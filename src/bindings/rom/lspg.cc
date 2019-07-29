@@ -1,80 +1,67 @@
 
-#include <iostream>
-#ifdef HAVE_PYBIND11
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
-#include <pybind11/eigen.h>
+//#include <pybind11/eigen.h>
 #include <pybind11/numpy.h>
-#endif
 
-#include "CORE_ALL"
-#include "ODE_ALL"
+#include "UTILS_ALL"
+#include "CONTAINERS_ALL"
 #include "SOLVERS_NONLINEAR"
+#include "ODE_ALL"
 #include "ROM_BASIC"
 #include "ROM_LSPG"
 
-namespace py = pybind11;
+PYBIND11_MODULE(pressio4py, m) {
 
-PYBIND11_MODULE(pyrom, m) {
-
+  // type aliases
   using scalar_t = double;
-  using py_arr = py::array_t<scalar_t, pybind11::array::c_style>;
-  using fom_t = py::object;
-  using ops_t = py::object;
+  using py_arr = pybind11::array_t<scalar_t, pybind11::array::c_style>;
+  using fom_t = pybind11::object;
+  using ops_t = pybind11::object;
   using step_t = int;
-
-  constexpr auto ode_case  = rompp::ode::ImplicitEnum::Euler;
-
-  //------------------------
-  // linear decoder binding
-  using decoder_jac_t	= py_arr;
-  using decoder_t	= ::rompp::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
-
-  pybind11::class_<decoder_t>(m, "LinearDecoder")
-      .def(pybind11::init< const decoder_jac_t &, py::object &>());
-
-  //------------------------
-  // default lspg problem
   using lspg_state_t	= py_arr;
 
-  using lspg_problem_type = rompp::rom::DefaultLSPGTypeGenerator<
-    fom_t, ode_case, decoder_t, lspg_state_t, ops_t>;
-  using lspg_prob_gen = rompp::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
-  using lspg_stepper_t = typename lspg_prob_gen::lspg_stepper_t;
-  using res_pol_t = typename lspg_prob_gen::lspg_residual_policy_t;
-  using jac_pol_t = typename lspg_prob_gen::lspg_jacobian_policy_t;
+  // TODO: need to figure out how to handle enums from python
+  constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
 
-  // concrete stepper
+  // linear decoder
+  using decoder_jac_t	= py_arr;
+  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
+
+  pybind11::class_<decoder_t>(m, "LinearDecoder")
+      .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
+
+  // default lspg problem
+  using lspg_problem_type = pressio::rom::DefaultLSPGTypeGenerator<
+    fom_t, ode_case, decoder_t, lspg_state_t, ops_t>;
+  using lspg_prob_gen	= pressio::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
+  using lspg_stepper_t	= typename lspg_prob_gen::lspg_stepper_t;
+  using res_pol_t	= typename lspg_prob_gen::lspg_residual_policy_t;
+  using jac_pol_t	= typename lspg_prob_gen::lspg_jacobian_policy_t;
+
+  // concrete LSPG stepper
   pybind11::class_<lspg_stepper_t>(m, "LspgStepper")
-    .def(pybind11::init<
-	 const py_arr &,
-	 const fom_t &,
-	 const res_pol_t &,
-	 const jac_pol_t &>());
+    .def(pybind11::init<const py_arr &, const fom_t &,
+			const res_pol_t &, const jac_pol_t &>());
 
   pybind11::class_<lspg_prob_gen>(m, "LspgProblem")
-    .def(pybind11::init<
-	 const fom_t &,
-	 const py_arr &,
-	 decoder_t &,
-	 lspg_state_t &,
-	 scalar_t,
-	 const ops_t &>())
+    .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
+			lspg_state_t &, scalar_t, const ops_t &>())
     .def("getStepper", &lspg_prob_gen::getStepperRef);
 
 
-  // solver bindings
-  // linear solver type
-  using linear_solver_t = py::object;
+  // linear solver type: use pybind::object because we use numpy solver
+  using linear_solver_t = pybind11::object;
 
   // non-linear solver type
-  using hessian_t = py_arr;
-  using nonlin_solver_t = ::rompp::solvers::iterative::PyGaussNewton
-    <lspg_stepper_t, py_arr, py_arr, py_arr, hessian_t, linear_solver_t, scalar_t>;
+  using hessian_t = py_arr; // hessian is a numpy array
+  using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
+    <lspg_stepper_t, py_arr, py_arr, py_arr,
+     hessian_t, linear_solver_t, scalar_t>;
 
   // base types
-  using nls_base_t = ::rompp::solvers::NonLinearSolverBase<nonlin_solver_t>;
-  using iter_base_t = ::rompp::solvers::IterativeBase<scalar_t>;
+  using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
+  using iter_base_t = ::pressio::solvers::IterativeBase<scalar_t>;
 
   pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
     .def("solve", &nls_base_t::template solve<lspg_stepper_t, py_arr>);
@@ -86,16 +73,14 @@ PYBIND11_MODULE(pyrom, m) {
     .def("setTolerance", &iter_base_t::setTolerance);
 
   pybind11::class_<nonlin_solver_t, iter_base_t, nls_base_t>(m, "GaussNewton")
-    .def(pybind11::init<
-	 const lspg_stepper_t &,
-	 const py_arr &,
-	 linear_solver_t &,
-	 py::object &>());
+    .def(pybind11::init<const lspg_stepper_t &, const py_arr &,
+			linear_solver_t &, pybind11::object &>());
 
+  // integrator
   m.def("integrateNSteps",
-	&::rompp::ode::integrateNSteps<
-	lspg_stepper_t, py_arr, scalar_t, step_t, nonlin_solver_t>,
-	"Integrate N Steps");
+  	&::pressio::ode::integrateNSteps<
+  	lspg_stepper_t, py_arr, scalar_t, step_t, nonlin_solver_t>,
+  	"Integrate N Steps");
 }
 
 
@@ -103,7 +88,7 @@ PYBIND11_MODULE(pyrom, m) {
 
 
 // template <
-//   ::rompp::ode::ImplicitEnum odeName,
+//   ::pressio::ode::ImplicitEnum odeName,
 //   typename scalar_t,
 //   typename state_t,
 //   typename residual_t,
@@ -112,7 +97,7 @@ PYBIND11_MODULE(pyrom, m) {
 // struct BindingImplicitOde{
 
 //   static void add(pybind11::module & m){
-//     using app_t = py::object;
+//     using app_t = pybind11::object;
 //     using step_t = int;
 
 //     //----------------------------------------------------------------------
@@ -123,11 +108,11 @@ PYBIND11_MODULE(pyrom, m) {
 //     constexpr auto nAuxStates = PyClassHelper<odeName>::numAuxStates_;
 
 //     // concrete stepper
-//     using stepper_t = ::rompp::ode::ImplicitStepper
+//     using stepper_t = ::pressio::ode::ImplicitStepper
 //       <odeName, state_t, residual_t, jacobian_t, app_t, scalar_t>;
 
 //     // base stepper
-//     using base_t = ::rompp::ode::ImplicitStepperBase<stepper_t, nAuxStates>;
+//     using base_t = ::pressio::ode::ImplicitStepperBase<stepper_t, nAuxStates>;
 
 //     pybind11::class_<base_t>(m, baseName)
 //       .def("residual",
@@ -147,16 +132,16 @@ PYBIND11_MODULE(pyrom, m) {
 //     // Bindings for Solver
 
 //     // linear solver type
-//     using linear_solver_t = py::object;
+//     using linear_solver_t = pybind11::object;
 
 //     // non-linear solver type
 //     using hessian_t = jacobian_t;
-//     using nonlin_solver_t = ::rompp::solvers::iterative::PyGaussNewton
+//     using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
 //       <stepper_t, state_t, residual_t, jacobian_t, hessian_t, linear_solver_t, scalar_t>;
 
 //     // base types
-//     using nls_base_t = ::rompp::solvers::NonLinearSolverBase<nonlin_solver_t>;
-//     using iter_base_t = ::rompp::solvers::IterativeBase<scalar_t>;
+//     using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
+//     using iter_base_t = ::pressio::solvers::IterativeBase<scalar_t>;
 
 //     pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
 //       .def("solve", &nls_base_t::template solve<stepper_t, state_t>);
@@ -172,10 +157,10 @@ PYBIND11_MODULE(pyrom, m) {
 //           const stepper_t &,
 //           const state_t &,
 //           linear_solver_t &,
-//     py::object &>());
+//     pybind11::object &>());
 
 //     m.def("integrateNSteps",
-//      &::rompp::ode::integrateNSteps<
+//      &::pressio::ode::integrateNSteps<
 //      stepper_t, state_t, scalar_t, step_t, nonlin_solver_t>,
 //      "Integrate N Steps");
 //   }
@@ -186,7 +171,7 @@ PYBIND11_MODULE(pyrom, m) {
 
 // struct App{
 //   using st_t = Eigen::VectorXd;
-//   py::object obj_;
+//   pybind11::object obj_;
 
 //   App(const pybind11::object & obj)
 //     : obj_(obj){}
@@ -203,7 +188,7 @@ PYBIND11_MODULE(pyrom, m) {
 // };
 
 // pybind11::class_<App>(m, "App")
-//   .def(pybind11::init<const py::object &>() );
+//   .def(pybind11::init<const pybind11::object &>() );
 
 
 // class ImplA;
@@ -287,15 +272,15 @@ PYBIND11_MODULE(pyrom, m) {
 
 
 // //void run_test(const std::function<int(int)>& f)
-// void test(py::object & f)
+// void test(pybind11::object & f)
 // {
 //   Eigen::MatrixXd A(2,2);
 //   A.setConstant(2.2);
 
-//   const py::object & f_r = f.attr("residual");
+//   const pybind11::object & f_r = f.attr("residual");
 //   f_r(A, 0);
 //   std::cout << "GG " << A(0,0) << std::endl;
-//   //py::print( f_r(0) );
+//   //pybind11::print( f_r(0) );
 //   //std::cout << "result: " << r << std::endl;
 // }
 
