@@ -10,7 +10,8 @@ mu = np.array([5., 0.02, 0.02])
 appObj = burgers.Burgers1d(mu,Ncell)
 appObj.setup()
 
-yRef = appObj.getInitialState()
+# reference state
+yRef = np.ones(Ncell)
 
 # object in charge of ops
 ops = pressio4pyOps.Ops()
