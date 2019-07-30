@@ -11,6 +11,11 @@
 #include "ROM_BASIC"
 #include "ROM_LSPG"
 
+  // pybind11::enum_<::pressio::ode::ImplicitEnum>(m, "ImplicitEnum", pybind11::arithmetic())
+  //   .value("Undefined", ::pressio::ode::ImplicitEnum::Undefined)
+  //   .value("Euler",	::pressio::ode::ImplicitEnum::Euler)
+  //   .value("BDF2",	::pressio::ode::ImplicitEnum::BDF2);
+
 PYBIND11_MODULE(pressio4py, m) {
 
   // type aliases
@@ -21,9 +26,6 @@ PYBIND11_MODULE(pressio4py, m) {
   using step_t = int;
   using lspg_state_t	= py_arr;
 
-  // TODO: need to figure out how to handle enums from python
-  constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
-
   // linear decoder
   using decoder_jac_t	= py_arr;
   using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
@@ -31,7 +33,10 @@ PYBIND11_MODULE(pressio4py, m) {
   pybind11::class_<decoder_t>(m, "LinearDecoder")
       .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
 
-  // default lspg problem
+  // lspg problem
+  // TODO: need to figure out how to handle enums from python
+  constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
+
   using lspg_problem_type = pressio::rom::DefaultLSPGTypeGenerator<
     fom_t, ode_case, decoder_t, lspg_state_t, ops_t>;
   using lspg_prob_gen	= pressio::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
@@ -40,15 +45,14 @@ PYBIND11_MODULE(pressio4py, m) {
   using jac_pol_t	= typename lspg_prob_gen::lspg_jacobian_policy_t;
 
   // concrete LSPG stepper
-  pybind11::class_<lspg_stepper_t>(m, "LspgStepper")
+  pybind11::class_<lspg_stepper_t>(m, "LspgStepperEuler")
     .def(pybind11::init<const py_arr &, const fom_t &,
 			const res_pol_t &, const jac_pol_t &>());
 
-  pybind11::class_<lspg_prob_gen>(m, "LspgProblem")
+  pybind11::class_<lspg_prob_gen>(m, "LspgProblemEuler")
     .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
 			lspg_state_t &, scalar_t, const ops_t &>())
     .def("getStepper", &lspg_prob_gen::getStepperRef);
-
 
   // linear solver type: use pybind::object because we use numpy solver
   using linear_solver_t = pybind11::object;
@@ -82,6 +86,10 @@ PYBIND11_MODULE(pressio4py, m) {
   	lspg_stepper_t, py_arr, scalar_t, step_t, nonlin_solver_t>,
   	"Integrate N Steps");
 }
+
+
+
+
 
 
 

@@ -28,7 +28,7 @@ yRom = np.zeros(romSize)
 
 # the problem
 t0 = 0.
-lspgObj = pressio4py.LspgProblem(appObj, yRef, decoder, yRom, t0, ops)
+lspgObj = pressio4py.LspgProblemEuler(appObj, yRef, decoder, yRom, t0, ops)
 
 # get stepper
 stepper = lspgObj.getStepper()
