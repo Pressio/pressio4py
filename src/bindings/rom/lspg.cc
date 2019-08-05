@@ -1,4 +1,7 @@
 
+#ifndef PRESSIO_PYBINDINGS_LSPG_HPP_
+#define PRESSIO_PYBINDINGS_LSPG_HPP_
+
 #include "UTILS_ALL"
 #include "CONTAINERS_ALL"
 #include "SOLVERS_NONLINEAR"
@@ -142,6 +145,7 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
   	"Integrate N Steps");
 }
 
+#endif
 
 
 

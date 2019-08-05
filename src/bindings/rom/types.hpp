@@ -1,4 +1,7 @@
 
+#ifndef PRESSIO_PYBINDINGS_TYPES_HPP_
+#define PRESSIO_PYBINDINGS_TYPES_HPP_
+
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
@@ -11,3 +14,5 @@ struct MyTypes{
   using rom_state_t	= py_arr;
   using step_t		= int;
 };
+
+#endif

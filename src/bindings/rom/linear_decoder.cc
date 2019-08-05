@@ -1,4 +1,7 @@
 
+#ifndef PRESSIO_PYBINDINGS_LINEAR_DECODER_HPP_
+#define PRESSIO_PYBINDINGS_LINEAR_DECODER_HPP_
+
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
@@ -31,3 +34,5 @@ PYBIND11_MODULE(pressio4py, m) {
   using mytypes = MyTypes;
   LinearDecoderBinder<mytypes>::doBind(m);
 }
+
+#endif
