@@ -77,6 +77,8 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
   	"Integrate N Steps");
 }
 
+#endif
+
 
 
 
