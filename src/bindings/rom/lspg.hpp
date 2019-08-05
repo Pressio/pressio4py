@@ -1,8 +1,4 @@
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-
 #include "UTILS_ALL"
 #include "CONTAINERS_ALL"
 #include "SOLVERS_NONLINEAR"
@@ -11,33 +7,35 @@
 #include "ROM_LSPG"
 #include "ROM_GALERKIN"
 
-struct MyTypes{
-  using scalar_t	= double;
-  using py_arr		= pybind11::array_t<scalar_t, pybind11::array::c_style>;
-  using fom_t		= pybind11::object;
-  using ops_t		= pybind11::object;
-  using rom_state_t	= py_arr;
-  using step_t		= int;
-};
+#include "types.hpp"
 
-template <typename types>
-struct LinearDecoderBinder{
-  using ops_t		= typename types::ops_t;
-  using decoder_jac_t	= typename types::py_arr;
-  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
+// struct MyTypes{
+//   using scalar_t	= double;
+//   using py_arr		= pybind11::array_t<scalar_t, pybind11::array::c_style>;
+//   using fom_t		= pybind11::object;
+//   using ops_t		= pybind11::object;
+//   using rom_state_t	= py_arr;
+//   using step_t		= int;
+// };
 
-  static void doBind(pybind11::module & m){
-    pybind11::class_<decoder_t>(m, "LinearDecoder")
-      .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
-  }
-};
+// template <typename types>
+// struct LinearDecoderBinder{
+//   using ops_t		= typename types::ops_t;
+//   using decoder_jac_t	= typename types::py_arr;
+//   using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
 
-PYBIND11_MODULE(pressio4py, m) {
-  using mytypes = MyTypes;
-  LinearDecoderBinder<mytypes>::doBind(m);
-}
+//   static void doBind(pybind11::module & m){
+//     pybind11::class_<decoder_t>(m, "LinearDecoder")
+//       .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
+//   }
+// };
 
-PYBIND11_MODULE(pressio4pyLSPG, m) {
+// PYBIND11_MODULE(pressio4py, m) {
+//   using mytypes = MyTypes;
+//   LinearDecoderBinder<mytypes>::doBind(m);
+// }
+
+PYBIND11_MODULE(pressio4pyLspg, m) {
   using mytypes = MyTypes;
 
   using scalar_t	= typename mytypes::scalar_t;
