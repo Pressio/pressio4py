@@ -5,7 +5,7 @@ project(pressio4py)
 include_directories(${EIGEN_INCLUDE_DIR} ${PRESSIO_INCLUDE_DIR})
 find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
 
-pybind11_add_module(pressio4py src/bindings/rom/lspg.cc)
+pybind11_add_module(pressio4py src/bindings/rom/rom.cc)
 
 #configure_file(src/apps/burgers.py ${CMAKE_CURRENT_BINARY_DIR}/burgers.py COPYONLY)
 #configure_file(src/ops/pressio4pyOps.py ${CMAKE_CURRENT_BINARY_DIR}/pressio4pyOps.py COPYONLY)
