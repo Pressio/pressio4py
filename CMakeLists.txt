@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 2.8.12)
-project(pressio4py)
+project(pressio4py CXX)
 
 include_directories(${EIGEN_INCLUDE_DIR} ${PRESSIO_INCLUDE_DIR})
 find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
