@@ -29,7 +29,8 @@ class Ops:
     jphi[:] = phi[:] -factor*dt*jphi[:]
 
   def myprint(self, A):
-    print(A)
+    print (np.atleast_2d(A[:]).T)
+    #print(A)
 
 
 
