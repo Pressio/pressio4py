@@ -76,7 +76,7 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
       .def("getStepper", &galerkin_problem_gen::getStepperRef);
 
     // integrator
-    m.def("integrateNStepsRk4",
+    m.def("integrateNStepsRK4",
 	  &::pressio::ode::integrateNSteps<
 	  galerkin_stepper_t, rom_state_t, scalar_t, step_t>,
 	  "Integrate N Steps");
