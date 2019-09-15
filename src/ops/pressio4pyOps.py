@@ -26,11 +26,11 @@ class Ops:
     R[:] = yn[:] - ynm1[:] -dt*R[:]
 
   def time_discrete_jacobian(self, jphi, phi, factor, dt):
-    print("factor", factor, " dt ", dt)
     jphi[:] = phi[:] -factor*dt*jphi[:]
 
   def myprint(self, A):
-    print(A)
+    print (np.atleast_2d(A[:]).T)
+    #print(A)
 
 
 
