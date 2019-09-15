@@ -1,9 +1,9 @@
 #!/bin/bash
 
-envScript=/Users/fnrizzi/Desktop/work/ROM/setenv_ompi400_clang700.sh
+envScript=$HOME/setenv_ompi400_clang700.sh
 source ${envScript}
 
-WORKPATH="/Users/fnrizzi/Desktop/work/ROM"
+WORKPATH="$HOME/Desktop"
 TPLSPATH="${WORKPATH}/clang/clang700_ompi400_debug_shared"
 EIGENPATH="${TPLSPATH}/eigen/install/include/eigen3"
 PYBIND11PATH="${TPLSPATH}/pybind11/install"
