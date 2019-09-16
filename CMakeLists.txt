@@ -5,9 +5,9 @@ project(pressio4py CXX)
 include_directories(${EIGEN_INCLUDE_DIR} ${PRESSIO_INCLUDE_DIR})
 find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
 
-pybind11_add_module(pressio4py src/bindings/rom/linear_decoder.cc)
-pybind11_add_module(pressio4pyLspg src/bindings/rom/lspg.cc)
-pybind11_add_module(pressio4pyGalerkin src/bindings/rom/galerkin.cc)
+pybind11_add_module(pressio4py src/bindings/rom/linear_decoder.hpp)
+pybind11_add_module(pressio4pyLspg src/bindings/rom/lspg.hpp)
+pybind11_add_module(pressio4pyGalerkin src/bindings/rom/galerkin.hpp)
 
 #configure_file(src/apps/burgers.py ${CMAKE_CURRENT_BINARY_DIR}/burgers.py COPYONLY)
 #configure_file(src/ops/pressio4pyOps.py ${CMAKE_CURRENT_BINARY_DIR}/pressio4pyOps.py COPYONLY)

@@ -1,6 +1,6 @@
 
-#ifndef PRESSIO_PYBINDINGS_TYPES_HPP_
-#define PRESSIO_PYBINDINGS_TYPES_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
+#define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
 
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
