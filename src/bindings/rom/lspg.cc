@@ -102,7 +102,7 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
   // base types
   using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
-  using iter_base_t = ::pressio::solvers::IterativeBase<scalar_t>;
+  using iter_base_t = ::pressio::solvers::IterativeBase<nonlin_solver_t, scalar_t>;
 
   pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
     .def("solve", &nls_base_t::template solve<lspg_stepper_t, py_arr>);
