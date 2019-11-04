@@ -59,7 +59,6 @@ struct MyTypes{
   using fom_t		= pybind11::object;
   using ops_t		= pybind11::object;
   using rom_state_t	= py_arr;
-  using step_t		= int;
 };
 
 #endif

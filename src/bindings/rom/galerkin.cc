@@ -65,7 +65,6 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
   using rom_state_t	= typename mytypes::rom_state_t;
-  using step_t		= typename mytypes::step_t;
 
   using decoderbind_t = LinearDecoderBinder<mytypes>;
   using decoder_t = typename decoderbind_t::decoder_t;
@@ -78,10 +77,9 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
     using galerkin_problem_t = ::pressio::rom::DefaultGalerkinExplicitTypeGenerator<
       ode_case, rom_state_t, fom_t, decoder_t>;
 
-    using galerkin_problem_gen = pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
-
-    using galerkin_stepper_t  = typename galerkin_problem_gen::galerkin_stepper_t;
-    using res_pol_t	    = typename galerkin_problem_gen::galerkin_residual_policy_t;
+    using galerkin_problem_gen	= pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
+    using res_pol_t		= typename galerkin_problem_gen::galerkin_residual_policy_t;
+    using galerkin_stepper_t	= typename galerkin_problem_gen::galerkin_stepper_t;
 
     // stepper
     pybind11::class_<galerkin_stepper_t>(m, "StepperEuler")
@@ -94,11 +92,10 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
 
     // integrator
     m.def("integrateNStepsEuler",
-	  &::pressio::ode::integrateNSteps<
-	  galerkin_stepper_t, rom_state_t, scalar_t, step_t>,
-	  "Integrate N Steps");
+    	  &::pressio::ode::integrateNSteps<
+    	  galerkin_stepper_t, rom_state_t, scalar_t>,
+    	  "Integrate N Steps");
   }
-  //--------------------------------------------------------
 
   //--------------------------------------------------------
   // RK4 Galerkin problem
@@ -108,10 +105,9 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
     using galerkin_problem_t = ::pressio::rom::DefaultGalerkinExplicitTypeGenerator<
       ode_case, rom_state_t, fom_t, decoder_t>;
 
-    using galerkin_problem_gen = pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
-
-    using galerkin_stepper_t  = typename galerkin_problem_gen::galerkin_stepper_t;
-    using res_pol_t	    = typename galerkin_problem_gen::galerkin_residual_policy_t;
+    using galerkin_problem_gen	= pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
+    using res_pol_t		= typename galerkin_problem_gen::galerkin_residual_policy_t;
+    using galerkin_stepper_t	= typename galerkin_problem_gen::galerkin_stepper_t;
 
     // stepper
     pybind11::class_<galerkin_stepper_t>(m, "StepperRK4")
@@ -119,16 +115,16 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
 
     pybind11::class_<galerkin_problem_gen>(m, "ProblemRK4")
       .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
-	   rom_state_t &, scalar_t, const ops_t &>())
+  	   rom_state_t &, scalar_t, const ops_t &>())
       .def("getStepper", &galerkin_problem_gen::getStepperRef);
 
     // integrator
     m.def("integrateNStepsRK4",
-	  &::pressio::ode::integrateNSteps<
-	  galerkin_stepper_t, rom_state_t, scalar_t, step_t>,
-	  "Integrate N Steps");
+  	  &::pressio::ode::integrateNSteps<
+  	  galerkin_stepper_t, rom_state_t, scalar_t>,
+  	  "Integrate N Steps");
   }
-  //--------------------------------------------------------
+
 }
 
 #endif
