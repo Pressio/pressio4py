@@ -102,7 +102,7 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
   {
     constexpr auto stepperName  = ::pressio::ode::ExplicitEnum::RungeKutta4;
     using galerkin_problem_t = ::pressio::rom::DefaultGalerkinExplicitTypeGenerator<
-					stepperName, rom_state_t, fom_t, decoder_t>;
+  					stepperName, rom_state_t, fom_t, decoder_t>;
 
     using galerkin_problem_gen	= pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
     using res_pol_t		= typename galerkin_problem_gen::galerkin_residual_policy_t;
@@ -114,13 +114,13 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
 
     pybind11::class_<galerkin_problem_gen>(m, "ProblemRK4")
       .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
-			  rom_state_t &, scalar_t, const ops_t &>())
+  			  rom_state_t &, scalar_t, const ops_t &>())
       .def("getStepper", &galerkin_problem_gen::getStepperRef);
 
     // integrator
     m.def("integrateNStepsRK4",
   	  &::pressio::ode::integrateNSteps<galerkin_stepper_t, rom_state_t, scalar_t>,
-	  "Integrate N Steps");
+  	  "Integrate N Steps");
   }
 
 }
