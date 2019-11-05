@@ -58,6 +58,7 @@
 
 template <typename types>
 struct LinearDecoderBinder{
+
   using ops_t		= typename types::ops_t;
   using decoder_jac_t	= typename types::py_arr;
   using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
@@ -66,6 +67,7 @@ struct LinearDecoderBinder{
     pybind11::class_<decoder_t>(m, "LinearDecoder")
       .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
   }
+
 };
 
 PYBIND11_MODULE(pressio4py, m) {
