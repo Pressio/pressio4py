@@ -60,12 +60,14 @@ template <typename types>
 struct LinearDecoderBinder{
 
   using ops_t		= typename types::ops_t;
-  using decoder_jac_t	= typename types::py_arr;
+  using fom_state_t	= typename types::fom_state_t;
+  using decoder_jac_t	= typename types::py_c_arr;
   using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
 
   static void doBind(pybind11::module & m){
     pybind11::class_<decoder_t>(m, "LinearDecoder")
-      .def(pybind11::init< const decoder_jac_t &, pybind11::object &>());
+      .def(pybind11::init< const decoder_jac_t &, pybind11::object &>())
+      .def("applyMapping", &decoder_t::template _applyMappingTest<decoder_jac_t, fom_state_t>, "dfdf");
   }
 
 };

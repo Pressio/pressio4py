@@ -53,12 +53,35 @@
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
 
-struct MyTypes{
+struct CommonTypes{
   using scalar_t	= double;
-  using py_arr		= pybind11::array_t<scalar_t, pybind11::array::f_style>;
+  using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
+  using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
   using fom_t		= pybind11::object;
   using ops_t		= pybind11::object;
-  using rom_state_t	= py_arr;
+};
+
+struct MyTypesGalerkin : CommonTypes{
+  using typename CommonTypes::scalar_t;
+  using typename CommonTypes::fom_t;
+  using typename CommonTypes::ops_t;
+  using typename CommonTypes::py_c_arr;
+  using typename CommonTypes::py_f_arr;
+  using rom_state_t	= py_f_arr;
+  using fom_state_t	= py_f_arr;
+  using decoder_jac_t	= py_f_arr;
+};
+
+struct MyTypesLSPG : CommonTypes{
+  using typename CommonTypes::scalar_t;
+  using typename CommonTypes::fom_t;
+  using typename CommonTypes::ops_t;
+  using typename CommonTypes::py_c_arr;
+  using typename CommonTypes::py_f_arr;
+  using rom_state_t	= py_c_arr;
+  using fom_state_t	= py_c_arr;
+  using decoder_jac_t	= py_c_arr;
+  using hessian_t	= py_c_arr;
 };
 
 #endif

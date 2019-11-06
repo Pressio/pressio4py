@@ -55,19 +55,26 @@
 #include "ROM_GALERKIN"
 
 #include "types.hpp"
-#include "linear_decoder.cc"
 
 PYBIND11_MODULE(pressio4pyGalerkin, m) {
-  using mytypes = MyTypes;
 
+  using mytypes		= MyTypesGalerkin;
   using scalar_t	= typename mytypes::scalar_t;
-  using py_arr		= typename mytypes::py_arr;
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
-  using rom_state_t	= typename mytypes::rom_state_t;
 
-  using decoderbind_t	= LinearDecoderBinder<mytypes>;
-  using decoder_t	= typename decoderbind_t::decoder_t;
+  using rom_state_t	= typename mytypes::rom_state_t;
+  using fom_state_t	= typename mytypes::fom_state_t;
+  using decoder_jac_t	= typename mytypes::decoder_jac_t;
+
+  // --------------------------------------------------------------------
+  // ---- decoder -----
+  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
+
+  pybind11::class_<decoder_t>(m, "LinearDecoder")
+    .def(pybind11::init< const decoder_jac_t &, const ops_t &>())
+    .def("applyMapping", &decoder_t::template _applyMappingTest<decoder_jac_t, fom_state_t>, "Decode");
+
 
   //--------------------------------------------------------
   // Euler Galerkin problem
@@ -86,7 +93,7 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
       .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
 
     pybind11::class_<galerkin_problem_gen>(m, "ProblemEuler")
-      .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
+      .def(pybind11::init<const fom_t &, const fom_state_t &, const decoder_t &,
 			  rom_state_t &, scalar_t, const ops_t &>())
       .def("getStepper", &galerkin_problem_gen::getStepperRef);
 
@@ -113,7 +120,7 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
       .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
 
     pybind11::class_<galerkin_problem_gen>(m, "ProblemRK4")
-      .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
+      .def(pybind11::init<const fom_t &, const fom_state_t &, const decoder_t &,
   			  rom_state_t &, scalar_t, const ops_t &>())
       .def("getStepper", &galerkin_problem_gen::getStepperRef);
 

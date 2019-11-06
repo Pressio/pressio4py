@@ -53,59 +53,66 @@
 #include "CONTAINERS_ALL"
 #include "SOLVERS_NONLINEAR"
 #include "ODE_ALL"
-#include "ROM_LSPG"
+#include "ROM_LSPG_UNSTEADY"
 
 #include "types.hpp"
-#include "linear_decoder.cc"
 
 PYBIND11_MODULE(pressio4pyLspg, m) {
-  using mytypes = MyTypes;
 
+  using mytypes		= MyTypesLSPG;
   using scalar_t	= typename mytypes::scalar_t;
-  using py_arr		= typename mytypes::py_arr;
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
+
   using rom_state_t	= typename mytypes::rom_state_t;
-  using step_t		= typename mytypes::step_t;
+  using fom_state_t	= typename mytypes::fom_state_t;
+  using decoder_jac_t	= typename mytypes::decoder_jac_t;
+  using hessian_t	= typename mytypes::hessian_t;
 
-  using decoderbind_t = LinearDecoderBinder<mytypes>;
-  using decoder_t = typename decoderbind_t::decoder_t;
+  // --------------------------------------------------------------------
+  // ---- decoder -----
+  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
 
-  // lspg problem
+  pybind11::class_<decoder_t>(m, "LinearDecoder")
+    .def(pybind11::init< const decoder_jac_t &, const ops_t &>())
+    .def("applyMapping", &decoder_t::template _applyMappingTest<decoder_jac_t, fom_state_t>, "Decode");
+
+  // --------------------------------------------------------------------
+  // ---- lspg problem ----
   constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
-  using lspg_problem_type = pressio::rom::DefaultLSPGTypeGenerator<
-    fom_t, ode_case, decoder_t, rom_state_t, ops_t>;
-  using lspg_prob_gen	= pressio::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
+  using lspg_problem_type  = pressio::rom::LSPGUnsteadyProblem<
+    pressio::rom::DefaultLSPGUnsteady, ode_case, fom_t, rom_state_t, decoder_t>;
 
-  using lspg_stepper_t	= typename lspg_prob_gen::lspg_stepper_t;
-  using res_pol_t	= typename lspg_prob_gen::lspg_residual_policy_t;
-  using jac_pol_t	= typename lspg_prob_gen::lspg_jacobian_policy_t;
+  // extract types from the lspg problem type
+  using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
+  using res_pol_t	= typename lspg_problem_type::lspg_residual_policy_t;
+  using jac_pol_t	= typename lspg_problem_type::lspg_jacobian_policy_t;
 
-  // concrete LSPG stepper
+  // concrete LSPG stepper binding
   pybind11::class_<lspg_stepper_t>(m, "StepperEuler")
-    .def(pybind11::init<const rom_state_t &, const fom_t &,
-			const res_pol_t &, const jac_pol_t &>());
+    .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &, const jac_pol_t &>());
 
-  pybind11::class_<lspg_prob_gen>(m, "ProblemEuler")
-    .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
-			rom_state_t &, scalar_t, const ops_t &>())
-    .def("getStepper", &lspg_prob_gen::getStepperRef);
+  // concrete LSPG problem
+  pybind11::class_<lspg_problem_type>(m, "ProblemEuler")
+    .def(pybind11::init<const fom_t &, const fom_state_t &, const decoder_t &,
+  			rom_state_t &, scalar_t, const ops_t &>())
+    .def("getStepper", &lspg_problem_type::getStepperRef);
 
-  // linear solver type: use pybind::object because we use numpy solver
+  // --------------------------------------------------------------------
+  // ---- linear solver type ----
+  // use pybind::object because the solver is actually defined by the user
   using linear_solver_t = pybind11::object;
 
-  // non-linear solver type
-  using hessian_t = py_arr; // hessian is a numpy array
+  // ---- non-linear solver type ---
   using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
-    <lspg_stepper_t, py_arr, py_arr, py_arr,
-     hessian_t, linear_solver_t, scalar_t>;
+    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t, linear_solver_t, scalar_t>;
 
   // base types
   using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
   using iter_base_t = ::pressio::solvers::IterativeBase<nonlin_solver_t, scalar_t>;
 
   pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
-    .def("solve", &nls_base_t::template solve<lspg_stepper_t, py_arr>);
+    .def("solve", &nls_base_t::template solve<lspg_stepper_t, rom_state_t>);
 
   pybind11::class_<iter_base_t>(m, "IterBase")
     .def("getMaxIterations", &iter_base_t::getMaxIterations)
@@ -114,14 +121,13 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
     .def("setTolerance", &iter_base_t::setTolerance);
 
   pybind11::class_<nonlin_solver_t, iter_base_t, nls_base_t>(m, "GaussNewton")
-    .def(pybind11::init<const lspg_stepper_t &, const rom_state_t &,
-			linear_solver_t &, ops_t &>());
+    .def(pybind11::init<const lspg_stepper_t &, const rom_state_t &, linear_solver_t &, ops_t &>());
 
   // integrator
   m.def("integrateNSteps",
-  	&::pressio::ode::integrateNSteps<
-  	lspg_stepper_t, rom_state_t, scalar_t, step_t, nonlin_solver_t>,
+  	&::pressio::ode::integrateNSteps<lspg_stepper_t, rom_state_t, scalar_t, nonlin_solver_t>,
   	"Integrate N Steps");
+
 }
 
 #endif
@@ -160,20 +166,20 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
 //   using lspg_problem_type = pressio::rom::DefaultLSPGTypeGenerator<
 //     fom_t, ode_case, decoder_t, lspg_state_t, ops_t>;
-//   using lspg_prob_gen	= pressio::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
-//   using lspg_stepper_t	= typename lspg_prob_gen::lspg_stepper_t;
-//   using res_pol_t	= typename lspg_prob_gen::lspg_residual_policy_t;
-//   using jac_pol_t	= typename lspg_prob_gen::lspg_jacobian_policy_t;
+//   using lspg_problem_type	= pressio::rom::LSPGUnsteadyProblemGenerator<lspg_problem_type>;
+//   using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
+//   using res_pol_t	= typename lspg_problem_type::lspg_residual_policy_t;
+//   using jac_pol_t	= typename lspg_problem_type::lspg_jacobian_policy_t;
 
 //   // concrete LSPG stepper
 //   pybind11::class_<lspg_stepper_t>(m, "LspgStepperEuler")
 //     .def(pybind11::init<const py_arr &, const fom_t &,
 // 			const res_pol_t &, const jac_pol_t &>());
 
-//   pybind11::class_<lspg_prob_gen>(m, "LspgProblemEuler")
+//   pybind11::class_<lspg_problem_type>(m, "LspgProblemEuler")
 //     .def(pybind11::init<const fom_t &, const py_arr &, decoder_t &,
 // 			lspg_state_t &, scalar_t, const ops_t &>())
-//     .def("getStepper", &lspg_prob_gen::getStepperRef);
+//     .def("getStepper", &lspg_problem_type::getStepperRef);
 
 //   // linear solver type: use pybind::object because we use numpy solver
 //   using linear_solver_t = pybind11::object;
