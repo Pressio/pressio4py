@@ -68,12 +68,18 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
   using decoder_jac_t	= typename mytypes::decoder_jac_t;
 
   // --------------------------------------------------------------------
-  // ---- decoder -----
+  // decoder
+  // --------------------------------------------------------------------
   using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
 
-  pybind11::class_<decoder_t>(m, "LinearDecoder")
-    .def(pybind11::init< const decoder_jac_t &, const ops_t &>())
-    .def("applyMapping", &decoder_t::template _applyMappingTest<decoder_jac_t, fom_state_t>, "Decode");
+  // base decoder class
+  using decoder_base_t = ::pressio::rom::DecoderBase<decoder_t, decoder_jac_t>;
+  pybind11::class_<decoder_base_t>(m, "DecoderBase")
+    .def("applyMapping", &decoder_base_t::template applyMapping<rom_state_t, fom_state_t>);
+
+  pybind11::class_<decoder_t, decoder_base_t>(m, "LinearDecoder")
+    .def(pybind11::init< const decoder_jac_t &, const ops_t &>());
+    // .def("phitvel", &decoder_t::template _PhiTVel<fom_state_t, rom_state_t>, "Decode");
 
 
   //--------------------------------------------------------

@@ -78,10 +78,10 @@ struct MyTypesLSPG : CommonTypes{
   using typename CommonTypes::ops_t;
   using typename CommonTypes::py_c_arr;
   using typename CommonTypes::py_f_arr;
-  using rom_state_t	= py_c_arr;
-  using fom_state_t	= py_c_arr;
-  using decoder_jac_t	= py_c_arr;
-  using hessian_t	= py_c_arr;
+  using rom_state_t	= py_f_arr;
+  using fom_state_t	= py_f_arr;
+  using decoder_jac_t	= py_f_arr;
+  using hessian_t	= py_f_arr;
 };
 
 #endif
