@@ -58,26 +58,25 @@ struct CommonTypes{
   using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
   using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
   using fom_t		= pybind11::object;
-  using ops_t		= pybind11::object;
 };
 
-struct MyTypesGalerkin : CommonTypes{
+struct DefaultGalerkinTypes : CommonTypes{
   using typename CommonTypes::scalar_t;
   using typename CommonTypes::fom_t;
-  using typename CommonTypes::ops_t;
   using typename CommonTypes::py_c_arr;
   using typename CommonTypes::py_f_arr;
+  using ops_t		= void;
   using rom_state_t	= py_f_arr;
   using fom_state_t	= py_f_arr;
   using decoder_jac_t	= py_f_arr;
 };
 
-struct MyTypesLSPG : CommonTypes{
+struct DefaultLSPGTypes : CommonTypes{
   using typename CommonTypes::scalar_t;
   using typename CommonTypes::fom_t;
-  using typename CommonTypes::ops_t;
   using typename CommonTypes::py_c_arr;
   using typename CommonTypes::py_f_arr;
+  using ops_t		= void;
   using rom_state_t	= py_f_arr;
   using fom_state_t	= py_f_arr;
   using decoder_jac_t	= py_f_arr;

@@ -59,7 +59,7 @@
 
 PYBIND11_MODULE(pressio4pyLspg, m) {
 
-  using mytypes		= DefaultLSPGTypes;
+  using mytypes		= MyTypesLSPG;
   using scalar_t	= typename mytypes::scalar_t;
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
@@ -80,13 +80,13 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
     .def("applyMapping", &decoder_base_t::template applyMapping<rom_state_t, fom_state_t>);
 
   pybind11::class_<decoder_t, decoder_base_t>(m, "LinearDecoder")
-    .def(pybind11::init< const decoder_jac_t &>());
+    .def(pybind11::init< const decoder_jac_t &, const ops_t &>());
 
   // --------------------------------------------------------------------
   // ---- lspg problem ----
   constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
   using lspg_problem_type  = pressio::rom::LSPGUnsteadyProblem<
-    pressio::rom::DefaultLSPGUnsteady, ode_case, fom_t, rom_state_t, decoder_t, ops_t>;
+    pressio::rom::DefaultLSPGUnsteady, ode_case, fom_t, rom_state_t, decoder_t>;
 
   // extract types from the lspg problem type
   using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
@@ -99,7 +99,8 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
   // concrete LSPG problem
   pybind11::class_<lspg_problem_type>(m, "ProblemEuler")
-    .def(pybind11::init<const fom_t &, const fom_state_t &, const decoder_t &, rom_state_t &, scalar_t>())
+    .def(pybind11::init<const fom_t &, const fom_state_t &, const decoder_t &,
+  			rom_state_t &, scalar_t, const ops_t &>())
     .def("getStepper", &lspg_problem_type::getStepperRef);
 
   // --------------------------------------------------------------------
@@ -109,7 +110,7 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
   // ---- non-linear solver type ---
   using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
-    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t, linear_solver_t, scalar_t, ops_t>;
+    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t, linear_solver_t, scalar_t>;
 
   // base types
   using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
@@ -125,7 +126,7 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
     .def("setTolerance", &iter_base_t::setTolerance);
 
   pybind11::class_<nonlin_solver_t, iter_base_t, nls_base_t>(m, "GaussNewton")
-    .def(pybind11::init<const lspg_stepper_t &, const rom_state_t &, linear_solver_t &>());
+    .def(pybind11::init<const lspg_stepper_t &, const rom_state_t &, linear_solver_t &, ops_t &>());
 
   // integrator
   m.def("integrateNSteps",
@@ -133,6 +134,7 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
   	"Integrate N Steps");
 
 }
+
 #endif
 
 

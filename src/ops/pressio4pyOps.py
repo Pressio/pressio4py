@@ -59,35 +59,11 @@ def time_discrete_jacobian_numba(jphi, phi, factor, dt):
     for j in range(nc):
       jphi[i][j] = phi[i][j] + factor*dt*jphi[i][j]
 
-def multiply_impl(a, transA, b, transB):
-  if transA == True and transB == False:
-    return np.matmul(a.T, b)
-  elif transA == True and transB == True:
-    return np.matmul(a.T, b.T)
-  elif transA == False and transB == True:
-    return np.matmul(a, b.T)
-  else:
-    return np.matmul(a, b)
-
-##########################################
 ##########################################
 class Ops:
   # todo: fix names and mutability issues
   def __init__(self):
     pass
-
-  # this is called with either one of these:
-  # 1. a, transA, b, transB, result
-  # 2. a, transA, b, transB  (here we need to return result)
-  @staticmethod
-  def multiply(*args):
-    a, transA, b, transB = args[0],args[1],args[2],args[3]
-    if len(args) == 4:
-      return multiply_impl(a, transA, b, transB)
-    elif len(args) == 5:
-      args[4][:] = multiply_impl(a, transA, b, transB)
-    else:
-      return;
 
   @staticmethod
   def time_discrete_euler(R, yn, ynm1, dt):
