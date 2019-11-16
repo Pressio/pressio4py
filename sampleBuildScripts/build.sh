@@ -13,7 +13,7 @@ PFX=${PWD}/install
 bdirname=build
 
 rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
-cmake -DCMAKE_CXX_COMPILER=${CC} \
+cmake -DCMAKE_C_COMPILER=${CC} \
       -DCMAKE_CXX_COMPILER=${CXX} \
       -DPYBIND11_DIR=${PYBIND11PATH} \
       -DPRESSIO_INCLUDE_DIR=${PRESSIOPATH} \
