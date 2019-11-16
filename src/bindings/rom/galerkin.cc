@@ -86,10 +86,10 @@ PYBIND11_MODULE(pressio4pyGalerkin, m) {
   //--------------------------------------------------------
   {
     constexpr auto stepperName  = ::pressio::ode::ExplicitEnum::Euler;
-    using galerkin_problem_t = ::pressio::rom::DefaultGalerkinExplicitTypeGenerator<
+    using galerkin_problem_t = ::pressio::rom::galerkin::DefaultProblemType<
       stepperName, rom_state_t, fom_t, decoder_t, ops_t>;
 
-    using galerkin_problem_gen	= pressio::rom::GalerkinProblemGenerator<galerkin_problem_t>;
+    using galerkin_problem_gen	= pressio::rom::galerkin::ProblemGenerator<galerkin_problem_t>;
     using res_pol_t		= typename galerkin_problem_gen::galerkin_residual_policy_t;
     using galerkin_stepper_t	= typename galerkin_problem_gen::galerkin_stepper_t;
 
