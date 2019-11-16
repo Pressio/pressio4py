@@ -85,8 +85,8 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
   // --------------------------------------------------------------------
   // ---- lspg problem ----
   constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
-  using lspg_problem_type  = pressio::rom::LSPGUnsteadyProblem<
-    pressio::rom::DefaultLSPGUnsteady, ode_case, fom_t, rom_state_t, decoder_t, ops_t>;
+  using lspg_problem_type  = pressio::rom::lspg::unsteady::Problem<
+    pressio::rom::lspg::unsteady::Default, ode_case, fom_t, rom_state_t, decoder_t, ops_t>;
 
   // extract types from the lspg problem type
   using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
