@@ -49,11 +49,8 @@
 #ifndef PRESSIO4PPY_PYBINDINGS_LSPG_HPP_
 #define PRESSIO4PY_PYBINDINGS_LSPG_HPP_
 
-#include "UTILS_ALL"
-#include "CONTAINERS_ALL"
-#include "SOLVERS_NONLINEAR"
-#include "ODE_ALL"
-#include "ROM_LSPG_UNSTEADY"
+#include "pressio_ode.hpp"
+#include "pressio_rom.hpp"
 
 #include "types.hpp"
 
@@ -72,21 +69,21 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
   // --------------------------------------------------------------------
   // decoder
   // --------------------------------------------------------------------
-  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t>;
+  using decoder_t	= ::pressio::rom::PyLinearDecoder<decoder_jac_t, ops_t, rom_state_t, fom_state_t>;
+  using decoder_base_t = typename decoder_t::base_t;
 
   // base decoder class
-  using decoder_base_t = ::pressio::rom::DecoderBase<decoder_t, decoder_jac_t>;
   pybind11::class_<decoder_base_t>(m, "DecoderBase")
-    .def("applyMapping", &decoder_base_t::template applyMapping<rom_state_t, fom_state_t>);
+    .def("applyMapping", &decoder_base_t::template applyMapping<rom_state_t>);
 
   pybind11::class_<decoder_t, decoder_base_t>(m, "LinearDecoder")
     .def(pybind11::init< const decoder_jac_t &>());
 
   // --------------------------------------------------------------------
   // ---- lspg problem ----
-  constexpr auto ode_case  = ::pressio::ode::ImplicitEnum::Euler;
-  using lspg_problem_type  = pressio::rom::lspg::unsteady::Problem<
-    pressio::rom::lspg::unsteady::Default, ode_case, fom_t, rom_state_t, decoder_t, ops_t>;
+  using ode_tag  = pressio::ode::implicitmethods::Euler;
+  using lspg_problem_type = pressio::rom::LSPGUnsteadyProblem<
+    pressio::rom::DefaultLSPGUnsteady, ode_tag, fom_t, rom_state_t, decoder_t, ops_t>;
 
   // extract types from the lspg problem type
   using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
@@ -109,7 +106,8 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
   // ---- non-linear solver type ---
   using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
-    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t, linear_solver_t, scalar_t, ops_t>;
+    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t,
+     linear_solver_t, scalar_t, ops_t>;
 
   // base types
   using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
@@ -129,8 +127,8 @@ PYBIND11_MODULE(pressio4pyLspg, m) {
 
   // integrator
   m.def("integrateNSteps",
-  	&::pressio::ode::integrateNSteps<lspg_stepper_t, rom_state_t, scalar_t, nonlin_solver_t>,
-  	"Integrate N Steps");
+	&pressio::ode::integrateNSteps<lspg_stepper_t, rom_state_t, scalar_t, nonlin_solver_t>,
+	"Integrate N Steps");
 
 }
 #endif
