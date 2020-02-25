@@ -52,6 +52,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
+#include "pressio_containers.hpp"
 
 struct CommonTypes{
   using scalar_t	= double;
@@ -69,6 +70,21 @@ struct DefaultGalerkinTypes : CommonTypes{
   using rom_state_t	= py_f_arr;
   using fom_state_t	= py_f_arr;
   using decoder_jac_t	= py_f_arr;
+};
+
+struct WrappedGalerkinTypes : CommonTypes{
+  using typename CommonTypes::scalar_t;
+  using typename CommonTypes::fom_t;
+  using typename CommonTypes::py_f_arr;
+  using ops_t		= void;
+
+  using rom_nat_state_t	= py_f_arr;
+  using fom_nat_state_t	= py_f_arr;
+  using decoder_nat_jac_t = py_f_arr;
+
+  using rom_state_t	= pressio::containers::Vector<rom_nat_state_t>;
+  using fom_state_t	= pressio::containers::Vector<fom_nat_state_t>;
+  using decoder_jac_t	= pressio::containers::Matrix<decoder_nat_jac_t>;
 };
 
 struct DefaultLSPGTypes : CommonTypes{
