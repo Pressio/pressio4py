@@ -62,7 +62,7 @@ void createGalerkinBindings(pybind11::module & m)
   using fom_nat_state_t	= typename mytypes::fom_nat_state_t;
 
   using rom_state_t	= typename mytypes::rom_state_t;
-  using decoder_t = typename mytypes::decoder_t;
+  using decoder_t	= typename mytypes::decoder_t;
 
   //--------------------------------------------------------
   // Euler Galerkin problem
