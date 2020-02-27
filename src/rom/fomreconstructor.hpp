@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// types.hpp
+// fomreconstructor.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,41 +46,24 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
-#define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
+#define PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
+#include "pressio_rom.hpp"
 
-struct CommonTypes{
-  using scalar_t	= double;
-  using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
-  using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
-  using fom_t		= pybind11::object;
-};
+template <typename mytypes>
+void createFomReconstructorBindings(pybind11::module & m)
+{
+  using scalar_t	= typename mytypes::scalar_t;
+  using rom_nat_state_t = typename mytypes::rom_nat_state_t;
+  using fom_state_t	= typename mytypes::fom_state_t;
+  using decoder_t	= typename mytypes::decoder_t;
 
-struct DefaultGalerkinTypes : CommonTypes{
-  using typename CommonTypes::scalar_t;
-  using typename CommonTypes::fom_t;
-  using typename CommonTypes::py_c_arr;
-  using typename CommonTypes::py_f_arr;
-  using ops_t		= void;
-  using rom_state_t	= py_f_arr;
-  using fom_state_t	= py_f_arr;
-  using decoder_jac_t	= py_f_arr;
-};
-
-struct DefaultLSPGTypes : CommonTypes{
-  using typename CommonTypes::scalar_t;
-  using typename CommonTypes::fom_t;
-  using typename CommonTypes::py_c_arr;
-  using typename CommonTypes::py_f_arr;
-  using ops_t		= void;
-  using rom_state_t	= py_f_arr;
-  using fom_state_t	= py_f_arr;
-  using decoder_jac_t	= py_f_arr;
-  using hessian_t	= py_f_arr;
-};
+  // fom reconstructor
+  using fom_reconstructor_t = pressio::rom::FomStateReconstructor<scalar_t, fom_state_t, decoder_t>;
+  pybind11::class_<fom_reconstructor_t>(m, "FomReconstructor")
+    .def(pybind11::init<const fom_state_t &, const decoder_t &>())
+    .def("evaluate", &fom_reconstructor_t::template evaluate<rom_nat_state_t>);
+}
 
 #endif
