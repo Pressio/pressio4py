@@ -1,23 +1,27 @@
 #!/bin/bash
 
-envScript=$HOME/setenv_ompi400_clang700.sh
+envScript=$HOME/Desktop/work/ROM/env_scripts/setenv_serial_gcc920.sh
 source ${envScript}
 
-WORKPATH="$HOME/Desktop"
-TPLSPATH="${WORKPATH}/clang/clang700_ompi400_debug_shared"
-PYBIND11PATH="${TPLSPATH}/pybind11/install"
-PRESSIOPATH="${WORKPATH}/clang/clang700_ompi400_debug_shared/pressio/install/include"
+WORKPATH="$HOME/Desktop/buildTest"
+PRESSIOPATH="${WORKPATH}/pressio/install/include"
+EIGENPATH="${WORKPATH}/eigen/install/include/eigen3"
+PYBIND11PATH="${WORKPATH}/pybind11/install"
 
-SRCDIR=${WORKPATH}/sources/pressio4py
+SRCDIR=/Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py
 PFX=${PWD}/install
 bdirname=build
 
 rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
-cmake -DCMAKE_C_COMPILER=${CC} \
+cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+      -DCMAKE_INSTALL_PREFIX=${PFX} \
       -DCMAKE_CXX_COMPILER=${CXX} \
-      -DPYBIND11_DIR=${PYBIND11PATH} \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DEIGEN_INCLUDE_DIR=${EIGENPATH} \
       -DPRESSIO_INCLUDE_DIR=${PRESSIOPATH} \
-      -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${PFX} \
+      -DPYBIND11_DIR=${PYBIND11PATH} \
       ${SRCDIR}
 make
 cd ..
+
+#-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=${PFX} \

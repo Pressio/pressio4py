@@ -50,42 +50,19 @@
 #define PRESSIO4PY_PYBINDINGS_GALERKIN_HPP_
 
 #include "pressio_rom.hpp"
-#include "types.hpp"
-#include <pybind11/operators.h>
 
-PYBIND11_MODULE(pressio4pyGalerkin, m) {
-
-  using mytypes		= WrappedGalerkinTypes;
+template <typename mytypes>
+void createGalerkinBindings(pybind11::module & m)
+{
   using scalar_t	= typename mytypes::scalar_t;
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
 
   using rom_nat_state_t	= typename mytypes::rom_nat_state_t;
   using fom_nat_state_t	= typename mytypes::fom_nat_state_t;
-  using decoder_nat_jac_t = typename mytypes::decoder_nat_jac_t;
 
   using rom_state_t	= typename mytypes::rom_state_t;
-  using fom_state_t	= typename mytypes::fom_state_t;
-  using decoder_jac_t	= typename mytypes::decoder_jac_t;
-
-  // --------------------------------------------------------------------
-  // decoder
-  // --------------------------------------------------------------------
-  using decoder_t	= pressio::rom::LinearDecoder<decoder_jac_t, rom_state_t, fom_state_t>;
-  using decoder_base_t = typename decoder_t::base_t;
-
-  // base decoder class
-  pybind11::class_<decoder_base_t>(m, "DecoderBase")
-    .def("applyMapping", &decoder_base_t::template applyMapping<rom_nat_state_t, fom_nat_state_t>);
-
-  pybind11::class_<decoder_t, decoder_base_t>(m, "LinearDecoder")
-    .def(pybind11::init< decoder_nat_jac_t &>());
-
-  // fom reconstructor
-  using fom_reconstructor_t = pressio::rom::FomStateReconstructor<scalar_t, fom_state_t, decoder_t>;
-  pybind11::class_<fom_reconstructor_t>(m, "FomReconstructor")
-    .def(pybind11::init<const fom_state_t &, const decoder_t &>())
-    .def("evaluate", &fom_reconstructor_t::template evaluate<rom_nat_state_t>);
+  using decoder_t = typename mytypes::decoder_t;
 
   //--------------------------------------------------------
   // Euler Galerkin problem
