@@ -56,8 +56,9 @@
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
 
-PYBIND11_MODULE(pressio4py, mParent) {
-  
+PYBIND11_MODULE(pressio4py, mParent)
+{
+
   pybind11::module m1 = mParent.def_submodule("rom");
 
   createDecoderBindings<pressio4py::ROMTypes>(m1);
@@ -65,7 +66,7 @@ PYBIND11_MODULE(pressio4py, mParent) {
 
   pybind11::module m2 = m1.def_submodule("galerkin");
   createGalerkinBindings<pressio4py::ROMTypes>(m2);
-  
+
   pybind11::module m3 = m1.def_submodule("lspg");
   pybind11::module m4 = m3.def_submodule("unsteady");
   createUnsteadyLSPGBindings<pressio4py::ROMTypes>(m4);

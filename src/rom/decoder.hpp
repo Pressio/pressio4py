@@ -54,11 +54,11 @@
 template <typename mytypes>
 void createDecoderBindings(pybind11::module & m)
 {
-  using rom_nat_state_t = typename mytypes::rom_nat_state_t;
-  using fom_nat_state_t = typename mytypes::fom_nat_state_t;
+  using rom_nat_state_t	  = typename mytypes::rom_nat_state_t;
+  using fom_nat_state_t   = typename mytypes::fom_nat_state_t;
   using decoder_nat_jac_t = typename mytypes::decoder_nat_jac_t;
-  using decoder_t = typename mytypes::decoder_t;
-  using decoder_base_t = typename mytypes::decoder_base_t;
+  using decoder_t	  = typename mytypes::decoder_t;
+  using decoder_base_t    = typename mytypes::decoder_base_t;
 
   // --------------------------------------------------------------------
   // decoder
