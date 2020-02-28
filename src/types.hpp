@@ -79,7 +79,6 @@ struct ROMTypes : CommonTypes{
   using hessian_t = pressio::containers::Matrix<decoder_nat_jac_t>;
 
   using decoder_t = pressio::rom::LinearDecoder<decoder_jac_t, rom_state_t, fom_state_t>;
-  using decoder_base_t = typename decoder_t::base_t;
 };
 
 } //end namespace pressio4py

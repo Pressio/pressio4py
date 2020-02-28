@@ -58,18 +58,13 @@ void createDecoderBindings(pybind11::module & m)
   using fom_nat_state_t   = typename mytypes::fom_nat_state_t;
   using decoder_nat_jac_t = typename mytypes::decoder_nat_jac_t;
   using decoder_t	  = typename mytypes::decoder_t;
-  using decoder_base_t    = typename mytypes::decoder_base_t;
 
   // --------------------------------------------------------------------
   // decoder
   // --------------------------------------------------------------------
-
-  // base decoder class
-  pybind11::class_<decoder_base_t>(m, "DecoderBase")
-    .def("applyMapping", &decoder_base_t::template applyMapping<rom_nat_state_t, fom_nat_state_t>);
-
-  pybind11::class_<decoder_t, decoder_base_t>(m, "LinearDecoder")
-    .def(pybind11::init< decoder_nat_jac_t &>());
+  pybind11::class_<decoder_t>(m, "LinearDecoder")
+    .def(pybind11::init< decoder_nat_jac_t &>())
+    .def("applyMapping", &decoder_t::template applyMapping<rom_nat_state_t, fom_nat_state_t>);
 }
 
 #endif
