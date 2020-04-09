@@ -68,24 +68,28 @@ void createGalerkinBindings(pybind11::module & m)
   // Euler Galerkin problem
   //--------------------------------------------------------
   {
+    // using pressio::rom::galerkin::DefaultProblemType;
+    // using galerkin_t = DefaultProblemType<ode_tag, rom_state_t, fom_t, decoder_t>;
+    // using galerkin_problem_gen	= pressio::rom::galerkin::ProblemGenerator<galerkin_t>;
     using ode_tag = pressio::ode::explicitmethods::Euler;
-    using pressio::rom::galerkin::DefaultProblemType;
-    using galerkin_t = DefaultProblemType<ode_tag, rom_state_t, fom_t, decoder_t>;
+    using gal_problem_t  = pressio::rom::galerkin::Problem<
+      pressio::rom::galerkin::Default, ode_tag, fom_t, rom_state_t, decoder_t>;
+    // problem_t galerkinProb(appObj, y0n, decoderObj, yROM_, t0, myOps);
 
-    using galerkin_problem_gen	= pressio::rom::galerkin::ProblemGenerator<galerkin_t>;
-    using res_pol_t		= typename galerkin_problem_gen::galerkin_residual_policy_t;
-    using galerkin_stepper_t	= typename galerkin_problem_gen::galerkin_stepper_t;
+
+    using res_pol_t		= typename gal_problem_t::residual_policy_t;
+    using galerkin_stepper_t	= typename gal_problem_t::stepper_t;
 
     // stepper
     pybind11::class_<galerkin_stepper_t>(m, "StepperEuler")
       .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
 
 
-    pybind11::class_<galerkin_problem_gen>(m, "ProblemEuler")
+    pybind11::class_<gal_problem_t>(m, "ProblemEuler")
       .def(pybind11::init<const fom_t &, fom_nat_state_t, const decoder_t &, rom_nat_state_t, scalar_t>())
-      .def("getStepper", &galerkin_problem_gen::getStepperRef,
+      .def("getStepper", &gal_problem_t::getStepperRef,
   	   pybind11::return_value_policy::reference)
-      .def("getFomStateReconstructor", &galerkin_problem_gen::getFomStateReconstructorCRef,
+      .def("getFomStateReconstructor", &gal_problem_t::getFomStateReconstructorCRef,
       	   pybind11::return_value_policy::reference);
 
     // integrator
