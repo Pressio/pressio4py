@@ -50,7 +50,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     Please make a new directory (e.g. build directory) and run CMake from there.")
 endif()
 
-# default to relase if build type is empty
+# default to release if build type is empty
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "${CMAKE_BUILD_TYPE} is not specified, defaulting to Release.")
   set(CMAKE_BUILD_TYPE "Release")
@@ -70,22 +70,22 @@ include_directories(${EIGEN_INCLUDE_DIR} ${PRESSIO_INCLUDE_DIR})
 find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
 #----------------------------------------------------------------
 
-# define the dir where all sources for pressio4py are
+# dir where all sources for pressio4py are
 set(PRESSIO4PY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-# set dir where all python apps are
+# dir where all python apps are
 set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/apps)
 
-# #----------------------------------------------------------------
+#----------------------------------------------------------------
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 message("CMAKE_LIBRARY_OUTPUT_DIRECTORY = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-# #----------------------------------------------------------------
-
-# create the library 
-pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
 #----------------------------------------------------------------
 
+# create the library
+pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
+
+# add tests
 add_subdirectory(tests)
 
 message("The prefix dir is: ${CMAKE_INSTALL_PREFIX}")
