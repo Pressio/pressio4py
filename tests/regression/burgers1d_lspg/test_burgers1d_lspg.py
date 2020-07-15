@@ -5,15 +5,16 @@ from scipy import linalg
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 
+#----------------------------
 class MyLinSolver:
   def __init__(self): pass
 
-  @staticmethod
-  def solve(A,b,x):
+  # @staticmethod
+  def solve(self, A,b,x):
     lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
     x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
 
-
+#----------------------------
 def test_euler():
   meshSize = 20
   romSize  = 11
@@ -43,7 +44,7 @@ def test_euler():
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setTolerance(nlsTol)
   # do integration
-  rom.lspg.unsteady.integrateNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)
+  rom.lspg.unsteady.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)
 
   fomRecon = lspgObj.getFomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)

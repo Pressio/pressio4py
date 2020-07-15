@@ -49,7 +49,7 @@
 #ifndef PRESSIO4PY_PYBINDINGS_LSPG_HPP_
 #define PRESSIO4PY_PYBINDINGS_LSPG_HPP_
 
-#include "pressio_rom.hpp"
+namespace pressio4py{
 
 template <typename mytypes>
 void createUnsteadyLSPGBindings(pybind11::module & m)
@@ -57,23 +57,21 @@ void createUnsteadyLSPGBindings(pybind11::module & m)
   using scalar_t	= typename mytypes::scalar_t;
   using fom_t		= typename mytypes::fom_t;
   using ops_t		= typename mytypes::ops_t;
-
-  using rom_nat_state_t	= typename mytypes::rom_nat_state_t;
-  using fom_nat_state_t	= typename mytypes::fom_nat_state_t;
-
+  using rom_native_state_t	= typename mytypes::rom_native_state_t;
+  using fom_native_state_t	= typename mytypes::fom_native_state_t;
   using rom_state_t	= typename mytypes::rom_state_t;
   using decoder_t	= typename mytypes::decoder_t;
   using decoder_jac_t	= typename mytypes::decoder_jac_t;
   using hessian_t	= typename mytypes::hessian_t;
 
-  // --------------------------------------------------------------------
-  // ---- lspg problem ----
-  // --------------------------------------------------------------------
+  // -----------------------------------------------
+  // ----		lspg problem		----
+  // -----------------------------------------------
   using ode_tag  = pressio::ode::implicitmethods::Euler;
-  using lspg_problem_type = pressio::rom::LSPGUnsteadyProblem<
-    pressio::rom::DefaultLSPGUnsteady, ode_tag, fom_t, rom_state_t, decoder_t>;
+  using lspg_problem_type = typename pressio::rom::lspg::composeDefaultProblem<
+    ode_tag, fom_t, rom_state_t, decoder_t>::type;
 
-  // // extract types from the lspg problem type
+  // extract types from the lspg problem type
   using lspg_stepper_t	= typename lspg_problem_type::lspg_stepper_t;
   using res_pol_t	= typename lspg_problem_type::lspg_residual_policy_t;
   using jac_pol_t	= typename lspg_problem_type::lspg_jacobian_policy_t;
@@ -84,42 +82,48 @@ void createUnsteadyLSPGBindings(pybind11::module & m)
 
   // concrete LSPG problem
   pybind11::class_<lspg_problem_type>(m, "ProblemEuler")
-    .def(pybind11::init<const fom_t &, const fom_nat_state_t &, const decoder_t &, rom_nat_state_t &, scalar_t>())
+    .def(pybind11::init<const fom_t &, const fom_native_state_t &, const decoder_t &, rom_native_state_t &, scalar_t>())
     .def("getFomStateReconstructor", &lspg_problem_type::getFomStateReconstructorCRef,
     	 pybind11::return_value_policy::reference)
     .def("getStepper", &lspg_problem_type::getStepperRef,
     	 pybind11::return_value_policy::reference);
 
-  // --------------------------------------------------------------------
-  // ---- linear solver type ----
-  // --------------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // ----		linear and nonlinear solver		----
+  // ---------------------------------------------------------------
   // use pybind::object because the solver is actually passed by the user
   using linear_solver_t = pybind11::object;
 
-  //  ---- non-linear solver type ---
-  using nonlin_solver_t = ::pressio::solvers::iterative::PyGaussNewton
-    <lspg_stepper_t, rom_state_t, rom_state_t, decoder_jac_t, hessian_t, linear_solver_t, scalar_t, ops_t>;
+  // GaussNewton solver with normal equations
+  using nonlin_solver_t = pressio::solvers::nonlinear::composeGaussNewton_t<
+    lspg_stepper_t,
+    pressio::solvers::nonlinear::DefaultUpdate,
+    pressio::solvers::nonlinear::StopWhenCorrectionNormBelowTol,
+    linear_solver_t, hessian_t>;
 
   // base types
-  using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
-  using iter_base_t = ::pressio::solvers::IterativeBase<nonlin_solver_t, scalar_t>;
+  //using nls_base_t = ::pressio::solvers::NonLinearSolverBase<nonlin_solver_t>;
+  // pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
+  //   .def("solve", &nls_base_t::template solve<lspg_stepper_t, rom_state_t>);
+  //using iter_base_t = ::pressio::solvers::IterativeBase<nonlin_solver_t, scalar_t>;
+  // pybind11::class_<iter_base_t>(m, "IterBase")
+  //   .def("getMaxIterations", &iter_base_t::getMaxIterations)
+  //   .def("setMaxIterations", &iter_base_t::setMaxIterations)
+  //   .def("getTolerance", &iter_base_t::getTolerance)
+  //   .def("setTolerance", &iter_base_t::setTolerance);
 
-  pybind11::class_<nls_base_t>(m, "NonLinSolverBase")
-    .def("solve", &nls_base_t::template solve<lspg_stepper_t, rom_state_t>);
-
-  pybind11::class_<iter_base_t>(m, "IterBase")
-    .def("getMaxIterations", &iter_base_t::getMaxIterations)
-    .def("setMaxIterations", &iter_base_t::setMaxIterations)
-    .def("getTolerance", &iter_base_t::getTolerance)
-    .def("setTolerance", &iter_base_t::setTolerance);
-
-  pybind11::class_<nonlin_solver_t, iter_base_t, nls_base_t>(m, "GaussNewton")
-    .def(pybind11::init<const lspg_stepper_t &, const rom_nat_state_t &, linear_solver_t &>());
+  pybind11::class_<nonlin_solver_t /*,iter_base_t*/>(m, "GaussNewton")
+    .def(pybind11::init<const lspg_stepper_t &, const rom_native_state_t &, linear_solver_t &>())
+    .def("getMaxIterations", &nonlin_solver_t::getMaxIterations)
+    .def("setMaxIterations", &nonlin_solver_t::setMaxIterations)
+    .def("getTolerance", &nonlin_solver_t::getTolerance)
+    .def("setTolerance", &nonlin_solver_t::setTolerance);
 
   // integrator
-  m.def("integrateNSteps",
-  	&pressio::ode::integrateNSteps<lspg_stepper_t, rom_nat_state_t, scalar_t, nonlin_solver_t>,
-  	"Integrate N Steps");
-
+  m.def("advanceNSteps",
+  	&pressio::ode::advanceNSteps<lspg_stepper_t, rom_native_state_t, scalar_t, nonlin_solver_t>,
+  	"Advance N Steps");
 }
+
+}//end namespace
 #endif

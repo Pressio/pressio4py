@@ -21,7 +21,7 @@ def test_euler():
 
   galerkinObj = rom.galerkin.ProblemEuler(appObj, yRef, decoder, yRom, 0.)
   stepper = galerkinObj.getStepper()
-  rom.galerkin.integrateNStepsEuler(stepper, yRom, 0., dt, Nsteps)
+  rom.galerkin.advanceNStepsEuler(stepper, yRom, 0., dt, Nsteps)
   # np.savetxt("final_generalized_coords.txt", yRom, fmt='%.16f')
 
   fomRecon = galerkinObj.getFomStateReconstructor()

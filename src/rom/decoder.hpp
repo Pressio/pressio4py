@@ -49,22 +49,22 @@
 #ifndef PRESSIO4PY_PYBINDINGS_DECODER_HPP_
 #define PRESSIO4PY_PYBINDINGS_DECODER_HPP_
 
-#include "pressio_rom.hpp"
+namespace pressio4py{
 
 template <typename mytypes>
 void createDecoderBindings(pybind11::module & m)
 {
-  using rom_nat_state_t	  = typename mytypes::rom_nat_state_t;
-  using fom_nat_state_t   = typename mytypes::fom_nat_state_t;
-  using decoder_nat_jac_t = typename mytypes::decoder_nat_jac_t;
-  using decoder_t	  = typename mytypes::decoder_t;
+  using rom_native_state_t   = typename mytypes::rom_native_state_t;
+  using fom_native_state_t   = typename mytypes::fom_native_state_t;
+  using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
+  using decoder_t	     = typename mytypes::decoder_t;
 
-  // --------------------------------------------------------------------
   // decoder
-  // --------------------------------------------------------------------
   pybind11::class_<decoder_t>(m, "LinearDecoder")
-    .def(pybind11::init< decoder_nat_jac_t &>())
-    .def("applyMapping", &decoder_t::template applyMapping<rom_nat_state_t, fom_nat_state_t>);
+    // constructor
+    .def(pybind11::init< decoder_native_jac_t &>())
+    // applyMapping method
+    .def("applyMapping", &decoder_t::template applyMapping<rom_native_state_t, fom_native_state_t>);
 }
-
+}
 #endif

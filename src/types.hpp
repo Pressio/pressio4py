@@ -69,17 +69,17 @@ struct ROMTypes : CommonTypes{
   using typename CommonTypes::py_f_arr;
   using ops_t   = void;
 
-  using rom_nat_state_t = py_f_arr;
-  using fom_nat_state_t = py_f_arr;
-  using decoder_nat_jac_t = py_f_arr;
+  using rom_native_state_t = py_f_arr;
+  using fom_native_state_t = py_f_arr;
+  using decoder_native_jac_t = py_f_arr;
 
-  using rom_state_t = pressio::containers::Vector<rom_nat_state_t>;
-  using fom_state_t = pressio::containers::Vector<fom_nat_state_t>;
-  using decoder_jac_t = pressio::containers::Matrix<decoder_nat_jac_t>;
-  using hessian_t = pressio::containers::Matrix<decoder_nat_jac_t>;
+  using rom_state_t = pressio::containers::Vector<rom_native_state_t>;
+  using fom_state_t = pressio::containers::Vector<fom_native_state_t>;
+  using decoder_jac_t = pressio::containers::Matrix<decoder_native_jac_t>;
+  using hessian_t = pressio::containers::Matrix<decoder_native_jac_t>;
 
   using decoder_t = pressio::rom::LinearDecoder<decoder_jac_t, rom_state_t, fom_state_t>;
 };
 
-} //end namespace pressio4py
+}
 #endif

@@ -49,21 +49,24 @@
 #ifndef PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
 #define PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
 
-#include "pressio_rom.hpp"
+namespace pressio4py{
 
 template <typename mytypes>
 void createFomReconstructorBindings(pybind11::module & m)
 {
-  using scalar_t	= typename mytypes::scalar_t;
-  using rom_nat_state_t = typename mytypes::rom_nat_state_t;
-  using fom_state_t	= typename mytypes::fom_state_t;
-  using decoder_t	= typename mytypes::decoder_t;
+  using scalar_t	   = typename mytypes::scalar_t;
+  using rom_native_state_t = typename mytypes::rom_native_state_t;
+  using fom_state_t	   = typename mytypes::fom_state_t;
+  using decoder_t	   = typename mytypes::decoder_t;
 
   // fom reconstructor
   using fom_reconstructor_t = pressio::rom::FomStateReconstructor<scalar_t, fom_state_t, decoder_t>;
   pybind11::class_<fom_reconstructor_t>(m, "FomReconstructor")
+    // define the constructor
     .def(pybind11::init<const fom_state_t &, const decoder_t &>())
-    .def("evaluate", &fom_reconstructor_t::template evaluate<rom_nat_state_t>);
+    // evaluate method
+    .def("evaluate", &fom_reconstructor_t::template evaluate<rom_native_state_t>);
 }
 
+}
 #endif

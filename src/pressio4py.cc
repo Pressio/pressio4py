@@ -50,6 +50,7 @@
 #define PRESSIO4PY_PYBINDINGS_PRESSIO_FOUR_PY_HPP_
 
 #include <pybind11/pybind11.h>
+
 #include "types.hpp"
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
@@ -58,18 +59,22 @@
 
 PYBIND11_MODULE(pressio4py, mParent)
 {
-
   pybind11::module m1 = mParent.def_submodule("rom");
 
-  createDecoderBindings<pressio4py::ROMTypes>(m1);
-  createFomReconstructorBindings<pressio4py::ROMTypes>(m1);
+  // decoder bindings
+  pressio4py::createDecoderBindings<pressio4py::ROMTypes>(m1);
 
+  // fom reconstructor bindings
+  pressio4py::createFomReconstructorBindings<pressio4py::ROMTypes>(m1);
+
+  // galerkin
   pybind11::module m2 = m1.def_submodule("galerkin");
-  createGalerkinBindings<pressio4py::ROMTypes>(m2);
+  pressio4py::createGalerkinBindings<pressio4py::ROMTypes>(m2);
 
+  //unsteady LSPG
   pybind11::module m3 = m1.def_submodule("lspg");
   pybind11::module m4 = m3.def_submodule("unsteady");
-  createUnsteadyLSPGBindings<pressio4py::ROMTypes>(m4);
+  pressio4py::createUnsteadyLSPGBindings<pressio4py::ROMTypes>(m4);
 }
 
 #endif
