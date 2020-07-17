@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// types.hpp
+// gauss_newton.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,40 +46,42 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
-#define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
-
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include "pressio_rom.hpp"
+#ifndef PRESSIO4PY_PYBINDINGS_GAUSS_NEWTON_HPP_
+#define PRESSIO4PY_PYBINDINGS_GAUSS_NEWTON_HPP_
 
 namespace pressio4py{
 
-struct CommonTypes{
-  using scalar_t	= double;
-  using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
-  using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
-  using fom_t		= pybind11::object;
+template<typename steady_system_t, typename stepper_system_t, typename hessian_t, typename rom_native_state_t>
+struct GaussNewtonSolverBinder
+{
+  static_assert(::pressio::solvers::concepts::system_residual_jacobian<stepper_system_t>::value,
+  		"Currently only supporting bindings for GN for system with residual_jacobian_api");
+  static_assert(::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
+  		"Currently only supporting bindings for GN for system with residual_jacobian_api");
+
+  // linear solver is a pybind::object because it is passed by the user from python
+  using linear_solver_t = pybind11::object;
+
+  using nonlinear_solver_t = pressio::solvers::nonlinear::composeGaussNewton_t<
+    // does not matter system_t passed here because the system_type is only used
+    // to compose the solver, does not appear in the nonlinear solver classes types.
+    stepper_system_t,
+    pressio::solvers::nonlinear::DefaultUpdate,
+    pressio::solvers::nonlinear::StopWhenCorrectionNormBelowTol,
+    linear_solver_t, hessian_t>;
+
+  GaussNewtonSolverBinder(pybind11::module & m)
+  {
+    pybind11::class_<nonlinear_solver_t>(m, "GaussNewton")
+      .def(pybind11::init<const stepper_system_t &, const rom_native_state_t &, linear_solver_t &>())
+      .def(pybind11::init<const steady_system_t &, const rom_native_state_t &, linear_solver_t &>())
+      .def("getMaxIterations", &nonlinear_solver_t::getMaxIterations)
+      .def("setMaxIterations", &nonlinear_solver_t::setMaxIterations)
+      .def("getTolerance", &nonlinear_solver_t::getTolerance)
+      .def("setTolerance", &nonlinear_solver_t::setTolerance)
+      .def("solve", &nonlinear_solver_t::template solve<steady_system_t, rom_native_state_t>);
+  }
 };
 
-struct ROMTypes : CommonTypes{
-  using typename CommonTypes::scalar_t;
-  using typename CommonTypes::fom_t;
-  using typename CommonTypes::py_f_arr;
-  using ops_t   = void;
-
-  using rom_native_state_t = py_f_arr;
-  using fom_native_state_t = py_f_arr;
-  using decoder_native_jac_t = py_f_arr;
-
-  using rom_state_t = pressio::containers::Vector<rom_native_state_t>;
-  using fom_state_t = pressio::containers::Vector<fom_native_state_t>;
-  using decoder_jac_t = pressio::containers::Matrix<decoder_native_jac_t>;
-  using hessian_t = pressio::containers::Matrix<decoder_native_jac_t>;
-
-  using decoder_t = pressio::rom::PyDecoder<decoder_jac_t, rom_state_t, fom_state_t>;
-};
-
-}
+}//end namespace
 #endif

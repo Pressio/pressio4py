@@ -17,6 +17,18 @@ class MyLinSolver:
     x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
 
 #----------------------------
+class MyMapper:
+  def __init__(self):
+    # load basis
+    self.phi_ = np.loadtxt("./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt")
+
+  def getJacobian(self):
+    return self.phi_
+
+  def applyMapping(self, romState, fomState):
+    fomState[:] = self.phi_.dot(romState)
+
+#----------------------------
 def test_euler():
   meshSize = 20
   romSize  = 11
@@ -28,11 +40,10 @@ def test_euler():
   appObj = Burgers1dSparseJacobian(meshSize)
   # set reference state
   yRef = np.ones(meshSize)
-  # load basis
-  phi = np.loadtxt("./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt")
 
   # create a decoder
-  decoder = rom.Decoder(phi)
+  mymap   = MyMapper()
+  decoder = rom.Decoder(mymap)
   # the LSPG state
   yRom = np.zeros(romSize)
 

@@ -4,6 +4,7 @@ from scipy import linalg
 
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
+from pressio4py import ode as ode
 
 def test_euler():
   meshSize = 50
@@ -16,12 +17,13 @@ def test_euler():
   yRef = np.ones(meshSize)
   # basis
   phi = np.loadtxt("./burgers1d_galerkin/basis.txt")
-  decoder = rom.LinearDecoder(phi)
+  decoder = rom.Decoder(phi)
   yRom = np.zeros(romSize)
 
-  galerkinObj = rom.galerkin.ProblemEuler(appObj, yRef, decoder, yRom, 0.)
+  galerkinObj = rom.galerkin.default.ProblemEuler(appObj, yRef, decoder, yRom, 0.)
   stepper = galerkinObj.getStepper()
-  rom.galerkin.advanceNStepsEuler(stepper, yRom, 0., dt, Nsteps)
+  ode.advanceNSteps(stepper, yRom, 0., dt, Nsteps)
+  # rom.galerkin.advanceNStepsEuler(stepper, yRom, 0., dt, Nsteps)
   # np.savetxt("final_generalized_coords.txt", yRom, fmt='%.16f')
 
   fomRecon = galerkinObj.getFomStateReconstructor()

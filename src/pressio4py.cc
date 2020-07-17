@@ -56,25 +56,48 @@
 #include "./rom/fomreconstructor.hpp"
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
+#include "./rom/gauss_newton.hpp"
 
 PYBIND11_MODULE(pressio4py, mParent)
 {
   pybind11::module m1 = mParent.def_submodule("rom");
 
+  using scalar_t	   = typename pressio4py::ROMTypes::scalar_t;
+  using rom_native_state_t = typename pressio4py::ROMTypes::rom_native_state_t;
+
   // decoder bindings
   pressio4py::createDecoderBindings<pressio4py::ROMTypes>(m1);
-
   // fom reconstructor bindings
   pressio4py::createFomReconstructorBindings<pressio4py::ROMTypes>(m1);
 
   // galerkin
   pybind11::module m2 = m1.def_submodule("galerkin");
-  pressio4py::createGalerkinBindings<pressio4py::ROMTypes>(m2);
+  using galerkin_binder_t = pressio4py::GalerkinBinder<pressio4py::ROMTypes>;
+  galerkin_binder_t galBinder(m2);
 
-  //unsteady LSPG
+  // lspg
   pybind11::module m3 = m1.def_submodule("lspg");
-  pybind11::module m4 = m3.def_submodule("unsteady");
-  pressio4py::createUnsteadyLSPGBindings<pressio4py::ROMTypes>(m4);
+  using lspg_binder_t = pressio4py::LSPGBinder<pressio4py::ROMTypes>;
+  using lspg_steady_system_t = typename lspg_binder_t::lspg_steady_system_t;
+  using lspg_stepper_bdf1_t  = typename lspg_binder_t::lspg_stepper_bdf1_t;
+  lspg_binder_t lspgBinder(m3);
+
+  //--------------------------
+  // *** bind GN solver ***
+  pybind11::module mSolver = mParent.def_submodule("solvers");
+  using hessian_t   = typename pressio4py::ROMTypes::hessian_t;
+  using gnbinder_t  = pressio4py::GaussNewtonSolverBinder<lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
+  using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
+  gnbinder_t gnBinder(mSolver);
+
+  // ode::advancer
+  pybind11::module mOde = mParent.def_submodule("ode");
+  mOde.def("advanceNSteps", // for Galerkin Euler
+	   &::pressio::ode::advanceNSteps<typename galerkin_binder_t::stepper_euler_t, rom_native_state_t, scalar_t>);
+  mOde.def("advanceNSteps", // for Galerkin RK4
+	   &::pressio::ode::advanceNSteps<typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
+  mOde.def("advanceNSteps", // needed for unsteady LSPG
+	   &pressio::ode::advanceNSteps<lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
 }
 
 #endif

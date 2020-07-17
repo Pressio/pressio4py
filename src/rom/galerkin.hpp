@@ -52,59 +52,59 @@
 namespace pressio4py{ namespace impl{
 
 template <typename mytypes, typename ode_tag>
-void createGalerkinBindingsImpl(pybind11::module & m,
-				const std::string stepperName,
-				const std::string problemName,
-				const std::string advancerName)
+struct GalerkinBinder
 {
   using scalar_t	   = typename mytypes::scalar_t;
   using fom_t		   = typename mytypes::fom_t;
-  using ops_t		   = typename mytypes::ops_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
   using decoder_t	   = typename mytypes::decoder_t;
 
-  using gal_problem_t		= typename pressio::rom::galerkin::composeDefaultProblem<
-    ode_tag, fom_t, rom_state_t, decoder_t>::type;
-  using res_pol_t		= typename gal_problem_t::residual_policy_t;
-  using galerkin_stepper_t	= typename gal_problem_t::stepper_t;
+  using gal_problem_t	   = typename pressio::rom::galerkin::composeDefaultProblem<
+				ode_tag, fom_t, rom_state_t, decoder_t>::type;
+  using res_pol_t	   = typename gal_problem_t::residual_policy_t;
+  using galerkin_stepper_t = typename gal_problem_t::stepper_t;
 
-  // stepper
-  pybind11::class_<galerkin_stepper_t>(m, stepperName.c_str())
-    .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
+  void bind(pybind11::module & m,
+	    const std::string stepperName,
+	    const std::string problemName,
+	    const std::string advancerName)
+  {
+    // stepper
+    pybind11::class_<galerkin_stepper_t>(m, stepperName.c_str())
+      .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
 
-  pybind11::class_<gal_problem_t>(m, problemName.c_str())
-    .def(pybind11::init<const fom_t &, fom_native_state_t, const decoder_t &, rom_native_state_t, scalar_t>())
-    .def("getStepper", &gal_problem_t::getStepperRef,
-	 pybind11::return_value_policy::reference)
-    .def("getFomStateReconstructor", &gal_problem_t::getFomStateReconstructorCRef,
-	 pybind11::return_value_policy::reference);
-
-  // integrator
-  m.def(advancerName.c_str(),
-	&::pressio::ode::advanceNSteps<galerkin_stepper_t, rom_native_state_t, scalar_t>,
-	"Advance N Steps");
-}
+    pybind11::class_<gal_problem_t>(m, problemName.c_str())
+      .def(pybind11::init<const fom_t &, const fom_native_state_t &,
+	   const decoder_t &, const rom_native_state_t &, scalar_t>())
+      .def("getStepper", &gal_problem_t::getStepperRef,
+	   pybind11::return_value_policy::reference)
+      .def("getFomStateReconstructor", &gal_problem_t::getFomStateReconstructorCRef,
+	   pybind11::return_value_policy::reference);
+  }
+};
 }// end impl
 
 template <typename mytypes>
-void createGalerkinBindings(pybind11::module & m)
+struct GalerkinBinder
 {
-  using scalar_t	   = typename mytypes::scalar_t;
-  using fom_t		   = typename mytypes::fom_t;
-  using ops_t		   = typename mytypes::ops_t;
-  using rom_native_state_t = typename mytypes::rom_native_state_t;
-  using fom_native_state_t = typename mytypes::fom_native_state_t;
-  using rom_state_t	   = typename mytypes::rom_state_t;
-  using decoder_t	   = typename mytypes::decoder_t;
-
   using tag1 = pressio::ode::explicitmethods::Euler;
-  impl::createGalerkinBindingsImpl<mytypes,tag1>(m, "StepperEuler", "ProblemEuler", "advanceNStepsEuler");
+  using gb1_t = impl::GalerkinBinder<mytypes, tag1>;
 
   using tag2 = pressio::ode::explicitmethods::RungeKutta4;
-  impl::createGalerkinBindingsImpl<mytypes,tag2>(m, "StepperRK4", "ProblemRK4", "advanceNStepsRK4");
-}
+  using gb2_t = impl::GalerkinBinder<mytypes, tag2>;
+
+  using stepper_euler_t = typename gb1_t::galerkin_stepper_t;
+  using stepper_rk4_t   = typename gb2_t::galerkin_stepper_t;
+
+  GalerkinBinder(pybind11::module & m)
+  {
+    pybind11::module m1 = m.def_submodule("default");
+    gb1_t GB1; GB1.bind(m1, "StepperEuler", "ProblemEuler", "advanceNStepsEuler");
+    gb2_t GB2; GB2.bind(m1, "StepperRK4", "ProblemRK4", "advanceNStepsRK4");
+  }
+};
 
 }//namespace pressio4py
 #endif
