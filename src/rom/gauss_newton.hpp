@@ -67,7 +67,6 @@ struct GaussNewtonSolverBinder
     // to compose the solver, does not appear in the nonlinear solver classes types.
     stepper_system_t,
     pressio::solvers::nonlinear::DefaultUpdate,
-    pressio::solvers::nonlinear::StopWhenCorrectionNormBelowTol,
     linear_solver_t, hessian_t>;
 
   GaussNewtonSolverBinder(pybind11::module & m)

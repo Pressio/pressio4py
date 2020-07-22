@@ -1,53 +1,36 @@
-# ************************************************************************
-#
-#                     		  Pressio
-#                             Copyright 2019
-#    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
-#
-# Under the terms of Contract DE-NA0003525 with NTESS, the
-# U.S. Government retains certain rights in this software.
-#
-# Pressio is licensed under BSD-3-Clause terms of use:
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the above copyright
-# notice, this list of conditions and the following disclaimer.
-#
-# 2. Redistributions in binary form must reproduce the above copyright
-# notice, this list of conditions and the following disclaimer in the
-# documentation and/or other materials provided with the distribution.
-#
-# 3. Neither the name of the copyright holder nor the names of its
-# contributors may be used to endorse or promote products derived
-# from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-# COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
-#
-# Questions? Contact Francesco Rizzi (fnrizzi@sandia.gov)
-#
-# ************************************************************************
 
 cmake_minimum_required(VERSION 3.11.0)
 project(pressio4py CXX)
 
+# setting where other cmake commands are
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+# include commands for coloring prints
+include(colors)
+
+#=====================================================================
+# we need c++14
+#=====================================================================
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
+#=====================================================================
+# versioning
+#=====================================================================
+set(PressioFpy_VERSION_MAJOR 0)
+set(PressioFpy_VERSION_MINOR 4)
+set(PressioFpy_VERSION_PATCH 1)
+set(PressioFpy_VERSION "${PressioFpy_VERSION_MAJOR}.${PressioFpy_VERSION_MINOR}.${PressioFpy_VERSION_PATCH}")
+math(EXPR PRESSIO_VERSION
+  "${PressioFpy_VERSION_MAJOR} * 10000 + ${PressioFpy_VERSION_MINOR} * 100 + ${PressioFpy_VERSION_PATCH}")
+
+message("${Yellow}----------------------------------${ColourReset}")
+message("${Yellow} Pressio4Py version = ${PressioFpy_VERSION} ${ColourReset}")
+message("${Yellow}----------------------------------${ColourReset}")
+
+
+#=====================================================================
 # guard against in-source builds
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds are not allowed.
