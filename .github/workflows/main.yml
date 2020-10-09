@@ -51,10 +51,10 @@ jobs:
           chmod +x main_tpls.sh
           ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
 
-      - name: Install Pressio
-        run: |
-          cd ~/pressio_repos
-          cd pressio-builder
+      # - name: Install Pressio
+      #   run: |
+      #     cd ~/pressio_repos
+      #     cd pressio-builder
 
       # - name: Install TPLs 
       #   run: |
