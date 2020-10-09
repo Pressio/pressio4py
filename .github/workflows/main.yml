@@ -42,6 +42,11 @@ jobs:
           git clone https://github.com/Pressio/pressio4py.git
           pwd
           ls -lh
+      - name: TPLs
+        run: |
+          cd pressio-builder
+          bash ./main_tpls.sh -dryrun=no -build-mode=Debug \
+               -target-dir=~/pressio_builds -tpls=pybind11,eigen
 
 
       # - name: Install TPLs 
