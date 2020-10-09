@@ -30,21 +30,11 @@ jobs:
           export PRESSIO_BUILDS=$HOME/pressio_builds
           
           echo "HOME="
-          $HOME
+          echo $HOME
           echo "CC="
-          $CC
+          echo $CC
           echo "CXX="
-          $CXX
-
-      - name: Clone Repos
-        run: |
-          cd ${PRESSIO_REPOS}
-
-          git clone git@github.com:Pressio/pressio.git
-          git clone git@github.com:Pressio/pressio-builder.git
-          git clone git@github.com:Pressio/pressio4py.git
-
-
+          echo $CXX
           
 #       # Runs a single command using the runners shell
 #       - name: Running doxygen
