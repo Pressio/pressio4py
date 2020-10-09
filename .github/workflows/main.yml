@@ -35,13 +35,13 @@ jobs:
           export PRESSIO_REPOS=$HOME/pressio_repos
           export PRESSIO_BUILDS=$HOME/pressio_builds
 
-      # - name: Clone Repos 
-      #   run: |
-      #     cd ${PRESSIO_REPOS}
+      - name: Clone Repos 
+        run: |
+          cd ${PRESSIO_REPOS}
 
-      #     git clone https://github.com/Pressio/pressio.git
-      #     git clone https://github.com/Pressio/pressio-builder.git
-      #     git clone https://github.com/Pressio/pressio4py.git
+          git clone https://github.com/Pressio/pressio.git
+          git clone https://github.com/Pressio/pressio-builder.git
+          git clone https://github.com/Pressio/pressio4py.git
 
           
 #       # Runs a single command using the runners shell
