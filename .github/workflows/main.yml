@@ -22,8 +22,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      - name: Install doxygen
-        run: sudo apt-get install doxygen
+      - name: Setup
+        run: |
+          mkdir $HOME/pressio_repos 
           
 #       # Runs a single command using the runners shell
 #       - name: Running doxygen
