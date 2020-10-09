@@ -14,6 +14,9 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+      defaults:
+        run:
+          shell: xterm
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -44,7 +47,6 @@ jobs:
           ls -lh
       - name: TPLs
         run: |
-          shell: xterm
           cd ~/pressio_repos
           ls -lh
           cd pressio-builder
