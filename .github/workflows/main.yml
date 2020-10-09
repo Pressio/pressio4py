@@ -25,6 +25,10 @@ jobs:
       - name: Setup
         run: |
           mkdir $HOME/pressio_repos 
+
+          export PRESSIO_REPOS=$HOME/pressio_repos
+          export PRESSIO_BUILDS=$HOME/pressio_builds
+          
           echo $HOME
           pwd
 
