@@ -44,6 +44,7 @@ jobs:
           ls -lh
       - name: TPLs
         run: |
+          shell: xterm
           cd ~/pressio_repos
           ls -lh
           cd pressio-builder
