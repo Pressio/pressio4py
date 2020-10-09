@@ -21,8 +21,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: kurocha/setup-cpp@v1
-      - name: Setup
+      - name: install compilers
+        run: |
+          sudo apt install gcc-10 g++-10
+      - name: Setup directories
         run: |
           mkdir $HOME/pressio_repos 
 
