@@ -34,16 +34,12 @@ jobs:
           mkdir $HOME/pressio_repos 
           export PRESSIO_REPOS=$HOME/pressio_repos
           export PRESSIO_BUILDS=$HOME/pressio_builds
-
+          pwd
+          ls -lh
       - name: Clone Repos 
         run: |
-          echo $PRESSIO_REPOS
           cd $PRESSIO_REPOS
-
-          git clone https://github.com/Pressio/pressio.git
-          git clone https://github.com/Pressio/pressio-builder.git
-          git clone https://github.com/Pressio/pressio4py.git
-
+          pwd
           ls -lh
 
       # - name: Install TPLs 
