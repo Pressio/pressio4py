@@ -43,6 +43,12 @@ jobs:
           git clone https://github.com/Pressio/pressio-builder.git
           git clone https://github.com/Pressio/pressio4py.git
 
+      - name: Install TPLs 
+        run: |
+          cd ${PRESSIO_REPOS}/pressio-builder
+          bash ./main_tpls.sh -dryrun=no -build-mode=Debug \
+               -target-dir=${PRESSIO_BUILDS} -tpls=pybind11,eigen
+
           
 #       # Runs a single command using the runners shell
 #       - name: Running doxygen
