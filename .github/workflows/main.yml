@@ -48,7 +48,7 @@ jobs:
           ls -lh
           cd pressio-builder
           ls -lh
-          bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
+          ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
 
       - name: Install Pressio
         run: |
