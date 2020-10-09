@@ -29,8 +29,11 @@ jobs:
           export PRESSIO_REPOS=$HOME/pressio_repos
           export PRESSIO_BUILDS=$HOME/pressio_builds
           
-          echo $HOME
-          pwd
+          echo "HOME="$HOME
+          echo "CC="$CC
+          echo "CXX="$CXX
+
+
 
           
 #       # Runs a single command using the runners shell
