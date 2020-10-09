@@ -29,9 +29,12 @@ jobs:
           export PRESSIO_REPOS=$HOME/pressio_repos
           export PRESSIO_BUILDS=$HOME/pressio_builds
           
-          echo "HOME="$HOME
-          echo "CC="$CC
-          echo "CXX="$CXX
+          echo "HOME="
+          $HOME
+          echo "CC="
+          $CC
+          echo "CXX="
+          $CXX
 
         -name: Clone Repos
          run: |
