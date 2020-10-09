@@ -31,16 +31,18 @@ jobs:
           echo $CC
       - name: Setup directories
         run: |
-          mkdir $HOME/pressio_repos 
-          export PRESSIO_REPOS=$HOME/pressio_repos
-          export PRESSIO_BUILDS=$HOME/pressio_builds
-          pwd
-          ls -lh
+          mkdir ~/pressio_repos
+          mkdir ~/pressio_builds 
+
       - name: Clone Repos 
         run: |
-          cd $PRESSIO_REPOS
+          cd ~/pressio_repos
+          git clone https://github.com/Pressio/pressio.git
+          git clone https://github.com/Pressio/pressio-builder.git
+          git clone https://github.com/Pressio/pressio4py.git
           pwd
           ls -lh
+
 
       # - name: Install TPLs 
       #   run: |
