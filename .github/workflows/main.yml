@@ -37,7 +37,8 @@ jobs:
 
       - name: Clone Repos 
         run: |
-          cd ${PRESSIO_REPOS}
+          echo $PRESSIO_REPOS
+          cd $PRESSIO_REPOS
 
           git clone https://github.com/Pressio/pressio.git
           git clone https://github.com/Pressio/pressio-builder.git
