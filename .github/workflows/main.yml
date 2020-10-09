@@ -32,9 +32,9 @@ jobs:
           echo "HOME="
           echo $HOME
           echo "CC="
-          echo $CC
+          echo $gcc
           echo "CXX="
-          echo $CXX
+          echo $g++
 
       # - name: Clone Repos 
       #   run: |
