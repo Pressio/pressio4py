@@ -26,17 +26,13 @@ jobs:
           sudo apt install gcc-10 g++-10
           export CC=/usr/bin/gcc-10
           export CXX=/usr/bin/g++-10
+          echo $CXX
       - name: Setup directories
         run: |
-          echo "HOME="
-          echo $HOME
-          echo "CC="
-          echo $gcc
-          echo "CXX="
-          echo $g++
           mkdir $HOME/pressio_repos 
           export PRESSIO_REPOS=$HOME/pressio_repos
           export PRESSIO_BUILDS=$HOME/pressio_builds
+          echo $PRESSIO_BUILDS
 
       # - name: Clone Repos 
       #   run: |
