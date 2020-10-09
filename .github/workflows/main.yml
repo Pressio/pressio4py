@@ -21,9 +21,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+      - uses: kurocha/setup-cpp@v1
       - name: Setup
-        uses: kurocha/setup-cpp@v1
         run: |
           mkdir $HOME/pressio_repos 
 
@@ -37,13 +36,13 @@ jobs:
           echo "CXX="
           echo $CXX
 
-      - name: Clone Repos 
-        run: |
-          cd ${PRESSIO_REPOS}
+      # - name: Clone Repos 
+      #   run: |
+      #     cd ${PRESSIO_REPOS}
 
-          git clone https://github.com/Pressio/pressio.git
-          git clone https://github.com/Pressio/pressio-builder.git
-          git clone https://github.com/Pressio/pressio4py.git
+      #     git clone https://github.com/Pressio/pressio.git
+      #     git clone https://github.com/Pressio/pressio-builder.git
+      #     git clone https://github.com/Pressio/pressio4py.git
 
           
 #       # Runs a single command using the runners shell
