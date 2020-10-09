@@ -24,6 +24,7 @@ jobs:
       - name: install compilers
         run: |
           sudo apt install gcc-10 g++-10
+          which gcc-10
       - name: Setup directories
         run: |
           mkdir $HOME/pressio_repos 
