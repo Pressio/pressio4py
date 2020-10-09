@@ -44,6 +44,8 @@ jobs:
           ls -lh
       - name: TPLs
         run: |
+          pwd
+          ls -lh
           cd pressio-builder
           bash ./main_tpls.sh -dryrun=no -build-mode=Debug \
                -target-dir=~/pressio_builds -tpls=pybind11,eigen
