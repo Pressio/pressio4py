@@ -25,6 +25,9 @@ jobs:
       - name: Setup
         run: |
           mkdir $HOME/pressio_repos 
+          echo $HOME
+          pwd
+
           
 #       # Runs a single command using the runners shell
 #       - name: Running doxygen
