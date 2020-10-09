@@ -9,4 +9,4 @@ Python bindings to `pressio`: enables Python users to use the `pressio` ROMs.
 ## License
 Pressio is released with the following [LICENSE](./LICENSE).
 
-*More detailed info to come soon*.
+* More detailed info to come soon*.
