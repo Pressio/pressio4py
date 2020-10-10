@@ -73,7 +73,16 @@ jobs:
           cd ~/pressio_builds
           bdirname=pressio4py-build
           rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
-          
+          ls -lh
+          cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+                -DCMAKE_INSTALL_PREFIX=~/pressio_builds/pressio4py-install \
+                -DCMAKE_CXX_COMPILER=${CXX} \
+                -DCMAKE_BUILD_TYPE=Release \
+                \
+                -DEIGEN_INCLUDE_DIR=~/pressio_builds/eigen/install/include/eigen3 \
+                -DPRESSIO_INCLUDE_DIR=~/pressio_builds/pressio/install/include \
+                -DPYBIND11_DIR=~/pressio_builds/pybind11/install \
+                ~/pressior_repos/pressio4py
 
       # - name: Install Pressio
       #   run: |
