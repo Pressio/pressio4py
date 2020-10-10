@@ -61,11 +61,11 @@ jobs:
           export CXX=/usr/bin/g++-10
           chmod + main_pressio.sh
           ./main_pressio.sh -dryrun=no \
-            -pressio-src=~/pressio_repos/pressio \
-            -target-dir=~/pressio_builds \
+            -pressio-src=${HOME}/pressio_repos/pressio \
+            -target-dir=${HOME}/pressio_builds \
             -cmake-generator-name=default_pybind \
-            -eigen-path=~/pressio_builds/eigen/install \
-            -pybind11-path=~/pressio_builds/pybind11/install
+            -eigen-path=${HOME}/pressio_builds/eigen/install \
+            -pybind11-path=${HOME}/pressio_builds/pybind11/install
       # - name: Build pressio4py
       #   run: |
       #     export TERM=xterm-256color
