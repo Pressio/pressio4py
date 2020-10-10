@@ -53,8 +53,15 @@ jobs:
                          -target-dir=~/pressio_builds -tpls=pybind11,eigen
       - name: Install pressio
         run: |
+          export TERM=xterm-256color
           cd ~/pressio_repos/pressio-builder
-          
+          chmod + main_pressio.sh
+          ./main_pressio.sh -dryrun=no \
+            -pressio-src=~/pressio_repos/pressio \
+            -target-dir=~/pressio_builds \
+            -cmake-generator-name=default_pybind \
+            -eigen-path=~/pressio_builds/eigen/install \
+            -pybind11-path=~/pressio_builds/pybind11/install
 
       # - name: Install Pressio
       #   run: |
