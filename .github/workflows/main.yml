@@ -64,6 +64,16 @@ jobs:
             -cmake-generator-name=default_pybind \
             -eigen-path=~/pressio_builds/eigen/install \
             -pybind11-path=~/pressio_builds/pybind11/install
+      - name: Build pressio4py
+        run: |
+          export TERM=xterm-256color
+          export CC=/usr/bin/gcc-10
+          export CXX=/usr/bin/g++-10
+
+          cd ~/pressio_builds
+          bdirname=pressio4py-build
+          rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
+          
 
       # - name: Install Pressio
       #   run: |
