@@ -52,7 +52,7 @@ jobs:
           bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=${HOME}/pressio_builds -tpls=pybind11,eigen
           cd ~/pressio_builds
           pwd
-          ls -lh
+          ls -lh ${HOME}/pressio_builds/pybind11
       - name: Install pressio
         run: |
           export TERM=xterm-256color
@@ -66,26 +66,26 @@ jobs:
             -cmake-generator-name=default_pybind \
             -eigen-path=${HOME}/pressio_builds/eigen/install \
             -pybind11-path=${HOME}/pressio_builds/pybind11/install
-      - name: Build pressio4py
-        run: |
-          export TERM=xterm-256color
-          export CC=/usr/bin/gcc-10
-          export CXX=/usr/bin/g++-10
+      # - name: Build pressio4py
+      #   run: |
+      #     export TERM=xterm-256color
+      #     export CC=/usr/bin/gcc-10
+      #     export CXX=/usr/bin/g++-10
 
-          cd ~/pressio_builds
-          ls -lh ${HOME}/pressio_builds/pybind11/install
-          bdirname=pressio4py-build
-          rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
+      #     cd ~/pressio_builds
+      #     ls -lh ${HOME}/pressio_builds/pybind11/install
+      #     bdirname=pressio4py-build
+      #     rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
 
-          cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
-                -DCMAKE_INSTALL_PREFIX=${HOME}/pressio_builds/pressio4py-install \
-                -DCMAKE_CXX_COMPILER=${CXX} \
-                -DCMAKE_BUILD_TYPE=Release \
-                \
-                -DEIGEN_INCLUDE_DIR=${HOME}/pressio_builds/eigen/install/include/eigen3 \
-                -DPRESSIO_INCLUDE_DIR=${HOME}/pressio_builds/pressio/install/include \
-                -DPYBIND11_DIR=${HOME}/pressio_builds/pybind11/install \
-                ${HOME}/pressio_repos/pressio4py
+      #     cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+      #           -DCMAKE_INSTALL_PREFIX=${HOME}/pressio_builds/pressio4py-install \
+      #           -DCMAKE_CXX_COMPILER=${CXX} \
+      #           -DCMAKE_BUILD_TYPE=Release \
+      #           \
+      #           -DEIGEN_INCLUDE_DIR=${HOME}/pressio_builds/eigen/install/include/eigen3 \
+      #           -DPRESSIO_INCLUDE_DIR=${HOME}/pressio_builds/pressio/install/include \
+      #           -DPYBIND11_DIR=${HOME}/pressio_builds/pybind11/install \
+      #           ${HOME}/pressio_repos/pressio4py
 
       # - name: Install Pressio
       #   run: |
