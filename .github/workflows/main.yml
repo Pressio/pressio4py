@@ -88,7 +88,8 @@ jobs:
                 -DPRESSIO_INCLUDE_DIR=${HOME}/pressio_builds/pressio/install/include \
                 -DPYBIND11_DIR=${HOME}/pressio_builds/pybind11/install \
                 ${HOME}/pressio_repos/pressio4py
-
+          make 
+          make install
       # - name: Install Pressio
       #   run: |
       #     cd ~/pressio_repos
