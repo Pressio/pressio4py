@@ -94,8 +94,9 @@ jobs:
         run: |
           cd ${HOME}/pressio_builds/pressio4py-build
           ls -lh
+          export PYTHONPATH="${PYTHONPATH}:/home/runner/pressio_builds/pressio4py-install"
           python3 --version
-          pip3 install pytest numpy scipy
+          pip3 install pytest numpy scipy numba
           python3 -m pytest -v -s .
 
       # - name: Install Pressio
