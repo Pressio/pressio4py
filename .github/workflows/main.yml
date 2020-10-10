@@ -95,7 +95,7 @@ jobs:
           cd ${HOME}/pressio_builds/pressio4py-build
           ls -lh
           python3 --version
-          pip3 install pytest numpy
+          pip3 install pytest numpy scipy
           python3 -m pytest -v -s .
 
       # - name: Install Pressio
