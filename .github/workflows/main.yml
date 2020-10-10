@@ -82,7 +82,7 @@ jobs:
                 -DEIGEN_INCLUDE_DIR=~/pressio_builds/eigen/install/include/eigen3 \
                 -DPRESSIO_INCLUDE_DIR=~/pressio_builds/pressio/install/include \
                 -DPYBIND11_DIR=~/pressio_builds/pybind11/install \
-                ~/pressior_repos/pressio4py
+                ~/pressio_repos/pressio4py
 
       # - name: Install Pressio
       #   run: |
