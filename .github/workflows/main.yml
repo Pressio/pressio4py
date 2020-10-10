@@ -48,6 +48,8 @@ jobs:
           cd pressio-builder
           chmod +x main_tpls.sh
           export TERM=xterm-256color
+          export CC=/usr/bin/gcc-10
+          export CXX=/usr/bin/g++-10
           echo $TERM
           bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=${HOME}/pressio_builds -tpls=pybind11,eigen
           cd ~/pressio_builds
