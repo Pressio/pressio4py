@@ -49,7 +49,7 @@ jobs:
           chmod +x main_tpls.sh
           export TERM=xterm-256color
           echo $TERM
-          bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
+          bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=/home/runner/pressio_builds -tpls=pybind11,eigen
           cd ~/pressio_builds
           pwd
           ls -lh
