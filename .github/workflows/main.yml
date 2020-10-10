@@ -94,8 +94,9 @@ jobs:
         run: |
           cd ${HOME}/pressio_builds/pressio4py-build
           ls -lh
-          which python
-          
+          python --version
+          which pytest
+
       # - name: Install Pressio
       #   run: |
       #     cd ~/pressio_repos
