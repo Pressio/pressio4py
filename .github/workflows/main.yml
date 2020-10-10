@@ -90,11 +90,14 @@ jobs:
                 ${HOME}/pressio_repos/pressio4py
           make 
           make install
+      - uses: actions/setup-python@v2
+        with: 
+          python-version:'3.7.6'
       - name: Test pressio4py
         run: |
           cd ${HOME}/pressio_builds/pressio4py-build
           ls -lh
-          python3 --version
+          python --version
 
       # - name: Install Pressio
       #   run: |
