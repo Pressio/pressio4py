@@ -96,7 +96,7 @@ jobs:
           ls -lh
           python3 --version
           pip3 install pytest
-          python3 -m pytest -v -s tests
+          python3 -m pytest -v -s .
 
       # - name: Install Pressio
       #   run: |
