@@ -49,13 +49,12 @@ jobs:
           chmod +x main_tpls.sh
           export TERM=xterm-256color
           echo $TERM
-          ./main_tpls.sh -dryrun=no -build-mode=Debug \
-                         -target-dir=~/pressio_builds -tpls=pybind11,eigen
-      - name: Install pressio
-        run: |
+          bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
           cd ~/pressio_builds
           pwd
           ls -lh
+      - name: Install pressio
+        run: |
           export TERM=xterm-256color
           cd ~/pressio_repos/pressio-builder
           export CC=/usr/bin/gcc-10
