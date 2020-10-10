@@ -45,14 +45,16 @@ jobs:
       - name: TPLs
         run: |
           cd ~/pressio_repos
-          ls -lh
           cd pressio-builder
-          ls -lh
           chmod +x main_tpls.sh
           export TERM=xterm-256color
-          
           echo $TERM
-          ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=~/pressio_builds -tpls=pybind11,eigen
+          ./main_tpls.sh -dryrun=no -build-mode=Debug \
+                         -target-dir=~/pressio_builds -tpls=pybind11,eigen
+      - name: Install pressio
+        run: |
+          cd ~/pressio_repos/pressio-builder
+          
 
       # - name: Install Pressio
       #   run: |
