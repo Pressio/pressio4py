@@ -96,6 +96,7 @@ jobs:
           ls -lh
           python --version
           which pytest
+          pytest
 
       # - name: Install Pressio
       #   run: |
