@@ -56,14 +56,16 @@
 
 namespace pressio4py{
 
-struct CommonTypes{
+struct CommonTypes
+{
   using scalar_t	= double;
   using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
   using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
   using fom_t		= pybind11::object;
 };
 
-struct ROMTypes : CommonTypes{
+struct ROMTypes : CommonTypes
+{
   using typename CommonTypes::scalar_t;
   using typename CommonTypes::fom_t;
   using typename CommonTypes::py_f_arr;
@@ -75,8 +77,8 @@ struct ROMTypes : CommonTypes{
 
   using rom_state_t = pressio::containers::Vector<rom_native_state_t>;
   using fom_state_t = pressio::containers::Vector<fom_native_state_t>;
-  using decoder_jac_t = pressio::containers::Matrix<decoder_native_jac_t>;
-  using hessian_t = pressio::containers::Matrix<decoder_native_jac_t>;
+  using decoder_jac_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
+  using hessian_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
 
   using decoder_t = pressio::rom::PyDecoder<decoder_jac_t, fom_state_t>;
 };

@@ -61,27 +61,39 @@ struct GalerkinBinder
   using rom_state_t	   = typename mytypes::rom_state_t;
   using decoder_t	   = typename mytypes::decoder_t;
 
-  using gal_problem_t	   = typename pressio::rom::galerkin::composeDefaultProblem<
-				ode_tag, fom_t, rom_state_t, decoder_t>::type;
-  using res_pol_t	   = typename gal_problem_t::residual_policy_t;
+  using gal_problem_t =
+    typename pressio::rom::galerkin::composeDefaultProblem<
+    ode_tag, fom_t, decoder_t, rom_state_t>::type;
+  using res_pol_t	   = typename gal_problem_t::velocity_policy_t;
   using galerkin_stepper_t = typename gal_problem_t::stepper_t;
 
-  void bind(pybind11::module & m,
-	    const std::string stepperName,
-	    const std::string problemName,
-	    const std::string advancerName)
+  static void bind(pybind11::module & m,
+		   const std::string stepperName,
+		   const std::string problemName,
+		   const std::string advancerName)
   {
     // stepper
-    pybind11::class_<galerkin_stepper_t>(m, stepperName.c_str())
-      .def(pybind11::init<const rom_state_t &, const fom_t &, const res_pol_t &>());
+    pybind11::class_<galerkin_stepper_t> galStepper(m, stepperName.c_str());
+    galStepper.def(pybind11::init<
+		   const rom_state_t &,
+		   const fom_t &,
+		   const res_pol_t &
+		   >());
 
-    pybind11::class_<gal_problem_t>(m, problemName.c_str())
-      .def(pybind11::init<const fom_t &, const fom_native_state_t &,
-	   const decoder_t &, const rom_native_state_t &, scalar_t>())
-      .def("getStepper", &gal_problem_t::getStepperRef,
-	   pybind11::return_value_policy::reference)
-      .def("getFomStateReconstructor", &gal_problem_t::getFomStateReconstructorCRef,
-	   pybind11::return_value_policy::reference);
+    // problem
+    pybind11::class_<gal_problem_t> galProblem(m, problemName.c_str());
+    galProblem.def(pybind11::init<
+		   const fom_t &,
+		   const decoder_t &,
+		   const rom_native_state_t &,
+		   const fom_native_state_t &
+		   >());
+    galProblem.def("stepper",
+		   &gal_problem_t::stepperRef,
+		   pybind11::return_value_policy::reference);
+    galProblem.def("fomStateReconstructor",
+		   &gal_problem_t::fomStateReconstructorCRef,
+		   pybind11::return_value_policy::reference);
   }
 };
 }// end impl
@@ -91,18 +103,17 @@ struct GalerkinBinder
 {
   using tag1 = pressio::ode::explicitmethods::Euler;
   using gb1_t = impl::GalerkinBinder<mytypes, tag1>;
+  using stepper_euler_t = typename gb1_t::galerkin_stepper_t;
 
   using tag2 = pressio::ode::explicitmethods::RungeKutta4;
   using gb2_t = impl::GalerkinBinder<mytypes, tag2>;
-
-  using stepper_euler_t = typename gb1_t::galerkin_stepper_t;
   using stepper_rk4_t   = typename gb2_t::galerkin_stepper_t;
 
   GalerkinBinder(pybind11::module & m)
   {
     pybind11::module m1 = m.def_submodule("default");
-    gb1_t GB1; GB1.bind(m1, "StepperEuler", "ProblemEuler", "advanceNStepsEuler");
-    gb2_t GB2; GB2.bind(m1, "StepperRK4", "ProblemRK4", "advanceNStepsRK4");
+    gb1_t::bind(m1, "StepperEuler", "ProblemEuler", "advanceNStepsEuler");
+    gb2_t::bind(m1, "StepperRK4", "ProblemRK4", "advanceNStepsRK4");
   }
 };
 

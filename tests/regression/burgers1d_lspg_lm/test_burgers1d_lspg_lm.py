@@ -10,22 +10,32 @@ from pressio4py import solvers as solvers
 np.set_printoptions(linewidth=140)
 
 # gold solution expected from this test
-gold = np.array([1.2392405345107, 1.0051378268469,
-                 1.0025875046782, 1.0028353031206,
-                 1.0031333374311, 1.0034628717396,
-                 1.0038270641633, 1.0042295588277,
-                 1.0046743839626, 1.0051659914443,
-                 1.0057093013441, 1.0063097511659,
-                 1.0069733502617, 1.0077067399692,
-                 1.0085172600729, 1.0094130222541,
-                 1.0104029912645, 1.0114970746344,
-                 1.0127062218147, 1.0140425337419])
+gold = np.array([
+  1.20961484805614e+00,
+  1.00414341203934e+00,
+  1.00225747155818e+00,
+  1.00247921957863e+00,
+  1.00273983077854e+00,
+  1.00302857017833e+00,
+  1.00334574603388e+00,
+  1.00369802443198e+00,
+  1.00408787911375e+00,
+  1.00451653245805e+00,
+  1.00499222980303e+00,
+  1.00551742704848e+00,
+  1.00609739288540e+00,
+  1.00673920319338e+00,
+  1.00744706708639e+00,
+  1.00823132823391e+00,
+  1.00909787535280e+00,
+  1.01005373889436e+00,
+  1.01111169307645e+00,
+  1.01228245079179e+00])
 
 #----------------------------
 class MyLinSolver:
   def __init__(self): pass
 
-  # @staticmethod
   def solve(self, A,b,x):
     lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
     # here we must use x[:] otherwise it won't overwrite x passed in
@@ -58,13 +68,9 @@ def test_euler():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(stepper, yRom, lsO)
-  #nlsO = solvers.LevenbergMarquardt(stepper, yRom, lsO)
-
-  nlsTol, nlsMaxIt = 1e-13, 5
-  nlsO.setUpdatingCriterion(solvers.update.standard)#LMSchedule1)
-  nlsO.setMaxIterations(nlsMaxIt)
-  nlsO.setCorrectionAbsoluteTolerance(nlsTol)
+  nlsO = solvers.LevenbergMarquardt(stepper, yRom, lsO)
+  nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
+  nlsO.setMaxIterations(2)
 
   # do integration
   ode.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)

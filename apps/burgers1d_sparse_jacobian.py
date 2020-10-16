@@ -2,7 +2,7 @@
 import numpy as np
 import math
 from numba import jit, njit
-from scipy.sparse import csr_matrix, diags, spdiags
+from scipy.sparse import csr_matrix, diags
 from scipy import linalg
 import time
 
@@ -49,7 +49,8 @@ class Burgers1dSparseJacobian:
     self.expVec_ = self.mu_[1] * np.exp( self.mu_[2] * self.xGrid_ )
 
   def velocity(self, u, t):
-    velocityImplNumba(u, t, self.f_, self.expVec_, self.dxInvHalf_, self.mu_[0])
+    velocityImplNumba(u, t, self.f_, self.expVec_,
+                      self.dxInvHalf_, self.mu_[0])
     return self.f_
 
   def jacobian(self, u, t):

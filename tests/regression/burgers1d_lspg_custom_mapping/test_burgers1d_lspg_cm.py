@@ -22,11 +22,14 @@ class MyMapper:
     # load basis
     self.phi_ = np.loadtxt("./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt")
 
-  def getJacobian(self):
+  def jacobian(self):
     return self.phi_
 
   def applyMapping(self, romState, fomState):
     fomState[:] = self.phi_.dot(romState)
+
+  def updateJacobian(self, romState):
+    pass
 
 #----------------------------
 def test_euler():
@@ -43,23 +46,23 @@ def test_euler():
 
   # create a decoder
   mymap   = MyMapper()
-  decoder = rom.Decoder(mymap)
+  decoder = rom.Decoder(mymap, "MyMapper")
   # the LSPG state
   yRom = np.zeros(romSize)
 
-  lspgObj = rom.lspg.unsteady.default.ProblemEuler(appObj, yRef, decoder, yRom, t0)
-  stepper = lspgObj.getStepper()
+  lspgObj = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
+  stepper = lspgObj.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
   nlsO = solvers.GaussNewton(stepper, yRom, lsO)
   nlsTol, nlsMaxIt = 1e-13, 5
   nlsO.setMaxIterations(nlsMaxIt)
-  nlsO.setTolerance(nlsTol)
+  nlsO.setCorrectionAbsoluteTolerance(nlsTol)
   # do integration
   ode.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)
 
-  fomRecon = lspgObj.getFomStateReconstructor()
+  fomRecon = lspgObj.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
   print(yFomFinal)
 

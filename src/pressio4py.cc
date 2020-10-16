@@ -50,13 +50,12 @@
 #define PRESSIO4PY_PYBINDINGS_PRESSIO_FOUR_PY_HPP_
 
 #include <pybind11/pybind11.h>
-
 #include "types.hpp"
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
-#include "./rom/gauss_newton.hpp"
+#include "./rom/nonlinear_solvers.hpp"
 
 PYBIND11_MODULE(pressio4py, mParent)
 {
@@ -67,37 +66,61 @@ PYBIND11_MODULE(pressio4py, mParent)
 
   // decoder bindings
   pressio4py::createDecoderBindings<pressio4py::ROMTypes>(m1);
+
   // fom reconstructor bindings
   pressio4py::createFomReconstructorBindings<pressio4py::ROMTypes>(m1);
 
   // galerkin
-  pybind11::module m2 = m1.def_submodule("galerkin");
+  pybind11::module m2	  = m1.def_submodule("galerkin");
   using galerkin_binder_t = pressio4py::GalerkinBinder<pressio4py::ROMTypes>;
   galerkin_binder_t galBinder(m2);
 
   // lspg
-  pybind11::module m3 = m1.def_submodule("lspg");
-  using lspg_binder_t = pressio4py::LSPGBinder<pressio4py::ROMTypes>;
+  pybind11::module m3	     = m1.def_submodule("lspg");
+  using lspg_binder_t	     = pressio4py::LSPGBinder<pressio4py::ROMTypes>;
   using lspg_steady_system_t = typename lspg_binder_t::lspg_steady_system_t;
   using lspg_stepper_bdf1_t  = typename lspg_binder_t::lspg_stepper_bdf1_t;
   lspg_binder_t lspgBinder(m3);
 
-  //--------------------------
-  // *** bind GN solver ***
+  //-------------------------------------
+  // *** nonlinear l-squares solvers ***
+  //-------------------------------------
   pybind11::module mSolver = mParent.def_submodule("solvers");
   using hessian_t   = typename pressio4py::ROMTypes::hessian_t;
-  using gnbinder_t  = pressio4py::GaussNewtonSolverBinder<lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
-  using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
-  gnbinder_t gnBinder(mSolver);
+  pressio4py::solvers::bindUpdatingEnums(mSolver);
+  pressio4py::solvers::bindStoppingEnums(mSolver);
 
-  // ode::advancer
+  // GN solver
+  using gnbinder_t =
+    pressio4py::solvers::GaussNewtonBinder<
+      lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
+  using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
+  gnbinder_t::bind(mSolver);
+
+  // LM solver
+  using lmbinder_t =
+    pressio4py::solvers::LMBinder<
+      lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t,rom_native_state_t>;
+  using lm_solver_t = typename lmbinder_t::nonlinear_solver_t;
+  lmbinder_t::bind(mSolver);
+
+  //-------------------------------------
+  // ode::advance
+  //-------------------------------------
   pybind11::module mOde = mParent.def_submodule("ode");
   mOde.def("advanceNSteps", // for Galerkin Euler
-	   &::pressio::ode::advanceNSteps<typename galerkin_binder_t::stepper_euler_t, rom_native_state_t, scalar_t>);
+	   &::pressio::ode::advanceNSteps<
+	   typename galerkin_binder_t::stepper_euler_t, rom_native_state_t, scalar_t>);
   mOde.def("advanceNSteps", // for Galerkin RK4
-	   &::pressio::ode::advanceNSteps<typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
+	   &::pressio::ode::advanceNSteps<
+	   typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
   mOde.def("advanceNSteps", // needed for unsteady LSPG
-	   &pressio::ode::advanceNSteps<lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
+	   &pressio::ode::advanceNSteps<
+	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
+  mOde.def("advanceNSteps", // needed for unsteady LSPG
+  	   &pressio::ode::advanceNSteps<
+	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
+
 }
 
 #endif

@@ -51,7 +51,8 @@ class Burgers1dDenseJacobian:
     self.expVec_ = self.mu_[1] * np.exp( self.mu_[2] * self.xGrid_ )
 
   def velocity(self, u, t):
-    velocityImplNumba(u, t, self.f_, self.expVec_, self.dxInvHalf_, self.mu_[0])
+    velocityImplNumba(u, t, self.f_, self.expVec_,
+                      self.dxInvHalf_, self.mu_[0])
     return self.f_
 
   def jacobian(self, u, t):

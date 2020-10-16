@@ -31,7 +31,7 @@ class MyLinSolver:
     assert(A[0,0]==6);assert(A[0,1]==12);assert(A[0,2]==18)
     assert(A[1,0]==12);assert(A[1,1]==24);assert(A[1,2]==36)
     assert(A[2,0]==18);assert(A[2,1]==36);assert(A[2,2]==54)
-    # here I would need to solve system, but for testing 
+    # here I would need to solve system, but for testing
     # let's say we fix the solution. Rememeber this is the correction
     # of the inner linear solve inside the GN
     assert(len(x)==3)
@@ -52,7 +52,7 @@ def test_steady_lspg():
   # set reference state
   yRef = np.ones(meshSize)
   # # load basis
-  phi = np.ones((meshSize, romSize))#np.random.rand(meshSize, romSize)
+  phi = np.ones((meshSize, romSize))
   phi[:,0] = 1
   phi[:,1] = 2
   phi[:,2] = 3
@@ -62,8 +62,8 @@ def test_steady_lspg():
   # the LSPG state
   yRom = np.zeros(romSize)
 
-  lspgObj = rom.lspg.steady.default.Problem(appObj, yRef, decoder)
-  system = lspgObj.getSystem()
+  lspgObj = rom.lspg.steady.default.Problem(appObj, decoder, yRom, yRef)
+  system = lspgObj.system()
 
   # linear and non linear solver
   lsO = MyLinSolver()
@@ -71,8 +71,8 @@ def test_steady_lspg():
   nlsTol, nlsMaxIt = 1e-13, 3
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setTolerance(nlsTol)
-  assert(nlsO.getTolerance()==1e-13)
-  assert(nlsO.getMaxIterations()==3)
+  assert(nlsO.correctionAbsoluteTolerance()==1e-13)
+  assert(nlsO.maxIterations()==3)
   # # solve
   nlsO.solve(system, yRom)
 
@@ -81,12 +81,10 @@ def test_steady_lspg():
   assert(yRom[1]==6.)
   assert(yRom[2]==9.)
 
-  fomRecon = lspgObj.getFomStateReconstructor()
+  fomRecon = lspgObj.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
   print(yFomFinal)
-  # gold is 43 because we have phi*rho=42 + reference state 
+  # gold is 43 because we have phi*rho=42 + reference state
   gold = [43.,43.,43.,43.,43.,43.]
   for y1,y2 in zip(gold, yFomFinal):
     assert(y1==y2)
-
-
