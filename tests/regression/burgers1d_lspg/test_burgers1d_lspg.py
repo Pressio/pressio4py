@@ -10,16 +10,27 @@ from pressio4py import solvers as solvers
 np.set_printoptions(linewidth=140)
 
 # gold solution expected from this test
-gold = np.array([1.2392405345107, 1.0051378268469,
-                 1.0025875046782, 1.0028353031206,
-                 1.0031333374311, 1.0034628717396,
-                 1.0038270641633, 1.0042295588277,
-                 1.0046743839626, 1.0051659914443,
-                 1.0057093013441, 1.0063097511659,
-                 1.0069733502617, 1.0077067399692,
-                 1.0085172600729, 1.0094130222541,
-                 1.0104029912645, 1.0114970746344,
-                 1.0127062218147, 1.0140425337419])
+gold = np.array([
+  1.23924618529016e+00,
+  1.00513224142691e+00,
+  1.00258744050401e+00,
+  1.00283530274169e+00,
+  1.00313333759789e+00,
+  1.00346287207285e+00,
+  1.00382706443916e+00,
+  1.00422955914887e+00,
+  1.00467438433032e+00,
+  1.00516599192553e+00,
+  1.00570930192065e+00,
+  1.00630975185226e+00,
+  1.00697335112295e+00,
+  1.00770674109302e+00,
+  1.00851726134268e+00,
+  1.00941302387047e+00,
+  1.01040299320197e+00,
+  1.01149707707594e+00,
+  1.01270622473792e+00,
+  1.01404253728095e+00])
 
 #----------------------------
 class MyLinSolver:
@@ -59,18 +70,16 @@ def test_euler():
   # linear and non linear solver
   lsO = MyLinSolver()
   nlsO = solvers.GaussNewton(stepper, yRom, lsO)
-  #nlsO = solvers.LevenbergMarquardt(stepper, yRom, lsO)
-
-  nlsTol, nlsMaxIt = 1e-13, 5
-  nlsO.setUpdatingCriterion(solvers.update.standard)#LMSchedule1)
-  nlsO.setMaxIterations(nlsMaxIt)
-  nlsO.setCorrectionAbsoluteTolerance(nlsTol)
+  nlsO.setUpdatingCriterion(solvers.update.standard)
+  nlsO.setMaxIterations(2)
+  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
 
   # do integration
   ode.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)
 
   fomRecon = lspgObj.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
+  np.set_printoptions(precision=15)
   print(yFomFinal)
 
   for y1,y2 in zip(gold, yFomFinal):

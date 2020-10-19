@@ -81,7 +81,6 @@ void bindStoppingEnums(pybind11::module & m)
     .export_values();
 }
 
-
 template <
   typename system_t,
   typename rom_native_state_t,
@@ -150,90 +149,52 @@ void bindStoppingCriteria(pybind11::class_<nonlinear_solver_t> & solverObj)
 
 
 template<
+  bool do_gn,
   typename steady_system_t,
-  typename stepper_system_t,
+  typename stepper_t,
   typename hessian_t,
   typename rom_native_state_t
   >
-struct GaussNewtonBinder
+struct LeastSquaresNormalEqBinder
 {
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<stepper_system_t>::value,
-   "Currently only supporting bindings for GN for system with residual_jacobian_api");
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
-   "Currently only supporting bindings for GN for system with residual_jacobian_api");
-
   // linear solver is a pybind::object because it is passed by the user from python
   using linear_solver_t = pybind11::object;
 
-  using nonlinear_solver_t =
-    pressio::solvers::nonlinear::composeGaussNewton_t<
-    // it does not matter here if we pass stepper_t or system_t
-    // as long as they both meet the res-jac api
-    stepper_system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
-
-  static void bind(pybind11::module & m)
-  {
-    pybind11::class_<nonlinear_solver_t> solver(m, "GaussNewton");
-
-    solver.def(pybind11::init<
-		  const stepper_system_t &,
-		  const rom_native_state_t &,
-		  linear_solver_t &>());
-
-    solver.def(pybind11::init<
-		  const steady_system_t &,
-		  const rom_native_state_t &,
-		  linear_solver_t &>());
-
-    bindCommonSolverMethods<stepper_system_t, rom_native_state_t>(solver);
-    bindCommonSolverMethods<steady_system_t, rom_native_state_t>(solver);
-    bindTolerancesMethods(solver);
-    bindStoppingCriteria(solver);
-  }
-};
-
-template<
-  typename steady_system_t,
-  typename stepper_system_t,
-  typename hessian_t,
-  typename rom_native_state_t
-  >
-struct LMBinder
-{
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<stepper_system_t>::value,
-   "Currently only supporting bindings for GN for system with residual_jacobian_api");
   static_assert
   (::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
-   "Currently only supporting bindings for GN for system with residual_jacobian_api");
+   "Currently only supporting bindings for residual_jacobian_api");
+  static_assert
+  (::pressio::solvers::concepts::system_residual_jacobian<stepper_t>::value,
+   "Currently only supporting bindings for residual_jacobian_api");
 
-  // linear solver is a pybind::object because it is passed by the user from python
-  using linear_solver_t = pybind11::object;
+  // it does not matter here if we use stepper_t or system_t as template
+  // args to declare the solver type in the code below as long as they
+  // both meet the res-jac api. If we get here, it means that condition is met
+  // because it is asserted above.
+  using system_t = steady_system_t;
 
-  using nonlinear_solver_t =
-    pressio::solvers::nonlinear::composeLevenbergMarquardt_t<
-    // it does not matter here if we pass stepper_t or system_t
-    // as long as they both meet the res-jac api
-    stepper_system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
+  using gn_type = pressio::solvers::nonlinear::composeGaussNewton_t<
+    system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
+  using lm_type = pressio::solvers::nonlinear::composeLevenbergMarquardt_t<
+    system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
+  using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
-  static void bind(pybind11::module & m)
+  static void bind(pybind11::module & m, std::string solverPythonName)
   {
-    pybind11::class_<nonlinear_solver_t> solver(m, "LevenbergMarquardt");
+    pybind11::class_<nonlinear_solver_t> solver(m, solverPythonName.c_str());
 
-    // constructors
     solver.def(pybind11::init<
-		  const stepper_system_t &,
-		  const rom_native_state_t &,
-		  linear_solver_t &>());
-    solver.def(pybind11::init<
-		  const steady_system_t &,
-		  const rom_native_state_t &,
-		  linear_solver_t &>());
+	       const steady_system_t &,
+	       const rom_native_state_t &,
+	       linear_solver_t &>());
+    bindCommonSolverMethods<system_t, rom_native_state_t>(solver);
 
-    bindCommonSolverMethods<stepper_system_t, rom_native_state_t>(solver);
-    bindCommonSolverMethods<steady_system_t, rom_native_state_t>(solver);
+    // create bindings for unsteady
+    solver.def(pybind11::init<const stepper_t &,
+	       const rom_native_state_t &,
+	       linear_solver_t &>());
+    bindCommonSolverMethods<stepper_t, rom_native_state_t>(solver);
+
     bindTolerancesMethods(solver);
     bindStoppingCriteria(solver);
   }

@@ -86,23 +86,21 @@ PYBIND11_MODULE(pressio4py, mParent)
   // *** nonlinear l-squares solvers ***
   //-------------------------------------
   pybind11::module mSolver = mParent.def_submodule("solvers");
-  using hessian_t   = typename pressio4py::ROMTypes::hessian_t;
   pressio4py::solvers::bindUpdatingEnums(mSolver);
   pressio4py::solvers::bindStoppingEnums(mSolver);
 
-  // GN solver
-  using gnbinder_t =
-    pressio4py::solvers::GaussNewtonBinder<
-      lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
+  // GN with normal equations
+  using hessian_t   = typename pressio4py::ROMTypes::hessian_t;
+  using gnbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
+    true, lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
   using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
-  gnbinder_t::bind(mSolver);
+  gnbinder_t::bind(mSolver, "GaussNewton");
 
-  // LM solver
-  using lmbinder_t =
-    pressio4py::solvers::LMBinder<
-      lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t,rom_native_state_t>;
+  // LM with normal equations
+  using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
+    false, lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
   using lm_solver_t = typename lmbinder_t::nonlinear_solver_t;
-  lmbinder_t::bind(mSolver);
+  lmbinder_t::bind(mSolver, "LevenbergMarquardt");
 
   //-------------------------------------
   // ode::advance
@@ -114,11 +112,12 @@ PYBIND11_MODULE(pressio4py, mParent)
   mOde.def("advanceNSteps", // for Galerkin RK4
 	   &::pressio::ode::advanceNSteps<
 	   typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
-  mOde.def("advanceNSteps", // needed for unsteady LSPG
+
+  mOde.def("advanceNSteps", // unsteady LSPG with GN
 	   &pressio::ode::advanceNSteps<
 	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
-  mOde.def("advanceNSteps", // needed for unsteady LSPG
-  	   &pressio::ode::advanceNSteps<
+  mOde.def("advanceNSteps", // unsteady LSPG with LM
+	   &pressio::ode::advanceNSteps<
 	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
 
 }

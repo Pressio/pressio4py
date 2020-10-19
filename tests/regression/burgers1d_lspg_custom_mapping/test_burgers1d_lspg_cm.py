@@ -20,7 +20,8 @@ class MyLinSolver:
 class MyMapper:
   def __init__(self):
     # load basis
-    self.phi_ = np.loadtxt("./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt")
+    fname = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt"
+    self.phi_ = np.loadtxt(fname)
 
   def jacobian(self):
     return self.phi_
@@ -29,6 +30,7 @@ class MyMapper:
     fomState[:] = self.phi_.dot(romState)
 
   def updateJacobian(self, romState):
+    # do nothing here for this test
     pass
 
 #----------------------------
@@ -46,6 +48,7 @@ def test_euler():
 
   # create a decoder
   mymap   = MyMapper()
+  # needs a description string
   decoder = rom.Decoder(mymap, "MyMapper")
   # the LSPG state
   yRom = np.zeros(romSize)
@@ -56,8 +59,9 @@ def test_euler():
   # linear and non linear solver
   lsO = MyLinSolver()
   nlsO = solvers.GaussNewton(stepper, yRom, lsO)
-  nlsTol, nlsMaxIt = 1e-13, 5
+  nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
+  nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
   nlsO.setCorrectionAbsoluteTolerance(nlsTol)
   # do integration
   ode.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)

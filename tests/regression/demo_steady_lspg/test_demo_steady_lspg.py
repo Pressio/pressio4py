@@ -9,16 +9,23 @@ class MySteadyAdapter:
   def __init__(self, N):
     assert(N==6)
     self.N_     = N
-    self.r_     = np.ones(self.N_)
 
-  def residual(self, stateIn):
+  def createResidual(self):
+    print("DemoSteadyLSPG: createResidual")
+    return np.zeros(self.N_)
+
+  def createApplyJacobianResult(self, operand):
+    print("DemoSteadyLSPG: createApplyJacobianResult")
+    return np.zeros_like(operand)
+
+  def residual(self, stateIn, R):
     print("DemoSteadyLSPG: residual")
-    return self.r_
+    R[:] = 1.0
 
-  def applyJacobian(self, stateIn, operandObj):
+  def applyJacobian(self, stateIn, operand, C):
     J = self.jacobian(stateIn)
     print("DemoSteadyLSPG: applyingJacobian")
-    return J.dot(operandObj)
+    C[:]  = J.dot(operand)
 
   def jacobian(self, stateIn):
     return np.identity(self.N_)
@@ -31,14 +38,11 @@ class MyLinSolver:
     assert(A[0,0]==6);assert(A[0,1]==12);assert(A[0,2]==18)
     assert(A[1,0]==12);assert(A[1,1]==24);assert(A[1,2]==36)
     assert(A[2,0]==18);assert(A[2,1]==36);assert(A[2,2]==54)
-    # here I would need to solve system, but for testing
+    # here I would need to solve the system, but for testing
     # let's say we fix the solution. Rememeber this is the correction
     # of the inner linear solve inside the GN
     assert(len(x)==3)
     x[:] = np.array([1.,2.,3.])
-    # x[:] = np.linalg.solve(A, b)
-    # lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
-    # x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
 
 #----------------------------
 def test_steady_lspg():

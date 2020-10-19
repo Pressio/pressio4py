@@ -33,7 +33,6 @@ class Burgers1dSparseJacobian:
     self.dxInvHalf_ = 0.
     self.xGrid_ = np.zeros(self.Ncell_)
     self.U0_    = np.zeros(self.Ncell_)
-    self.f_     = np.zeros(self.Ncell_)
     self.expVec_= np.zeros(self.Ncell_)
     self.diag_  = np.zeros(self.Ncell_)
     self.ldiag_ = np.zeros(self.Ncell_-1)
@@ -48,15 +47,20 @@ class Burgers1dSparseJacobian:
       self.xGrid_[i] = self.dx_*i + self.dx_*0.5
     self.expVec_ = self.mu_[1] * np.exp( self.mu_[2] * self.xGrid_ )
 
-  def velocity(self, u, t):
-    velocityImplNumba(u, t, self.f_, self.expVec_,
+  def createVelocity(self):
+    return np.zeros(self.Ncell_)
+
+  def velocity(self, u, t, f):
+    velocityImplNumba(u, t, f[:], self.expVec_,
                       self.dxInvHalf_, self.mu_[0])
-    return self.f_
+
+  def createApplyJacobianResult(self, B):
+    return np.zeros_like(B)
+
+  def applyJacobian(self, u, B, t, result):
+    J = self.jacobian(u, t)
+    result[:] = J.dot(B)
 
   def jacobian(self, u, t):
     fillDiag(u, self.diag_, self.ldiag_, self.dxInv_)
     return diags( [self.ldiag_, self.diag_], [-1,0], format='csr')
-
-  def applyJacobian(self, u, B, t):
-    J = self.jacobian(u, t)
-    return J.dot(B)
