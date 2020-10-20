@@ -55,7 +55,6 @@ template <typename mytypes, typename ode_tag>
 struct GalerkinBinder
 {
   using scalar_t	   = typename mytypes::scalar_t;
-  using fom_t		   = typename mytypes::fom_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
@@ -80,7 +79,7 @@ struct GalerkinBinder
     pybind11::class_<galerkin_stepper_t> galStepper(m, stepperName.c_str());
     galStepper.def(pybind11::init<
 		   const rom_state_t &,
-		   const /*fom_t*/ sys_wrapper_t &,
+		   const sys_wrapper_t &,
 		   const res_pol_t &
 		   >());
 

@@ -61,22 +61,15 @@ void createDecoderBindings(pybind11::module & m)
 
   pybind11::class_<decoder_t> decoderPy(m, "Decoder");
   // constructor: user passes the jacobian matrix, this yields a linear decoder
-  decoderPy.def
-    (pybind11::init<const decoder_native_jac_t &>());
+  decoderPy.def(pybind11::init<const decoder_native_jac_t &>());
 
   // constructor: user passes a python object, this yields an arbitrary mapper
-  decoderPy.def(pybind11::init<
-		pybind11::object,
-		std::string>());
+  decoderPy.def(pybind11::init<pybind11::object, std::string>());
 
   // method to call for applying the mapping
   decoderPy.def
     ("applyMapping",
      &decoder_t::template applyMapping<rom_native_state_t, fom_native_state_t>);
-
-  // pybind11::enum_<typename decoder_t::mappingKind>(decoderPy, "mappingKind")
-  //   .value("Linear", decoder_t::mappingKind::Linear)
-  //   .export_values();
 }
 }
 #endif

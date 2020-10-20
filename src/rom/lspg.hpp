@@ -57,7 +57,6 @@ template <typename mytypes, typename ode_tag, int problemid>
 struct UnsteadyLSPGProblemBinder
 {
   using scalar_t	   = typename mytypes::scalar_t;
-  using fom_t		   = typename mytypes::fom_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
@@ -119,7 +118,6 @@ template <typename mytypes, int problemid>
 struct SteadyLSPGProblemBinder
 {
   using scalar_t	   = typename mytypes::scalar_t;
-  using fom_t		   = typename mytypes::fom_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;

@@ -61,13 +61,11 @@ struct CommonTypes
   using scalar_t	= double;
   using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
   using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
-  using fom_t		= pybind11::object;
 };
 
 struct ROMTypes : CommonTypes
 {
   using typename CommonTypes::scalar_t;
-  using typename CommonTypes::fom_t;
   using typename CommonTypes::py_f_arr;
   using ops_t   = void;
 
