@@ -49,9 +49,7 @@
 #ifndef PRESSIO4PY_PYBINDINGS_LSPG_HPP_
 #define PRESSIO4PY_PYBINDINGS_LSPG_HPP_
 
-namespace pressio4py{
-
-namespace impl{
+namespace pressio4py{ namespace rom{ namespace impl{
 
 // the problemid is used to choose among: default, masked and preconditioned
 // so 0 = default, 1=masked, 2==preconditioned
@@ -64,18 +62,24 @@ struct UnsteadyLSPGProblemBinder
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
   using decoder_t	   = typename mytypes::decoder_t;
+  using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
+
+  using sys_wrapper_t =
+    pressio4py::rom::FomWrapperContinuousTimeWithApplyJacobian<
+    scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   static_assert(problemid==0, "currently only supporting default LSPG");
   using lspg_problem_type =
     typename std::conditional<
     problemid==0,
     typename pressio::rom::lspg::composeDefaultProblem<
-      ode_tag, fom_t, decoder_t, rom_state_t>::type,
-    void>::type;
+      ode_tag, sys_wrapper_t, decoder_t, rom_state_t>::type,
+    void
+    >::type;
 
-  using lspg_stepper_t	= typename lspg_problem_type::stepper_t;
-  using residual_policy_t	= typename lspg_problem_type::residual_policy_t;
-  using jacobian_policy_t	= typename lspg_problem_type::jacobian_policy_t;
+  using lspg_stepper_t	  = typename lspg_problem_type::stepper_t;
+  using residual_policy_t = typename lspg_problem_type::residual_policy_t;
+  using jacobian_policy_t = typename lspg_problem_type::jacobian_policy_t;
 
   static void bind(pybind11::module & m,
 		   const std::string appendToStepperName,
@@ -89,47 +93,50 @@ struct UnsteadyLSPGProblemBinder
     pybind11::class_<lspg_stepper_t> stepper(m, stepperPythonName.c_str());
     stepper.def(pybind11::init<
 		const rom_state_t &,
-		const fom_t &,
+		const sys_wrapper_t &,
 		const residual_policy_t &,
 		const jacobian_policy_t &>());
 
     // concrete LSPG problem binding: need this because is what we use to extract stepper
     pybind11::class_<lspg_problem_type> problem(m, problemPythonName.c_str());
     problem.def(pybind11::init<
-		const fom_t &,
+		pybind11::object,
 		const decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &>());
-
     problem.def("fomStateReconstructor",
 		&lspg_problem_type::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
-
     problem.def("stepper",
 		&lspg_problem_type::stepperRef,
 		pybind11::return_value_policy::reference);
   }
 };
 
-
 // the problemid is used to choose among: default, masked, preconditioned
 // so 0 = default, 1=masked, 2==preconditioned
 template <typename mytypes, int problemid>
 struct SteadyLSPGProblemBinder
 {
-  using scalar_t	= typename mytypes::scalar_t;
-  using fom_t		= typename mytypes::fom_t;
-  using rom_native_state_t	= typename mytypes::rom_native_state_t;
-  using fom_native_state_t	= typename mytypes::fom_native_state_t;
-  using rom_state_t	= typename mytypes::rom_state_t;
-  using decoder_t	= typename mytypes::decoder_t;
+  using scalar_t	   = typename mytypes::scalar_t;
+  using fom_t		   = typename mytypes::fom_t;
+  using fom_native_state_t = typename mytypes::fom_native_state_t;
+  using rom_native_state_t = typename mytypes::rom_native_state_t;
+  using rom_state_t	   = typename mytypes::rom_state_t;
+  using decoder_t	   = typename mytypes::decoder_t;
+  using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
+
+  using sys_wrapper_t =
+    pressio4py::rom::FomWrapperSteadyState<
+    scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   static_assert(problemid==0, "currently only supporting default LSPG");
   using lspg_problem_type = typename std::conditional<
     problemid==0,
     typename pressio::rom::lspg::composeDefaultProblem<
-      fom_t, decoder_t, rom_state_t>::type,
-    void>::type;
+      sys_wrapper_t, decoder_t, rom_state_t>::type,
+    void
+    >::type;
 
   using lspg_system_t		= typename lspg_problem_type::system_t;
   using residual_policy_t	= typename lspg_problem_type::residual_policy_t;
@@ -143,14 +150,14 @@ struct SteadyLSPGProblemBinder
     // from the problem object to pass to the solver)
     pybind11::class_<lspg_system_t> system(m, "System");
     system.def(pybind11::init<
-	       const fom_t &,
+	       sys_wrapper_t,
 	       const residual_policy_t &,
 	       const jacobian_policy_t &>());
 
     // concrete LSPG problem
     pybind11::class_<lspg_problem_type> problem(m, "Problem");
     problem.def(pybind11::init<
-		const fom_t &,
+		pybind11::object,
 		const decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t>());
@@ -202,5 +209,5 @@ struct LSPGBinder
   }
 };
 
-}//end namespace
+}}//end namespace pressio4py::rom
 #endif

@@ -53,6 +53,7 @@
 #include "types.hpp"
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
+#include "./rom/fom_wrappers.hpp"
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
 #include "./rom/nonlinear_solvers.hpp"
@@ -72,12 +73,12 @@ PYBIND11_MODULE(pressio4py, mParent)
 
   // galerkin
   pybind11::module m2	  = m1.def_submodule("galerkin");
-  using galerkin_binder_t = pressio4py::GalerkinBinder<pressio4py::ROMTypes>;
+  using galerkin_binder_t = pressio4py::rom::GalerkinBinder<pressio4py::ROMTypes>;
   galerkin_binder_t galBinder(m2);
 
   // lspg
   pybind11::module m3	     = m1.def_submodule("lspg");
-  using lspg_binder_t	     = pressio4py::LSPGBinder<pressio4py::ROMTypes>;
+  using lspg_binder_t	     = pressio4py::rom::LSPGBinder<pressio4py::ROMTypes>;
   using lspg_steady_system_t = typename lspg_binder_t::lspg_steady_system_t;
   using lspg_stepper_bdf1_t  = typename lspg_binder_t::lspg_stepper_bdf1_t;
   lspg_binder_t lspgBinder(m3);

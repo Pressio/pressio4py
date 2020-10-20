@@ -49,7 +49,7 @@
 #ifndef PRESSIO4PY_PYBINDINGS_GALERKIN_HPP_
 #define PRESSIO4PY_PYBINDINGS_GALERKIN_HPP_
 
-namespace pressio4py{ namespace impl{
+namespace pressio4py{ namespace rom{ namespace impl{
 
 template <typename mytypes, typename ode_tag>
 struct GalerkinBinder
@@ -60,10 +60,14 @@ struct GalerkinBinder
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
   using decoder_t	   = typename mytypes::decoder_t;
+  using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
-  using gal_problem_t =
-    typename pressio::rom::galerkin::composeDefaultProblem<
-    ode_tag, fom_t, decoder_t, rom_state_t>::type;
+  using sys_wrapper_t =
+    pressio4py::rom::FomWrapperContinuousTimeWithoutApplyJacobian<
+    scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
+
+  using gal_problem_t = typename pressio::rom::galerkin::composeDefaultProblem<
+    ode_tag, sys_wrapper_t, decoder_t, rom_state_t>::type;
   using res_pol_t	   = typename gal_problem_t::velocity_policy_t;
   using galerkin_stepper_t = typename gal_problem_t::stepper_t;
 
@@ -76,14 +80,14 @@ struct GalerkinBinder
     pybind11::class_<galerkin_stepper_t> galStepper(m, stepperName.c_str());
     galStepper.def(pybind11::init<
 		   const rom_state_t &,
-		   const fom_t &,
+		   const /*fom_t*/ sys_wrapper_t &,
 		   const res_pol_t &
 		   >());
 
     // problem
     pybind11::class_<gal_problem_t> galProblem(m, problemName.c_str());
     galProblem.def(pybind11::init<
-		   const fom_t &,
+		   pybind11::object,
 		   const decoder_t &,
 		   const rom_native_state_t &,
 		   const fom_native_state_t &
@@ -117,5 +121,5 @@ struct GalerkinBinder
   }
 };
 
-}//namespace pressio4py
+}}//namespace pressio4py::rom
 #endif
