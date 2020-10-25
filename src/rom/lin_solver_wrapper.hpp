@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// types.hpp
+// lin_solver_wrapper.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,40 +46,46 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
-#define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
-
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include "pressio_rom.hpp"
+#ifndef PRESSIO4PY_PYBINDINGS_LINEAR_SOLVER_WRAPPER_HPP_
+#define PRESSIO4PY_PYBINDINGS_LINEAR_SOLVER_WRAPPER_HPP_
 
 namespace pressio4py{
 
-struct CommonTypes
+template<typename matrix_t>
+class LinSolverWrapper
 {
-  using scalar_t	= double;
-  using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
-  using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
+  static_assert
+  (pressio::containers::predicates::is_dense_matrix_wrapper_pybind<matrix_t>::value,
+   "matrix_t for LinSolverWrapper must be a dense matrix wrapper pybind");
+
+  pybind11::object pyObj_;
+
+public:
+  using matrix_type = matrix_t;
+
+public:
+  LinSolverWrapper(pybind11::object pyObj)
+    : pyObj_(pyObj){}
+
+  LinSolverWrapper() = delete;
+  LinSolverWrapper(const LinSolverWrapper &) = default;
+  LinSolverWrapper & operator=(const LinSolverWrapper &) = default;
+  LinSolverWrapper(LinSolverWrapper &&) = default;
+  LinSolverWrapper & operator=(LinSolverWrapper &&) = default;
+  ~LinSolverWrapper() = default;
+
+public:
+  template<typename state_type>
+  pressio::mpl::enable_if_t<
+  pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+  >
+  solve(const matrix_type & A,
+	const state_type & b,
+	state_type & x)
+  {
+    pyObj_.attr("solve")(*A.data(), *b.data(), *x.data());
+  }
 };
 
-struct ROMTypes : CommonTypes
-{
-  using typename CommonTypes::scalar_t;
-  using typename CommonTypes::py_f_arr;
-  using ops_t   = void;
-
-  using rom_native_state_t = py_f_arr;
-  using fom_native_state_t = py_f_arr;
-  using decoder_native_jac_t = py_f_arr;
-
-  using rom_state_t = pressio::containers::Vector<rom_native_state_t>;
-  using fom_state_t = pressio::containers::Vector<fom_native_state_t>;
-  using decoder_jac_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
-  using lsq_hessian_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
-
-  using decoder_t = pressio::rom::PyDecoder<decoder_jac_t, fom_state_t>;
-};
-
-}
+}//namespace pressio4py
 #endif

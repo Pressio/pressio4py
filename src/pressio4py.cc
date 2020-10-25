@@ -56,14 +56,15 @@
 #include "./rom/fom_wrappers.hpp"
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
+#include "./rom/lin_solver_wrapper.hpp"
 #include "./rom/nonlinear_solvers.hpp"
 
 PYBIND11_MODULE(pressio4py, mParent)
 {
   pybind11::module m1 = mParent.def_submodule("rom");
-
   using scalar_t	   = typename pressio4py::ROMTypes::scalar_t;
   using rom_native_state_t = typename pressio4py::ROMTypes::rom_native_state_t;
+  using rom_state_t	   = typename pressio4py::ROMTypes::rom_state_t;
 
   // decoder bindings
   pressio4py::createDecoderBindings<pressio4py::ROMTypes>(m1);
@@ -77,29 +78,36 @@ PYBIND11_MODULE(pressio4py, mParent)
   galerkin_binder_t galBinder(m2);
 
   // lspg
-  pybind11::module m3	     = m1.def_submodule("lspg");
-  using lspg_binder_t	     = pressio4py::rom::LSPGBinder<pressio4py::ROMTypes>;
-  using lspg_steady_system_t = typename lspg_binder_t::lspg_steady_system_t;
-  using lspg_stepper_bdf1_t  = typename lspg_binder_t::lspg_stepper_bdf1_t;
+  pybind11::module m3		= m1.def_submodule("lspg");
+  using lspg_binder_t		= pressio4py::rom::LSPGBinder<pressio4py::ROMTypes>;
+  using lspg_steady_system_t	= typename lspg_binder_t::lspg_steady_system_t;
+  using lspg_de_stepper_bdf1_t  = typename lspg_binder_t::de_lspg_stepper_bdf1_t;
+  using lspg_hr_stepper_bdf1_t  = typename lspg_binder_t::hr_lspg_stepper_bdf1_t;
   lspg_binder_t lspgBinder(m3);
 
   //-------------------------------------
-  // *** nonlinear l-squares solvers ***
+  // *** solvers ***
   //-------------------------------------
   pybind11::module mSolver = mParent.def_submodule("solvers");
+
+  // *** nonlinear l-squares solvers normal-equations ***
   pressio4py::solvers::bindUpdatingEnums(mSolver);
   pressio4py::solvers::bindStoppingEnums(mSolver);
+  // for least-squares normal equations, we have a hessian and gradient
+  using hessian_t = typename pressio4py::ROMTypes::lsq_hessian_t;
+  using linear_solver_t = pressio4py::LinSolverWrapper<hessian_t>;
 
   // GN with normal equations
-  using hessian_t   = typename pressio4py::ROMTypes::hessian_t;
   using gnbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
-    true, lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
+    true, lspg_steady_system_t, lspg_de_stepper_bdf1_t, lspg_hr_stepper_bdf1_t,
+    linear_solver_t, rom_native_state_t, rom_state_t>;
   using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
   gnbinder_t::bind(mSolver, "GaussNewton");
 
   // LM with normal equations
   using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
-    false, lspg_steady_system_t, lspg_stepper_bdf1_t, hessian_t, rom_native_state_t>;
+    false, lspg_steady_system_t, lspg_de_stepper_bdf1_t, lspg_hr_stepper_bdf1_t,
+    linear_solver_t, rom_native_state_t, rom_state_t>;
   using lm_solver_t = typename lmbinder_t::nonlinear_solver_t;
   lmbinder_t::bind(mSolver, "LevenbergMarquardt");
 
@@ -114,13 +122,18 @@ PYBIND11_MODULE(pressio4py, mParent)
 	   &::pressio::ode::advanceNSteps<
 	   typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
 
-  mOde.def("advanceNSteps", // unsteady LSPG with GN
+  mOde.def("advanceNSteps", // unsteady default LSPG with GN
 	   &pressio::ode::advanceNSteps<
-	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
-  mOde.def("advanceNSteps", // unsteady LSPG with LM
+	   lspg_de_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
+  mOde.def("advanceNSteps", // unsteady default LSPG with LM
 	   &pressio::ode::advanceNSteps<
-	   lspg_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
-
+	   lspg_de_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
+  mOde.def("advanceNSteps", // unsteady hypred LSPG with GN
+	   &pressio::ode::advanceNSteps<
+	   lspg_hr_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
+  mOde.def("advanceNSteps", // unsteady hypred LSPG with LM
+	   &pressio::ode::advanceNSteps<
+	   lspg_hr_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
 }
 
 #endif

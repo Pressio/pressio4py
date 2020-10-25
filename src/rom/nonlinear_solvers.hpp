@@ -81,17 +81,9 @@ void bindStoppingEnums(pybind11::module & m)
     .export_values();
 }
 
-template <
-  typename system_t,
-  typename rom_native_state_t,
-  typename nonlinear_solver_t
-  >
+template <typename nonlinear_solver_t>
 void bindCommonSolverMethods(pybind11::class_<nonlinear_solver_t> & solverObj)
 {
-  // register the solve method
-  solverObj.def("solve",
-		&nonlinear_solver_t::template solve<system_t, rom_native_state_t>);
-
   // methods to set and query num of iterations
   solverObj.def("maxIterations",    &nonlinear_solver_t::maxIterations);
   solverObj.def("setMaxIterations", &nonlinear_solver_t::setMaxIterations);
@@ -151,20 +143,22 @@ void bindStoppingCriteria(pybind11::class_<nonlinear_solver_t> & solverObj)
 template<
   bool do_gn,
   typename steady_system_t,
-  typename stepper_t,
-  typename hessian_t,
-  typename rom_native_state_t
+  typename stepper_de_t,
+  typename stepper_hr_t,
+  typename linear_solver_t,
+  typename rom_native_state_t,
+  typename rom_state_t
   >
 struct LeastSquaresNormalEqBinder
 {
-  // linear solver is a pybind::object because it is passed by the user from python
-  using linear_solver_t = pybind11::object;
-
   static_assert
   (::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
    "Currently only supporting bindings for residual_jacobian_api");
   static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<stepper_t>::value,
+  (::pressio::solvers::concepts::system_residual_jacobian<stepper_de_t>::value,
+   "Currently only supporting bindings for residual_jacobian_api");
+  static_assert
+  (::pressio::solvers::concepts::system_residual_jacobian<stepper_hr_t>::value,
    "Currently only supporting bindings for residual_jacobian_api");
 
   // it does not matter here if we use stepper_t or system_t as template
@@ -174,29 +168,40 @@ struct LeastSquaresNormalEqBinder
   using system_t = steady_system_t;
 
   using gn_type = pressio::solvers::nonlinear::composeGaussNewton_t<
-    system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
+    system_t, linear_solver_t>;
   using lm_type = pressio::solvers::nonlinear::composeLevenbergMarquardt_t<
-    system_t, linear_solver_t, hessian_t, ::pressio::utils::p4pyTag>;
+    system_t, linear_solver_t>;
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
   static void bind(pybind11::module & m, std::string solverPythonName)
   {
-    pybind11::class_<nonlinear_solver_t> solver(m, solverPythonName.c_str());
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
 
-    solver.def(pybind11::init<
-	       const steady_system_t &,
-	       const rom_native_state_t &,
-	       linear_solver_t &>());
-    bindCommonSolverMethods<system_t, rom_native_state_t>(solver);
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
 
-    // create bindings for unsteady
-    solver.def(pybind11::init<const stepper_t &,
-	       const rom_native_state_t &,
-	       linear_solver_t &>());
-    bindCommonSolverMethods<stepper_t, rom_native_state_t>(solver);
+    // constr bindings for steady
+    nonLinSolver.def(pybind11::init<
+		     const steady_system_t &,
+		     const rom_native_state_t &,
+		     pybind11::object>());
+    bindCommonSolverMethods(nonLinSolver);
+    // for steady LSPG, we also need to register the solve method
+    // because the state is owned by Python which calls solve directly
+    nonLinSolver.def("solve",
+		     &nonlinear_solver_t::template solve<system_t, rom_native_state_t>);
 
-    bindTolerancesMethods(solver);
-    bindStoppingCriteria(solver);
+    // constr bindings for unsteady default
+    nonLinSolver.def(pybind11::init<const stepper_de_t &,
+		     const rom_native_state_t &,
+		     pybind11::object/*linear_solver_t &*/>());
+    bindCommonSolverMethods(nonLinSolver);
+
+    // constr bindings for unsteady hyp-red
+    nonLinSolver.def(pybind11::init<const stepper_hr_t &,
+		     const rom_native_state_t &,
+		     pybind11::object/*linear_solver_t &*/>());
+    bindCommonSolverMethods(nonLinSolver);
   }
 };
 
