@@ -98,10 +98,11 @@ jobs:
           python3 --version
           pip3 --version
           pip3 install --upgrade pip
+          pip3 --version
           pip3 install pytest numpy scipy wheel
           sudo apt-get install python3-setuptools
           pip3 install numba
-          python3 -m pytest -vs .
+          python3 -m pytest .
 # pip install setuptools
 # pip3 install setuptools pytest numpy scipy wheel numba
 # python3 -m pytest -v -s 
