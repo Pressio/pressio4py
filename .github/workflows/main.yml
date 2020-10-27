@@ -97,7 +97,7 @@ jobs:
           export PYTHONPATH="${PYTHONPATH}:/home/runner/pressio_builds/pressio4py-install"
           python3 --version
           python --version
-          pip install pytest
+          pip3 install pytest
 # pip install setuptools
 # pip3 install setuptools pytest numpy scipy wheel numba
 # python3 -m pytest -v -s 
