@@ -98,7 +98,7 @@ jobs:
           python3 --version
           pip3 install pytest numpy scipy
           sudo apt-get install python3-setuptools
-          
+          pip3 install numba
           python3 -m pytest -vs .
 # pip install setuptools
 # pip3 install setuptools pytest numpy scipy wheel numba
