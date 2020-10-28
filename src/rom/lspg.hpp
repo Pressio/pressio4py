@@ -132,7 +132,7 @@ struct UnsteadyLSPGProblemBinder
       ode_tag, sys_wrapper_t, decoder_t, rom_state_t>,
     typename std::conditional<
       problemid==1,
-      typename pressio::rom::lspg::experimental::composeHyperReducedProblem_t<
+      typename pressio::rom::lspg::composeHyperReducedProblem_t<
 	ode_tag, sys_wrapper_t, decoder_t, rom_state_t,
 	// we use a py_f_arr to store indices for sample to stencil mapping
 	pressio::containers::Vector<typename mytypes::py_f_arr>>,
