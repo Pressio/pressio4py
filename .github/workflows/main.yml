@@ -39,17 +39,11 @@ jobs:
           cd ~/pressio_repos
           git clone https://github.com/Pressio/pressio.git
           git clone https://github.com/Pressio/pressio-builder.git
-# <<<<<<< HEAD
-#           git clone --branch develop https://github.com/Pressio/pressio4py.git
-#           pwd
-#           ls -lh
-#           cd pressio4py
-#           git branch -a
-# =======
-          git clone https://github.com/Pressio/pressio4py.git
+          git clone --branch develop https://github.com/Pressio/pressio4py.git
           pwd
           ls -lh
-# >>>>>>> testWeb
+          cd pressio4py
+          git branch -a
       - name: TPLs
         run: |
           cd ~/pressio_repos
