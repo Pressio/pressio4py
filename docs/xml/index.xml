@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.8.20" xml:lang="en-US">
+  <compound refid="example1_8md" kind="file"><name>example1.md</name>
+  </compound>
+  <compound refid="build__and__install_8md" kind="file"><name>build_and_install.md</name>
+  </compound>
+  <compound refid="main_8md" kind="file"><name>main.md</name>
+  </compound>
+  <compound refid="tutorial1_8md" kind="file"><name>tutorial1.md</name>
+  </compound>
+  <compound refid="md_pages_examples_example1" kind="page"><name>md_pages_examples_example1</name>
+  </compound>
+  <compound refid="md_pages_getstarted_build_and_install" kind="page"><name>md_pages_getstarted_build_and_install</name>
+  </compound>
+  <compound refid="md_pages_tutorials_tutorial1" kind="page"><name>md_pages_tutorials_tutorial1</name>
+  </compound>
+  <compound refid="dir_c8b5f49f42f70cbb2789196c6be03b08" kind="dir"><name>pages/examples</name>
+  </compound>
+  <compound refid="dir_72e76ac6147c72c291306ebceacd125b" kind="dir"><name>pages/getstarted</name>
+  </compound>
+  <compound refid="dir_208d2690607c4e3d3fabfa1d18673d36" kind="dir"><name>pages</name>
+  </compound>
+  <compound refid="dir_d37f90f6dfa16220c69059cd0bfa7aa7" kind="dir"><name>pages/tutorials</name>
+  </compound>
+  <compound refid="indexpage" kind="page"><name>index</name>
+  </compound>
+</doxygenindex>

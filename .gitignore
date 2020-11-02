@@ -1,8 +1,3 @@
-# Doxygen generated #
-#####################
-html/
-latex/
-xml/
 *.pyc
 
 # MISX #
