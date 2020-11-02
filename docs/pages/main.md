@@ -8,9 +8,11 @@ You landed on the documentation of the Python bindings library!
 
 If this is a mistake, please go back to the [project website](https://pressio.github.io/).
 
+
 ## Getting Started
 You can start by reading the [installation process](./md_pages_getstarted_build_and_install.html).
 <!-- Untill we start filling the tutorials and examples, you can peek at the [test subdirectory](https://github.com/Pressio/pressio/tree/master/tests/rom/burgers1d) of the C++ library. -->
+
 
 ## License and Citation
 The full license is available [here](https://pressio.github.io/various/license/).
