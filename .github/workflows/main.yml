@@ -6,9 +6,9 @@ name: Test compilation
 # events but only for the master branch
 on:
   push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+    branches: [master, develop]
+    pull_request:
+    branches: [master, develop]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -39,11 +39,17 @@ jobs:
           cd ~/pressio_repos
           git clone https://github.com/Pressio/pressio.git
           git clone https://github.com/Pressio/pressio-builder.git
-          git clone --branch develop https://github.com/Pressio/pressio4py.git
+# <<<<<<< HEAD
+#           git clone --branch develop https://github.com/Pressio/pressio4py.git
+#           pwd
+#           ls -lh
+#           cd pressio4py
+#           git branch -a
+# =======
+          git clone https://github.com/Pressio/pressio4py.git
           pwd
           ls -lh
-          cd pressio4py
-          git branch -a
+# >>>>>>> testWeb
       - name: TPLs
         run: |
           cd ~/pressio_repos
