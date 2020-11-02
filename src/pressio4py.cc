@@ -50,6 +50,13 @@
 #define PRESSIO4PY_PYBINDINGS_PRESSIO_FOUR_PY_HPP_
 
 #include <pybind11/pybind11.h>
+#include <pybind11/functional.h>
+#include <pybind11/numpy.h>
+
+// pressio include
+#include "pressio_rom.hpp"
+
+// pressio4py includes
 #include "types.hpp"
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"

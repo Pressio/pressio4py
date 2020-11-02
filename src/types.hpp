@@ -49,9 +49,7 @@
 #ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
 #define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
+// pressio include
 #include "pressio_rom.hpp"
 
 namespace pressio4py{

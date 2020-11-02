@@ -92,7 +92,7 @@ auto extent(Tf vIn)
 auto subscriptChange(Tf vIn)
 {
   vec_t a(vIn);
-  a[0] = 1.;
+  a(0) = 1.;
   // this should return by view so that we can check
   // on the python side if things are right
   return *a.data();
