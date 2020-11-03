@@ -13,7 +13,6 @@ include(colors)
 #=====================================================================
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #=====================================================================
@@ -33,7 +32,6 @@ message("${Yellow}----------------------------------${ColourReset}")
 
 #=====================================================================
 #=====================================================================
-
 ### guard against in-source builds ###
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds are not allowed.
@@ -46,18 +44,13 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-### check if EIGEN_INCLUDE_DIR is set ###
-if (NOT EIGEN_INCLUDE_DIR)
-  message(FATAL_ERROR "${EIGEN_INCLUDE_DIR} is not specified, must be set.")
-endif()
-
 ### check if PRESSIO_INCLUDE_DIR is set ###
 if (NOT PRESSIO_INCLUDE_DIR)
   message(FATAL_ERROR "${PRESSIO_INCLUDE_DIR} is not specified, must be set.")
 endif()
 
 #----------------------------------------------------------------
-include_directories(${EIGEN_INCLUDE_DIR} ${PRESSIO_INCLUDE_DIR})
+include_directories(${PRESSIO_INCLUDE_DIR})
 find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
 
 #----------------------------------------------------------------

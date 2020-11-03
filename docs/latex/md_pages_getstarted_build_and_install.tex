@@ -4,18 +4,16 @@
 This page describes the building steps for {\ttfamily pressio4py}. By the end, you should be able to clone pressio4py, build it, and use the library in Python.
 \end{DoxyParagraph}
 \hypertarget{md_pages_getstarted_build_and_install_autotoc_md2}{}\doxysection{Prerequisites}\label{md_pages_getstarted_build_and_install_autotoc_md2}
-You need\+:
-
 
 \begin{DoxyItemize}
 \item S\+SH keys setup with github (if you are working behind a firewall, set the proper proxies)
 \item C, C++ (with support for C++14) compiler;
 \item C\+Make $>$= 3.\+11.\+0;
 \item Bash $>$= 3.\+2.\+57.
-\item Python (min version T\+BD), with Num\+Py, Sci\+Py, Numba, and Pytest
+\item Python ($>$=3.\+6), with Num\+Py, Sci\+Py, Numba, and Pytest
 \end{DoxyItemize}\hypertarget{md_pages_getstarted_build_and_install_autotoc_md3}{}\doxysection{In pratice, to build pressio4py follow these steps}\label{md_pages_getstarted_build_and_install_autotoc_md3}
 \hypertarget{md_pages_getstarted_build_and_install_autotoc_md4}{}\doxysubsection{1. Prep}\label{md_pages_getstarted_build_and_install_autotoc_md4}
-(a) Create (or choose) a directory where you want to clone all repos, e,g.\+:
+Create (or choose) a directory where you want to clone all repos, e,g.\+:
 
 
 \begin{DoxyCode}{0}
@@ -23,25 +21,16 @@ You need\+:
 \end{DoxyCode}
 
 
-(b) To make things easier and cleaner below, create environment variables\+:
+And to make things easier, create environment variables\+:
 
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{export PRESSIO\_REPOS=\$HOME/pressio\_repos}
 \DoxyCodeLine{export PRESSIO\_BUILDS=\$HOME/pressio\_builds}
-\end{DoxyCode}
-
-
-(c) Unless you already have them, set the following compilers environment variable\+:
-
-
-\begin{DoxyCode}{0}
 \DoxyCodeLine{export CC=<path-\/to-\/your-\/C-\/compiler>}
 \DoxyCodeLine{export CXX=<path-\/to-\/your-\/CXX-\/compiler>}
 \end{DoxyCode}
-
-
-These are needed because {\ttfamily CC} and {\ttfamily C\+XX} are used to do all the builds.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md5}{}\doxysubsection{2. Cloning}\label{md_pages_getstarted_build_and_install_autotoc_md5}
+\hypertarget{md_pages_getstarted_build_and_install_autotoc_md5}{}\doxysubsection{2. Cloning}\label{md_pages_getstarted_build_and_install_autotoc_md5}
 Clone the needed repos as follows\+:
 
 
@@ -59,30 +48,13 @@ Run the following command\+:
 \begin{DoxyCode}{0}
 \DoxyCodeLine{cd \$\{PRESSIO\_REPOS\}/pressio-\/builder}
 \DoxyCodeLine{bash ./main\_tpls.sh -\/dryrun=no -\/build-\/mode=Debug \(\backslash\)}
-\DoxyCodeLine{     -\/target-\/dir=\$\{PRESSIO\_BUILDS\} -\/tpls=pybind11,eigen}
+\DoxyCodeLine{     -\/target-\/dir=\$\{PRESSIO\_BUILDS\} -\/tpls=pybind11}
 \end{DoxyCode}
 
 
-This step should create a directory tree with\+: 
+This step should create two subdirectories\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\$\{PRESSIO\_BUILDS\}/eigen/install}
 \DoxyCodeLine{\$\{PRESSIO\_BUILDS\}/pybind11/\{install, build\}}
-\end{DoxyCode}
-
-
-which looks like the following using {\ttfamily tree}\+:
-
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{├── pressio\_builds}
-\DoxyCodeLine{│   ├── eigen}
-\DoxyCodeLine{│   │   ├── eigen-\/3.3.7}
-\DoxyCodeLine{│   │   ├── eigen-\/3.3.7.tar.gz}
-\DoxyCodeLine{│   │   └── install}
-\DoxyCodeLine{│   └── pybind11}
-\DoxyCodeLine{│       ├── build}
-\DoxyCodeLine{│       ├── install}
-\DoxyCodeLine{│       └── pybind11}
 \end{DoxyCode}
 \hypertarget{md_pages_getstarted_build_and_install_autotoc_md7}{}\doxysubsection{4. Install pressio}\label{md_pages_getstarted_build_and_install_autotoc_md7}
 
@@ -92,7 +64,6 @@ which looks like the following using {\ttfamily tree}\+:
 \DoxyCodeLine{  -\/pressio-\/src=\$\{PRESSIO\_REPOS\}/pressio \(\backslash\)}
 \DoxyCodeLine{  -\/target-\/dir=\$\{PRESSIO\_BUILDS\} \(\backslash\)}
 \DoxyCodeLine{  -\/cmake-\/generator-\/name=default\_pybind \(\backslash\)}
-\DoxyCodeLine{  -\/eigen-\/path=\$\{PRESSIO\_BUILDS\}/eigen/install \(\backslash\)}
 \DoxyCodeLine{  -\/pybind11-\/path=\$\{PRESSIO\_BUILDS\}/pybind11/install}
 \end{DoxyCode}
 \hypertarget{md_pages_getstarted_build_and_install_autotoc_md8}{}\doxysubsection{5. Time to build pressio4py}\label{md_pages_getstarted_build_and_install_autotoc_md8}
@@ -106,8 +77,6 @@ which looks like the following using {\ttfamily tree}\+:
 \DoxyCodeLine{      -\/DCMAKE\_INSTALL\_PREFIX=\$\{PRESSIO\_BUILDS\}/pressio4py-\/install \(\backslash\)}
 \DoxyCodeLine{      -\/DCMAKE\_CXX\_COMPILER=\$\{CXX\} \(\backslash\)}
 \DoxyCodeLine{      -\/DCMAKE\_BUILD\_TYPE=Release \(\backslash\)}
-\DoxyCodeLine{      \(\backslash\)}
-\DoxyCodeLine{      -\/DEIGEN\_INCLUDE\_DIR=\$\{PRESSIO\_BUILDS\}/eigen/install/include/eigen3 \(\backslash\)}
 \DoxyCodeLine{      -\/DPRESSIO\_INCLUDE\_DIR=\$\{PRESSIO\_BUILDS\}/pressio/install/include \(\backslash\)}
 \DoxyCodeLine{      -\/DPYBIND11\_DIR=\$\{PRESSIO\_BUILDS\}/pybind11/install \(\backslash\)}
 \DoxyCodeLine{      \$\{PRESSIO\_REPOS\}/pressio4py}
@@ -117,10 +86,12 @@ which looks like the following using {\ttfamily tree}\+:
 \end{DoxyCode}
 
 
-You should have dynamic libraries inside {\ttfamily \$\{P\+R\+E\+S\+S\+I\+O\+\_\+\+B\+U\+I\+L\+DS\}/pressio4py-\/install} that you can load from Python.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md9}{}\doxysubsection{6. Testing}\label{md_pages_getstarted_build_and_install_autotoc_md9}
+This creates the Python library inside {\ttfamily \$\{P\+R\+E\+S\+S\+I\+O\+\_\+\+B\+U\+I\+L\+DS\}/pressio4py-\/install} to load.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md9}{}\doxysubsection{6. Testing}\label{md_pages_getstarted_build_and_install_autotoc_md9}
 After building, you can do\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{cd \$\{PRESSIO\_BUILDS\}/pressio4py-\/build}
-\DoxyCodeLine{pytest}
+\DoxyCodeLine{pytest -\/s}
 \end{DoxyCode}
- 
+
+
+where the {\ttfamily -\/s} flag tells Python to flush all output to terminal. 
