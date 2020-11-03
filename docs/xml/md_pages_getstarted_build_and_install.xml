@@ -12,13 +12,12 @@
 </para>
 <sect1 id="md_pages_getstarted_build_and_install_1autotoc_md2">
 <title>Prerequisites</title>
-<para>You need:</para>
 <para><itemizedlist>
 <listitem><para>SSH keys setup with github (if you are working behind a firewall, set the proper proxies)</para>
 </listitem><listitem><para>C, C++ (with support for C++14) compiler;</para>
 </listitem><listitem><para>CMake &gt;= 3.11.0;</para>
 </listitem><listitem><para>Bash &gt;= 3.2.57.</para>
-</listitem><listitem><para>Python (min version TBD), with NumPy, SciPy, Numba, and Pytest</para>
+</listitem><listitem><para>Python (&gt;=3.6), with NumPy, SciPy, Numba, and Pytest</para>
 </listitem></itemizedlist>
 </para>
 </sect1>
@@ -26,18 +25,15 @@
 <title>In pratice, to build pressio4py follow these steps</title>
 <sect2 id="md_pages_getstarted_build_and_install_1autotoc_md4">
 <title>1. Prep</title>
-<para>(a) Create (or choose) a directory where you want to clone all repos, e,g.:</para>
+<para>Create (or choose) a directory where you want to clone all repos, e,g.:</para>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">mkdir<sp/>$HOME/pressio_repos</highlight></codeline>
 </programlisting></para>
-<para>(b) To make things easier and cleaner below, create environment variables:</para>
+<para>And to make things easier, create environment variables:</para>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>PRESSIO_REPOS=$HOME/pressio_repos</highlight></codeline>
 <codeline><highlight class="normal">export<sp/>PRESSIO_BUILDS=$HOME/pressio_builds</highlight></codeline>
-</programlisting></para>
-<para>(c) Unless you already have them, set the following compilers environment variable:</para>
-<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CC=&lt;path-to-your-C-compiler&gt;</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>CC=&lt;path-to-your-C-compiler&gt;</highlight></codeline>
 <codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-CXX-compiler&gt;</highlight></codeline>
 </programlisting></para>
-<para>These are needed because <computeroutput>CC</computeroutput> and <computeroutput>CXX</computeroutput> are used to do all the builds.</para>
 </sect2>
 <sect2 id="md_pages_getstarted_build_and_install_1autotoc_md5">
 <title>2. Cloning</title>
@@ -54,21 +50,9 @@
 <para>Run the following command:</para>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${PRESSIO_REPOS}/pressio-builder</highlight></codeline>
 <codeline><highlight class="normal">bash<sp/>./main_tpls.sh<sp/>-dryrun=no<sp/>-build-mode=Debug<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>-target-dir=${PRESSIO_BUILDS}<sp/>-tpls=pybind11,eigen</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>-target-dir=${PRESSIO_BUILDS}<sp/>-tpls=pybind11</highlight></codeline>
 </programlisting></para>
-<para>This step should create a directory tree with: <programlisting filename=".bash"><codeline><highlight class="normal">${PRESSIO_BUILDS}/eigen/install</highlight></codeline>
-<codeline><highlight class="normal">${PRESSIO_BUILDS}/pybind11/{install,<sp/>build}</highlight></codeline>
-</programlisting></para>
-<para>which looks like the following using <computeroutput>tree</computeroutput>:</para>
-<para><programlisting><codeline><highlight class="normal">├──<sp/>pressio_builds</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/>├──<sp/>eigen</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/>│  <sp/>├──<sp/>eigen-3.3.7</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/>│  <sp/>├──<sp/>eigen-3.3.7.tar.gz</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/>│  <sp/>└──<sp/>install</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/>└──<sp/>pybind11</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/><sp/><sp/><sp/><sp/>├──<sp/>build</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/><sp/><sp/><sp/><sp/>├──<sp/>install</highlight></codeline>
-<codeline><highlight class="normal">│  <sp/><sp/><sp/><sp/><sp/>└──<sp/>pybind11</highlight></codeline>
+<para>This step should create two subdirectories: <programlisting filename=".bash"><codeline><highlight class="normal">${PRESSIO_BUILDS}/pybind11/{install,<sp/>build}</highlight></codeline>
 </programlisting></para>
 </sect2>
 <sect2 id="md_pages_getstarted_build_and_install_1autotoc_md7">
@@ -78,7 +62,6 @@
 <codeline><highlight class="normal"><sp/><sp/>-pressio-src=${PRESSIO_REPOS}/pressio<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>-target-dir=${PRESSIO_BUILDS}<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>-cmake-generator-name=default_pybind<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>-eigen-path=${PRESSIO_BUILDS}/eigen/install<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>-pybind11-path=${PRESSIO_BUILDS}/pybind11/install</highlight></codeline>
 </programlisting></para>
 </sect2>
@@ -92,8 +75,6 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_INSTALL_PREFIX=${PRESSIO_BUILDS}/pressio4py-install<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_CXX_COMPILER=${CXX}<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_BUILD_TYPE=Release<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DEIGEN_INCLUDE_DIR=${PRESSIO_BUILDS}/eigen/install/include/eigen3<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DPRESSIO_INCLUDE_DIR=${PRESSIO_BUILDS}/pressio/install/include<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DPYBIND11_DIR=${PRESSIO_BUILDS}/pybind11/install<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>${PRESSIO_REPOS}/pressio4py</highlight></codeline>
@@ -101,13 +82,14 @@
 <codeline><highlight class="normal">make<sp/>install</highlight></codeline>
 <codeline><highlight class="normal">cd<sp/>..</highlight></codeline>
 </programlisting></para>
-<para>You should have dynamic libraries inside <computeroutput>${PRESSIO_BUILDS}/pressio4py-install</computeroutput> that you can load from Python.</para>
+<para>This creates the Python library inside <computeroutput>${PRESSIO_BUILDS}/pressio4py-install</computeroutput> to load.</para>
 </sect2>
 <sect2 id="md_pages_getstarted_build_and_install_1autotoc_md9">
 <title>6. Testing</title>
 <para>After building, you can do: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${PRESSIO_BUILDS}/pressio4py-build</highlight></codeline>
-<codeline><highlight class="normal">pytest</highlight></codeline>
-</programlisting> </para>
+<codeline><highlight class="normal">pytest<sp/>-s</highlight></codeline>
+</programlisting></para>
+<para>where the <computeroutput>-s</computeroutput> flag tells Python to flush all output to terminal. </para>
 </sect2>
 </sect1>
     </detaileddescription>
