@@ -65,10 +65,10 @@ struct GalerkinBinder
     pressio4py::rom::FomWrapperContinuousTimeWithoutApplyJacobian<
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
-  using gal_problem_t = typename pressio::rom::galerkin::composeDefaultProblem<
+  using galerkin_problem_t = typename pressio::rom::galerkin::composeDefaultProblem<
     ode_tag, sys_wrapper_t, decoder_t, rom_state_t>::type;
-  using res_pol_t	   = typename gal_problem_t::velocity_policy_t;
-  using galerkin_stepper_t = typename gal_problem_t::stepper_t;
+  using res_pol_t	   = typename galerkin_problem_t::velocity_policy_t;
+  using galerkin_stepper_t = typename galerkin_problem_t::stepper_t;
 
   static void bind(pybind11::module & m,
 		   const std::string stepperName,
@@ -84,7 +84,7 @@ struct GalerkinBinder
 		   >());
 
     // problem
-    pybind11::class_<gal_problem_t> galProblem(m, problemName.c_str());
+    pybind11::class_<galerkin_problem_t> galProblem(m, problemName.c_str());
     galProblem.def(pybind11::init<
 		   pybind11::object,
 		   const decoder_t &,
@@ -92,10 +92,10 @@ struct GalerkinBinder
 		   const fom_native_state_t &
 		   >());
     galProblem.def("stepper",
-		   &gal_problem_t::stepperRef,
+		   &galerkin_problem_t::stepperRef,
 		   pybind11::return_value_policy::reference);
     galProblem.def("fomStateReconstructor",
-		   &gal_problem_t::fomStateReconstructorCRef,
+		   &galerkin_problem_t::fomStateReconstructorCRef,
 		   pybind11::return_value_policy::reference);
   }
 };
@@ -106,13 +106,15 @@ struct GalerkinBinder
 {
   using tag1 = pressio::ode::explicitmethods::Euler;
   using gb1_t = impl::GalerkinBinder<mytypes, tag1>;
+  using problem_euler_t = typename gb1_t::galerkin_problem_t;
   using stepper_euler_t = typename gb1_t::galerkin_stepper_t;
 
   using tag2 = pressio::ode::explicitmethods::RungeKutta4;
   using gb2_t = impl::GalerkinBinder<mytypes, tag2>;
-  using stepper_rk4_t   = typename gb2_t::galerkin_stepper_t;
+  using problem_rk4_t = typename gb2_t::galerkin_problem_t;
+  using stepper_rk4_t = typename gb2_t::galerkin_stepper_t;
 
-  GalerkinBinder(pybind11::module & m)
+  static void bind(pybind11::module & m)
   {
     pybind11::module m1 = m.def_submodule("default");
     gb1_t::bind(m1, "StepperEuler", "ProblemEuler", "advanceNStepsEuler");

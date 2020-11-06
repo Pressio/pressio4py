@@ -46,46 +46,48 @@ class MyLinSolver:
 
 #----------------------------
 def test_steady_lspg():
+  np.random.seed(334346892)
+
   meshSize = 6
   romSize = 3
-
-  np.random.seed(334346892)
 
   # create app
   appObj = MySteadyAdapter(meshSize)
   # set reference state
   yRef = np.ones(meshSize)
-  # # load basis
+  # load basis
   phi = np.ones((meshSize, romSize))
   phi[:,0] = 1
   phi[:,1] = 2
   phi[:,2] = 3
 
-  # create a decoder
+  # decoder
   decoder = rom.Decoder(phi)
-  # the LSPG state
+  # LSPG state
   yRom = np.zeros(romSize)
-
-  lspgObj = rom.lspg.steady.default.Problem(appObj, decoder, yRom, yRef)
-  system = lspgObj.system()
+  # create LSPG problem
+  lspgProblem = rom.lspg.steady.default.Problem(appObj, decoder, yRom, yRef)
+  #system = lspgProblem.system()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(system, yRom, lsO)
+  #nlsO = solvers.GaussNewton(system, yRom, lsO)
+  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+
   nlsTol, nlsMaxIt = 1e-13, 3
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setTolerance(nlsTol)
   assert(nlsO.correctionAbsoluteTolerance()==1e-13)
   assert(nlsO.maxIterations()==3)
-  # # solve
-  nlsO.solve(system, yRom)
+  # solve
+  rom.lspg.solveSteady(lspgProblem, yRom, nlsO)
 
   print(yRom)
   assert(yRom[0]==3.)
   assert(yRom[1]==6.)
   assert(yRom[2]==9.)
 
-  fomRecon = lspgObj.fomStateReconstructor()
+  fomRecon = lspgProblem.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
   print(yFomFinal)
   # gold is 43 because we have phi*rho=42 + reference state

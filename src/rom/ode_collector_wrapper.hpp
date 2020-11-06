@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// fomreconstructor.hpp
+// ode_collector_wrapper.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,35 +46,43 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
-#define PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
+#ifndef ODE_COLLECTOR_WRAPPER_HPP_
+#define ODE_COLLECTOR_WRAPPER_HPP_
 
 namespace pressio4py{
 
-template <typename mytypes>
-void createFomReconstructorBindings(pybind11::module & m)
+template<typename state_t>
+class OdeCollectorWrapper
 {
-  using scalar_t	   = typename mytypes::scalar_t;
-  using rom_native_state_t = typename mytypes::rom_native_state_t;
-  using fom_native_state_t = typename mytypes::fom_native_state_t;
-  using fom_state_t	   = typename mytypes::fom_state_t;
-  using decoder_t	   = typename mytypes::decoder_t;
+  static_assert
+  (pressio::containers::predicates::is_vector_wrapper_pybind<state_t>::value,
+   "state_t for OdeCollectorWrapper must be a vector wrapper pybind");
 
-  // fom reconstructor
-  using fom_reconstructor_t =
-    pressio::rom::FomStateReconstructor<scalar_t, fom_state_t, decoder_t>;
+  pybind11::object pyObj_;
 
-  // actual class
-  pybind11::class_<fom_reconstructor_t> fomReconstructor(m, "FomReconstructor");
-  // constructor
-  fomReconstructor.def
-    (pybind11::init<const fom_state_t &, const decoder_t &>());
-  // evaluate method
-  fomReconstructor.def
-    ("__call__", &fom_reconstructor_t::template evaluate<rom_native_state_t>);
-  fomReconstructor.def
-    ("evaluate", &fom_reconstructor_t::template evaluate<rom_native_state_t>);
-}
+public:
+  OdeCollectorWrapper(pybind11::object pyObj)
+    : pyObj_(pyObj){}
 
-}
+  OdeCollectorWrapper() = delete;
+  OdeCollectorWrapper(const OdeCollectorWrapper &) = default;
+  OdeCollectorWrapper & operator=(const OdeCollectorWrapper &) = default;
+  OdeCollectorWrapper(OdeCollectorWrapper &&) = default;
+  OdeCollectorWrapper & operator=(OdeCollectorWrapper &&) = default;
+  ~OdeCollectorWrapper() = default;
+
+public:
+  template<typename state_type, typename time_type>
+  pressio::mpl::enable_if_t<
+  pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+  >
+  operator()(pressio::ode::types::step_t step,
+	     time_type time,
+	     const state_type & state)
+  {
+    pyObj_.attr("__call__")(step, time, *state.data());
+  }
+};
+
+}//namespace pressio4py
 #endif

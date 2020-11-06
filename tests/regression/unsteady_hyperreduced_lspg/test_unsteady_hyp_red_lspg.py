@@ -3,7 +3,6 @@ import numpy as np
 from scipy import linalg
 
 from pressio4py import rom as rom
-from pressio4py import ode as ode
 from pressio4py import solvers as solvers
 
 np.set_printoptions(linewidth=140)
@@ -55,6 +54,14 @@ class MyLinSolver:
       hGold = np.ones((3,3))*158.8
       assert( np.allclose(A, hGold, atol=1e-12) )
 
+
+#----------------------------------------
+class OdeObserver:
+  def __init__(self): pass
+
+  def __call__(self, timeStep, time, state):
+    print(state)
+    assert(state.shape[0]==3)
 
 #----------------------------
 def test():
@@ -180,21 +187,23 @@ def test():
   yRom    = np.zeros(romSize)
 
   indices = [1,4,5,7,8]
-  lspgObj = rom.lspg.unsteady.hyperreduced.ProblemEuler(appObj, decoder, yRom, yRef, indices)
-  stepper = lspgObj.stepper()
+  lspgProblem = rom.lspg.unsteady.hyperreduced.ProblemEuler(appObj, decoder,
+                                                            yRom, yRef, indices)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(stepper, yRom, lsO)
+  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
 
   # do integration
-  ode.advanceNSteps(stepper, yRom, 0., 0.2, 1, nlsO)
+  myObs = OdeObserver()
+  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, 0.,
+                                         0.2, 1, myObs, nlsO)
 
   # yRom should be [1 1 1]
-  fomRecon = lspgObj.fomStateReconstructor()
+  fomRecon = lspgProblem.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
   np.set_printoptions(precision=15)
 

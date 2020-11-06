@@ -8,7 +8,6 @@ sys.path.append(str(file_path) + "/../apps")
 
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
-from pressio4py import ode as ode
 
 gold = np.array(
   [5.0081542681376, 5.016629490569,
@@ -37,6 +36,18 @@ gold = np.array(
    6.0088164545724, 6.0531503069487,
    6.0989210765093, 6.1461565470309])
 
+#----------------------------------------
+class OdeObserver:
+  def __init__(self, fomRec):
+    self.fomRec = fomRec
+
+  def __call__(self, timeStep, time, state):
+    print(state)
+    fs = self.fomRec.evaluate(state)
+    print(fs.shape)
+    assert(fs.shape[0]==50)
+
+#----------------------------------------
 def test_euler():
   meshSize = 50
   romSize  = 20
@@ -53,14 +64,15 @@ def test_euler():
 
   # create rom state
   yRom = np.zeros(romSize)
+  # create problem
+  galerkinProblem = rom.galerkin.default.ProblemEuler(appObj, decoder, yRom, yRef)
+  fomRecon = galerkinProblem.fomStateReconstructor()
+  # the observer is called to monitor evolution of rom_state and
+  # uses the reconstructor object to reconstruct FOM state
+  myObs = OdeObserver(fomRecon)
+  rom.galerkin.advanceNSteps(galerkinProblem, yRom, 0., dt, Nsteps, myObs)
 
-  # create problem and integrate in time
-  galerkinObj = rom.galerkin.default.ProblemEuler(appObj, decoder, yRom, yRef)
-  stepper = galerkinObj.stepper()
-  ode.advanceNSteps(stepper, yRom, 0., dt, Nsteps)
-
-  # reconstruct full state
-  fomRecon = galerkinObj.fomStateReconstructor()
+  # reconstruct full state at the end
   yFomFinal = fomRecon.evaluate(yRom)
   print(yFomFinal)
 

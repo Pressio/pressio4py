@@ -69,16 +69,16 @@ struct SteadyLSPGProblemBinder
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   static_assert(problemid==0, "currently only supporting default LSPG");
-  using lspg_problem_type = typename std::conditional<
+  using lspg_problem_t = typename std::conditional<
     problemid==0,
     typename pressio::rom::lspg::composeDefaultProblem<
       sys_wrapper_t, decoder_t, rom_state_t>::type,
     void
     >::type;
 
-  using lspg_system_t		= typename lspg_problem_type::system_t;
-  using residual_policy_t	= typename lspg_problem_type::residual_policy_t;
-  using jacobian_policy_t	= typename lspg_problem_type::jacobian_policy_t;
+  using lspg_system_t		= typename lspg_problem_t::system_t;
+  using residual_policy_t	= typename lspg_problem_t::residual_policy_t;
+  using jacobian_policy_t	= typename lspg_problem_t::jacobian_policy_t;
 
   SteadyLSPGProblemBinder() = default;
 
@@ -93,17 +93,17 @@ struct SteadyLSPGProblemBinder
 	       const jacobian_policy_t &>());
 
     // concrete LSPG problem
-    pybind11::class_<lspg_problem_type> problem(m, "Problem");
+    pybind11::class_<lspg_problem_t> problem(m, "Problem");
     problem.def(pybind11::init<
 		pybind11::object,
 		const decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t>());
     problem.def("fomStateReconstructor",
-		&lspg_problem_type::fomStateReconstructorCRef,
+		&lspg_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
     problem.def("system",
-		&lspg_problem_type::systemRef,
+		&lspg_problem_t::systemRef,
 		pybind11::return_value_policy::reference);
   }
 };
@@ -125,7 +125,7 @@ struct UnsteadyLSPGProblemBinder
     pressio4py::rom::FomWrapperContinuousTimeWithApplyJacobian<
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
-  using lspg_problem_type =
+  using lspg_problem_t =
     typename std::conditional<
     problemid==0,
     typename pressio::rom::lspg::composeDefaultProblem_t<
@@ -140,9 +140,9 @@ struct UnsteadyLSPGProblemBinder
       >::type
     >::type;
 
-  using lspg_stepper_t	  = typename lspg_problem_type::stepper_t;
-  using residual_policy_t = typename lspg_problem_type::residual_policy_t;
-  using jacobian_policy_t = typename lspg_problem_type::jacobian_policy_t;
+  using lspg_stepper_t	  = typename lspg_problem_t::stepper_t;
+  using residual_policy_t = typename lspg_problem_t::residual_policy_t;
+  using jacobian_policy_t = typename lspg_problem_t::jacobian_policy_t;
 
   // constructor for default lspg problem
   template<typename T, int _problemid = problemid>
@@ -186,15 +186,15 @@ struct UnsteadyLSPGProblemBinder
 		const jacobian_policy_t &>());
 
     // concrete LSPG problem binding: need this because is what we use to extract stepper
-    pybind11::class_<lspg_problem_type> problem(m, problemPythonName.c_str());
+    pybind11::class_<lspg_problem_t> problem(m, problemPythonName.c_str());
 
     bindProblemConstructor(problem);
 
     problem.def("fomStateReconstructor",
-		&lspg_problem_type::fomStateReconstructorCRef,
+		&lspg_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
     problem.def("stepper",
-		&lspg_problem_type::stepperRef,
+		&lspg_problem_t::stepperRef,
 		pybind11::return_value_policy::reference);
   }
 };
@@ -210,17 +210,20 @@ struct LSPGBinder
 
   // steady
   using LSPGProblemBinder_t = impl::SteadyLSPGProblemBinder<mytypes, 0>;
-  using lspg_steady_system_t = typename LSPGProblemBinder_t::lspg_system_t;
+  using lspg_steady_problem_t = typename LSPGProblemBinder_t::lspg_problem_t;
+  using lspg_steady_system_t  = typename LSPGProblemBinder_t::lspg_system_t;
 
   using bdf1tag = pressio::ode::implicitmethods::Euler;
   // default bdf1
   using de_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 0>;
+  using de_lspg_problem_bdf1_t	   = typename de_bdf1LSPGProblemBinder_t::lspg_problem_t;
   using de_lspg_stepper_bdf1_t     = typename de_bdf1LSPGProblemBinder_t::lspg_stepper_t;
   // hyper-reduced bdf1
   using hr_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 1>;
+  using hr_lspg_problem_bdf1_t	   = typename hr_bdf1LSPGProblemBinder_t::lspg_problem_t;
   using hr_lspg_stepper_bdf1_t     = typename hr_bdf1LSPGProblemBinder_t::lspg_stepper_t;
 
-  LSPGBinder(pybind11::module & lspgModule)
+  static void bind(pybind11::module & lspgModule)
   {
     //--------------------------
     // *** steady problem ***

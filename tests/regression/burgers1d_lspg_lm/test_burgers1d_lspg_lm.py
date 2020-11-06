@@ -4,7 +4,6 @@ from scipy import linalg
 
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
-from pressio4py import ode as ode
 from pressio4py import solvers as solvers
 
 np.set_printoptions(linewidth=140)
@@ -41,6 +40,14 @@ class MyLinSolver:
     # here we must use x[:] otherwise it won't overwrite x passed in
     x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
 
+#----------------------------------------
+class OdeObserver:
+  def __init__(self): pass
+
+  def __call__(self, timeStep, time, state):
+    print(state)
+    assert(state.shape[0]==11)
+
 #----------------------------
 def test_euler():
   meshSize = 20
@@ -58,24 +65,26 @@ def test_euler():
   basisFile = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt"
   phi = np.loadtxt(basisFile)
 
-  # create a decoder
+  # decoder
   decoder = rom.Decoder(phi)
-  # the LSPG state
+  # LSPG state
   yRom = np.zeros(romSize)
 
-  lspgObj = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
-  stepper = lspgObj.stepper()
+  lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder,
+                                                       yRom, yRef)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.LevenbergMarquardt(stepper, yRom, lsO)
+  nlsO = solvers.LevenbergMarquardt(lspgProblem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
   nlsO.setMaxIterations(2)
 
-  # do integration
-  ode.advanceNSteps(stepper, yRom, t0, dt, Nsteps, nlsO)
+  # solve
+  myObs = OdeObserver()
+  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, t0,
+                                         dt, Nsteps, myObs, nlsO)
 
-  fomRecon = lspgObj.fomStateReconstructor()
+  fomRecon = lspgProblem.fomStateReconstructor()
   yFomFinal = fomRecon.evaluate(yRom)
   print(yFomFinal)
 

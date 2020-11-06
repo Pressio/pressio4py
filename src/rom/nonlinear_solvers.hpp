@@ -142,15 +142,18 @@ void bindStoppingCriteria(pybind11::class_<nonlinear_solver_t> & solverObj)
 
 template<
   bool do_gn,
-  typename steady_system_t,
-  typename stepper_de_t,
-  typename stepper_hr_t,
+  typename steady_prob_t, /*typename steady_system_t,*/
+  typename prob_de_t,
+  typename prob_hr_t,
   typename linear_solver_t,
   typename rom_native_state_t,
   typename rom_state_t
   >
 struct LeastSquaresNormalEqBinder
 {
+  using steady_system_t = typename steady_prob_t::system_t;
+  using stepper_de_t    = typename prob_de_t::stepper_t;
+  using stepper_hr_t    = typename prob_hr_t::stepper_t;
   static_assert
   (::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
    "Currently only supporting bindings for residual_jacobian_api");
@@ -179,29 +182,34 @@ struct LeastSquaresNormalEqBinder
 
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
 
-    // constr bindings for steady
+    // -------------------------------------------
+    // *** bindings for constructor for steady ***
     nonLinSolver.def(pybind11::init<
-		     const steady_system_t &,
+		     steady_prob_t &,
 		     const rom_native_state_t &,
 		     pybind11::object>());
-    bindCommonSolverMethods(nonLinSolver);
-    // for steady LSPG, we also need to register the solve method
-    // because the state is owned by Python which calls solve directly
-    nonLinSolver.def("solve",
-		     &nonlinear_solver_t::template solve<system_t, rom_native_state_t>);
 
-    // constr bindings for unsteady default
-    nonLinSolver.def(pybind11::init<const stepper_de_t &,
-		     const rom_native_state_t &,
-		     pybind11::object/*linear_solver_t &*/>());
-    bindCommonSolverMethods(nonLinSolver);
+    // // for steady LSPG, we also need to register the solve method
+    // // because the state is owned by Python which calls solve directly
+    // // so the c++ side takes in a rom_native_state_t
+    // nonLinSolver.def("solve",
+    // 		     &nonlinear_solver_t::template solve<system_t, rom_native_state_t>);
 
-    // constr bindings for unsteady hyp-red
-    nonLinSolver.def(pybind11::init<const stepper_hr_t &,
+    // -----------------------------------------------------
+    // *** bindings for constructor for unsteady default ***
+    nonLinSolver.def(pybind11::init<
+		     prob_de_t &,
 		     const rom_native_state_t &,
-		     pybind11::object/*linear_solver_t &*/>());
-    bindCommonSolverMethods(nonLinSolver);
+		     pybind11::object>());
+
+    // -----------------------------------------------------
+    // *** bindings for constructor for unsteady hyp-red ***
+    nonLinSolver.def(pybind11::init<
+		     prob_hr_t &,
+		     const rom_native_state_t &,
+		     pybind11::object>());
   }
 };
 
