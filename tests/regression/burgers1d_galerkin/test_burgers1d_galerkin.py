@@ -60,12 +60,14 @@ def test_euler():
   yRef = np.ones(meshSize)
   # basis
   phi = np.loadtxt("./burgers1d_galerkin/basis.txt")
+
   decoder = rom.Decoder(phi)
 
   # create rom state
   yRom = np.zeros(romSize)
   # create problem
   galerkinProblem = rom.galerkin.default.ProblemEuler(appObj, decoder, yRom, yRef)
+
   fomRecon = galerkinProblem.fomStateReconstructor()
   # the observer is called to monitor evolution of rom_state and
   # uses the reconstructor object to reconstruct FOM state

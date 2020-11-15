@@ -197,7 +197,7 @@ def test():
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
 
-  # do integration
+  # solve
   myObs = OdeObserver()
   rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, 0.,
                                          0.2, 1, myObs, nlsO)

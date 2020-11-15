@@ -170,9 +170,9 @@ struct LeastSquaresNormalEqBinder
   // because it is asserted above.
   using system_t = steady_system_t;
 
-  using gn_type = pressio::solvers::nonlinear::composeGaussNewton_t<
+  using gn_type = pressio::solvers::nonlinear::impl::composeGaussNewton_t<
     system_t, linear_solver_t>;
-  using lm_type = pressio::solvers::nonlinear::composeLevenbergMarquardt_t<
+  using lm_type = pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t<
     system_t, linear_solver_t>;
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
