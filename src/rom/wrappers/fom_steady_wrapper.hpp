@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// fom_wrappers.hpp
+// fom_steady_wrappers.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,59 +46,10 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_ROM_FOM_WRAPPERS_HPP_
-#define PRESSIO4PY_PYBINDINGS_ROM_FOM_WRAPPERS_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_ROM_FOM_STEADY_WRAPPER_HPP_
+#define PRESSIO4PY_PYBINDINGS_ROM_FOM_STEADY_WRAPPER_HPP_
 
 namespace pressio4py{ namespace rom{
-
-template<
-  typename scalar_t,
-  typename state_t,
-  typename velocity_t,
-  typename dense_matrix_t
-  >
-class FomWrapperContinuousTimeWithoutApplyJacobian
-{
-  pybind11::object pyObj_;
-
-public:
-  using scalar_type       = scalar_t;
-  using state_type	  = state_t;
-  using velocity_type	  = velocity_t;
-  using dense_matrix_type = dense_matrix_t;
-
-public:
-  FomWrapperContinuousTimeWithoutApplyJacobian() = delete;
-
-  FomWrapperContinuousTimeWithoutApplyJacobian(pybind11::object pyObj)
-    : pyObj_(pyObj){}
-
-  FomWrapperContinuousTimeWithoutApplyJacobian
-    (const FomWrapperContinuousTimeWithoutApplyJacobian&) = default;
-
-  FomWrapperContinuousTimeWithoutApplyJacobian & operator=
-    (const FomWrapperContinuousTimeWithoutApplyJacobian &) = default;
-
-  FomWrapperContinuousTimeWithoutApplyJacobian
-    (FomWrapperContinuousTimeWithoutApplyJacobian &&) = default;
-
-  FomWrapperContinuousTimeWithoutApplyJacobian & operator=
-  (FomWrapperContinuousTimeWithoutApplyJacobian &&) = default;
-
-  ~FomWrapperContinuousTimeWithoutApplyJacobian() = default;
-
-public:
-  velocity_type createVelocity() const{
-    return pyObj_.attr("createVelocity")();
-  }
-
-  void velocity(const state_type & state,
-		const scalar_type time,
-		velocity_type & velo) const
-  {
-    pyObj_.attr("velocity")(state, time, velo);
-  }
-};
 
 template<
   typename scalar_t,
@@ -118,17 +69,14 @@ public:
 
 public:
   FomWrapperSteadyState() = delete;
-
-  FomWrapperSteadyState(pybind11::object pyObj)
-    : pyObj_(pyObj){}
-
   FomWrapperSteadyState(const FomWrapperSteadyState &) = default;
   FomWrapperSteadyState & operator=(const FomWrapperSteadyState &) = default;
-
   FomWrapperSteadyState(FomWrapperSteadyState &&) = default;
   FomWrapperSteadyState & operator=(FomWrapperSteadyState &&) = default;
-
   ~FomWrapperSteadyState() = default;
+
+  explicit FomWrapperSteadyState(pybind11::object pyObj)
+    : pyObj_(pyObj){}
 
 public:
   residual_type createResidual() const{
@@ -150,68 +98,6 @@ public:
 		     dense_matrix_type & result) const
   {
     pyObj_.attr("applyJacobian")(state, operand, result);
-  }
-};
-
-
-template<
-  typename scalar_t,
-  typename state_t,
-  typename velocity_t,
-  typename dense_matrix_t
-  >
-class FomWrapperContinuousTimeWithApplyJacobian
-{
-  pybind11::object pyObj_;
-
-public:
-  using scalar_type       = scalar_t;
-  using state_type	  = state_t;
-  using velocity_type	  = velocity_t;
-  using dense_matrix_type = dense_matrix_t;
-
-public:
-  FomWrapperContinuousTimeWithApplyJacobian() = delete;
-
-  FomWrapperContinuousTimeWithApplyJacobian(pybind11::object pyObj)
-    : pyObj_(pyObj){}
-
-  FomWrapperContinuousTimeWithApplyJacobian
-    (const FomWrapperContinuousTimeWithApplyJacobian &) = default;
-
-  FomWrapperContinuousTimeWithApplyJacobian & operator=
-    (const FomWrapperContinuousTimeWithApplyJacobian &) = default;
-
-  FomWrapperContinuousTimeWithApplyJacobian
-    (FomWrapperContinuousTimeWithApplyJacobian &&) = default;
-
-  FomWrapperContinuousTimeWithApplyJacobian & operator=
-    (FomWrapperContinuousTimeWithApplyJacobian &&) = default;
-
-  ~FomWrapperContinuousTimeWithApplyJacobian() = default;
-
-public:
-  velocity_type createVelocity() const{
-    return pyObj_.attr("createVelocity")();
-  }
-
-  dense_matrix_type createApplyJacobianResult(const dense_matrix_type & B) const{
-    return pyObj_.attr("createApplyJacobianResult")(B);
-  }
-
-  void velocity(const state_type & state,
-  		const scalar_type time,
-		velocity_type & velo) const
-  {
-    pyObj_.attr("velocity")(state, time, velo);
-  }
-
-  void applyJacobian(const state_type & state,
-		     const dense_matrix_type & operand,
-		     const scalar_type time,
-		     dense_matrix_type & result) const
-  {
-    pyObj_.attr("applyJacobian")(state, operand, time, result);
   }
 };
 

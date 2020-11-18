@@ -58,13 +58,16 @@
 
 // pressio4py includes
 #include "types.hpp"
+
+#include "./rom/wrappers/fom_steady_wrapper.hpp"
+#include "./rom/wrappers/fom_continuous_time_wrapper.hpp"
+#include "./rom/wrappers/lin_solver_wrapper.hpp"
+#include "./rom/wrappers/ode_collector_wrapper.hpp"
+
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
-#include "./rom/fom_wrappers.hpp"
 #include "./rom/galerkin.hpp"
 #include "./rom/lspg.hpp"
-#include "./rom/lin_solver_wrapper.hpp"
-#include "./rom/ode_collector_wrapper.hpp"
 #include "./rom/nonlinear_solvers.hpp"
 
 PYBIND11_MODULE(pressio4py, mParent)

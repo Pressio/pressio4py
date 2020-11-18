@@ -64,14 +64,13 @@ struct SteadyLSPGProblemBinder
   using decoder_t	   = typename mytypes::decoder_t;
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
-  using sys_wrapper_t =
-    pressio4py::rom::FomWrapperSteadyState<
+  using sys_wrapper_t = pressio4py::rom::FomWrapperSteadyState<
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   static_assert(problemid==0, "currently only supporting default LSPG");
   using lspg_problem_t = typename std::conditional<
     problemid==0,
-    typename pressio::rom::lspg::composeDefaultProblem<
+    typename pressio::rom::lspg::impl::composeDefaultProblem<
       sys_wrapper_t, decoder_t, rom_state_t>::type,
     void
     >::type;
@@ -121,18 +120,17 @@ struct UnsteadyLSPGProblemBinder
   using decoder_t	   = typename mytypes::decoder_t;
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
-  using sys_wrapper_t =
-    pressio4py::rom::FomWrapperContinuousTimeWithApplyJacobian<
+  using sys_wrapper_t = pressio4py::rom::FomWrapperCTimeWithApplyJac<
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   using lspg_problem_t =
     typename std::conditional<
     problemid==0,
-    typename pressio::rom::lspg::composeDefaultProblem_t<
+    typename pressio::rom::lspg::impl::composeDefaultProblem_t<
       ode_tag, sys_wrapper_t, decoder_t, rom_state_t>,
     typename std::conditional<
       problemid==1,
-      typename pressio::rom::lspg::composeHyperReducedProblem_t<
+      typename pressio::rom::lspg::impl::composeHyperReducedProblem_t<
 	ode_tag, sys_wrapper_t, decoder_t, rom_state_t,
 	// we use a py_f_arr to store indices for sample to stencil mapping
 	pressio::containers::Vector<typename mytypes::py_f_arr>>,

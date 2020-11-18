@@ -61,8 +61,7 @@ struct GalerkinBinder
   using decoder_t	   = typename mytypes::decoder_t;
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
-  using sys_wrapper_t =
-    pressio4py::rom::FomWrapperContinuousTimeWithoutApplyJacobian<
+  using sys_wrapper_t = pressio4py::rom::FomWrapperCTimeNoApplyJac<
     scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   using galerkin_problem_t = typename pressio::rom::galerkin::composeDefaultProblem<
