@@ -51,7 +51,6 @@
 
 namespace pressio4py{ namespace rom{ namespace impl{
 
-
 // the problemid is used to choose among:
 // so 0 = default
 template <typename mytypes, int problemid>
@@ -139,6 +138,7 @@ struct UnsteadyLSPGProblemBinder
     >::type;
 
   using lspg_stepper_t	  = typename lspg_problem_t::stepper_t;
+  using aux_lspg_stepper_t= typename lspg_problem_t::aux_stepper_t;
   using residual_policy_t = typename lspg_problem_t::residual_policy_t;
   using jacobian_policy_t = typename lspg_problem_t::jacobian_policy_t;
 
@@ -174,26 +174,24 @@ struct UnsteadyLSPGProblemBinder
     const auto stepperPythonName = "Stepper"+appendToStepperName;
     const auto problemPythonName = "Problem"+appendToProblemName;
 
-    // concrete LSPG stepper binding (need this because inside python we extract it
-    // from the problem object to pass to the advancer
-    pybind11::class_<lspg_stepper_t> stepper(m, stepperPythonName.c_str());
-    stepper.def(pybind11::init<
-		const rom_state_t &,
-		const sys_wrapper_t &,
-		const residual_policy_t &,
-		const jacobian_policy_t &>());
+    // // concrete LSPG stepper binding (need this because inside python we extract it
+    // // from the problem object to pass to the advancer
+    // pybind11::class_<lspg_stepper_t> stepper(m, stepperPythonName.c_str());
+    // stepper.def(pybind11::init<
+    // 		const rom_state_t &,
+    // 		const sys_wrapper_t &,
+    // 		const residual_policy_t &,
+    // 		const jacobian_policy_t &>());
 
     // concrete LSPG problem binding: need this because is what we use to extract stepper
     pybind11::class_<lspg_problem_t> problem(m, problemPythonName.c_str());
-
     bindProblemConstructor(problem);
-
     problem.def("fomStateReconstructor",
 		&lspg_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
-    problem.def("stepper",
-		&lspg_problem_t::stepperRef,
-		pybind11::return_value_policy::reference);
+    // problem.def("stepper",
+    // 		&lspg_problem_t::stepperRef,
+    // 		pybind11::return_value_policy::reference);
   }
 };
 
@@ -211,15 +209,31 @@ struct LSPGBinder
   using lspg_steady_problem_t = typename LSPGProblemBinder_t::lspg_problem_t;
   using lspg_steady_system_t  = typename LSPGProblemBinder_t::lspg_system_t;
 
+  //------------------
+  // unsteady: bdf1
+  //------------------
   using bdf1tag = pressio::ode::implicitmethods::Euler;
-  // default bdf1
+  // default
   using de_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 0>;
   using de_lspg_problem_bdf1_t	   = typename de_bdf1LSPGProblemBinder_t::lspg_problem_t;
   using de_lspg_stepper_bdf1_t     = typename de_bdf1LSPGProblemBinder_t::lspg_stepper_t;
-  // hyper-reduced bdf1
+  // hyper-reduced
   using hr_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 1>;
   using hr_lspg_problem_bdf1_t	   = typename hr_bdf1LSPGProblemBinder_t::lspg_problem_t;
   using hr_lspg_stepper_bdf1_t     = typename hr_bdf1LSPGProblemBinder_t::lspg_stepper_t;
+
+  //------------------
+  // unsteady: bdf2
+  //------------------
+  using bdf2tag = pressio::ode::implicitmethods::BDF2;
+  // default
+  using de_bdf2LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 0>;
+  using de_lspg_problem_bdf2_t	   = typename de_bdf2LSPGProblemBinder_t::lspg_problem_t;
+  using de_lspg_stepper_bdf2_t     = typename de_bdf2LSPGProblemBinder_t::lspg_stepper_t;
+  // hyper-reduced
+  using hr_bdf2LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 1>;
+  using hr_lspg_problem_bdf2_t	   = typename hr_bdf2LSPGProblemBinder_t::lspg_problem_t;
+  using hr_lspg_stepper_bdf2_t     = typename hr_bdf2LSPGProblemBinder_t::lspg_stepper_t;
 
   static void bind(pybind11::module & lspgModule)
   {
@@ -241,11 +255,13 @@ struct LSPGBinder
       // default LSPG
       pybind11::module thismodule = lspgUnsteadyModule.def_submodule("default");
       de_bdf1LSPGProblemBinder_t::bind(thismodule, "Euler", "Euler");
+      de_bdf2LSPGProblemBinder_t::bind(thismodule, "BDF2", "BDF2");
     }
     {
       // hyper-reduced LSPG
       pybind11::module thismodule = lspgUnsteadyModule.def_submodule("hyperreduced");
       hr_bdf1LSPGProblemBinder_t::bind(thismodule, "Euler", "Euler");
+      hr_bdf2LSPGProblemBinder_t::bind(thismodule, "BDF2", "BDF2");
     }
   }
 };

@@ -66,7 +66,8 @@ class OdeObserver:
 #----------------------------
 def test():
   '''
-  this test checks that the hyp-red lspg problem works as expected.
+  check that the hyp-red bdf1 lspg problem works as expected.
+
   We don't solve a real problem but we we use fake data and veryify that
   at every stage involved, from constructor to fom querying to solve,
   the data is supposed to be correct.
@@ -76,20 +77,22 @@ def test():
         0  1  2  3  4  5  6  7  8  9  (indices of sample mesh points)
 
   - sample mesh: subset of stencils mesh points {1,4,5,7,8}
-        *        *  *     *  *
-        0        4  5     7  8  (indices wrt stencil mesh)
-        0        1  2     3  4  (enumaration wrt to sample mesh only)
+           *        *  *     *  *
+           0        4  5     7  8  (indices wrt stencil mesh)
+           0        1  2     3  4  (enumaration wrt to sample mesh only)
 
   - romSize = 3
   - start from romState = [0,0,0]
+  - reference Fom state is null, i.e. all zeros
   - use GN with normal equations and do two iterations of the GN solver,
     inner linear solve: simply sets correction to be [1 1 ... 1]
   - linear mapping such that:
-              phi = [ 1 1 1;
-                      ...  ;
-                     10 10 10]
+        phi = [ 1 1 1;
+                ...  ;
+              10 10 10]
 
-  - we do one time steps: t0 -> t1, with dt = 0.2
+  - we do one time steps: t0 -> t1
+  - dt fixed at 0.2
   - the fomObj returns the velocity at the sample mesh points:
           f = [1.1 2.2 3.3 4.4 5.5]
   - the fomObj returns the applyJac which has size (Nsmesh, romSize)
@@ -105,9 +108,9 @@ def test():
   =========================
   =========================
 
-  *************************************
-  *** first call to solver we have ***
-  *************************************
+  **********************************************
+  *** first call to nonlinear solver we have ***
+  **********************************************
   romState     = [0 0 0],
   fomState_n   = [0 ... 0]
   fomState_n-1 = [0 ... 0]
@@ -129,7 +132,7 @@ def test():
              8-dt*5 8-dt*5 8-dt*5;     7.0 7.0 7.0;
              9-dt*6 9-dt*6 9-dt*6]     7.8 7.8 7.8]
 
-  so that the first call to the linear solver should have:
+  so that the linear solver should have:
   b = -lspgJac^T R = [ 20.46 20.46 20.46 ]
   neg sign because of the sign convention in pressio
 
@@ -138,11 +141,10 @@ def test():
         158.8 158.8 158.8;
         158.8 158.8 158.8]
 
-
-  *************************************
-  *** second call to solver we have ***
-  *************************************
-  romState     = [1 1 1],
+  **********************************************
+  *** second call to nonlin solver we have ***
+  **********************************************
+  romState     = [1 1 1]
   fomState_n   = [3 6 9 12 15 18 21 24 27 30]
   fomState_n-1 = [0 ... 0]
 
@@ -164,7 +166,7 @@ def test():
              8-dt*5 8-dt*5 8-dt*5;     7.0 7.0 7.0;
              9-dt*6 9-dt*6 9-dt*6]     7.8 7.8 7.8]
 
-  so that the first call to the linear solver should have:
+  so that the linear solver should have:
   b = -lspgJac^T R = [ -527.34 -527.34 -527.34 ]
   the neg sign because of the sign convention in pressio
 
@@ -179,7 +181,7 @@ def test():
   romSize = 3
 
   appObj  = MyTestApp(Nstencil, Nsmesh, romSize)
-  yRef    = np.ones(Nstencil)
+  yRef    = np.zeros(Nstencil)
   phi     = np.zeros((Nstencil, romSize))
   for i in range(Nstencil): phi[i,:] = float(i+1)
 
@@ -207,6 +209,6 @@ def test():
   yFomFinal = fomRecon.evaluate(yRom)
   np.set_printoptions(precision=15)
 
-  # the goldFomState = phi*[1 1 1] + yRef
-  goldFomState = [4,7, 10, 13, 16, 19, 22, 25, 28, 31]
+  # the goldFomState = phi*[1 1 1]
+  goldFomState = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
   assert( np.allclose(yFomFinal, goldFomState, atol=1e-13) )

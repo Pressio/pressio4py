@@ -96,13 +96,14 @@ PYBIND11_MODULE(pressio4py, mParent)
   using lspg_binder_t		= pressio4py::rom::LSPGBinder<pressio4py::ROMTypes>;
   //steady
   using lspg_steady_prob_t	= typename lspg_binder_t::lspg_steady_problem_t;
-  using lspg_steady_system_t	= typename lspg_binder_t::lspg_steady_system_t;
-  //default, bdf1
+  //bdf1 default
   using lspg_de_prob_bdf1_t	= typename lspg_binder_t::de_lspg_problem_bdf1_t;
-  using lspg_de_stepper_bdf1_t  = typename lspg_binder_t::de_lspg_stepper_bdf1_t;
-  //hypred bdf1
+  //bdf1 hypred
   using lspg_hr_prob_bdf1_t	= typename lspg_binder_t::hr_lspg_problem_bdf1_t;
-  using lspg_hr_stepper_bdf1_t  = typename lspg_binder_t::hr_lspg_stepper_bdf1_t;
+  //bdf2 default
+  using lspg_de_prob_bdf2_t	= typename lspg_binder_t::de_lspg_problem_bdf2_t;
+  //bdf2 hypred
+  using lspg_hr_prob_bdf2_t	= typename lspg_binder_t::hr_lspg_problem_bdf2_t;
   // do bind
   lspg_binder_t::bind(lspgModule);
 
@@ -120,15 +121,20 @@ PYBIND11_MODULE(pressio4py, mParent)
 
   // GN with normal equations
   using gnbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
-    true, lspg_steady_prob_t, lspg_de_prob_bdf1_t, lspg_hr_prob_bdf1_t,
-    /*lspg_steady_system_t, lspg_de_stepper_bdf1_t, lspg_hr_stepper_bdf1_t,*/
+    true,
+    lspg_steady_prob_t,
+    lspg_de_prob_bdf1_t, lspg_de_prob_bdf2_t,
+    lspg_hr_prob_bdf1_t, lspg_hr_prob_bdf2_t,
     linear_solver_t, rom_native_state_t, rom_state_t>;
   using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
   gnbinder_t::bind(mSolver, "GaussNewton");
 
   // LM with normal equations
   using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
-    false, lspg_steady_prob_t, lspg_de_prob_bdf1_t, lspg_hr_prob_bdf1_t,
+    false,
+    lspg_steady_prob_t,
+    lspg_de_prob_bdf1_t, lspg_de_prob_bdf2_t,
+    lspg_hr_prob_bdf1_t, lspg_hr_prob_bdf2_t,
     linear_solver_t, rom_native_state_t, rom_state_t>;
   using lm_solver_t = typename lmbinder_t::nonlinear_solver_t;
   lmbinder_t::bind(mSolver, "LevenbergMarquardt");
@@ -157,7 +163,7 @@ PYBIND11_MODULE(pressio4py, mParent)
    		 &::pressio::rom::lspg::solveSteady<
 		 lspg_steady_prob_t, rom_native_state_t, lm_solver_t>);
 
-  // unsteady lspg
+  // unsteady lspg bdf1
   lspgModule.def("solveNSequentialMinimizations", // default with GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf1_t, rom_native_state_t,
@@ -175,26 +181,23 @@ PYBIND11_MODULE(pressio4py, mParent)
 		 lspg_hr_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, lm_solver_t>);
 
-  // pybind11::module mOde = mParent.def_submodule("ode");
-  // mOde.def("advanceNSteps", // for Galerkin Euler
-  // 	   &::pressio::ode::advanceNSteps<
-  // 	   typename galerkin_binder_t::stepper_euler_t, rom_native_state_t, scalar_t>);
-  // mOde.def("advanceNSteps", // for Galerkin RK4
-  // 	   &::pressio::ode::advanceNSteps<
-  // 	   typename galerkin_binder_t::stepper_rk4_t, rom_native_state_t, scalar_t>);
-
-  // mOde.def("advanceNSteps", // unsteady default LSPG with GN
-  // 	   &pressio::ode::advanceNSteps<
-  // 	   lspg_de_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
-  // mOde.def("advanceNSteps", // unsteady default LSPG with LM
-  // 	   &pressio::ode::advanceNSteps<
-  // 	   lspg_de_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
-  // mOde.def("advanceNSteps", // unsteady hypred LSPG with GN
-  // 	   &pressio::ode::advanceNSteps<
-  // 	   lspg_hr_stepper_bdf1_t, rom_native_state_t, scalar_t, gn_solver_t>);
-  // mOde.def("advanceNSteps", // unsteady hypred LSPG with LM
-  // 	   &pressio::ode::advanceNSteps<
-  // 	   lspg_hr_stepper_bdf1_t, rom_native_state_t, scalar_t, lm_solver_t>);
+  // unsteady lspg bdf2
+  lspgModule.def("solveNSequentialMinimizations", // default with GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // hyp-red with GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // default with LM
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, lm_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // hyp-red with LM
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, lm_solver_t>);
 }
 
 #endif

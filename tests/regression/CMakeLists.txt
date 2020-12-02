@@ -34,6 +34,8 @@ configure_file(${PRESSIO4PY_APPS_DIR}/burgers1d_sparse_jacobian.py
   ${testdir2dest} COPYONLY)
 configure_file(${testdir2src}/svd_basis_ncell20_t010_dt001_implicit_euler.txt
   ${testdir2dest} COPYONLY)
+configure_file(${testdir2src}/svd_basis_ncell20_t010_dt001_implicit_bdf2.txt
+  ${testdir2dest} COPYONLY)
 
 #-----------------------
 # unsteady lspg lm solver
@@ -62,15 +64,21 @@ configure_file(${PRESSIO4PY_APPS_DIR}/burgers1d_sparse_jacobian.py
 configure_file(${testdir2src}/svd_basis_ncell20_t010_dt001_implicit_euler.txt
   ${testdir2dest} COPYONLY)
 
-#-----------------------
-# unsteady hypred lspg
-#-----------------------
-set(testdir2src  ${CMAKE_CURRENT_SOURCE_DIR}/unsteady_hyperreduced_lspg)
-set(testdir2dest ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/unsteady_hyperreduced_lspg)
+#---------------------------
+# unsteady hypred lspg bdf1
+#---------------------------
+set(testdir2src  ${CMAKE_CURRENT_SOURCE_DIR}/unsteady_hyperreduced_bdf1_lspg)
+set(testdir2dest ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/unsteady_hyperreduced_bdf1_lspg)
 file(MAKE_DIRECTORY ${testdir2dest})
-configure_file(${testdir2src}/test_unsteady_hyp_red_lspg.py ${testdir2dest} COPYONLY)
+configure_file(${testdir2src}/test_unsteady_hyp_red_bdf1_lspg.py ${testdir2dest} COPYONLY)
 
-
+#---------------------------
+# unsteady hypred lspg bdf2
+#---------------------------
+set(testdir2src  ${CMAKE_CURRENT_SOURCE_DIR}/unsteady_hyperreduced_bdf2_lspg)
+set(testdir2dest ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/unsteady_hyperreduced_bdf2_lspg)
+file(MAKE_DIRECTORY ${testdir2dest})
+configure_file(${testdir2src}/test_unsteady_hyp_red_bdf2_lspg.py ${testdir2dest} COPYONLY)
 
 
 
