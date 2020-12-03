@@ -56,13 +56,14 @@
 // pressio include
 #include "pressio_rom.hpp"
 
-// pressio4py includes
+// local includes
 #include "types.hpp"
-
 #include "./rom/wrappers/fom_steady_wrapper.hpp"
 #include "./rom/wrappers/fom_continuous_time_wrapper.hpp"
 #include "./rom/wrappers/lin_solver_wrapper.hpp"
+#include "./rom/wrappers/qr_solver_wrapper.hpp"
 #include "./rom/wrappers/ode_collector_wrapper.hpp"
+#include "./rom/wrappers/nonlin_ls_weighting_wrapper.hpp"
 
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
@@ -116,8 +117,11 @@ PYBIND11_MODULE(pressio4py, mParent)
   pressio4py::solvers::bindStoppingEnums(mSolver);
 
   // for least-squares normal equations, we have a hessian and gradient
-  using hessian_t = typename pressio4py::ROMTypes::lsq_hessian_t;
+  using hessian_t	= typename pressio4py::ROMTypes::lsq_hessian_t;
   using linear_solver_t = pressio4py::LinSolverWrapper<hessian_t>;
+  using jac_t           = typename pressio4py::ROMTypes::decoder_jac_t;
+  using qr_solver_t     = pressio4py::QrSolverWrapper<jac_t>;
+  using nlls_weigher_t  = pressio4py::NonLinLSWeightingWrapper;
 
   // GN with normal equations
   using gnbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
@@ -128,6 +132,27 @@ PYBIND11_MODULE(pressio4py, mParent)
     linear_solver_t, rom_native_state_t, rom_state_t>;
   using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
   gnbinder_t::bind(mSolver, "GaussNewton");
+
+  // GN with QR
+  using gnbinder_qr_t = pressio4py::solvers::LeastSquaresQRBinder<
+    true,
+    lspg_steady_prob_t,
+    lspg_de_prob_bdf1_t, lspg_de_prob_bdf2_t,
+    lspg_hr_prob_bdf1_t, lspg_hr_prob_bdf2_t,
+    qr_solver_t, rom_native_state_t, rom_state_t>;
+  using gn_qr_solver_t = typename gnbinder_qr_t::nonlinear_solver_t;
+  gnbinder_qr_t::bind(mSolver, "GaussNewtonQR");
+
+  // weighted GN with normal equations
+  using wgnbinder_t = pressio4py::solvers::WeightedLeastSquaresNormalEqBinder<
+    true,
+    lspg_steady_prob_t,
+    lspg_de_prob_bdf1_t, lspg_de_prob_bdf2_t,
+    lspg_hr_prob_bdf1_t, lspg_hr_prob_bdf2_t,
+    linear_solver_t, rom_native_state_t, rom_state_t,
+    nlls_weigher_t>;
+  using w_gn_solver_t = typename wgnbinder_t::nonlinear_solver_t;
+  wgnbinder_t::bind(mSolver, "WeightedGaussNewton");
 
   // LM with normal equations
   using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
@@ -155,46 +180,88 @@ PYBIND11_MODULE(pressio4py, mParent)
 		     typename galerkin_binder_t::problem_rk4_t,
 		     rom_native_state_t, scalar_t, collector_t>);
 
-  // for steady lspg
-  lspgModule.def("solveSteady", // default with GN
+  // steady default lspg
+  lspgModule.def("solveSteady", // GN
 		 &::pressio::rom::lspg::solveSteady<
 		 lspg_steady_prob_t, rom_native_state_t, gn_solver_t>);
-  lspgModule.def("solveSteady", // default with LM
+  lspgModule.def("solveSteady", // weighted GN
+		 &::pressio::rom::lspg::solveSteady<
+		 lspg_steady_prob_t, rom_native_state_t, w_gn_solver_t>);
+  lspgModule.def("solveSteady", // GN QR
+		 &::pressio::rom::lspg::solveSteady<
+		 lspg_steady_prob_t, rom_native_state_t, gn_qr_solver_t>);
+  lspgModule.def("solveSteady", // LM
    		 &::pressio::rom::lspg::solveSteady<
 		 lspg_steady_prob_t, rom_native_state_t, lm_solver_t>);
 
-  // unsteady lspg bdf1
-  lspgModule.def("solveNSequentialMinimizations", // default with GN
+  // unsteady default lspg bdf1
+  lspgModule.def("solveNSequentialMinimizations", // GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // hyp-red with GN
+  lspgModule.def("solveNSequentialMinimizations", // weighted GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
-		 lspg_hr_prob_bdf1_t, rom_native_state_t,
-		 scalar_t, collector_t, gn_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // default with LM
+		 lspg_de_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, w_gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // GN QR
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_qr_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // LM
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, lm_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // hyp-red with LM
+
+  // unsteady hyper-reduced lspg bdf1
+  lspgModule.def("solveNSequentialMinimizations", // GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // weighted GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, w_gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // GN QR
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_qr_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // LM
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, lm_solver_t>);
 
-  // unsteady lspg bdf2
-  lspgModule.def("solveNSequentialMinimizations", // default with GN
+  // unsteady default lspg bdf2
+  lspgModule.def("solveNSequentialMinimizations", // GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf2_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // hyp-red with GN
+  lspgModule.def("solveNSequentialMinimizations", // GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
-		 lspg_hr_prob_bdf2_t, rom_native_state_t,
-		 scalar_t, collector_t, gn_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // default with LM
+		 lspg_de_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, w_gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // GN QR
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_qr_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // LM
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf2_t, rom_native_state_t,
 		 scalar_t, collector_t, lm_solver_t>);
-  lspgModule.def("solveNSequentialMinimizations", // hyp-red with LM
+
+  // unsteady hyper-reduced lspg bdf2
+  lspgModule.def("solveNSequentialMinimizations", // GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // weighted GN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, w_gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // GN QR
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, gn_qr_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // LM
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf2_t, rom_native_state_t,
 		 scalar_t, collector_t, lm_solver_t>);

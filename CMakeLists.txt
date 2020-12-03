@@ -26,10 +26,6 @@ set(PressioFpy_VERSION
 math(EXPR PRESSIO_VERSION
   "${PressioFpy_VERSION_MAJOR} * 10000 + ${PressioFpy_VERSION_MINOR} * 100 + ${PressioFpy_VERSION_PATCH}")
 
-message("${Yellow}----------------------------------${ColourReset}")
-message("${Yellow} Pressio4Py version = ${PressioFpy_VERSION} ${ColourReset}")
-message("${Yellow}----------------------------------${ColourReset}")
-
 #=====================================================================
 #=====================================================================
 ### guard against in-source builds ###
@@ -63,14 +59,43 @@ set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/apps)
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
-message("CMAKE_LIBRARY_OUTPUT_DIRECTORY = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
 #----------------------------------------------------------------
-# create the library
+# get the working branch
+execute_process(
+  COMMAND git rev-parse --abbrev-ref HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE PFPY_BRANCH
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+# get the commit hash of the pressio4py being used
+execute_process(
+  COMMAND git rev-parse HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  RESULT_VARIABLE SHORT_HASH_RESULT
+  OUTPUT_VARIABLE PFPY_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+#----------------------------------------------------------------
+# command to create the pressio4py library
 pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
+
+#=====================================================================
+### display some info
+#=====================================================================
+message("${Yellow}----------------------------------${ColourReset}")
+message("${Yellow} Pressio4Py config info: ${ColourReset}")
+message("${Yellow}----------------------------------${ColourReset}")
+message("${Yellow} - C++ std = ${CMAKE_CXX_STANDARD} ${ColourReset}")
+message("${Yellow} - p4py version = ${PressioFpy_VERSION} ${ColourReset}")
+message("${Yellow} - p4py branch  = ${PFPY_BRANCH} ${ColourReset}")
+message("${Yellow} - p4py hash    = ${PFPY_HASH} ${ColourReset}")
+message("${Yellow} - Build dir       = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
+message("${Yellow} - prefix          = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
+message("${Yellow} - Pressio include = ${PRESSIO_INCLUDE_DIR} ${ColourReset}")
 
 # add tests
 add_subdirectory(tests)
 
-message("The prefix dir is: ${CMAKE_INSTALL_PREFIX}")
+# install
 install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

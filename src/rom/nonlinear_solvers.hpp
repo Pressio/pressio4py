@@ -141,17 +141,13 @@ void bindStoppingCriteria(pybind11::class_<nonlinear_solver_t> & solverObj)
 
 
 template<
-  bool do_gn,
   typename steady_prob_t,
   typename prob_de_bdf1_t,
   typename prob_de_bdf2_t,
   typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t,
-  typename linear_solver_t,
-  typename rom_native_state_t,
-  typename rom_state_t
+  typename prob_hr_bdf2_t
   >
-struct LeastSquaresNormalEqBinder
+struct _have_correct_api
 {
   using steady_system_t = typename steady_prob_t::system_t;
   using stepper_de_t    = typename prob_de_bdf1_t::stepper_t;
@@ -166,62 +162,186 @@ struct LeastSquaresNormalEqBinder
   (::pressio::solvers::concepts::system_residual_jacobian<stepper_hr_t>::value,
    "Currently only supporting bindings for residual_jacobian_api");
 
+  static constexpr auto value = true;
+};
+
+
+template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
+void bindConstructorUnweighted(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+{
+  nonLinSolver.def(pybind11::init<
+		   problem_t &,
+		   const rom_native_state_t &,
+		   pybind11::object
+		   >());
+}
+
+template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
+void bindConstructorWeighted(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+{
+  nonLinSolver.def(pybind11::init<
+		   problem_t &,
+		   const rom_native_state_t &,
+		   pybind11::object,
+		   pybind11::object
+		   >());
+}
+
+
+/*
+  GN or LM with normal equations
+ */
+template<
+  bool do_gn,
+  typename steady_prob_t,
+  typename prob_de_bdf1_t,
+  typename prob_de_bdf2_t,
+  typename prob_hr_bdf1_t,
+  typename prob_hr_bdf2_t,
+  typename linear_solver_t,
+  typename rom_native_state_t,
+  typename rom_state_t
+  >
+struct LeastSquaresNormalEqBinder
+{
+  static_assert
+  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
+   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+
   // it does not matter here if we use stepper_t or system_t as template
   // args to declare the solver type in the code below as long as they
   // both meet the res-jac api. If we get here, it means that condition is met
   // because it is asserted above.
-  using system_t = steady_system_t;
+  using system_t = typename steady_prob_t::system_t;
 
-  using gn_type = pressio::solvers::nonlinear::impl::composeGaussNewton_t<
-    system_t, linear_solver_t>;
-  using lm_type = pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t<
-    system_t, linear_solver_t>;
+  // gauss-newton solver type
+  using gn_type =
+    pressio::solvers::nonlinear::impl::composeGaussNewton_t<system_t, linear_solver_t>;
+  // lm solver type
+  using lm_type =
+    pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t<system_t, linear_solver_t>;
+
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
   static void bind(pybind11::module & m, std::string solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
-
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
+    // for steady
+    bindConstructorUnweighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf1
+    bindConstructorUnweighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf2
+    bindConstructorUnweighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf1
+    bindConstructorUnweighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf2
+    bindConstructorUnweighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+  }
+};
 
-    // -------------------------------------------
-    // *** bindings for constructor for steady ***
-    nonLinSolver.def(pybind11::init<
-		     steady_prob_t &,
-		     const rom_native_state_t &,
-		     pybind11::object>());
+/*
+  weighted GN or LM with normal equations
+ */
+template<
+  bool do_gn,
+  typename steady_prob_t,
+  typename prob_de_bdf1_t,
+  typename prob_de_bdf2_t,
+  typename prob_hr_bdf1_t,
+  typename prob_hr_bdf2_t,
+  typename linear_solver_t,
+  typename rom_native_state_t,
+  typename rom_state_t,
+  typename weigher_t
+  >
+struct WeightedLeastSquaresNormalEqBinder
+{
+  static_assert
+  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
+   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
 
-    // // for steady LSPG, we also need to register the solve method
-    // // because the state is owned by Python which calls solve directly
-    // // so the c++ side takes in a rom_native_state_t
-    // nonLinSolver.def("solve",
-    // 		     &nonlinear_solver_t::template solve<system_t, rom_native_state_t>);
+  // it does not matter here if we use stepper_t or system_t as template
+  // args to declare the solver type in the code below as long as they
+  // both meet the res-jac api. If we get here, it means that condition is met
+  // because it is asserted above.
+  using system_t = typename steady_prob_t::system_t;
 
-    // -----------------------------------------------------
-    // *** bindings for constructor for unsteady default ***
-    nonLinSolver.def(pybind11::init<
-		     prob_de_bdf1_t &,
-		     const rom_native_state_t &,
-		     pybind11::object>());
+  // gauss-newton solver type
+  using gn_type =
+    pressio::solvers::nonlinear::impl::composeGaussNewton_t<system_t, linear_solver_t, weigher_t>;
+  // lm solver type
+  using lm_type =
+    pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t<system_t, linear_solver_t, weigher_t>;
 
-    nonLinSolver.def(pybind11::init<
-		     prob_de_bdf2_t &,
-		     const rom_native_state_t &,
-		     pybind11::object>());
+  // pick the final nonlin solver type is based on the do_gn
+  using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
-    // -----------------------------------------------------
-    // *** bindings for constructor for unsteady hyp-red ***
-    nonLinSolver.def(pybind11::init<
-		     prob_hr_bdf1_t &,
-		     const rom_native_state_t &,
-		     pybind11::object>());
+  static void bind(pybind11::module & m, std::string solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+    // for steady
+    bindConstructorWeighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf1
+    bindConstructorWeighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf2
+    bindConstructorWeighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf1
+    bindConstructorWeighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf2
+    bindConstructorWeighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+  }
+};
 
-    nonLinSolver.def(pybind11::init<
-		     prob_hr_bdf2_t &,
-		     const rom_native_state_t &,
-		     pybind11::object>());
+template<
+  bool do_gn,
+  typename steady_prob_t,
+  typename prob_de_bdf1_t,
+  typename prob_de_bdf2_t,
+  typename prob_hr_bdf1_t,
+  typename prob_hr_bdf2_t,
+  typename qr_solver_t,
+  typename rom_native_state_t,
+  typename rom_state_t
+  >
+struct LeastSquaresQRBinder
+{
+  static_assert(do_gn, "QR-based solver only supported for GN");
+
+  static_assert
+  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
+   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+
+  // it does not matter here if we use stepper_t or system_t as template
+  // args to declare the solver type in the code below as long as they
+  // both meet the res-jac api. If we get here, it means that condition is met
+  // because it is asserted above.
+  using system_t = typename steady_prob_t::system_t;
+
+  using nonlinear_solver_t =
+    pressio::solvers::nonlinear::impl::composeGaussNewtonQR_t<system_t, qr_solver_t>;
+
+  static void bind(pybind11::module & m, std::string solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+    // for steady
+    bindConstructorUnweighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf1
+    bindConstructorUnweighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf2
+    bindConstructorUnweighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf1
+    bindConstructorUnweighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf2
+    bindConstructorUnweighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
   }
 };
 

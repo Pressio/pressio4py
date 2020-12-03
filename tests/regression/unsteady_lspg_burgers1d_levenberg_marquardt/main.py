@@ -2,6 +2,11 @@
 import numpy as np
 from scipy import linalg
 
+# need to add to python path location of the apps
+import pathlib, sys
+file_path = pathlib.Path(__file__).parent.absolute()
+sys.path.append(str(file_path) + "/../apps")
+
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
@@ -62,7 +67,7 @@ def test_euler():
   # set reference state
   yRef = np.ones(meshSize)
   # load basis
-  basisFile = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt"
+  basisFile = str(file_path) + "/basis_euler.txt"
   phi = np.loadtxt(basisFile)
 
   # decoder

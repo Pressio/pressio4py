@@ -5,6 +5,8 @@ from scipy import linalg
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 
+#print("TOTTI")
+
 class MySteadyAdapter:
   def __init__(self, N):
     assert(N==6)
@@ -67,11 +69,9 @@ def test_steady_lspg():
   yRom = np.zeros(romSize)
   # create LSPG problem
   lspgProblem = rom.lspg.steady.default.Problem(appObj, decoder, yRom, yRef)
-  #system = lspgProblem.system()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  #nlsO = solvers.GaussNewton(system, yRom, lsO)
   nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
 
   nlsTol, nlsMaxIt = 1e-13, 3

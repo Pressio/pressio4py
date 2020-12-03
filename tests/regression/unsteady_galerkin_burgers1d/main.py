@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 
+# need to add to python path location of the apps
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/../apps")
@@ -58,8 +59,8 @@ def test_euler():
   appObj = Burgers1dSparseJacobian(meshSize)
   # reference state
   yRef = np.ones(meshSize)
-  # basis
-  phi = np.loadtxt("./burgers1d_galerkin/basis.txt")
+  # basis (use file path to know the build directory)
+  phi = np.loadtxt(str(file_path) + "/basis_euler.txt")
 
   decoder = rom.Decoder(phi)
 

@@ -1,4 +1,9 @@
 
+message("")
+message("${Magenta}----------------------------------${ColourReset}")
+message("${Magenta} Processing unit tests ${ColourReset}")
+message("${Magenta}----------------------------------${ColourReset}")
+
 # for unit tests, I need to include the source dir
 include_directories(${PRESSIO4PY_SRC_DIR})
 
@@ -13,6 +18,8 @@ file(GLOB PYTEST_FILES "*.py")
 
 # 1. copy all files.py to testdir
 foreach(f ${PYTEST_FILES})
+  get_filename_component(fname ${f} NAME_WLE)
+  message("configuring unit test : ${fname}")
   configure_file(${f} ${testdir} COPYONLY)
 endforeach()
 

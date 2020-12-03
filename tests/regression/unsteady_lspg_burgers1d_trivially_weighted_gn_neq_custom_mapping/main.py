@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 
+# need to add to python path location of the apps
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/../apps")
@@ -23,7 +24,7 @@ class MyLinSolver:
 class MyMapper:
   def __init__(self):
     # load basis
-    fname = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt"
+    fname = str(file_path) + "/basis_euler.txt"
     self.phi_ = np.loadtxt(fname)
 
   def jacobian(self):
@@ -43,6 +44,15 @@ class OdeObserver:
   def __call__(self, timeStep, time, state):
     print(state)
     assert(state.shape[0]==11)
+
+#----------------------------
+class MyWeigher:
+  def __init__(self): pass
+
+  def apply(self, operand, result):
+    # trivial
+    print("weigher: shapes", operand.shape, result.shape)
+    np.copyto(result, operand)
 
 #----------------------------
 def test_euler():
@@ -66,9 +76,12 @@ def test_euler():
 
   lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
 
+  # weighting operator
+  wOp = MyWeigher()
+
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.WeightedGaussNewton(lspgProblem, yRom, lsO, wOp)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)

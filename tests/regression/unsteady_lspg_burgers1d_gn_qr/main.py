@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 
+# need to add to python path location of the apps
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/../apps")
@@ -57,14 +58,22 @@ goldBdf2 = np.array([
   1.014043688232101])
 
 #----------------------------
-class MyLinSolver:
-  def __init__(self): pass
+class MyQRSolver:
+  def __init__(self, meshSize, romSize):
+    self.Q_ = np.zeros((meshSize, romSize))
+    self.R_ = np.zeros((romSize, romSize))
 
-  # @staticmethod
-  def solve(self, A,b,x):
-    lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
-    # here we must use x[:] otherwise it won't overwrite x passed in
-    x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
+  def computeThin(self, A):
+    self.Q_, self.R_ = np.linalg.qr(A, mode='reduced')
+
+  def applyQTranspose(self, operand, result):
+    result[:] = self.Q_.T.dot(operand)
+
+  def applyRTranspose(self, operand, result):
+    result[:] = self.R_.T.dot(operand)
+
+  def solveRxb(self, b, x):
+    x[:] = linalg.solve(self.R_, b)
 
 #----------------------------------------
 class OdeObserver:
@@ -88,7 +97,7 @@ def test_euler():
   # set reference state
   yRef = np.ones(meshSize)
   # load basis
-  basisFile = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_euler.txt"
+  basisFile = str(file_path) + "/basis_bdf1.txt"
   phi = np.loadtxt(basisFile)
 
   # decoder
@@ -98,9 +107,9 @@ def test_euler():
   # lspg problem
   lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
 
-  # linear and non linear solver
-  lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  # qr and non linear solver
+  qrS = MyQRSolver(meshSize, romSize)
+  nlsO = solvers.GaussNewtonQR(lspgProblem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
@@ -133,7 +142,7 @@ def test_bdf2():
   # set reference state
   yRef = np.ones(meshSize)
   # load basis
-  basisFile = "./burgers1d_lspg/svd_basis_ncell20_t010_dt001_implicit_bdf2.txt"
+  basisFile = str(file_path) + "/basis_bdf2.txt"
   phi = np.loadtxt(basisFile)
 
   # decoder
@@ -143,9 +152,9 @@ def test_bdf2():
   # lspg problem
   lspgProblem = rom.lspg.unsteady.default.ProblemBDF2(appObj, decoder, yRom, yRef)
 
-  # linear and non linear solver
-  lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  # qr and non linear solver
+  qrS = MyQRSolver(meshSize, romSize)
+  nlsO = solvers.GaussNewtonQR(lspgProblem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
