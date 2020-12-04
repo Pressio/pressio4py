@@ -5,8 +5,6 @@ from scipy import linalg
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 
-#print("TOTTI")
-
 class MySteadyAdapter:
   def __init__(self, N):
     assert(N==6)

@@ -172,7 +172,7 @@ void bindConstructorUnweighted(pybind11::class_<nonlinear_solver_t> nonLinSolver
   nonLinSolver.def(pybind11::init<
 		   problem_t &,
 		   const rom_native_state_t &,
-		   pybind11::object
+		   pybind11::object //linear or qr solver
 		   >());
 }
 
@@ -182,11 +182,21 @@ void bindConstructorWeighted(pybind11::class_<nonlinear_solver_t> nonLinSolver)
   nonLinSolver.def(pybind11::init<
 		   problem_t &,
 		   const rom_native_state_t &,
-		   pybind11::object,
-		   pybind11::object
+		   pybind11::object, //linear or qr solver
+		   pybind11::object // weigher
 		   >());
 }
 
+template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
+void bindConstructorIrw(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+{
+  nonLinSolver.def(pybind11::init<
+		   problem_t &,
+		   const rom_native_state_t &,
+		   pybind11::object, //linear or qr solver
+		   typename problem_t::traits::scalar_t
+		   >());
+}
 
 /*
   GN or LM with normal equations
@@ -298,6 +308,58 @@ struct WeightedLeastSquaresNormalEqBinder
   }
 };
 
+/*
+  IRWGN normal equations
+ */
+template<
+  typename steady_prob_t,
+  typename prob_de_bdf1_t,
+  typename prob_de_bdf2_t,
+  typename prob_hr_bdf1_t,
+  typename prob_hr_bdf2_t,
+  typename linear_solver_t,
+  typename rom_native_state_t,
+  typename rom_state_t
+  >
+struct IrwLeastSquaresNormalEqBinder
+{
+  static_assert
+  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
+   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+
+  // it does not matter here if we use stepper_t or system_t as template
+  // args to declare the solver type in the code below as long as they
+  // both meet the res-jac api. If we get here, it means that condition is met
+  // because it is asserted above.
+  using system_t = typename steady_prob_t::system_t;
+
+  using composer_t = pressio::solvers::nonlinear::impl::composeIrwGaussNewton<system_t, linear_solver_t>;
+  using w_t = typename composer_t::weighting_t;
+  using nonlinear_solver_t = typename composer_t::type;
+
+  static void bind(pybind11::module & m, std::string solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+    // for steady
+    bindConstructorIrw<steady_prob_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf1
+    bindConstructorIrw<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady default bdf2
+    bindConstructorIrw<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf1
+    bindConstructorIrw<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
+    // for unsteady hypred bdf2
+    bindConstructorIrw<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+  }
+};
+
+
+/*
+  QR-based GN
+ */
 template<
   bool do_gn,
   typename steady_prob_t,

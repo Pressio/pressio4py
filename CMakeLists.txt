@@ -94,8 +94,25 @@ message("${Yellow} - Build dir       = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${Colou
 message("${Yellow} - prefix          = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
 message("${Yellow} - Pressio include = ${PRESSIO_INCLUDE_DIR} ${ColourReset}")
 
+## need to process the apps directory ##
+message("")
+message("${Magenta}----------------------------------${ColourReset}")
+message("${Magenta} Processing apps for tests/demos ${ColourReset}")
+message("${Magenta}----------------------------------${ColourReset}")
+set(appsDestDir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/apps)
+file(MAKE_DIRECTORY ${appsDestDir})
+file(GLOB allApps "${PRESSIO4PY_APPS_DIR}/*.py")
+foreach(f ${allApps})
+  get_filename_component(fname ${f} NAME)
+  message("Copying : ${fname} to build dir")
+  configure_file(${f} ${appsDestDir} COPYONLY)
+endforeach()
+
 # add tests
 add_subdirectory(tests)
+
+# add demos
+add_subdirectory(demos)
 
 # install
 install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

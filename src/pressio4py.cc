@@ -154,6 +154,15 @@ PYBIND11_MODULE(pressio4py, mParent)
   using w_gn_solver_t = typename wgnbinder_t::nonlinear_solver_t;
   wgnbinder_t::bind(mSolver, "WeightedGaussNewton");
 
+  // IRW GN with normal equations
+  using irwgnbinder_t = pressio4py::solvers::IrwLeastSquaresNormalEqBinder<
+    lspg_steady_prob_t,
+    lspg_de_prob_bdf1_t, lspg_de_prob_bdf2_t,
+    lspg_hr_prob_bdf1_t, lspg_hr_prob_bdf2_t,
+    linear_solver_t, rom_native_state_t, rom_state_t>;
+  using irwgn_solver_t = typename irwgnbinder_t::nonlinear_solver_t;
+  irwgnbinder_t::bind(mSolver, "IrwGaussNewton");
+
   // LM with normal equations
   using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqBinder<
     false,
@@ -184,6 +193,9 @@ PYBIND11_MODULE(pressio4py, mParent)
   lspgModule.def("solveSteady", // GN
 		 &::pressio::rom::lspg::solveSteady<
 		 lspg_steady_prob_t, rom_native_state_t, gn_solver_t>);
+  lspgModule.def("solveSteady", // IRWGN
+		 &::pressio::rom::lspg::solveSteady<
+		 lspg_steady_prob_t, rom_native_state_t, irwgn_solver_t>);
   lspgModule.def("solveSteady", // weighted GN
 		 &::pressio::rom::lspg::solveSteady<
 		 lspg_steady_prob_t, rom_native_state_t, w_gn_solver_t>);
@@ -199,6 +211,10 @@ PYBIND11_MODULE(pressio4py, mParent)
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // IRWGN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, irwgn_solver_t>);
   lspgModule.def("solveNSequentialMinimizations", // weighted GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf1_t, rom_native_state_t,
@@ -217,6 +233,10 @@ PYBIND11_MODULE(pressio4py, mParent)
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf1_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // IRWGN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf1_t, rom_native_state_t,
+		 scalar_t, collector_t, irwgn_solver_t>);
   lspgModule.def("solveNSequentialMinimizations", // weighted GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf1_t, rom_native_state_t,
@@ -235,6 +255,10 @@ PYBIND11_MODULE(pressio4py, mParent)
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf2_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // IRWGN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_de_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, irwgn_solver_t>);
   lspgModule.def("solveNSequentialMinimizations", // GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_de_prob_bdf2_t, rom_native_state_t,
@@ -253,6 +277,10 @@ PYBIND11_MODULE(pressio4py, mParent)
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf2_t, rom_native_state_t,
 		 scalar_t, collector_t, gn_solver_t>);
+  lspgModule.def("solveNSequentialMinimizations", // IRWGN
+		 &::pressio::rom::lspg::solveNSequentialMinimizations<
+		 lspg_hr_prob_bdf2_t, rom_native_state_t,
+		 scalar_t, collector_t, irwgn_solver_t>);
   lspgModule.def("solveNSequentialMinimizations", // weighted GN
 		 &::pressio::rom::lspg::solveNSequentialMinimizations<
 		 lspg_hr_prob_bdf2_t, rom_native_state_t,
