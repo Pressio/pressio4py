@@ -23,9 +23,12 @@ class MyLinSolver:
 #----------------------------
 class MyMapper:
   def __init__(self):
-    # load basis
     fname = str(file_path) + "/basis_euler.txt"
-    self.phi_ = np.loadtxt(fname)
+    # I have to make phi a column-major array to ensure
+    # pressio does not make a copy of this
+    self.phi_ = np.copy(np.loadtxt(fname), order='F')
+    phi_addr = self.phi_.__array_interface__['data'][0]
+    print("map:phi: ", hex(phi_addr))
 
   def jacobian(self):
     return self.phi_
@@ -62,6 +65,7 @@ def test_euler():
   mymap   = MyMapper()
   # needs a description string
   decoder = rom.Decoder(mymap, "MyMapper")
+  print("dec:add: ", hex(decoder.jacobianAddress()))
   # LSPG state
   yRom = np.zeros(romSize)
 

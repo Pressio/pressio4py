@@ -59,9 +59,11 @@ def test_euler():
   appObj = Burgers1dSparseJacobian(meshSize)
   # reference state
   yRef = np.ones(meshSize)
-  # basis (use file path to know the build directory)
-  phi = np.loadtxt(str(file_path) + "/basis_euler.txt")
 
+  # I have to make phi a column-major array to ensure
+  # pressio does not make a copy of this
+  basisFile = str(file_path) + "/basis_euler.txt"
+  phi = np.copy(np.loadtxt(basisFile), order='F')
   decoder = rom.Decoder(phi)
 
   # create rom state

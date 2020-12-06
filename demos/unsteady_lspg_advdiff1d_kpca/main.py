@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
+import sklearn.decomposition as skd
 
 # need to add to python path location of the apps
 import pathlib, sys
@@ -40,40 +41,62 @@ def test_fom(fom, dt, nsteps, ax):
 
   print("SVD on matrix: ", Usolns.T.shape)
   U,S,VT = np.linalg.svd(Usolns.T)
+  np.savetxt("snapshots.txt",Usolns)
+  #romSize = 2
+  ## POD
+  #Phi = U[:,:romSize]
+  #uTpod = np.dot(Phi, np.dot(Phi.T, uT))
+  #ax.plot(x,uTpod,'-b',label='POD')
+  ## KPCA
+  #mymap = MyMapperKPCA(romSize)
+  #uhat = mymap.applyInverseMapping(uT)
+  ##uhat = mymap.transformer_.transform(uT.reshape(1,-1))
+  #print(uhat.shape)
+  #uTkpca = uT.copy()
+  #mymap.applyMapping(uhat,uTkpca)
+  #ax.plot(x,uTkpca,'-r',label='KPCA')
+  #plt.show()
   nbasis = -1
   np.savetxt("basis.txt", U[:,:nbasis])
   return uT
 
-# #---------------
-# ### GALERKIN ###
-# #---------------
-# def test_galerkin(appObj, dt, nsteps, romSize):
-#   yRef = np.zeros(appObj.nGrid)
-#   phi = np.loadtxt("basis.txt")[:, :romSize]
-#   decoder = rom.Decoder(phi)
-#   yFom0 = appObj.u0.copy()
-#   yRom  = np.dot(phi.T, yFom0)
-#   galerkinProblem = rom.galerkin.default.ProblemEuler(appObj, decoder, yRom, yRef)
-#   fomRecon = galerkinProblem.fomStateReconstructor()
-#   myObs = OdeObserver()
-#   rom.galerkin.advanceNSteps(galerkinProblem, yRom, 0., dt, nsteps, myObs)
-#   yFomFinal = fomRecon.evaluate(yRom)
-#   return yFomFinal
-
 #----------------------------
-class MyMapper:
+class MyMapperKPCA:
   def __init__(self, romSize):
-    fname = str("basis.txt")
-    self.phi_ = np.loadtxt(fname)[:,:romSize]
+    fname = str("snapshots.txt")
+    snapshots = np.loadtxt(fname)
+    self.transformer_ = skd.KernelPCA(n_components=romSize,\
+                                     kernel='poly',
+                                     degree=3,
+                                     fit_inverse_transform=True)
+    self.transformer_.fit(snapshots)
+    self.romSize_ = romSize
+    fomSize = snapshots.shape[1]
+    self.phi_ = np.zeros((fomSize,romSize), order='F')
+    self.fomState0 = np.zeros(fomSize)
+    self.fomState1 = np.zeros(fomSize)
 
   def jacobian(self):
     return self.phi_
 
   def applyMapping(self, romState, fomState):
-    fomState[:] = self.phi_.dot(romState)
+    fomState[:] = np.squeeze(self.transformer_.inverse_transform(romState.reshape(1,-1)))
+
+  def applyInverseMapping(self, fomState):
+    return np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))
 
   def updateJacobian(self, romState):
-    pass
+    romStateLocal = romState.copy()
+    # finite difference to approximate jacobian of KPCA
+    # compute unperturbed fomState
+    self.applyMapping(romStateLocal,self.fomState0)
+    eps = 0.001
+    for i in range(self.romSize_):
+        romStateLocal[i] += eps
+        self.applyMapping(romStateLocal, self.fomState1)
+        self.phi_[:,i] = (self.fomState1 - self.fomState0) / eps
+        romStateLocal[i] -= eps
+
 
 #----------------------------------------
 class OdeObserver:
@@ -100,10 +123,13 @@ class MyLinSolver:
 
 def test_lspg(appObj, dt, nsteps, romSize, pValue):
   yRef = np.zeros(appObj.nGrid)
-  mymap   = MyMapper(romSize)
-  decoder = rom.Decoder(mymap, "MyMapper")
+  mymap   = MyMapperKPCA(romSize)
+  decoder = rom.Decoder(mymap, "MyMapperKPCA")
+
+  # project fom initial state to compute rom initial state
   yFom0 = appObj.u0.copy()
-  yRom = np.dot(mymap.jacobian().T, yFom0)
+  yRom = mymap.applyInverseMapping(yFom0)
+  mymap.updateJacobian(yRom)
 
   problem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
   fomRecon = problem.fomStateReconstructor()
@@ -113,15 +139,15 @@ def test_lspg(appObj, dt, nsteps, romSize, pValue):
     nlsO = solvers.GaussNewton(problem, yRom, MyLinSolver())
   else:
     nlsO = solvers.IrwGaussNewton(problem, yRom, MyLinSolver(), pValue)
-  nlsTol, nlsMaxIt = 1e-6, 3
+  nlsTol, nlsMaxIt = 1e-7, 6
   nlsO.setMaxIterations(nlsMaxIt)
-  #nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
-  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
+  nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
+  #nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
   nlsO.setCorrectionAbsoluteTolerance(nlsTol)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(problem, yRom, 0.,dt,nsteps,myObs, nlsO)
+  rom.lspg.solveNSequentialMinimizations(problem, yRom, 0.,dt, nsteps, myObs, nlsO)
   yFomFinal = fomRecon.evaluate(yRom)
   return yFomFinal
 
@@ -142,13 +168,12 @@ if __name__ == "__main__":
   gold = test_fom(fom, dtFom, int(tfinal/dtFom), ax)
 
   # ROM #
-  romSize = 4
   dtRom = 3e-4
   nsteps = int(tfinal/dtRom)
-  pValues = [0.1, 3., 6]
+  romSizes = [2,3,4]
   colors  = ['b', 'r', 'y']
-  for p,c in zip(pValues,colors):
-   yFomLSPG = test_lspg(fom, dtRom, nsteps, romSize, pValue=p)
+  for p,c in zip(romSizes,colors):
+   yFomLSPG = test_lspg(fom, dtRom, nsteps, p, -1)
    goldNorm = linalg.norm(gold)
    en = linalg.norm(gold-yFomLSPG)
    print("LSPG p= {} err: {}, {}".format(p, en, en/goldNorm))

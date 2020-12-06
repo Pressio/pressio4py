@@ -23,9 +23,10 @@ class MyLinSolver:
 #----------------------------
 class MyMapper:
   def __init__(self):
-    # load basis
+    # I have to make phi a column-major array to ensure
+    # pressio does not make a copy of this
     fname = str(file_path) + "/basis_euler.txt"
-    self.phi_ = np.loadtxt(fname)
+    self.phi_ = np.copy(np.loadtxt(fname), order='F')
 
   def jacobian(self):
     return self.phi_

@@ -96,9 +96,11 @@ def test_euler():
 
   # set reference state
   yRef = np.ones(meshSize)
-  # load basis
+
+  # I have to make phi a column-major array to ensure
+  # pressio does not make a copy of this
   basisFile = str(file_path) + "/basis_bdf1.txt"
-  phi = np.loadtxt(basisFile)
+  phi = np.copy(np.loadtxt(basisFile), order='F')
 
   # decoder
   decoder = rom.Decoder(phi)
