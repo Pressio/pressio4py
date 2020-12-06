@@ -65,14 +65,14 @@ struct ROMTypes : CommonTypes
 {
   using typename CommonTypes::scalar_t;
   using typename CommonTypes::py_f_arr;
-  using ops_t   = void;
 
-  using rom_native_state_t = py_f_arr;
-  using fom_native_state_t = py_f_arr;
+  // currently use column-major format to be seamlessly compatible with blas/lapack
+  using rom_native_state_t   = py_f_arr;
+  using fom_native_state_t   = py_f_arr;
   using decoder_native_jac_t = py_f_arr;
 
-  using rom_state_t = pressio::containers::Vector<rom_native_state_t>;
-  using fom_state_t = pressio::containers::Vector<fom_native_state_t>;
+  using rom_state_t   = pressio::containers::Vector<rom_native_state_t>;
+  using fom_state_t   = pressio::containers::Vector<fom_native_state_t>;
   using decoder_jac_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
   using lsq_hessian_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
 

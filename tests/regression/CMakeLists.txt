@@ -37,6 +37,4 @@ foreach(d ${allDirs})
       endif()
     endif()
   endforeach(f ${thisTestFiles})
-
 endforeach(d ${allDirs})
-message("")

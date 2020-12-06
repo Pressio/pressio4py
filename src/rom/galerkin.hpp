@@ -103,6 +103,9 @@ struct GalerkinBinder
 template <typename mytypes>
 struct GalerkinBinder
 {
+  // we need to define and list types for all possible ode methods
+  // because we need to bind them all in advance for them
+  // to be accessible in python
   using tag1 = pressio::ode::explicitmethods::Euler;
   using gb1_t = impl::GalerkinBinder<mytypes, tag1>;
   using problem_euler_t = typename gb1_t::galerkin_problem_t;

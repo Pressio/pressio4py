@@ -201,67 +201,69 @@ struct UnsteadyLSPGProblemBinder
 template <typename mytypes>
 struct LSPGBinder
 {
-  using scalar_t		= typename mytypes::scalar_t;
-  using rom_native_state_t	= typename mytypes::rom_native_state_t;
-
+  //------------------
   // steady
-  using LSPGProblemBinder_t = impl::SteadyLSPGProblemBinder<mytypes, 0>;
-  using lspg_steady_problem_t = typename LSPGProblemBinder_t::lspg_problem_t;
-  using lspg_steady_system_t  = typename LSPGProblemBinder_t::lspg_system_t;
+  //------------------
+  using de_steady_binder_t  = impl::SteadyLSPGProblemBinder<mytypes, 0>;
+  using de_steady_problem_t = typename de_steady_binder_t::lspg_problem_t;
 
   //------------------
   // unsteady: bdf1
   //------------------
   using bdf1tag = pressio::ode::implicitmethods::Euler;
   // default
-  using de_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 0>;
-  using de_lspg_problem_bdf1_t	   = typename de_bdf1LSPGProblemBinder_t::lspg_problem_t;
-  using de_lspg_stepper_bdf1_t     = typename de_bdf1LSPGProblemBinder_t::lspg_stepper_t;
+  using de_bdf1_binder_t  = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 0>;
+  using de_bdf1_problem_t = typename de_bdf1_binder_t::lspg_problem_t;
   // hyper-reduced
-  using hr_bdf1LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 1>;
-  using hr_lspg_problem_bdf1_t	   = typename hr_bdf1LSPGProblemBinder_t::lspg_problem_t;
-  using hr_lspg_stepper_bdf1_t     = typename hr_bdf1LSPGProblemBinder_t::lspg_stepper_t;
+  using hr_bdf1_binder_t  = impl::UnsteadyLSPGProblemBinder<mytypes, bdf1tag, 1>;
+  using hr_bdf1_problem_t = typename hr_bdf1_binder_t::lspg_problem_t;
 
   //------------------
   // unsteady: bdf2
   //------------------
   using bdf2tag = pressio::ode::implicitmethods::BDF2;
   // default
-  using de_bdf2LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 0>;
-  using de_lspg_problem_bdf2_t	   = typename de_bdf2LSPGProblemBinder_t::lspg_problem_t;
-  using de_lspg_stepper_bdf2_t     = typename de_bdf2LSPGProblemBinder_t::lspg_stepper_t;
+  using de_bdf2_binder_t  = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 0>;
+  using de_bdf2_problem_t = typename de_bdf2_binder_t::lspg_problem_t;
   // hyper-reduced
-  using hr_bdf2LSPGProblemBinder_t = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 1>;
-  using hr_lspg_problem_bdf2_t	   = typename hr_bdf2LSPGProblemBinder_t::lspg_problem_t;
-  using hr_lspg_stepper_bdf2_t     = typename hr_bdf2LSPGProblemBinder_t::lspg_stepper_t;
+  using hr_bdf2_binder_t  = impl::UnsteadyLSPGProblemBinder<mytypes, bdf2tag, 1>;
+  using hr_bdf2_problem_t = typename hr_bdf2_binder_t::lspg_problem_t;
 
+  // *** tuple with all problem types ***
+  using problem_types = std::tuple<
+    de_steady_problem_t, de_bdf1_problem_t, de_bdf2_problem_t, hr_bdf1_problem_t, hr_bdf2_problem_t
+    >;
+  using steady_problem_types = std::tuple<de_steady_problem_t>;
+  using unsteady_problem_types = std::tuple<de_bdf1_problem_t, de_bdf2_problem_t,
+					    hr_bdf1_problem_t, hr_bdf2_problem_t>;
+
+  // binding method
   static void bind(pybind11::module & lspgModule)
   {
-    //--------------------------
     // *** steady problem ***
-    //--------------------------
+    pybind11::module lspgSteadyModule = lspgModule.def_submodule("steady");
     {
-      pybind11::module lspgSteadyModule = lspgModule.def_submodule("steady");
       // default
       pybind11::module lspgSteadyDefaultModule = lspgSteadyModule.def_submodule("default");
-      LSPGProblemBinder_t::bind(lspgSteadyDefaultModule);
+      de_steady_binder_t::bind(lspgSteadyDefaultModule);
     }
 
-    //--------------------------
     // *** unsteady problem ***
-    //--------------------------
     pybind11::module lspgUnsteadyModule = lspgModule.def_submodule("unsteady");
     {
-      // default LSPG
-      pybind11::module thismodule = lspgUnsteadyModule.def_submodule("default");
-      de_bdf1LSPGProblemBinder_t::bind(thismodule, "Euler", "Euler");
-      de_bdf2LSPGProblemBinder_t::bind(thismodule, "BDF2", "BDF2");
-    }
-    {
-      // hyper-reduced LSPG
-      pybind11::module thismodule = lspgUnsteadyModule.def_submodule("hyperreduced");
-      hr_bdf1LSPGProblemBinder_t::bind(thismodule, "Euler", "Euler");
-      hr_bdf2LSPGProblemBinder_t::bind(thismodule, "BDF2", "BDF2");
+      {
+	// default LSPG
+	pybind11::module thismodule = lspgUnsteadyModule.def_submodule("default");
+	de_bdf1_binder_t::bind(thismodule, "Euler", "Euler");
+	de_bdf2_binder_t::bind(thismodule, "BDF2", "BDF2");
+      }
+
+      {
+	// hyper-reduced LSPG
+	pybind11::module thismodule = lspgUnsteadyModule.def_submodule("hyperreduced");
+	hr_bdf1_binder_t::bind(thismodule, "Euler", "Euler");
+	hr_bdf2_binder_t::bind(thismodule, "BDF2", "BDF2");
+      }
     }
   }
 };

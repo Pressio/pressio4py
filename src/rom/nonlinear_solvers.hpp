@@ -138,99 +138,147 @@ void bindStoppingCriteria(pybind11::class_<nonlinear_solver_t> & solverObj)
   solverObj.def("stoppingCriterion",
 		&nonlinear_solver_t::stoppingCriterion);
 };
+//------------------------------------------------
 
+template <typename T, typename = void>
+struct has_system_typedef : std::false_type{};
 
-template<
-  typename steady_prob_t,
-  typename prob_de_bdf1_t,
-  typename prob_de_bdf2_t,
-  typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t
+template <typename T>
+struct has_system_typedef<
+  T, pressio::mpl::enable_if_t< !std::is_void<typename T::system_t >::value >
+  > : std::true_type{};
+
+template <typename T, typename = void>
+struct has_stepper_typedef : std::false_type{};
+
+template <typename T>
+struct has_stepper_typedef<
+  T, pressio::mpl::enable_if_t< !std::is_void<typename T::stepper_t >::value >
+  > : std::true_type{};
+//-----------------------------------------------
+
+template<typename, typename = void>
+struct _have_rj_api;
+
+template<class T>
+struct _have_rj_api<
+  T, pressio::mpl::enable_if_t< has_system_typedef<T>::value >
   >
-struct _have_correct_api
 {
-  using steady_system_t = typename steady_prob_t::system_t;
-  using stepper_de_t    = typename prob_de_bdf1_t::stepper_t;
-  using stepper_hr_t    = typename prob_hr_bdf2_t::stepper_t;
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<steady_system_t>::value,
-   "Currently only supporting bindings for residual_jacobian_api");
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<stepper_de_t>::value,
-   "Currently only supporting bindings for residual_jacobian_api");
-  static_assert
-  (::pressio::solvers::concepts::system_residual_jacobian<stepper_hr_t>::value,
-   "Currently only supporting bindings for residual_jacobian_api");
-
-  static constexpr auto value = true;
+  static constexpr auto value =
+    pressio::solvers::concepts::system_residual_jacobian<typename T::system_t>::value;
 };
 
+template<class T>
+struct _have_rj_api<
+  T, pressio::mpl::enable_if_t< has_stepper_typedef<T>::value >
+  >
+{
+  static constexpr auto value =
+    pressio::solvers::concepts::system_residual_jacobian<typename T::stepper_t>::value;
+};
+//------------------------------------------------
 
-template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
-void bindConstructorUnweighted(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+template<class...>
+struct _have_rj_api_var;
+
+template<class head>
+struct _have_rj_api_var<head>
+{
+  static constexpr auto value = _have_rj_api<head>::value;
+};
+
+template<class head, class... tail>
+struct _have_rj_api_var<head, tail...>
+{
+  static constexpr auto value = _have_rj_api<head>::value and _have_rj_api_var<tail...>::value;
+};
+//------------------------------------------------
+
+struct Unweighted{};
+struct Weighted{};
+struct Irwls{};
+
+template<class rom_problem_t, class nonlinear_solver_t>
+void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Unweighted)
 {
   nonLinSolver.def(pybind11::init<
-		   problem_t &,
-		   const rom_native_state_t &,
+		   rom_problem_t &,
+		   const typename rom_problem_t::lspg_native_state_t &,
 		   pybind11::object //linear or qr solver
 		   >());
 }
 
-template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
-void bindConstructorWeighted(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+template<typename rom_problem_t, class nonlinear_solver_t>
+void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Weighted)
 {
   nonLinSolver.def(pybind11::init<
-		   problem_t &,
-		   const rom_native_state_t &,
+		   rom_problem_t &,
+		   const typename rom_problem_t::lspg_native_state_t &,
 		   pybind11::object, //linear or qr solver
-		   pybind11::object // weigher
+		   pybind11::object // weighting operator
 		   >());
 }
 
-template<typename problem_t, class rom_native_state_t, class nonlinear_solver_t>
-void bindConstructorIrw(pybind11::class_<nonlinear_solver_t> nonLinSolver)
+template<typename rom_problem_t, class nonlinear_solver_t>
+void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Irwls)
 {
   nonLinSolver.def(pybind11::init<
-		   problem_t &,
-		   const rom_native_state_t &,
+		   rom_problem_t &,
+		   const typename rom_problem_t::lspg_native_state_t &,
 		   pybind11::object, //linear or qr solver
-		   typename problem_t::traits::scalar_t
+		   typename rom_problem_t::traits::scalar_t // value of p-norm
 		   >());
 }
 
+template<class ...>
+struct bindConstructorVar;
+
+template<class T>
+struct bindConstructorVar<T>
+{
+  template<class nonlinear_solver_t, typename tag>
+  static void bind(pybind11::class_<nonlinear_solver_t> & nonLinSolver, tag t){
+    bindConstructor<T, nonlinear_solver_t>(nonLinSolver, t);
+  }
+};
+
+template<class head, class ... tail>
+struct bindConstructorVar<head, tail...>
+{
+  template<class nonlinear_solver_t, typename tag>
+  static void bind(pybind11::class_<nonlinear_solver_t> & nonLinSolver, tag t){
+    bindConstructor<head, nonlinear_solver_t>(nonLinSolver, t);
+    bindConstructorVar<tail...>::template bind(nonLinSolver,  t);
+  }
+};
+//------------------------------------------------
+
+//------------------------------------------------
 /*
   GN or LM with normal equations
  */
-template<
-  bool do_gn,
-  typename steady_prob_t,
-  typename prob_de_bdf1_t,
-  typename prob_de_bdf2_t,
-  typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t,
-  typename linear_solver_t,
-  typename rom_native_state_t,
-  typename rom_state_t
-  >
+
+template<bool do_gn, typename linear_solver_wrapper_t, typename ...Problems>
 struct LeastSquaresNormalEqBinder
 {
-  static_assert
-  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
-   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+  static_assert(_have_rj_api_var<Problems...>::value, "");
 
-  // it does not matter here if we use stepper_t or system_t as template
-  // args to declare the solver type in the code below as long as they
-  // both meet the res-jac api. If we get here, it means that condition is met
+  // it does not matter here if we use the steady system or stepper_t
+  // as template arg to compose the solver type in the code below as long as it
+  // meets the res-jac api. But since we are here, this condition is met
   // because it is asserted above.
-  using system_t = typename steady_prob_t::system_t;
+  using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+  using system_t = typename head_problem_t::system_t;
 
   // gauss-newton solver type
-  using gn_type =
-    pressio::solvers::nonlinear::impl::composeGaussNewton_t<system_t, linear_solver_t>;
+  using gn_type = pressio::solvers::nonlinear::impl::composeGaussNewton_t
+    <system_t, linear_solver_wrapper_t>;
   // lm solver type
-  using lm_type =
-    pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t<system_t, linear_solver_t>;
+  using lm_type = pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t
+    <system_t, linear_solver_wrapper_t>;
 
+  // pick gn or lm conditioned on the bool argument
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
   static void bind(pybind11::module & m, std::string solverPythonName)
@@ -239,45 +287,60 @@ struct LeastSquaresNormalEqBinder
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    // for steady
-    bindConstructorUnweighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf1
-    bindConstructorUnweighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf2
-    bindConstructorUnweighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf1
-    bindConstructorUnweighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf2
-    bindConstructorUnweighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+    bindConstructorVar<Problems...>::template bind(nonLinSolver, Unweighted{});
   }
 };
 
+//------------------------------------------------
+/*
+  QR-based GN
+ */
+template<bool do_gn, class qr_solver_t, class ...Problems>
+struct LeastSquaresQRBinder
+{
+  static_assert(do_gn, "QR-based solver only supported for GN");
+  static_assert(_have_rj_api_var<Problems...>::value, "");
+
+  // it does not matter here if we use the steady system or stepper_t
+  // as template arg to compose the solver type in the code below as long as it
+  // meets the res-jac api. But since we are here, this condition is met
+  // because it is asserted above.
+  using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+  using system_t = typename head_problem_t::system_t;
+
+  using nonlinear_solver_t =
+    pressio::solvers::nonlinear::impl::composeGaussNewtonQR_t<system_t, qr_solver_t>;
+
+  static void bind(pybind11::module & m, std::string solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+    bindConstructorVar<Problems...>::template bind(nonLinSolver, Unweighted{});
+  }
+};
+
+//------------------------------------------------
 /*
   weighted GN or LM with normal equations
  */
 template<
   bool do_gn,
-  typename steady_prob_t,
-  typename prob_de_bdf1_t,
-  typename prob_de_bdf2_t,
-  typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t,
   typename linear_solver_t,
-  typename rom_native_state_t,
-  typename rom_state_t,
-  typename weigher_t
+  typename weigher_t,
+  class ... Problems
   >
 struct WeightedLeastSquaresNormalEqBinder
 {
-  static_assert
-  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
-   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+  static_assert(_have_rj_api_var<Problems...>::value, "");
 
-  // it does not matter here if we use stepper_t or system_t as template
-  // args to declare the solver type in the code below as long as they
-  // both meet the res-jac api. If we get here, it means that condition is met
+  // it does not matter here if we use the steady system or stepper_t
+  // as template arg to compose the solver type in the code below as long as it
+  // meets the res-jac api. But since we are here, this condition is met
   // because it is asserted above.
-  using system_t = typename steady_prob_t::system_t;
+  using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+  using system_t = typename head_problem_t::system_t;
 
   // gauss-newton solver type
   using gn_type =
@@ -295,43 +358,25 @@ struct WeightedLeastSquaresNormalEqBinder
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    // for steady
-    bindConstructorWeighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf1
-    bindConstructorWeighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf2
-    bindConstructorWeighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf1
-    bindConstructorWeighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf2
-    bindConstructorWeighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+    bindConstructorVar<Problems...>::template bind(nonLinSolver, Weighted{});
   }
 };
 
+//------------------------------------------------
 /*
   IRWGN normal equations
  */
-template<
-  typename steady_prob_t,
-  typename prob_de_bdf1_t,
-  typename prob_de_bdf2_t,
-  typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t,
-  typename linear_solver_t,
-  typename rom_native_state_t,
-  typename rom_state_t
-  >
+template<bool do_gn, class linear_solver_t, class ...Problems>
 struct IrwLeastSquaresNormalEqBinder
 {
-  static_assert
-  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
-   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
+  static_assert(_have_rj_api_var<Problems...>::value, "");
 
-  // it does not matter here if we use stepper_t or system_t as template
-  // args to declare the solver type in the code below as long as they
-  // both meet the res-jac api. If we get here, it means that condition is met
+  // it does not matter here if we use the steady system or stepper_t
+  // as template arg to compose the solver type in the code below as long as it
+  // meets the res-jac api. But since we are here, this condition is met
   // because it is asserted above.
-  using system_t = typename steady_prob_t::system_t;
+  using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+  using system_t = typename head_problem_t::system_t;
 
   using composer_t = pressio::solvers::nonlinear::impl::composeIrwGaussNewton<system_t, linear_solver_t>;
   using w_t = typename composer_t::weighting_t;
@@ -343,68 +388,30 @@ struct IrwLeastSquaresNormalEqBinder
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    // for steady
-    bindConstructorIrw<steady_prob_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf1
-    bindConstructorIrw<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf2
-    bindConstructorIrw<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf1
-    bindConstructorIrw<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf2
-    bindConstructorIrw<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
+    bindConstructorVar<Problems...>::template bind(nonLinSolver, Irwls{});
   }
 };
 
+// helper metafunction for dealing with types in a tuple
+template<template<bool, typename...> class T, bool, typename...>
+struct instantiate_from_tuple_pack { };
 
-/*
-  QR-based GN
- */
 template<
-  bool do_gn,
-  typename steady_prob_t,
-  typename prob_de_bdf1_t,
-  typename prob_de_bdf2_t,
-  typename prob_hr_bdf1_t,
-  typename prob_hr_bdf2_t,
-  typename qr_solver_t,
-  typename rom_native_state_t,
-  typename rom_state_t
+  template<bool, typename...> class T,
+  bool b, class T1, typename... Ts
   >
-struct LeastSquaresQRBinder
+struct instantiate_from_tuple_pack<T, b, T1, std::tuple<Ts...>>
 {
-  static_assert(do_gn, "QR-based solver only supported for GN");
+  using type = T<b, T1, Ts...>;
+};
 
-  static_assert
-  (_have_correct_api<steady_prob_t, prob_de_bdf1_t,
-   prob_de_bdf2_t, prob_hr_bdf1_t, prob_hr_bdf2_t>::value, "");
-
-  // it does not matter here if we use stepper_t or system_t as template
-  // args to declare the solver type in the code below as long as they
-  // both meet the res-jac api. If we get here, it means that condition is met
-  // because it is asserted above.
-  using system_t = typename steady_prob_t::system_t;
-
-  using nonlinear_solver_t =
-    pressio::solvers::nonlinear::impl::composeGaussNewtonQR_t<system_t, qr_solver_t>;
-
-  static void bind(pybind11::module & m, std::string solverPythonName)
-  {
-    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
-    bindTolerancesMethods(nonLinSolver);
-    bindStoppingCriteria(nonLinSolver);
-    bindCommonSolverMethods(nonLinSolver);
-    // for steady
-    bindConstructorUnweighted<steady_prob_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf1
-    bindConstructorUnweighted<prob_de_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady default bdf2
-    bindConstructorUnweighted<prob_de_bdf2_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf1
-    bindConstructorUnweighted<prob_hr_bdf1_t, rom_native_state_t>(nonLinSolver);
-    // for unsteady hypred bdf2
-    bindConstructorUnweighted<prob_hr_bdf2_t, rom_native_state_t>(nonLinSolver);
-  }
+template<
+  template<bool, typename...> class T,
+  bool b, class T1, class T2, typename... Ts
+  >
+struct instantiate_from_tuple_pack<T, b, T1, T2, std::tuple<Ts...>>
+{
+  using type = T<b, T1, T2, Ts...>;
 };
 
 }}//end namespace
