@@ -8,13 +8,14 @@ LINKS_NAVBAR1 = [
   ("<a href=>Get Started</a>", # empty href so that get started only has children
    [
      ("<a href=\"md_pages_getstarted_build_and_install.html\">Installation and Dependencies</a>",)
+   ]),
+  #######
+  # demos
+  ("<a href=>Demos</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
+   [
+     ("<a href=\"md_pages_demos_demo1.html\">1D adv-diff: Galerkin with POD modes</a>", ),
+     ("<a href=\"md_pages_demos_demo2.html\">1D adv-diff: LSPG with POD modes</a>", )
    ])
-
-  # # tutorials
-  # ("<a href=>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
-  #  [
-  #    ("<a href=\"md_pages_tutorials_tutorial1.html\">Tutorial1</a>", )
-  #  ]),
 
   # # examples
   # ("<a href=>Full Examples</a>", #("<a href=\"md_pages_examples.html\">Full Examples</a>",

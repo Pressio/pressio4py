@@ -4,7 +4,14 @@ message("${Magenta}----------------------------------${ColourReset}")
 message("${Magenta} Processing demos ${ColourReset}")
 message("${Magenta}----------------------------------${ColourReset}")
 
-# glob over current dir and use relative to keep the dir name without full path
+# need to copy to destination all auxiliary python files in here
+file(GLOB auxPyFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} REGEX "*.py*")
+foreach(f ${auxPyFiles})
+  configure_file(${f} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/demos/ COPYONLY)
+endforeach()
+
+
+# glob over current subdirectories and use relative to keep the dir name without full path
 file(GLOB allDirs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} REGEX "*steady*")
 
 # loop over each test directory

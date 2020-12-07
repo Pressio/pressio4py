@@ -1,97 +1,106 @@
 
 
-\begin{DoxyParagraph}{What is this page about?}
-This page describes the building steps for {\ttfamily pressio4py}. By the end, you should be able to clone pressio4py, build it, and use the library in Python.
+\begin{DoxyParagraph}{What does this page describe?}
+This page describes the end-\/to-\/end building process for {\ttfamily pressio4py}. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.
 \end{DoxyParagraph}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md2}{}\doxysection{Prerequisites}\label{md_pages_getstarted_build_and_install_autotoc_md2}
+\hypertarget{md_pages_getstarted_build_and_install_autotoc_md20}{}\doxysection{Prerequisites}\label{md_pages_getstarted_build_and_install_autotoc_md20}
 
 \begin{DoxyItemize}
-\item S\+SH keys setup with github (if you are working behind a firewall, set the proper proxies)
-\item C, C++ (with support for C++14) compiler;
+\item S\+SH keys setup with github (if you are working behind a firewall, set the proper proxies);
+\item C++ compiler (with support for C++14 standard);
 \item C\+Make $>$= 3.\+11.\+0;
 \item Bash $>$= 3.\+2.\+57.
-\item Python ($>$=3.\+6), with Num\+Py, Sci\+Py, Numba, and Pytest
-\end{DoxyItemize}\hypertarget{md_pages_getstarted_build_and_install_autotoc_md3}{}\doxysection{In pratice, to build pressio4py follow these steps}\label{md_pages_getstarted_build_and_install_autotoc_md3}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md4}{}\doxysubsection{1. Prep}\label{md_pages_getstarted_build_and_install_autotoc_md4}
-Create (or choose) a directory where you want to clone all repos, e,g.\+:
+\item Python ($>$=3.\+6), with Num\+Py, Sci\+Py, Numba, Pytest and sklearn (needed to run some of the demos).
+\end{DoxyItemize}\hypertarget{md_pages_getstarted_build_and_install_autotoc_md21}{}\doxysection{Pratical steps}\label{md_pages_getstarted_build_and_install_autotoc_md21}
+\hypertarget{md_pages_getstarted_build_and_install_autotoc_md22}{}\doxysubsection{1. Prep}\label{md_pages_getstarted_build_and_install_autotoc_md22}
+Create a working director where you want to clone all repos and do the builds, e,g.\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{mkdir \$HOME/pressio\_repos}
+\DoxyCodeLine{export WORKDIR=\$HOME/myPressioTest}
+\DoxyCodeLine{mkdir -\/p \$\{WORKDIR\}/sources  \# creates workdir and subdir for all sources}
 \end{DoxyCode}
 
 
-And to make things easier, create environment variables\+:
+To make things easier, create environment variables for the compilers\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{export PRESSIO\_REPOS=\$HOME/pressio\_repos}
-\DoxyCodeLine{export PRESSIO\_BUILDS=\$HOME/pressio\_builds}
 \DoxyCodeLine{export CC=<path-\/to-\/your-\/C-\/compiler>}
 \DoxyCodeLine{export CXX=<path-\/to-\/your-\/CXX-\/compiler>}
 \end{DoxyCode}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md5}{}\doxysubsection{2. Cloning}\label{md_pages_getstarted_build_and_install_autotoc_md5}
-Clone the needed repos as follows\+:
-
+\hypertarget{md_pages_getstarted_build_and_install_autotoc_md23}{}\doxysubsection{2. Cloning}\label{md_pages_getstarted_build_and_install_autotoc_md23}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{cd \$\{PRESSIO\_REPOS\}}
-\DoxyCodeLine{}
+\DoxyCodeLine{cd \$\{WORKDIR\}/sources}
 \DoxyCodeLine{git clone git@github.com:Pressio/pressio.git}
 \DoxyCodeLine{git clone git@github.com:Pressio/pressio-\/builder.git}
 \DoxyCodeLine{git clone git@github.com:Pressio/pressio4py.git}
 \end{DoxyCode}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md6}{}\doxysubsection{3. Install T\+P\+Ls}\label{md_pages_getstarted_build_and_install_autotoc_md6}
-Run the following command\+:
+
+
+By default, the above commands will clone the {\itshape master} branch of each repo. This is because the master branches of the three repos are the stable ones, and compatible with one another. If you want specific versions, you can just checkout the tag you want. If you do so, make sure you checkout the same tag for all three repos.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md24}{}\doxysubsection{3. Install Dependencies}\label{md_pages_getstarted_build_and_install_autotoc_md24}
+Currently, pressio and pybind11 are the dependencies required by {\ttfamily pressio4py}. To get and install the T\+P\+Ls, run the following\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{cd \$\{PRESSIO\_REPOS\}/pressio-\/builder}
+\DoxyCodeLine{cd \$\{WORKDIR\}/sources/pressio-\/builder}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# first, get pybind11}
 \DoxyCodeLine{bash ./main\_tpls.sh -\/dryrun=no -\/build-\/mode=Debug \(\backslash\)}
-\DoxyCodeLine{     -\/target-\/dir=\$\{PRESSIO\_BUILDS\} -\/tpls=pybind11}
-\end{DoxyCode}
-
-
-This step should create two subdirectories\+: 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{\$\{PRESSIO\_BUILDS\}/pybind11/\{install, build\}}
-\end{DoxyCode}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md7}{}\doxysubsection{4. Install pressio}\label{md_pages_getstarted_build_and_install_autotoc_md7}
-
-\begin{DoxyCode}{0}
-\DoxyCodeLine{cd \$\{PRESSIO\_REPOS\}/pressio-\/builder}
+\DoxyCodeLine{     -\/target-\/dir=\$\{WORKDIR\} -\/tpls=pybind11}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# second, get pressio}
 \DoxyCodeLine{./main\_pressio.sh -\/dryrun=no \(\backslash\)}
-\DoxyCodeLine{  -\/pressio-\/src=\$\{PRESSIO\_REPOS\}/pressio \(\backslash\)}
-\DoxyCodeLine{  -\/target-\/dir=\$\{PRESSIO\_BUILDS\} \(\backslash\)}
+\DoxyCodeLine{  -\/pressio-\/src=\$\{WORKDIR\}/sources/pressio \(\backslash\)}
+\DoxyCodeLine{  -\/target-\/dir=\$\{WORKDIR\} \(\backslash\)}
 \DoxyCodeLine{  -\/cmake-\/generator-\/name=default\_pybind \(\backslash\)}
-\DoxyCodeLine{  -\/pybind11-\/path=\$\{PRESSIO\_BUILDS\}/pybind11/install}
+\DoxyCodeLine{  -\/pybind11-\/path=\$\{WORKDIR\}/pybind11/install}
 \end{DoxyCode}
-\hypertarget{md_pages_getstarted_build_and_install_autotoc_md8}{}\doxysubsection{5. Time to build pressio4py}\label{md_pages_getstarted_build_and_install_autotoc_md8}
+
+
+Inside {\ttfamily \$\{W\+O\+R\+K\+D\+IR\}}, you should see the following structure\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{➤ tree -\/d -\/L 2}
+\DoxyCodeLine{.}
+\DoxyCodeLine{├── pressio}
+\DoxyCodeLine{│   ├── build}
+\DoxyCodeLine{│   └── install}
+\DoxyCodeLine{├── pybind11}
+\DoxyCodeLine{│   ├── build}
+\DoxyCodeLine{│   ├── install}
+\DoxyCodeLine{│   └── pybind11}
+\DoxyCodeLine{└── sources}
+\DoxyCodeLine{    ├── pressio}
+\DoxyCodeLine{    ├── pressio-\/builder}
+\DoxyCodeLine{    └── pressio4py}
+\end{DoxyCode}
+\hypertarget{md_pages_getstarted_build_and_install_autotoc_md25}{}\doxysubsection{4. Build pressio4py}\label{md_pages_getstarted_build_and_install_autotoc_md25}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{cd \$\{PRESSIO\_BUILDS\}}
+\DoxyCodeLine{cd \$\{WORKDIR\}}
 \DoxyCodeLine{}
 \DoxyCodeLine{bdirname=pressio4py-\/build}
 \DoxyCodeLine{rm -\/rf \$\{bdirname\} \&\& mkdir \$\{bdirname\} \&\& cd \$\{bdirname\}}
 \DoxyCodeLine{cmake -\/DCMAKE\_VERBOSE\_MAKEFILE:BOOL=TRUE \(\backslash\)}
-\DoxyCodeLine{      -\/DCMAKE\_INSTALL\_PREFIX=\$\{PRESSIO\_BUILDS\}/pressio4py-\/install \(\backslash\)}
+\DoxyCodeLine{      -\/DCMAKE\_INSTALL\_PREFIX=\$\{WORKDIR\}/pressio4py-\/install \(\backslash\)}
 \DoxyCodeLine{      -\/DCMAKE\_CXX\_COMPILER=\$\{CXX\} \(\backslash\)}
 \DoxyCodeLine{      -\/DCMAKE\_BUILD\_TYPE=Release \(\backslash\)}
-\DoxyCodeLine{      -\/DPRESSIO\_INCLUDE\_DIR=\$\{PRESSIO\_BUILDS\}/pressio/install/include \(\backslash\)}
-\DoxyCodeLine{      -\/DPYBIND11\_DIR=\$\{PRESSIO\_BUILDS\}/pybind11/install \(\backslash\)}
-\DoxyCodeLine{      \$\{PRESSIO\_REPOS\}/pressio4py}
+\DoxyCodeLine{      -\/DPRESSIO\_INCLUDE\_DIR=\$\{WORKDIR\}/pressio/install/include \(\backslash\)}
+\DoxyCodeLine{      -\/DPYBIND11\_DIR=\$\{WORKDIR\}/pybind11/install \(\backslash\)}
+\DoxyCodeLine{      \$\{WORKDIR\}/sources/pressio4py}
 \DoxyCodeLine{make -\/j4}
 \DoxyCodeLine{make install}
 \DoxyCodeLine{cd ..}
 \end{DoxyCode}
 
 
-This creates the Python library inside {\ttfamily \$\{P\+R\+E\+S\+S\+I\+O\+\_\+\+B\+U\+I\+L\+DS\}/pressio4py-\/install} to load.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md9}{}\doxysubsection{6. Testing}\label{md_pages_getstarted_build_and_install_autotoc_md9}
-After building, you can do\+: 
+This should create the Python library inside {\ttfamily \$\{W\+O\+R\+K\+D\+IR\}/pressio4py-\/install} which you can import in Python.\hypertarget{md_pages_getstarted_build_and_install_autotoc_md26}{}\doxysubsection{5. Running the tests or demos}\label{md_pages_getstarted_build_and_install_autotoc_md26}
+To run all tests, after building\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{cd \$\{PRESSIO\_BUILDS\}/pressio4py-\/build}
-\DoxyCodeLine{pytest -\/s}
+\DoxyCodeLine{cd \$\{WORKDIR\}/pressio4py-\/build}
+\DoxyCodeLine{pytest -\/s  \#-\/s flushes all output to terminal.}
 \end{DoxyCode}
 
 
-where the {\ttfamily -\/s} flag tells Python to flush all output to terminal. 
+Or you can find demos inside {\ttfamily \$\{W\+O\+R\+K\+D\+IR\}/pressio4py-\/build/demos}. 

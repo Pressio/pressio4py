@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+  <compounddef id="md_pages_demos_demo1" kind="page">
+    <compoundname>md_pages_demos_demo1</compoundname>
+    <title>1D adv-diff: Galerkin with POD modes</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved.<linebreak/>
+ To jump directly at the full demo script, click <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
+</simplesect>
+ <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Disclaimer</title><para>This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.</para>
+</simplesect>
+</para>
+<sect1 id="md_pages_demos_demo1_1autotoc_md1">
+<title>Overview</title>
+<para>Here, we cover the three typical steps needed for a ROM:<orderedlist>
+<listitem><para>generating of snapshots using the full-order model (FOM)</para>
+</listitem><listitem><para>computing the basis: here we demonstrate the use of POD modes</para>
+</listitem><listitem><para>executing the ROM: here we leverage the GALERKIN ROM to demonstrate a <emphasis>reproductive</emphasis> test, i.e., we run the ROM using the same physical coefficients, b.c., etc. A predictive run is demonstrated in a different tutorial.</para>
+</listitem></orderedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_demos_demo1_1autotoc_md2">
+<title>FOM Equations</title>
+<para>The governing equations for this problem are:</para>
+<para><formula id="0">\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \]</formula> where <formula id="1">$k(u,x)=x^4$</formula>, the field is <formula id="2">$u(x;t)$</formula>, the advection velocity is fixed at <formula id="3">$a=2$</formula>, the spatial coordinate is <formula id="4">$x$</formula> and the domain is <formula id="5">$(0,1)$</formula>. We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences is implemented <ulink url="https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py">here</ulink>.</para>
+</sect1>
+<sect1 id="md_pages_demos_demo1_1autotoc_md3">
+<title>Imports</title>
+<para>Before looking at the code snippets below, the imports needed are: <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff1d<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>fom<sp/>class</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff_1d_fom<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>doFom<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>function<sp/>to<sp/>collect<sp/>fom<sp/>data</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>solvers<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>solvers</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_pages_demos_demo1_1autotoc_md4">
+<title>Main function</title>
+<para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>initial<sp/>condition<sp/>u(x,t=0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ic<sp/>=<sp/></highlight><highlight class="keyword">lambda</highlight><highlight class="normal"><sp/>x:<sp/>2.*np.sin(9.*np.pi*x)<sp/>-<sp/>np.sin(4.*np.pi*x)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomObj<sp/>=<sp/>AdvDiff1d(nGrid=120,<sp/>IC=ic,<sp/>adv_coef=2.0)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>final<sp/>time<sp/>to<sp/>integrate<sp/>to</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>finalTime<sp/>=<sp/>.05</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>1.<sp/>FOM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomTimeStepSize<sp/><sp/>=<sp/>1e-5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomNumberOfSteps<sp/>=<sp/>int(finalTime/fomTimeStepSize)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sampleEvery<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>[fomFinalState,<sp/>snapshots]<sp/>=<sp/>doFom(fomObj,<sp/>fomTimeStepSize,<sp/>fomNumberOfSteps,<sp/>sampleEvery)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>2.<sp/>POD<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>modes<sp/>=<sp/>computePodModes(snapshots)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>3.<sp/>GALERKIN<sp/>ROM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romSize<sp/>=<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romTimeStepSize<sp/><sp/>=<sp/>3e-4</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>we<sp/>pass<sp/>only<sp/>romSize<sp/>modes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>approximatedState<sp/>=<sp/>runGalerkin(fomObj,<sp/>romTimeStepSize,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>romNumberOfSteps,<sp/>modes[:,:romSize])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>plot<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ax<sp/>=<sp/>plt.gca()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ax.plot(fomObj.xGrid,<sp/>fomFinalState,<sp/></highlight><highlight class="stringliteral">&apos;-&apos;</highlight><highlight class="normal">,<sp/>linewidth=2,<sp/>label=</highlight><highlight class="stringliteral">&apos;FOM&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ax.plot(fomObj.xGrid,<sp/>approximatedState,<sp/></highlight><highlight class="stringliteral">&apos;or&apos;</highlight><highlight class="normal">,<sp/>label=</highlight><highlight class="stringliteral">&apos;LSPG:<sp/>&apos;</highlight><highlight class="normal">+str(romSize)+</highlight><highlight class="stringliteral">&apos;<sp/>POD<sp/>modes&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>plt.rcParams.update({</highlight><highlight class="stringliteral">&apos;font.size&apos;</highlight><highlight class="normal">:<sp/>18})</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>plt.ylabel(</highlight><highlight class="stringliteral">&quot;Solution&quot;</highlight><highlight class="normal">,<sp/>fontsize=18)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>plt.xlabel(</highlight><highlight class="stringliteral">&quot;x-coordinate&quot;</highlight><highlight class="normal">,<sp/>fontsize=18)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>plt.legend(fontsize=12)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>plt.show()</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_pages_demos_demo1_1autotoc_md5">
+<title>Code for the various stages in main</title>
+<para>Here we list the functions performing the various stages of the run.</para>
+<sect3 id="md_pages_demos_demo1_1autotoc_md6">
+<title>1. Run FOM and collect snapshots</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>U<sp/>=<sp/>[u]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>T<sp/>=<sp/>[0.0]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>f<sp/>=<sp/>fom.createVelocity()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>i<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(1,nsteps+1):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>query<sp/>rhs<sp/>of<sp/>discretized<sp/>system</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>fom.velocity(u,<sp/>i*dt,<sp/>f)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>simple<sp/>Euler<sp/>forward</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>u<sp/>=<sp/>u<sp/>+<sp/>dt*f</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>i<sp/>%<sp/>saveFreq<sp/>==<sp/>0:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>U.append(u)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>T.append(i*dt)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Usolns<sp/>=<sp/>np.array(U)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_pages_demos_demo1_1autotoc_md7">
+<title>2. Compute POD modes</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>U,S,VT<sp/>=<sp/>np.linalg.svd(snapshots)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_pages_demos_demo1_1autotoc_md8">
+<title>3. Construct and run Galerkin</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runGalerkin(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>auxiliary<sp/>class<sp/>to<sp/>use<sp/>in<sp/>the<sp/>solve<sp/>below</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>monitor<sp/>the<sp/>rom<sp/>state<sp/>during<sp/>time<sp/>stepping</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RomStateObserver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>state):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>find<sp/>out<sp/>number<sp/>of<sp/>modes<sp/>wanted</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romSize<sp/>=<sp/>modes.shape[1]</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>a<sp/>linear<sp/>decoder,<sp/>passing<sp/>only<sp/>the<sp/>desired<sp/>number<sp/>of<sp/>modes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>will<sp/>make<sp/>a<sp/>deep<sp/>copy<sp/>of<sp/>the<sp/>modes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>linearDecoder<sp/>=<sp/>rom.Decoder(modes)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>fom<sp/>reference<sp/>state:<sp/>here<sp/>it<sp/>is<sp/>zero</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomReferenceState<sp/>=<sp/>np.zeros(fomObj.nGrid)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>ROM<sp/>state<sp/>by<sp/>projecting<sp/>the<sp/>fom<sp/>initial<sp/>condition</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomInitialState<sp/>=<sp/>fomObj.u0.copy()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>np.dot(modes.T,<sp/>fomInitialState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>GALERKIN<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.galerkin.default.ProblemEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>objective<sp/>to<sp/>monitor<sp/>the<sp/>romState<sp/>at<sp/>every<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>myObs<sp/>=<sp/>RomStateObserver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solver<sp/>GALERKIN<sp/>problems</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>rom.galerkin.advanceNSteps(problem,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>after<sp/>we<sp/>are<sp/>done,<sp/>use<sp/>the<sp/>reconstructor<sp/>object<sp/>to<sp/>reconstruct<sp/>the<sp/>fom<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>get<sp/>the<sp/>reconstructor<sp/>object:<sp/>this<sp/>allows<sp/>to<sp/>map<sp/>romState<sp/>to<sp/>fomState</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomRecon<sp/>=<sp/>problem.fomStateReconstructor()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon.evaluate(romState)</highlight></codeline>
+</programlisting> </para>
+</sect3>
+</sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

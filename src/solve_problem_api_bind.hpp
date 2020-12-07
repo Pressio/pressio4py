@@ -84,6 +84,18 @@ struct bindOneProbToMultipleSolvers<solver_t>
 	  collector_t,
 	  solver_t>);
   }
+
+  template<class rom_native_state_t, class problem_t>
+  static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
+  bind(pybind11::module & m)
+  {
+    m.def("solveNSequentialMinimizations",
+	  &::pressio::rom::lspg::solveNSequentialMinimizations<
+	  problem_t,
+	  rom_native_state_t,
+	  typename pressio::rom::details::traits<problem_t>::scalar_t,
+	  solver_t>);
+  }
 };
 
 template<class solver_t, class ...other_solvers_t>

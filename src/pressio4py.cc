@@ -182,23 +182,35 @@ PYBIND11_MODULE(pressio4py, mParent)
 
   // functions for galerkin: here we do this manually but
   // should be done similarly to lspg below to make this more automated
-  galerkinModule.def("advanceNSteps", // for Galerkin Euler
+  galerkinModule.def("advanceNSteps", // for Galerkin Euler with collector
 		     &pressio::rom::galerkin::solveNSteps<
 		     typename galerkin_binder_t::problem_euler_t,
 		     rom_native_state_t, scalar_t, collector_t>);
+  galerkinModule.def("advanceNSteps", // for Galerkin Euler without collector
+		     &pressio::rom::galerkin::solveNSteps<
+		     typename galerkin_binder_t::problem_euler_t,
+		     rom_native_state_t, scalar_t>);
   galerkinModule.def("advanceNSteps", // for Galerkin RK4
 		     &pressio::rom::galerkin::solveNSteps<
 		     typename galerkin_binder_t::problem_rk4_t,
 		     rom_native_state_t, scalar_t, collector_t>);
+  galerkinModule.def("advanceNSteps", // for Galerkin RK4 without collector
+		     &pressio::rom::galerkin::solveNSteps<
+		     typename galerkin_binder_t::problem_rk4_t,
+		     rom_native_state_t, scalar_t>);
+
 
   // for lspg, we have MANY solver choices and MANY problem types,
   // so writing explicitly the binding for solving all these is verbose.
   // So we use some metaprogramming to facilitate binding each problem to each problem.
   pressio4py::bindLspgProbsWithMultipleSolvers
     <steady_lspgproblems, solvers>::template bind<rom_native_state_t>(lspgModule);
-  // note that for unsteady we need to passs the collector object
+  // unsteady with collector object
   pressio4py::bindLspgProbsWithMultipleSolvers
     <unsteady_lspgproblems, solvers>::template bind<rom_native_state_t, collector_t>(lspgModule);
+  // unsteady without collector object
+  pressio4py::bindLspgProbsWithMultipleSolvers
+    <unsteady_lspgproblems, solvers>::template bind<rom_native_state_t>(lspgModule);
 
 
   // TODO: not working because of conflicting std::out and sys.out
