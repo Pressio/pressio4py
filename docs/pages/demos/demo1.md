@@ -7,16 +7,10 @@
 @par What does this page describe?
 This page describes a demo for a reproductive Galerkin ROM applied to a
 1D advection-diffusion problem using POD modes as basis.
-By the end, it should be clear how to setup the problem and the various steps involved.<br>
-To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py)
-
-
-@m_class{m-block m-warning}
-
-@par Disclaimer
+By the end, it should be clear how to setup the problem and the various steps involved.
 This demo purposefully focuses on a simple test since the main goal is
 to demonstrate the steps and the code. More complex cases will be added later.
-
+To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py)
 
 ## Overview
 Here, we cover the three typical steps needed for a ROM:
@@ -41,7 +35,7 @@ is implemented [here](https://github.com/Pressio/pressio4py/blob/master/apps/adv
 
 
 ## Imports
-Before looking at the code snippets below, the imports needed are:
+Before looking at the code snippets below, the `pressio4py`-specific imports needed are:
 ```py
 from adv_diff1d import *					# the fom class
 from adv_diff_1d_fom import doFom			# the function to collect fom data

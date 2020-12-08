@@ -7,11 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved.<linebreak/>
- To jump directly at the full demo script, click <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
-</simplesect>
- <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Disclaimer</title><para>This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.</para>
+<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
 </simplesect>
 </para>
 <sect1 id="md_pages_demos_demo1_1autotoc_md1">
@@ -30,7 +26,7 @@
 </sect1>
 <sect1 id="md_pages_demos_demo1_1autotoc_md3">
 <title>Imports</title>
-<para>Before looking at the code snippets below, the imports needed are: <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff1d<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>fom<sp/>class</highlight><highlight class="normal"></highlight></codeline>
+<para>Before looking at the code snippets below, the <computeroutput>pressio4py</computeroutput>-specific imports needed are: <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff1d<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>fom<sp/>class</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff_1d_fom<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>doFom<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>function<sp/>to<sp/>collect<sp/>fom<sp/>data</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>solvers<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>solvers</highlight></codeline>

@@ -1,13 +1,7 @@
 
 
 \begin{DoxyParagraph}{What does this page describe?}
-This page describes a demo for a reproductive Galerkin R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved.~\newline
- To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
-\end{DoxyParagraph}
-
-
-\begin{DoxyParagraph}{Disclaimer}
-This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.
+This page describes a demo for a reproductive Galerkin R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
 \hypertarget{md_pages_demos_demo1_autotoc_md1}{}\doxysection{Overview}\label{md_pages_demos_demo1_autotoc_md1}
 Here, we cover the three typical steps needed for a R\+OM\+:
@@ -19,7 +13,7 @@ Here, we cover the three typical steps needed for a R\+OM\+:
 The governing equations for this problem are\+:
 
 \[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the F\+OM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo1_autotoc_md3}{}\doxysection{Imports}\label{md_pages_demos_demo1_autotoc_md3}
-Before looking at the code snippets below, the imports needed are\+: 
+Before looking at the code snippets below, the {\ttfamily pressio4py}-\/specific imports needed are\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{from adv\_diff1d \textcolor{keyword}{import} *                    \textcolor{comment}{\# the fom class}}
 \DoxyCodeLine{\textcolor{keyword}{from} adv\_diff\_1d\_fom \textcolor{keyword}{import} doFom           \textcolor{comment}{\# the function to collect fom data}}

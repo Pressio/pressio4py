@@ -1,13 +1,7 @@
 
 
 \begin{DoxyParagraph}{What does this page describe?}
-This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved.~\newline
- To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py}{\texttt{ here.}}
-\end{DoxyParagraph}
-
-
-\begin{DoxyParagraph}{Disclaimer}
-This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.
+This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
 \hypertarget{md_pages_demos_demo2_autotoc_md10}{}\doxysection{Overview}\label{md_pages_demos_demo2_autotoc_md10}
 Here, we cover the three typical steps needed for a R\+OM\+:
@@ -15,18 +9,17 @@ Here, we cover the three typical steps needed for a R\+OM\+:
 \item generating of snapshots using the full-\/order model (F\+OM)
 \item computing the basis\+: here we demonstrate the use of P\+OD modes
 \item executing the R\+OM\+: here we leverage the L\+S\+PG R\+OM to demonstrate a {\itshape reproductive} test, i.\+e., we run the R\+OM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different tutorial.
-\end{DoxyEnumerate}\hypertarget{md_pages_demos_demo2_autotoc_md11}{}\doxysection{F\+O\+M Equations}\label{md_pages_demos_demo2_autotoc_md11}
-The governing equations for this problem are\+:
+\end{DoxyEnumerate}
 
-\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the F\+OM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo2_autotoc_md12}{}\doxysection{Imports}\label{md_pages_demos_demo2_autotoc_md12}
-Before looking at the code snippets below, the imports needed are\+: 
+The governing equations for this problem are the same as those in \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo2_autotoc_md11}{}\doxysection{Imports}\label{md_pages_demos_demo2_autotoc_md11}
+Before looking at the code snippets below, the {\ttfamily pressio4py}-\/specific imports needed are\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{from} adv\_diff1d \textcolor{keyword}{import} *                    \textcolor{comment}{\# the fom class}}
 \DoxyCodeLine{\textcolor{keyword}{from} adv\_diff\_1d\_fom \textcolor{keyword}{import} doFom           \textcolor{comment}{\# the function to collect fom data}}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} solvers \textcolor{keyword}{as} solvers}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md13}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md13}
+\hypertarget{md_pages_demos_demo2_autotoc_md12}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md12}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
@@ -70,8 +63,8 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  plt.legend(fontsize=12)}
 \DoxyCodeLine{  plt.show()}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md14}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo2_autotoc_md14}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo2_autotoc_md15}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo2_autotoc_md15}
+\hypertarget{md_pages_demos_demo2_autotoc_md13}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo2_autotoc_md13}
+Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo2_autotoc_md14}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo2_autotoc_md14}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -90,7 +83,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  Usolns = np.array(U)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md16}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo2_autotoc_md16}
+\hypertarget{md_pages_demos_demo2_autotoc_md15}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo2_autotoc_md15}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -98,7 +91,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md17}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo2_autotoc_md17}
+\hypertarget{md_pages_demos_demo2_autotoc_md16}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo2_autotoc_md16}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, modes):}

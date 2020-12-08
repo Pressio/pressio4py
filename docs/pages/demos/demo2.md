@@ -8,15 +8,9 @@
 This page describes a demo for a reproductive LSPG ROM applied to a
 1D advection-diffusion problem using POD modes as basis.
 By the end, it should be clear how to setup the problem and
-the various steps involved.<br>
-To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py)
-
-
-@m_class{m-block m-warning}
-
-@par Disclaimer
-This demo purposefully focuses on a simple test since the main goal is
+the various steps involved. This demo purposefully focuses on a simple test since the main goal is
 to demonstrate the steps and the code. More complex cases will be added later.
+To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py)
 
 
 ## Overview
@@ -27,22 +21,11 @@ Here, we cover the three typical steps needed for a ROM:
 a *reproductive* test, i.e., we run the ROM using the same physical coefficients, b.c., etc.
 A predictive run is demonstrated in a different tutorial.
 
-## FOM Equations
-The governing equations for this problem are:
-
-@f[
-\frac{\partial u}{\partial t}
-= \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} )
-- a*\frac{\partial u}{\partial x}
-@f]
-where @f$k(u,x)=x^4@f$, the field is @f$u(x;t)@f$, the advection velocity
-is fixed at @f$a=2@f$, the spatial coordinate is @f$x@f$ and the domain is @f$(0,1)@f$.
-We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences
-is implemented [here](https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py).
-
+The governing equations for this problem are the same
+as those in [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
 
 ## Imports
-Before looking at the code snippets below, the imports needed are:
+Before looking at the code snippets below, the `pressio4py`-specific imports needed are:
 ```py
 from adv_diff1d import *					# the fom class
 from adv_diff_1d_fom import doFom			# the function to collect fom data

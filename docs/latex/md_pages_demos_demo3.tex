@@ -1,24 +1,18 @@
 
 
 \begin{DoxyParagraph}{What does this page describe?}
-This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via kernel P\+CA. ~\newline
- To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py}{\texttt{ here.}}
+This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via kernel P\+CA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-
-
-\begin{DoxyParagraph}{Disclaimer}
-This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.
-\end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md19}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md19}
-This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}}, but instead of using P\+OD modes, we show here how to use a nonlinear manifold computed via kernel P\+CA.\hypertarget{md_pages_demos_demo3_autotoc_md20}{}\doxysection{Imports}\label{md_pages_demos_demo3_autotoc_md20}
-Before looking at the code snippets below, the imports needed are\+: 
+\hypertarget{md_pages_demos_demo3_autotoc_md18}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md18}
+This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}}, but instead of using P\+OD modes, we show here how to use a nonlinear manifold computed via kernel P\+CA.\hypertarget{md_pages_demos_demo3_autotoc_md19}{}\doxysection{Imports}\label{md_pages_demos_demo3_autotoc_md19}
+Before looking at the code snippets below, the {\ttfamily pressio4py}-\/specific imports needed are\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{from} adv\_diff1d \textcolor{keyword}{import} *                    \textcolor{comment}{\# the fom class}}
 \DoxyCodeLine{\textcolor{keyword}{from} adv\_diff\_1d\_fom \textcolor{keyword}{import} doFom           \textcolor{comment}{\# the function to collect fom data}}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} solvers \textcolor{keyword}{as} solvers}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md21}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md21}
+\hypertarget{md_pages_demos_demo3_autotoc_md20}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md20}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
@@ -60,9 +54,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  plt.legend(fontsize=12)}
 \DoxyCodeLine{  plt.show()}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md22}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo3_autotoc_md22}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo3_autotoc_md23}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo3_autotoc_md23}
-This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md24}{}\doxysubsection{2. Setup and train the nonlinear k\+P\+C\+A mapper}\label{md_pages_demos_demo3_autotoc_md24}
+\hypertarget{md_pages_demos_demo3_autotoc_md21}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo3_autotoc_md21}
+Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo3_autotoc_md22}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo3_autotoc_md22}
+This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md23}{}\doxysubsection{2. Setup and train the nonlinear k\+P\+C\+A mapper}\label{md_pages_demos_demo3_autotoc_md23}
 It is important to note that while the mapper class below has the A\+PI required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a k\+P\+C\+A-\/based representation, but one can use, e.\+g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMapperKPCA:}
@@ -110,7 +104,7 @@ It is important to note that while the mapper class below has the A\+PI required
 \begin{DoxyParagraph}{Important\+:}
 when creating an abitrary mapping (as in the class above), the jacobian matrix {\bfseries{must}} be column-\/major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md25}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo3_autotoc_md25}
+\hypertarget{md_pages_demos_demo3_autotoc_md24}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo3_autotoc_md24}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, customMapper):}

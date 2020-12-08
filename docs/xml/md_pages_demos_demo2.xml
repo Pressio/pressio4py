@@ -7,11 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved.<linebreak/>
- To jump directly at the full demo script, click <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</ulink></para>
-</simplesect>
- <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Disclaimer</title><para>This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later.</para>
+<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</ulink></para>
 </simplesect>
 </para>
 <sect1 id="md_pages_demos_demo2_1autotoc_md10">
@@ -22,21 +18,17 @@
 </listitem><listitem><para>executing the ROM: here we leverage the LSPG ROM to demonstrate a <emphasis>reproductive</emphasis> test, i.e., we run the ROM using the same physical coefficients, b.c., etc. A predictive run is demonstrated in a different tutorial.</para>
 </listitem></orderedlist>
 </para>
+<para>The governing equations for this problem are the same as those in <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html">here</ulink>,</para>
 </sect1>
 <sect1 id="md_pages_demos_demo2_1autotoc_md11">
-<title>FOM Equations</title>
-<para>The governing equations for this problem are:</para>
-<para><formula id="0">\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \]</formula> where <formula id="1">$k(u,x)=x^4$</formula>, the field is <formula id="2">$u(x;t)$</formula>, the advection velocity is fixed at <formula id="3">$a=2$</formula>, the spatial coordinate is <formula id="4">$x$</formula> and the domain is <formula id="5">$(0,1)$</formula>. We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences is implemented <ulink url="https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py">here</ulink>.</para>
-</sect1>
-<sect1 id="md_pages_demos_demo2_1autotoc_md12">
 <title>Imports</title>
-<para>Before looking at the code snippets below, the imports needed are: <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff1d<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>fom<sp/>class</highlight><highlight class="normal"></highlight></codeline>
+<para>Before looking at the code snippets below, the <computeroutput>pressio4py</computeroutput>-specific imports needed are: <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff1d<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>fom<sp/>class</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>adv_diff_1d_fom<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>doFom<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>function<sp/>to<sp/>collect<sp/>fom<sp/>data</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>solvers<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>solvers</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_demos_demo2_1autotoc_md13">
+<sect1 id="md_pages_demos_demo2_1autotoc_md12">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>initial<sp/>condition<sp/>u(x,t=0)</highlight><highlight class="normal"></highlight></codeline>
@@ -80,10 +72,10 @@
 <codeline><highlight class="normal"><sp/><sp/>plt.show()</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_demos_demo2_1autotoc_md14">
+<sect1 id="md_pages_demos_demo2_1autotoc_md13">
 <title>Code for the various stages in main</title>
 <para>Here we list the functions performing the various stages of the run.</para>
-<sect2 id="md_pages_demos_demo2_1autotoc_md15">
+<sect2 id="md_pages_demos_demo2_1autotoc_md14">
 <title>1. Run FOM and collect snapshots</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
@@ -102,7 +94,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo2_1autotoc_md16">
+<sect2 id="md_pages_demos_demo2_1autotoc_md15">
 <title>2. Compute POD modes</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
@@ -110,7 +102,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo2_1autotoc_md17">
+<sect2 id="md_pages_demos_demo2_1autotoc_md16">
 <title>3. Construct and run LSPG</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runLspg(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>an<sp/>auxiliary<sp/>class<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>solve</highlight><highlight class="normal"></highlight></codeline>
