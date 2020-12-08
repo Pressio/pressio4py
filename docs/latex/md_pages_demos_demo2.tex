@@ -71,7 +71,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  plt.show()}
 \end{DoxyCode}
 \hypertarget{md_pages_demos_demo2_autotoc_md14}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo2_autotoc_md14}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo2_autotoc_md15}{}\doxysubsubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo2_autotoc_md15}
+Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo2_autotoc_md15}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo2_autotoc_md15}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -90,7 +90,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  Usolns = np.array(U)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md16}{}\doxysubsubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo2_autotoc_md16}
+\hypertarget{md_pages_demos_demo2_autotoc_md16}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo2_autotoc_md16}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -98,7 +98,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md17}{}\doxysubsubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo2_autotoc_md17}
+\hypertarget{md_pages_demos_demo2_autotoc_md17}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo2_autotoc_md17}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, modes):}
@@ -140,7 +140,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  nonLinSolver.setMaxIterations(nlsMaxIt)}
 \DoxyCodeLine{  nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create objective to monitor the romState at every iteration}}
+\DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
 \DoxyCodeLine{  myObs = RomStateObserver()}
 \DoxyCodeLine{  \textcolor{comment}{\# solver LSPG problems}}
 \DoxyCodeLine{  rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)}

@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
+import sklearn.decomposition as skd
 
 # if run from within a build of pressio4py, need to append to python path
 import pathlib, sys
@@ -15,13 +16,46 @@ from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
 
-def computePodModes(snapshots):
-  print("SVD on matrix: ", snapshots.shape)
-  U,S,VT = np.linalg.svd(snapshots)
-  return U
+class MyMapperKPCA:
+  def __init__(self, snapshots, numModes):
+    self.transformer_ = skd.KernelPCA(n_components=numModes,\
+                                      kernel='poly',
+                                      degree=3,
+                                      fit_inverse_transform=True)
+    # do training using provided snapshots
+    self.transformer_.fit(snapshots)
+
+    self.numModes_ = numModes
+    fomSize = snapshots.shape[1]
+    self.fomState0 = np.zeros(fomSize)
+    self.fomState1 = np.zeros(fomSize)
+    # attention: the jacobian of the mapping must be column-major oder
+    # so that pressio can view it without deep copying it, this enables
+    # to keep only one jacobian object around and to call the update
+    # method below correctly
+    self.jacobian_ = np.zeros((fomSize,numModes), order='F')
+
+  def jacobian(self): return self.jacobian_
+
+  def applyMapping(self, romState, fomState):
+    fomState[:] = np.squeeze(self.transformer_.inverse_transform(romState.reshape(1,-1)))
+
+  def applyInverseMapping(self, fomState):
+    return np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))
+
+  def updateJacobian(self, romState):
+    romStateLocal = romState.copy()
+    # finite difference to approximate jacobian of the mapping
+    self.applyMapping(romStateLocal,self.fomState0)
+    eps = 0.001
+    for i in range(self.numModes_):
+        romStateLocal[i] += eps
+        self.applyMapping(romStateLocal, self.fomState1)
+        self.jacobian_[:,i] = (self.fomState1 - self.fomState0) / eps
+        romStateLocal[i] -= eps
 
 #----------------------------------------
-def runLspg(fomObj, dt, nsteps, modes):
+def runLspg(fomObj, dt, nsteps, customMapper):
   # this is an auxiliary class that can be passed to solve
   # LSPG to monitor the rom state.
   class RomStateObserver:
@@ -36,27 +70,23 @@ def runLspg(fomObj, dt, nsteps, modes):
       x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
 
   #----------------------------------------
-  # find out number of modes wanted
-  romSize = modes.shape[1]
-
-  # create a linear decoder, passing only the desired number of modes
-  # this will make a deep copy of the modes
-  linearDecoder = rom.Decoder(modes)
+  # create a custom decoder using the mapper passed as argument
+  customDecoder = rom.Decoder(customMapper, "kPCAMapper")
 
   # fom reference state: here it is zero
   fomReferenceState = np.zeros(fomObj.nGrid)
 
   # create ROM state by projecting the fom initial condition
   fomInitialState = fomObj.u0.copy()
-  romState = np.dot(modes.T, fomInitialState)
+  romState = customMapper.applyInverseMapping(fomInitialState)
 
   # create LSPG problem
-  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
+  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, customDecoder, romState, fomReferenceState)
 
   # create the Gauss-Newton solver
   nonLinSolver = solvers.GaussNewton(problem, romState, MyLinSolver())
   # set tolerance and convergence criteria
-  nlsTol, nlsMaxIt = 1e-6, 5
+  nlsTol, nlsMaxIt = 1e-7, 10
   nonLinSolver.setMaxIterations(nlsMaxIt)
   nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
 
@@ -86,15 +116,14 @@ if __name__ == "__main__":
   sampleEvery      = 200
   [fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)
 
-  #--- 2. POD ---#
-  modes = computePodModes(snapshots)
+  #--- 2. train a nonlinear mapping using kPCA ---#
+  # here we use 3 modes, change this to try different modes
+  myNonLinearMapper = MyMapperKPCA(snapshots.T, numModes=3)
 
   #--- 3. LSPG ROM ---#
-  romSize = 4
   romTimeStepSize  = 3e-4
   romNumberOfSteps = int(finalTime/romTimeStepSize)
-  # we pass only romSize modes
-  approximatedState = runLspg(fomObj, romTimeStepSize, romNumberOfSteps, modes[:,:romSize])
+  approximatedState = runLspg(fomObj, romTimeStepSize, romNumberOfSteps, myNonLinearMapper)
 
   # compute l2-error between fom and approximate state
   fomNorm = linalg.norm(fomFinalState)
@@ -104,7 +133,7 @@ if __name__ == "__main__":
   #--- plot ---#
   ax = plt.gca()
   ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or', label='LSPG: '+str(romSize)+' POD modes')
+  ax.plot(fomObj.xGrid, approximatedState, 'or', label='LSPG: with kPCA mapping')
   plt.rcParams.update({'font.size': 18})
   plt.ylabel("Solution", fontsize=18)
   plt.xlabel("x-coordinate", fontsize=18)

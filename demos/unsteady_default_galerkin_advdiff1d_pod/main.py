@@ -46,7 +46,7 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   # create GALERKIN problem
   problem = rom.galerkin.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
 
-  # create objective to monitor the romState at every iteration
+  # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solver GALERKIN problems
   rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)

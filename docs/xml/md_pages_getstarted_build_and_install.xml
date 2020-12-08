@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes the end-to-end building process for <computeroutput>pressio4py</computeroutput>. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md20">
+<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md28">
 <title>Prerequisites</title>
 <para><itemizedlist>
 <listitem><para>SSH keys setup with github (if you are working behind a firewall, set the proper proxies);</para>
@@ -21,9 +21,9 @@
 </listitem></itemizedlist>
 </para>
 </sect1>
-<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md21">
+<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md29">
 <title>Pratical steps</title>
-<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md22">
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md30">
 <title>1. Prep</title>
 <para>Create a working director where you want to clone all repos and do the builds, e,g.:</para>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>WORKDIR=$HOME/myPressioTest</highlight></codeline>
@@ -34,7 +34,7 @@
 <codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-CXX-compiler&gt;</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md23">
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md31">
 <title>2. Cloning</title>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/sources</highlight></codeline>
 <codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio.git</highlight></codeline>
@@ -43,7 +43,7 @@
 </programlisting></para>
 <para>By default, the above commands will clone the <emphasis>master</emphasis> branch of each repo. This is because the master branches of the three repos are the stable ones, and compatible with one another. If you want specific versions, you can just checkout the tag you want. If you do so, make sure you checkout the same tag for all three repos.</para>
 </sect2>
-<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md24">
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md32">
 <title>3. Install Dependencies</title>
 <para>Currently, pressio and pybind11 are the dependencies required by <computeroutput>pressio4py</computeroutput>. To get and install the TPLs, run the following:</para>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/sources/pressio-builder</highlight></codeline>
@@ -74,7 +74,7 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>└──<sp/>pressio4py</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md25">
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md33">
 <title>4. Build pressio4py</title>
 <para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}</highlight></codeline>
 <codeline></codeline>
@@ -93,7 +93,7 @@
 </programlisting></para>
 <para>This should create the Python library inside <computeroutput>${WORKDIR}/pressio4py-install</computeroutput> which you can import in Python.</para>
 </sect2>
-<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md26">
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md34">
 <title>5. Running the tests or demos</title>
 <para>To run all tests, after building: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/pressio4py-build</highlight></codeline>
 <codeline><highlight class="normal">pytest<sp/>-s<sp/><sp/>#-s<sp/>flushes<sp/>all<sp/>output<sp/>to<sp/>terminal.</highlight></codeline>

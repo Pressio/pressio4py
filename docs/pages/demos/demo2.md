@@ -96,7 +96,7 @@ if __name__ == "__main__":
   plt.show()
 ```
 
-# Code for the various stages in main
+## Code for the various stages in main
 Here we list the functions performing the various stages of the run.
 
 ### 1. Run FOM and collect snapshots
@@ -167,7 +167,7 @@ def runLspg(fomObj, dt, nsteps, modes):
   nonLinSolver.setMaxIterations(nlsMaxIt)
   nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
 
-  # create objective to monitor the romState at every iteration
+  # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solver LSPG problems
   rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)

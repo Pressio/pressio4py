@@ -95,7 +95,7 @@ if __name__ == "__main__":
   plt.show()
 ```
 
-# Code for the various stages in main
+## Code for the various stages in main
 Here we list the functions performing the various stages of the run.
 
 ### 1. Run FOM and collect snapshots
@@ -151,7 +151,7 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   # create GALERKIN problem
   problem = rom.galerkin.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
 
-  # create objective to monitor the romState at every iteration
+  # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solver GALERKIN problems
   rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)

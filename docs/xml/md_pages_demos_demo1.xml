@@ -83,7 +83,7 @@
 <sect1 id="md_pages_demos_demo1_1autotoc_md5">
 <title>Code for the various stages in main</title>
 <para>Here we list the functions performing the various stages of the run.</para>
-<sect3 id="md_pages_demos_demo1_1autotoc_md6">
+<sect2 id="md_pages_demos_demo1_1autotoc_md6">
 <title>1. Run FOM and collect snapshots</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
@@ -101,16 +101,16 @@
 <codeline><highlight class="normal"><sp/><sp/>Usolns<sp/>=<sp/>np.array(U)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
 </programlisting></para>
-</sect3>
-<sect3 id="md_pages_demos_demo1_1autotoc_md7">
+</sect2>
+<sect2 id="md_pages_demos_demo1_1autotoc_md7">
 <title>2. Compute POD modes</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>U,S,VT<sp/>=<sp/>np.linalg.svd(snapshots)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
 </programlisting></para>
-</sect3>
-<sect3 id="md_pages_demos_demo1_1autotoc_md8">
+</sect2>
+<sect2 id="md_pages_demos_demo1_1autotoc_md8">
 <title>3. Construct and run Galerkin</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runGalerkin(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>auxiliary<sp/>class<sp/>to<sp/>use<sp/>in<sp/>the<sp/>solve<sp/>below</highlight><highlight class="normal"></highlight></codeline>
@@ -136,7 +136,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>GALERKIN<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.galerkin.default.ProblemEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>objective<sp/>to<sp/>monitor<sp/>the<sp/>romState<sp/>at<sp/>every<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>object<sp/>to<sp/>monitor<sp/>the<sp/>romState<sp/>at<sp/>every<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>myObs<sp/>=<sp/>RomStateObserver()</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solver<sp/>GALERKIN<sp/>problems</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>rom.galerkin.advanceNSteps(problem,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs)</highlight></codeline>
@@ -146,7 +146,7 @@
 <codeline><highlight class="normal"><sp/><sp/>fomRecon<sp/>=<sp/>problem.fomStateReconstructor()</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon.evaluate(romState)</highlight></codeline>
 </programlisting> </para>
-</sect3>
+</sect2>
 </sect1>
     </detaileddescription>
   </compounddef>
