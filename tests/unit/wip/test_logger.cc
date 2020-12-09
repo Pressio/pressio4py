@@ -6,7 +6,8 @@ namespace
 {
 void testTraceLog()
 {
-  PRESSIOLOG_TRACE("tracing {:.f}", 2.);
+  pybind11::print("hello");
+  PRESSIOLOG_TRACE("tracing");
 }
 }//anonym namespace
 

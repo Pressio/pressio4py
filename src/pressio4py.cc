@@ -52,6 +52,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
+#include <pybind11/iostream.h>
 #include <pybind11/stl.h>
 
 // pressio include
@@ -175,7 +176,7 @@ PYBIND11_MODULE(pressio4py, mParent)
 			     w_gn_solver_t, gn_qr_solver_t, lm_solver_t>;
 
   //-------------------------------------
-  // exposed api to solve rom problems
+  // expose api to solve rom problems
   //-------------------------------------
   // collector used to monitor the rom state
   using collector_t = pressio4py::OdeCollectorWrapper<rom_state_t>;
@@ -213,30 +214,32 @@ PYBIND11_MODULE(pressio4py, mParent)
     <unsteady_lspgproblems, solvers>::template bind<rom_native_state_t>(lspgModule);
 
 
-  // TODO: not working because of conflicting std::out and sys.out
-  // // logger
-  // pybind11::module loggerModule = mParent.def_submodule("logger");
-  // pybind11::enum_<pressio::logto>(loggerModule, "logto")
-  //   .value("terminal",	      pressio::logto::terminal)
-  //   .value("fileAndTerminal", pressio::logto::fileAndTerminal)
-  //   .value("terminalAndFile", pressio::logto::terminalAndFile)
-  //   .value("file", pressio::logto::file)
-  //   .export_values();
+  //-------------------------------------
+  // expose logging
+  //-------------------------------------
+  pybind11::module loggerModule = mParent.def_submodule("logger");
+  pybind11::enum_<pressio::logto>(loggerModule, "logto")
+    .value("terminal",	      pressio::logto::terminal)
+    .export_values();
 
-  // pybind11::enum_<pressio::log::level>(loggerModule, "loglevel")
-  //   .value("trace",	pressio::log::level::trace)
-  //   .value("debug",	pressio::log::level::debug)
-  //   .value("info",	pressio::log::level::info)
-  //   .value("warn",	pressio::log::level::warn)
-  //   .value("err",	pressio::log::level::err)
-  //   .value("critical",	pressio::log::level::critical)
-  //   .value("off",	pressio::log::level::off)
-  //   .export_values();
+  pybind11::enum_<pressio::log::level>(loggerModule, "loglevel")
+    .value("trace",	pressio::log::level::trace)
+    .value("debug",	pressio::log::level::debug)
+    .value("info",	pressio::log::level::info)
+    .value("warn",	pressio::log::level::warn)
+    .value("err",	pressio::log::level::err)
+    .value("critical",	pressio::log::level::critical)
+    .value("off",	pressio::log::level::off)
+    .export_values();
 
-  // loggerModule.def("initialize",
-  //  		   &pressio::log::initialize);
-  // loggerModule.def("setVerbosity",
-  // 		   &pressio::log::setVerbosity<std::vector<::pressio::log::level>>);
+  // make sure to redirect stdout/stderr streams to python stdout
+  pybind11::add_ostream_redirect(mParent, "ostream_redirect");
+
+  // bind the initialization and setVerbosity functions
+  loggerModule.def("initialize",
+   		   &pressio::log::initialize);
+  loggerModule.def("setVerbosity",
+		   &pressio::log::setVerbosity<std::vector<::pressio::log::level>>);
 }
 
 #endif

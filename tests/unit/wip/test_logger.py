@@ -6,5 +6,5 @@ from pressio4py import logger as logger
 
 def test1():
   logger.initialize(logger.logto.terminal, "null")
-  logger.setVerbosity([logger.loglevel.debug])
+  logger.setVerbosity([logger.loglevel.trace])
   m.testTraceLog()

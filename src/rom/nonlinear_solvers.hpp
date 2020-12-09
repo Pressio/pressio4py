@@ -252,7 +252,6 @@ struct bindConstructorVar<head, tail...>
     bindConstructorVar<tail...>::template bind(nonLinSolver,  t);
   }
 };
-//------------------------------------------------
 
 //------------------------------------------------
 /*

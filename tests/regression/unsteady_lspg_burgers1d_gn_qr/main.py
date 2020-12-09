@@ -10,6 +10,7 @@ sys.path.append(str(file_path) + "/../apps")
 from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
+from pressio4py import logger as logger
 
 np.set_printoptions(linewidth=140)
 
@@ -137,6 +138,9 @@ def test_bdf2():
   Nsteps   = 10
   dt       = 0.01
   t0       = 0.
+
+  logger.initialize(logger.logto.terminal, "null")
+  logger.setVerbosity([logger.loglevel.info])
 
   # create app
   appObj = Burgers1dSparseJacobian(meshSize)
