@@ -61,13 +61,6 @@ void createDecoderBindings(pybind11::module & m)
 
   pybind11::class_<decoder_t> decoderPy(m, "Decoder");
 
-  // note that since pressio4py uses by default col-major ordering,
-  // if the matrix passed to the decoder is row-major, then a deep copy
-  // occurs behind the scenes because pressio cannot hold a view of
-  // the origina data. For linear decoder this does not matter since
-  // the jacobian never changes. But it is critical for the custom
-  // mapping since in that case we also need to do jacobian updating
-
   // constructor: user passes the jacobian matrix, this implies a linear decoder
   decoderPy.def(pybind11::init<decoder_native_jac_t>());
   // constructor: user passes a python object, this yields an arbitrary mapper

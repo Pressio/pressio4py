@@ -51,6 +51,8 @@
 
 // pressio include
 #include "pressio_rom.hpp"
+// local
+#include "./rom/wrappers/py_decoder.hpp"
 
 namespace pressio4py{
 
@@ -75,8 +77,7 @@ struct ROMTypes : CommonTypes
   using fom_state_t   = pressio::containers::Vector<fom_native_state_t>;
   using decoder_jac_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
   using lsq_hessian_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
-
-  using decoder_t = pressio::rom::PyDecoder<decoder_jac_t, fom_state_t>;
+  using decoder_t     = pressio4py::PyDecoder<scalar_t, decoder_jac_t, fom_state_t>;
 };
 
 }
