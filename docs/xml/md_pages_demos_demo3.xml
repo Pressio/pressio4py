@@ -2,7 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
   <compounddef id="md_pages_demos_demo3" kind="page">
     <compoundname>md_pages_demos_demo3</compoundname>
-    <title>1D adv-diff: LSPG with nonlinear manifoldd projection via kPCA</title>
+    <title>1D adv-diff: LSPG with nonlinear manifold projection via kPCA</title>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
@@ -112,7 +112,7 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>romStateLocal[i]<sp/>-=<sp/>eps</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Important:</title><para>when creating an abitrary mapping (as in the class above), the jacobian matrix <bold>must</bold> be column-major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.</para>
+<para><simplesect kind="par"><title>Important:</title><para>when creating an arbitrary mapping (as in the class above), the jacobian matrix <bold>must</bold> be column-major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.</para>
 </simplesect>
 </para>
 </sect2>

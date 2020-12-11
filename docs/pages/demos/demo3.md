@@ -1,5 +1,5 @@
 
-# 1D adv-diff: LSPG with nonlinear manifoldd projection via kPCA
+# 1D adv-diff: LSPG with nonlinear manifold projection via kPCA
 
 
 @m_class{m-block m-info}
@@ -125,7 +125,7 @@ class MyMapperKPCA:
 @m_class{m-block m-warning}
 
 @par Important:
-when creating an abitrary mapping (as in the class above),
+when creating an arbitrary mapping (as in the class above),
 the jacobian matrix **must** be column-major oder so that pressio
 can reference it without deep copying it. This not only reduced the
 memory footprint since it allows to keep only one jacobian object
