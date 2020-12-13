@@ -47,7 +47,8 @@ endif()
 
 #----------------------------------------------------------------
 include_directories(${PRESSIO_INCLUDE_DIR})
-find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
+#find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
+add_subdirectory(pybind11)
 
 #----------------------------------------------------------------
 # dir where all sources for pressio4py are
@@ -112,7 +113,7 @@ endforeach()
 add_subdirectory(tests)
 
 # add demos
-add_subdirectory(demos)
+#add_subdirectory(demos)
 
 # install
-install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})
+#install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})
