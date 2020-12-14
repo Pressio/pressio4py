@@ -18,14 +18,38 @@ class CMakeBuild(build_ext):
 
     if not extdir.endswith(os.path.sep): extdir += os.path.sep
 
-    pressioIncludeDir = ext.sourcedir + "/pressio/packages"
-    print("pressioIncludeDir = ", pressioIncludeDir)
-
-    cfg = "Debug" if self.debug else "Release"
+    if not os.path.exists(self.build_temp): os.makedirs(self.build_temp)
+    print("self.build_temp ", self.build_temp)
 
     # CMake lets you override the generator - we need to check this.
     # Can be set with Conda-Build, for example.
     cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
+
+    #------------------------
+    # --- pressio ---
+    #------------------------
+    pressioSrcDir   = ext.sourcedir + "/pressio"
+    pressioBuildDir = self.build_temp+"/pressio/build"
+    pressioPfxDir   = "../install"
+    cmake_args = [
+      "-DPRESSIO_ENABLE_TPL_EIGEN=OFF",
+      "-DPRESSIO_ENABLE_TPL_PYBIND11=ON",
+      "-DCMAKE_INSTALL_PREFIX={}".format(pressioPfxDir),
+    ]
+    if not os.path.exists(pressioBuildDir): os.makedirs(pressioBuildDir)
+    subprocess.check_call(
+      ["cmake", pressioSrcDir] + cmake_args, cwd=pressioBuildDir
+    )
+    subprocess.check_call(
+      ["make", "install"], cwd=pressioBuildDir
+    )
+    pressioIncludeDir = self.build_temp + "/pressio/install/include"
+    print("pressioIncludeDir = ", pressioIncludeDir)
+
+    #------------------------
+    # --- pressio4py ---
+    #------------------------
+    cfg = "Debug" if self.debug else "Release"
 
     # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
     # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
