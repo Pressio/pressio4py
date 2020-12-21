@@ -30,7 +30,7 @@ else:
       f[i] = dxInvHalf * ( uSq[i-1] - uSq[i] ) + expVec[i]
 
 if numbaOn:
-  @conditional_decorator(njit(["void(float64[:], float64[:], float64[:], f8)"]), numbaOn)
+  @njit(["void(float64[:], float64[:], float64[:], f8)"])
   def fillDiag(u, diag, ldiag, dxInv):
     n = len(u)
     for i in range(n-1):
