@@ -66,6 +66,7 @@
 #include "./rom/wrappers/qr_solver_wrapper.hpp"
 #include "./rom/wrappers/ode_collector_wrapper.hpp"
 #include "./rom/wrappers/nonlin_ls_weighting_wrapper.hpp"
+#include "./rom/wrappers/masker_wrapper.hpp"
 
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
@@ -73,7 +74,8 @@
 #include "./rom/lspg.hpp"
 #include "./rom/nonlinear_solvers.hpp"
 
-#include "./solve_problem_api_bind.hpp"
+#include "./lspg_solve_problem_api_bind.hpp"
+#include "./galerkin_solve_problem_api_bind.hpp"
 
 PYBIND11_MODULE(pressio4py, mParent)
 {
@@ -98,14 +100,16 @@ PYBIND11_MODULE(pressio4py, mParent)
   //---------------------
   //  galerkin rom
   //---------------------
-  pybind11::module galerkinModule= romModule.def_submodule("galerkin");
-  using galerkin_binder_t = pressio4py::rom::GalerkinBinder<pressio4py::ROMTypes>;
+  pybind11::module galerkinModule = romModule.def_submodule("galerkin");
+  using galerkin_binder_t	  = pressio4py::rom::GalerkinBinder<pressio4py::ROMTypes>;
   galerkin_binder_t::bind(galerkinModule);
+  // need to extract problem types
+  using galerkinproblems	  = typename galerkin_binder_t::problem_types;
+  using explicit_galerkinproblems = typename galerkin_binder_t::explicit_problem_types;
+  using implicit_galerkinproblems = typename galerkin_binder_t::implicit_problem_types;
 
   //---------------------
   //  lspg rom
-  // de: stands for default
-  // hr: stands for hyper-reduced
   //---------------------
   pybind11::module lspgModule	= romModule.def_submodule("lspg");
   using lspg_binder_t		= pressio4py::rom::LSPGBinder<pressio4py::ROMTypes>;
@@ -130,6 +134,14 @@ PYBIND11_MODULE(pressio4py, mParent)
   using linear_solver_t = pressio4py::LinSolverWrapper<hessian_t>;
   using qr_solver_t     = pressio4py::QrSolverWrapper<jac_t>;
   using nlls_weigher_t  = pressio4py::NonLinLSWeightingWrapper;
+
+  // newton-raphson
+  using newraphbinder_t =
+    typename pressio4py::solvers::instantiate_from_tuple_pack<
+      pressio4py::solvers::NewtonRaphsonBinder,
+    true, linear_solver_t, implicit_galerkinproblems>::type;
+  using newraph_solver_t = typename newraphbinder_t::nonlinear_solver_t;
+  newraphbinder_t::bind(mSolver, "NewtonRaphson");
 
   // GN with normal equations
   using gnbinder_t =
@@ -172,50 +184,55 @@ PYBIND11_MODULE(pressio4py, mParent)
   lmbinder_t::bind(mSolver, "LevenbergMarquardt");
 
   // create tuple with all sover types
-  using solvers = std::tuple<gn_solver_t, irwgn_solver_t,
-			     w_gn_solver_t, gn_qr_solver_t, lm_solver_t>;
+  using least_squares_solvers = std::tuple<
+    gn_solver_t, irwgn_solver_t, w_gn_solver_t, gn_qr_solver_t, lm_solver_t>;
 
-  //-------------------------------------
+  //---------------------------------------------------------------------
   // expose api to solve rom problems
-  //-------------------------------------
-  // collector used to monitor the rom state
+  //
+  // writing explicitly the binding for solving all problems is verbose.
+  // use metaprogramming to facilitate binding
+  //---------------------------------------------------------------------
+  // collector used to monitor the rom state (same for galerkin and lspg)
   using collector_t = pressio4py::OdeCollectorWrapper<rom_state_t>;
 
-  // functions for galerkin: here we do this manually but
-  // should be done similarly to lspg below to make this more automated
-  galerkinModule.def("advanceNSteps", // for Galerkin Euler with collector
-		     &pressio::rom::galerkin::solveNSteps<
-		     typename galerkin_binder_t::problem_euler_t,
-		     rom_native_state_t, scalar_t, collector_t>);
-  galerkinModule.def("advanceNSteps", // for Galerkin Euler without collector
-		     &pressio::rom::galerkin::solveNSteps<
-		     typename galerkin_binder_t::problem_euler_t,
-		     rom_native_state_t, scalar_t>);
-  galerkinModule.def("advanceNSteps", // for Galerkin RK4
-		     &pressio::rom::galerkin::solveNSteps<
-		     typename galerkin_binder_t::problem_rk4_t,
-		     rom_native_state_t, scalar_t, collector_t>);
-  galerkinModule.def("advanceNSteps", // for Galerkin RK4 without collector
-		     &pressio::rom::galerkin::solveNSteps<
-		     typename galerkin_binder_t::problem_rk4_t,
-		     rom_native_state_t, scalar_t>);
+  // *** galerkin ***
+  // explicit time stepping with collector object
+  pressio4py::bindGalerkinExplicitProbs
+    <explicit_galerkinproblems>::template bind<rom_native_state_t,
+					       scalar_t,
+					       collector_t>(galerkinModule);
+  // explicit time stepping without collector object
+  pressio4py::bindGalerkinExplicitProbs
+    <explicit_galerkinproblems>::template bind<rom_native_state_t, scalar_t>(galerkinModule);
+
+  // implicit time stepping with collector object
+  pressio4py::bindSingleSolverWithMultipleGalerkinProblems
+    <newraph_solver_t, implicit_galerkinproblems>::template bind<rom_native_state_t,
+								 scalar_t,
+								 collector_t>(galerkinModule);
+  // implicit time stepping without collector object
+  pressio4py::bindSingleSolverWithMultipleGalerkinProblems
+    <newraph_solver_t, implicit_galerkinproblems>::template bind<rom_native_state_t,
+								 scalar_t>(galerkinModule);
 
 
+  // *** lspg ***
   // for lspg, we have MANY solver choices and MANY problem types,
   // so writing explicitly the binding for solving all these is verbose.
   // So we use some metaprogramming to facilitate binding each problem to each problem.
   pressio4py::bindLspgProbsWithMultipleSolvers
-    <steady_lspgproblems, solvers>::template bind<rom_native_state_t>(lspgModule);
+    <steady_lspgproblems, least_squares_solvers>::template bind<rom_native_state_t>(lspgModule);
   // unsteady with collector object
   pressio4py::bindLspgProbsWithMultipleSolvers
-    <unsteady_lspgproblems, solvers>::template bind<rom_native_state_t, collector_t>(lspgModule);
+    <unsteady_lspgproblems, least_squares_solvers>::template bind<rom_native_state_t, collector_t>(lspgModule);
   // unsteady without collector object
   pressio4py::bindLspgProbsWithMultipleSolvers
-    <unsteady_lspgproblems, solvers>::template bind<rom_native_state_t>(lspgModule);
+    <unsteady_lspgproblems, least_squares_solvers>::template bind<rom_native_state_t>(lspgModule);
 
 
   //-------------------------------------
-  // expose logging
+  // bind logging
   //-------------------------------------
   pybind11::module loggerModule = mParent.def_submodule("logger");
   pybind11::enum_<pressio::logto>(loggerModule, "logto")

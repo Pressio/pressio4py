@@ -198,6 +198,7 @@ struct _have_rj_api_var<head, tail...>
 struct Unweighted{};
 struct Weighted{};
 struct Irwls{};
+struct NewtonRaphson{};
 
 template<class rom_problem_t, class nonlinear_solver_t>
 void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Unweighted)
@@ -228,6 +229,16 @@ void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Irwls)
 		   const typename rom_problem_t::lspg_native_state_t &,
 		   pybind11::object, //linear or qr solver
 		   typename rom_problem_t::traits::scalar_t // value of p-norm
+		   >());
+}
+
+template<typename rom_problem_t, class nonlinear_solver_t>
+void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, NewtonRaphson)
+{
+  nonLinSolver.def(pybind11::init<
+		   rom_problem_t &,
+		   const typename rom_problem_t::galerkin_native_state_t &,
+		   pybind11::object //linear or qr solver
 		   >());
 }
 
@@ -266,7 +277,9 @@ struct LeastSquaresNormalEqBinder
   // it does not matter here if we use the steady system or stepper_t
   // as template arg to compose the solver type in the code below as long as it
   // meets the res-jac api. But since we are here, this condition is met
-  // because it is asserted above.
+  // because it is asserted above. so just pick the first problem type in the
+  // pack, which should be a steady lspg problem, and so it has a system_t typedef
+  // that we can use for compose solver below
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::system_t;
 
@@ -303,7 +316,9 @@ struct LeastSquaresQRBinder
   // it does not matter here if we use the steady system or stepper_t
   // as template arg to compose the solver type in the code below as long as it
   // meets the res-jac api. But since we are here, this condition is met
-  // because it is asserted above.
+  // because it is asserted above. so just pick the first problem type in the
+  // pack, which should be a steady lspg problem, and so it has a system_t typedef
+  // that we can use for compose solver below
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::system_t;
 
@@ -337,7 +352,9 @@ struct WeightedLeastSquaresNormalEqBinder
   // it does not matter here if we use the steady system or stepper_t
   // as template arg to compose the solver type in the code below as long as it
   // meets the res-jac api. But since we are here, this condition is met
-  // because it is asserted above.
+  // because it is asserted above. so just pick the first problem type in the
+  // pack, which should be a steady lspg problem, and so it has a system_t typedef
+  // that we can use for compose solver below
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::system_t;
 
@@ -373,7 +390,9 @@ struct IrwLeastSquaresNormalEqBinder
   // it does not matter here if we use the steady system or stepper_t
   // as template arg to compose the solver type in the code below as long as it
   // meets the res-jac api. But since we are here, this condition is met
-  // because it is asserted above.
+  // because it is asserted above. so just pick the first problem type in the
+  // pack, which should be a steady lspg problem, and so it has a system_t typedef
+  // that we can use for compose solver below
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::system_t;
 
@@ -391,7 +410,32 @@ struct IrwLeastSquaresNormalEqBinder
   }
 };
 
+//------------------------------------------------
+/*
+  newton-raphson (only used for Galerkin for now)
+*/
+template<bool dummy, class linear_solver_t, class ...Problems>
+struct NewtonRaphsonBinder
+{
+  using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+  using system_t = typename head_problem_t::stepper_t;
+
+  using nonlinear_solver_t = pressio::solvers::nonlinear::impl::composeNewtonRaphson_t<
+    system_t, linear_solver_t>;
+
+  static void bind(pybind11::module & m, std::string solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+    bindConstructorVar<Problems...>::template bind(nonLinSolver, NewtonRaphson{});
+  }
+};
+
+//------------------------------------------------
 // helper metafunction for dealing with types in a tuple
+//------------------------------------------------
 template<template<bool, typename...> class T, bool, typename...>
 struct instantiate_from_tuple_pack { };
 

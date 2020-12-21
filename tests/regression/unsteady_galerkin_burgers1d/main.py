@@ -69,7 +69,7 @@ def test_euler():
   # create rom state
   yRom = np.zeros(romSize)
   # create problem
-  galerkinProblem = rom.galerkin.default.ProblemEuler(appObj, decoder, yRom, yRef)
+  galerkinProblem = rom.galerkin.default.ProblemForwardEuler(appObj, decoder, yRom, yRef)
 
   fomRecon = galerkinProblem.fomStateReconstructor()
   # the observer is called to monitor evolution of rom_state and

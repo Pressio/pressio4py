@@ -61,6 +61,7 @@ struct bindOneProbToMultipleSolvers;
 template<class solver_t>
 struct bindOneProbToMultipleSolvers<solver_t>
 {
+  // specialize for steady problem
   template<class rom_native_state_t, class problem_t, class ...args>
   static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_steady_lspg>
   bind(pybind11::module & m)
@@ -72,6 +73,20 @@ struct bindOneProbToMultipleSolvers<solver_t>
 	  solver_t>);
   }
 
+  // specialize for unsteady problem without collector
+  template<class rom_native_state_t, class problem_t>
+  static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
+  bind(pybind11::module & m)
+  {
+    m.def("solveNSequentialMinimizations",
+	  &::pressio::rom::lspg::solveNSequentialMinimizations<
+	  problem_t,
+	  rom_native_state_t,
+	  typename pressio::rom::details::traits<problem_t>::scalar_t,
+	  solver_t>);
+  }
+
+  // specialize for unsteady problem with collector to monitor rom states
   template<class rom_native_state_t, class problem_t, class collector_t>
   static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
   bind(pybind11::module & m)
@@ -82,18 +97,6 @@ struct bindOneProbToMultipleSolvers<solver_t>
 	  rom_native_state_t,
 	  typename pressio::rom::details::traits<problem_t>::scalar_t,
 	  collector_t,
-	  solver_t>);
-  }
-
-  template<class rom_native_state_t, class problem_t>
-  static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
-  bind(pybind11::module & m)
-  {
-    m.def("solveNSequentialMinimizations",
-	  &::pressio::rom::lspg::solveNSequentialMinimizations<
-	  problem_t,
-	  rom_native_state_t,
-	  typename pressio::rom::details::traits<problem_t>::scalar_t,
 	  solver_t>);
   }
 };
@@ -111,11 +114,12 @@ struct bindOneProbToMultipleSolvers<solver_t, other_solvers_t...>
 					  problem_t, args...>(m);
   }
 };
-//------------------------------------------------------------------
 
 /*
-  metafunctions to help exposing api for the combinatorial of
- multiple problems with mutliple solvers
+  ------------------------------------------------------------------
+  metafunctions to facilitate binding api for the combinatorial case
+  of multiple problems with mutliple solvers
+  ------------------------------------------------------------------
 */
 template<typename...>
 struct bindLspgProbsWithMultipleSolvers;
