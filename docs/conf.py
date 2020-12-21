@@ -47,7 +47,7 @@ LINKS_NAVBAR2 = [
 
 PLUGINS = ['m.htmlsanity', 'm.math',
            'm.code', 'm.components',
-           'm.dot']
+           'm.dot', 'm.images']
 
 SHOW_UNDOCUMENTED = "YES"
 

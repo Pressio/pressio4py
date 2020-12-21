@@ -8,33 +8,31 @@
 This page describes a demo for a reproductive LSPG ROM applied to a
 1D advection-diffusion problem using a nonlinear manifold via kernel PCA.
 This demo purposefully focuses on a simple test since the main goal is
-to demonstrate the steps and the code. More complex cases will be added later.
-To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py)
+to demonstrate the steps and the code.
+The full demo script is [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py)
 
 
 ## Overview
+This demo solves the same problem as the one
+[here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html),
+but instead of using POD modes, we show here how to use
+a nonlinear manifold computed via kernel PCA.
 
-This demo solves the same problem as the one [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
-but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.
-
-## Imports
-Before looking at the code snippets below, the `pressio4py`-specific imports needed are:
-```py
-from adv_diff1d import *					# the fom class
-from adv_diff_1d_fom import doFom			# the function to collect fom data
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
-
-```
+<!-- ## Imports -->
+<!-- Before looking at the code snippets below, the `pressio4py`-specific imports needed are: -->
+<!-- ```py -->
+<!-- from adv_diff1d import *					# the fom class -->
+<!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
+<!-- from pressio4py import rom as rom -->
+<!-- from pressio4py import solvers as solvers -->
+<!-- ``` -->
 
 ## Main function
 The main function of the demo is the following:
 ```py
 if __name__ == "__main__":
-  # initial condition u(x,t=0)
-  ic = lambda x: 2.*np.sin(9.*np.pi*x) - np.sin(4.*np.pi*x)
   # create fom object
-  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv_coef=2.0)
+  fomObj = AdvDiff1d(nGrid=120, adv_coef=2.0)
 
   # the final time to integrate to
   finalTime = .05
@@ -60,21 +58,14 @@ if __name__ == "__main__":
   print("Final state relative l2 error: {}".format(err/fomNorm))
 
   #--- plot ---#
-  ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or', label='LSPG: with kPCA mapping')
-  plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
-  plt.show()
+  # see actual demo for plotting
 ```
 
 ## Code for the various stages in main
 Here we list the functions performing the various stages of the run.
 
 ### 1. Run FOM and collect snapshots
-This step is the same as described [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
+This step is the same as described [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html),
 
 
 ### 2. Setup and train the nonlinear kPCA mapper
@@ -172,7 +163,7 @@ def runLspg(fomObj, dt, nsteps, customMapper):
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
-  # solver LSPG problems
+  # solve problem
   rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
@@ -180,3 +171,7 @@ def runLspg(fomObj, dt, nsteps, customMapper):
   fomRecon = problem.fomStateReconstructor()
   return fomRecon.evaluate(romState)
 ```
+
+## Results
+If everything works fine, the following plot shows the result.
+@image html tutorial3.png

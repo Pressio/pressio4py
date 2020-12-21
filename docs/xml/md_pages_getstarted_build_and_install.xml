@@ -9,6 +9,9 @@
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
 <para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes the end-to-end building process for <computeroutput>pressio4py</computeroutput>. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.</para>
 </simplesect>
+ <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>We will soon enable installation via pip, stay tuned!</title><para></para>
+</simplesect>
 </para>
 <sect1 id="md_pages_getstarted_build_and_install_1autotoc_md27">
 <title>Prerequisites</title>

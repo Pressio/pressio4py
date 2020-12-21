@@ -1,26 +1,49 @@
 
 import numpy as np
 import math
-from numba import jit, njit
 from scipy.sparse import csr_matrix, diags
 from scipy import linalg
 import time
 
-@njit(["void(float64[:], f8, float64[:], float64[:], f8, f8)"])
-def velocityImplNumba(u, t, f, expVec, dxInvHalf, mu0):
-  n = len(u)
-  uSq = np.square(u)
-  f[0] = dxInvHalf * (math.pow(mu0, 2) - uSq[0]) + expVec[0]
-  for i in range(1,n):
-    f[i] = dxInvHalf * ( uSq[i-1] - uSq[i] ) + expVec[i]
+try:
+  from numba import jit, njit
+  print("module 'numba' is installed")
+  numbaOn = True
+except ModuleNotFoundError:
+  numbaOn = False
+  print("module 'numba' not installed")
 
-@njit(["void(float64[:], float64[:], float64[:], f8)"])
-def fillDiag(u, diag, ldiag, dxInv):
-  n = len(u)
-  for i in range(n-1):
-    diag[i] = -dxInv*u[i]
-    ldiag[i] = dxInv*u[i]
-  diag[n-1] = -dxInv*u[n-1]
+if numbaOn:
+  @njit(["void(float64[:], f8, float64[:], float64[:], f8, f8)"])
+  def velocityImplNumba(u, t, f, expVec, dxInvHalf, mu0):
+    n = len(u)
+    uSq = np.square(u)
+    f[0] = dxInvHalf * (math.pow(mu0, 2) - uSq[0]) + expVec[0]
+    for i in range(1,n):
+      f[i] = dxInvHalf * ( uSq[i-1] - uSq[i] ) + expVec[i]
+else:
+  def velocityImplNumba(u, t, f, expVec, dxInvHalf, mu0):
+    n = len(u)
+    uSq = np.square(u)
+    f[0] = dxInvHalf * (math.pow(mu0, 2) - uSq[0]) + expVec[0]
+    for i in range(1,n):
+      f[i] = dxInvHalf * ( uSq[i-1] - uSq[i] ) + expVec[i]
+
+if numbaOn:
+  @conditional_decorator(njit(["void(float64[:], float64[:], float64[:], f8)"]), numbaOn)
+  def fillDiag(u, diag, ldiag, dxInv):
+    n = len(u)
+    for i in range(n-1):
+      diag[i] = -dxInv*u[i]
+      ldiag[i] = dxInv*u[i]
+    diag[n-1] = -dxInv*u[n-1]
+else:
+  def fillDiag(u, diag, ldiag, dxInv):
+    n = len(u)
+    for i in range(n-1):
+      diag[i] = -dxInv*u[i]
+      ldiag[i] = dxInv*u[i]
+    diag[n-1] = -dxInv*u[n-1]
 
 class Burgers1dSparseJacobian:
   def __init__(self, Ncell):

@@ -15,6 +15,7 @@ from adv_diff1d import *
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
+from settings_for_website import edit_figure_for_web
 
 #----------------------------
 class MyLinSolver:
@@ -213,15 +214,21 @@ if __name__ == "__main__":
 
   #--- plot ---#
   ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedStateGal, 'or',
-          markerfacecolor='None',
-          label='BDF1 Galerkin: '+str(romSize)+' POD modes')
-  ax.plot(fomObj.xGrid, approximatedStateLspg, 'ob',
-          markerfacecolor='None',
-          label='BDF1 LSPG: '+str(romSize)+' POD modes')
   plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=2, label='FOM')
+  ax.plot(fomObj.xGrid, approximatedStateGal, 'or',
+          markerfacecolor='None', markersize=5,
+          label='BDF1 Galerkin: '+str(romSize)+' POD modes')
+  ax.plot(fomObj.xGrid, approximatedStateLspg, 'oy',
+          markerfacecolor='None', markersize=5,
+          label='BDF1 LSPG: '+str(romSize)+' POD modes')
+
+  ax.set_ylabel("Solution")
+  ax.set_xlabel("x-coordinate")
+  leg = plt.legend(fontsize=12, fancybox=True, framealpha=0, loc='lower right')
+  ax.grid(True, linewidth=0.35, color='gray')
+
+  #used to change color to text and axes
+  edit_figure_for_web(ax, leg)
+  plt.savefig('tutorial5.png', dpi=200, transparent=True)
   plt.show()

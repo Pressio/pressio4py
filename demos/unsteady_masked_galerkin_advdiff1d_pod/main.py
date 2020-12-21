@@ -15,6 +15,7 @@ from adv_diff1d import *
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
+from settings_for_website import edit_figure_for_web
 
 #----------------------------
 class MyMasker:
@@ -74,7 +75,7 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
                                                     romState, fomReferenceState,
                                                     masker, projector)
 
-  # solve the GALERKIN problem
+  # solve problem
   rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
@@ -141,11 +142,17 @@ if __name__ == "__main__":
 
   #--- plot ---#
   ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or',
-          label='Galerkin: '+str(romSize)+' POD modes')
   plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=2, label='FOM')
+  ax.plot(fomObj.xGrid, approximatedState, 'or',
+          markerfacecolor='None', markersize=5,
+          label='Galerkin: '+str(romSize)+' POD modes')
+  ax.set_ylabel("Solution")
+  ax.set_xlabel("x-coordinate")
+  leg = plt.legend(fontsize=12, fancybox=True, framealpha=0, loc='lower right')
+  ax.grid(True, linewidth=0.35, color='gray')
+
+  #used to change color to text and axes
+  edit_figure_for_web(ax, leg)
+  plt.savefig('tutorial4.png', dpi=200, transparent=True)
   plt.show()

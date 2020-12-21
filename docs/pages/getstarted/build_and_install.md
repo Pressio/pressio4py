@@ -10,6 +10,11 @@ By the end, it should be clear how to clone pressio4py, get all dependencies ,
 build pressio4py and use the library in Python.
 
 
+@m_class{m-block m-warning}
+
+@par We will soon enable installation via pip, stay tuned!
+
+
 ## Prerequisites
 * SSH keys setup with github (if you are working behind a firewall, set the proper proxies);
 * C++ compiler (with support for C++14 standard);

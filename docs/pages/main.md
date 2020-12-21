@@ -1,5 +1,5 @@
 
-# Pressio Python Bindings
+# Python Bindings for Pressio
 
 *Leading-edge projection-based reduced order models (\proms) for
 dynamical systems in science and engineering.*
@@ -14,6 +14,11 @@ You can start by reading the [building/installation process](./md_pages_getstart
 <!-- Untill we start filling the tutorials and examples, you can peek at the [test subdirectory](https://github.com/Pressio/pressio/tree/master/tests/rom/burgers1d) of the C++ library. -->
 
 
+@m_class{m-block m-warning}
+
+@par We will soon enable installation via pip, stay tuned!
+
+
 ## License and Citation
 The full license is available [here](https://pressio.github.io/various/license/).
 
@@ -21,4 +26,4 @@ We are working on publishing this: you can find our arXiv preprint at: https://a
 
 
 ## Questions?
-Find us on Slack: https://pressioteam.slack.com or open an issue on github.
+Find us on Slack: https://pressioteam.slack.com or open an issue on [github](https://github.com/Pressio/pressio4py).

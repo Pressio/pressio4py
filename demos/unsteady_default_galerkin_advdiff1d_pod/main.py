@@ -14,6 +14,7 @@ from adv_diff1d import *
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
+from settings_for_website import edit_figure_for_web
 
 #----------------------------------------
 def computePodModes(snapshots):
@@ -43,12 +44,12 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   fomInitialState = fomObj.u0.copy()
   romState = np.dot(modes.T, fomInitialState)
 
-  # create GALERKIN problem
-  problem = rom.galerkin.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
+  # create problem
+  problem = rom.galerkin.default.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState)
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
-  # solver GALERKIN problems
+  # solve problem
   rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
@@ -58,10 +59,8 @@ def runGalerkin(fomObj, dt, nsteps, modes):
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  # initial condition u(x,t=0)
-  ic = lambda x: 2.*np.sin(9.*np.pi*x) - np.sin(4.*np.pi*x)
   # create fom object
-  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv_coef=2.0)
+  fomObj = AdvDiff1d(nGrid=120, adv_coef=2.0)
 
   # the final time to integrate to
   finalTime = .05
@@ -76,24 +75,39 @@ if __name__ == "__main__":
   modes = computePodModes(snapshots)
 
   #--- 3. GALERKIN ROM ---#
-  romSize = 5
   romTimeStepSize  = 3e-4
   romNumberOfSteps = int(finalTime/romTimeStepSize)
-  # we pass only romSize modes
-  approximatedState = runGalerkin(fomObj, romTimeStepSize,
-                              romNumberOfSteps, modes[:,:romSize])
+  # run with various number of modes
+  romSizes = [2,4,6]
+  approximations = {}
+  for romSize in romSizes:
+    currentSolution = runGalerkin(fomObj, romTimeStepSize,
+                                  romNumberOfSteps,
+                                  modes[:,:romSize])
+    approximations[romSize] = currentSolution
 
-  # compute l2-error between fom and approximate state
-  fomNorm = linalg.norm(fomFinalState)
-  err = linalg.norm(fomFinalState-approximatedState)
-  print("Final state relative l2 error: {}".format(err/fomNorm))
+    # compute l2-error between fom and approximate state
+    fomNorm = linalg.norm(fomFinalState)
+    err = linalg.norm(fomFinalState-currentSolution)
+    print("With {} modes, final relative l2 error: {}".format(romSize, err/fomNorm))
 
   #--- plot ---#
   ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or', label='Galerkin: '+str(romSize)+' POD modes')
   plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=2, label='FOM')
+
+  colors = ['b', 'r', 'y']
+  for [k,v],c in zip(approximations.items(), colors):
+    ax.plot(fomObj.xGrid, v, 'o', markeredgecolor=c,
+            markerfacecolor='None', markersize=3,
+            label='Galerkin: '+str(k)+' POD modes')
+
+  ax.set_ylabel("Solution", fontsize=18)
+  ax.set_xlabel("x-coordinate", fontsize=18)
+  leg = plt.legend(fontsize=12, fancybox=True, framealpha=0, loc='lower right')
+  ax.grid(True, linewidth=0.35, color='gray')
+
+  #used to change color to text and axes
+  edit_figure_for_web(ax, leg)
+  plt.savefig('tutorial1.png', dpi=200, transparent=True)
   plt.show()

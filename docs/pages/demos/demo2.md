@@ -7,41 +7,38 @@
 @par What does this page describe?
 This page describes a demo for a reproductive LSPG ROM applied to a
 1D advection-diffusion problem using POD modes as basis.
-By the end, it should be clear how to setup the problem and
-the various steps involved. This demo purposefully focuses on a simple test since the main goal is
-to demonstrate the steps and the code. More complex cases will be added later.
-To jump directly at the full demo script, click [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py)
+By the end, it should be clear how to setup the problem.
+This demo purposefully focuses on a simple test since the main goal is
+to demonstrate the steps and the code.
+The full demo script is [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py)
 
 
 ## Overview
-Here, we cover the three typical steps needed for a ROM:
-1. generating of snapshots using the full-order model (FOM)
-2. computing the basis: here we demonstrate the use of POD modes
-3. executing the ROM: here we leverage the LSPG ROM to demonstrate
+We cover these three typical steps needed for a ROM:
+1. generate of snapshots using the full-order model (FOM)
+2. compute the basis: here we demonstrate the use of POD modes
+3. execute the ROM: here we leverage the LSPG ROM to demonstrate
 a *reproductive* test, i.e., we run the ROM using the same physical coefficients, b.c., etc.
 A predictive run is demonstrated in a different tutorial.
 
 The governing equations for this problem are the same
 as those in [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
 
-## Imports
-Before looking at the code snippets below, the `pressio4py`-specific imports needed are:
-```py
-from adv_diff1d import *					# the fom class
-from adv_diff_1d_fom import doFom			# the function to collect fom data
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
-
-```
+<!-- ## Imports -->
+<!-- Before looking at the code snippets below, the `pressio4py`-specific imports needed are: -->
+<!-- ```py -->
+<!-- from adv_diff1d import *					# the fom class -->
+<!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
+<!-- from pressio4py import rom as rom -->
+<!-- from pressio4py import solvers as solvers -->
+<!-- ``` -->
 
 ## Main function
 The main function of the demo is the following:
 ```py
 if __name__ == "__main__":
-  # initial condition u(x,t=0)
-  ic = lambda x: 2.*np.sin(9.*np.pi*x) - np.sin(4.*np.pi*x)
   # create fom object
-  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv_coef=2.0)
+  fomObj = AdvDiff1d(nGrid=120, adv_coef=2.0)
 
   # the final time to integrate to
   finalTime = .05
@@ -69,14 +66,7 @@ if __name__ == "__main__":
   print("Final state relative l2 error: {}".format(err/fomNorm))
 
   #--- plot ---#
-  ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or', label='LSPG: '+str(romSize)+' POD modes')
-  plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
-  plt.show()
+  # see actual demo for plotting
 ```
 
 ## Code for the various stages in main
@@ -152,7 +142,7 @@ def runLspg(fomObj, dt, nsteps, modes):
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
-  # solver LSPG problems
+  # solve problem
   rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
@@ -160,3 +150,7 @@ def runLspg(fomObj, dt, nsteps, modes):
   fomRecon = problem.fomStateReconstructor()
   return fomRecon.evaluate(romState)
 ```
+
+## Results
+If everything works fine, the following plot shows the result.
+@image html tutorial2.png

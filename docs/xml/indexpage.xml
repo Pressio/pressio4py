@@ -2,7 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
   <compounddef id="indexpage" kind="page">
     <compoundname>index</compoundname>
-    <title>Pressio Python Bindings</title>
+    <title>Python Bindings for Pressio</title>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
@@ -12,6 +12,10 @@
 <sect1 id="index_1autotoc_md35">
 <title>Getting Started</title>
 <para>You can start by reading the <ulink url="./md_pages_getstarted_build_and_install.html">building/installation process</ulink>.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>We will soon enable installation via pip, stay tuned!</title><para></para>
+</simplesect>
+</para>
 </sect1>
 <sect1 id="index_1autotoc_md36">
 <title>License and Citation</title>
@@ -20,7 +24,7 @@
 </sect1>
 <sect1 id="index_1autotoc_md37">
 <title>Questions?</title>
-<para>Find us on Slack: <ulink url="https://pressioteam.slack.com">https://pressioteam.slack.com</ulink> or open an issue on github. </para>
+<para>Find us on Slack: <ulink url="https://pressioteam.slack.com">https://pressioteam.slack.com</ulink> or open an issue on <ulink url="https://github.com/Pressio/pressio4py">github</ulink>. </para>
 </sect1>
     </detaileddescription>
   </compounddef>
