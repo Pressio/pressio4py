@@ -8,7 +8,7 @@ This tutorial shows how to create a linear decoder in pressio4py.
 
 ## Context
 A key assumption of projection-based ROMs relies on approximating
-the full-order model (FOM) state, @f$y_{fom}@f$, as:
+a full-order model (FOM) state, @f$y_{fom}@f$, as:
 @f[
 y_{fom} = g(y_{rom})
 @f]
@@ -20,8 +20,8 @@ If @f$g@f$ is linear, then we can write:
 y_{fom} = \phi y_{rom}
 @f]
 where @f$\phi@f$ is a matrix (for the time being, assume it constant).
-A linear decoder in pressio implements this linear mapping.
-Since it is linear, the Jacobian of the mapping is:
+A linear decoder in pressio4py implements this linear mapping.
+Due to the linearity, the Jacobian of the mapping is:
 @f[
 \frac{d y_{fom}}{d y_{rom}} = \phi.
 @f]
