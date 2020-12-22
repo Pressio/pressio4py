@@ -263,7 +263,7 @@
 <para>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate. <image type="html" name="demo5_f2.png"></image>
 </para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Warning</title><para>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo. </para>
+<para><simplesect kind="par"><title>Warning</title><para>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos. </para>
 </simplesect>
 </para>
 </sect1>
