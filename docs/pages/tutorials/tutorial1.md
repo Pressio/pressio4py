@@ -27,11 +27,10 @@ Since it is linear, the Jacobian of the mapping is:
 @f]
 
 ## Code
-Here we demonstate how to create a linear decoder
-object using Eigen types.
-The full tutorial can be found [here](https://github.com/Pressio/pressio-tutorials/blob/master/tutorials/tutorial4.cc).
+Here we demonstate how to create a linear decoder.
+The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py)
 
-```cpp
+```python
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
 12:52
