@@ -146,5 +146,5 @@ if __name__ == "__main__":
 
   #used to change color to text and axes
   edit_figure_for_web(ax, leg)
-  plt.savefig('demo3.png', dpi=200, transparent=True)
+  plt.savefig('demo3.png', dpi=250, transparent=True)
   plt.show()
