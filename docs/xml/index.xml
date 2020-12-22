@@ -6,11 +6,15 @@
   </compound>
   <compound refid="demo3_8md" kind="file"><name>demo3.md</name>
   </compound>
+  <compound refid="demo4_8md" kind="file"><name>demo4.md</name>
+  </compound>
   <compound refid="example1_8md" kind="file"><name>example1.md</name>
   </compound>
   <compound refid="build__and__install_8md" kind="file"><name>build_and_install.md</name>
   </compound>
   <compound refid="main_8md" kind="file"><name>main.md</name>
+  </compound>
+  <compound refid="tutorial1_8md" kind="file"><name>tutorial1.md</name>
   </compound>
   <compound refid="md_pages_demos_demo1" kind="page"><name>md_pages_demos_demo1</name>
   </compound>
@@ -18,9 +22,13 @@
   </compound>
   <compound refid="md_pages_demos_demo3" kind="page"><name>md_pages_demos_demo3</name>
   </compound>
+  <compound refid="md_pages_demos_demo4" kind="page"><name>md_pages_demos_demo4</name>
+  </compound>
   <compound refid="md_pages_examples_example1" kind="page"><name>md_pages_examples_example1</name>
   </compound>
   <compound refid="md_pages_getstarted_build_and_install" kind="page"><name>md_pages_getstarted_build_and_install</name>
+  </compound>
+  <compound refid="md_pages_tutorials_tutorial1" kind="page"><name>md_pages_tutorials_tutorial1</name>
   </compound>
   <compound refid="dir_e3e5033bce933e9613999c4991aa42b8" kind="dir"><name>pages/demos</name>
   </compound>
@@ -29,6 +37,8 @@
   <compound refid="dir_72e76ac6147c72c291306ebceacd125b" kind="dir"><name>pages/getstarted</name>
   </compound>
   <compound refid="dir_208d2690607c4e3d3fabfa1d18673d36" kind="dir"><name>pages</name>
+  </compound>
+  <compound refid="dir_d37f90f6dfa16220c69059cd0bfa7aa7" kind="dir"><name>pages/tutorials</name>
   </compound>
   <compound refid="indexpage" kind="page"><name>index</name>
   </compound>

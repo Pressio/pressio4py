@@ -9,13 +9,20 @@ LINKS_NAVBAR1 = [
    [
      ("<a href=\"md_pages_getstarted_build_and_install.html\">Installation and Dependencies</a>",)
    ]),
-  #######
+
+  # tutorials
+  ("<a href=>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
+   [
+     ("<a href=\"md_pages_tutorials_tutorial1.html\">Linear Decoder</a>", )
+   ]),
+
   # demos
-  ("<a href=>Demos</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
+  ("<a href=>Demos</a>", #("<a href=\"md_pages_demos.html\">Demos</a>",
    [
      ("<a href=\"md_pages_demos_demo1.html\">1D adv-diff: Galerkin with POD modes</a>", ),
      ("<a href=\"md_pages_demos_demo2.html\">1D adv-diff: LSPG with POD modes</a>", ),
      ("<a href=\"md_pages_demos_demo3.html\">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a>", ),
+     ("<a href=\"md_pages_demos_demo4.html\">1D adv-diff: POD Galerkin with collocation mask</a>", ),
    ])
 
   # # examples

@@ -114,5 +114,8 @@ add_subdirectory(tests)
 # add demos
 add_subdirectory(demos)
 
+# add tutorials
+add_subdirectory(tutorials)
+
 # install
 install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

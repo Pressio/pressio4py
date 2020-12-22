@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+  <compounddef id="md_pages_demos_demo4" kind="page">
+    <compoundname>md_pages_demos_demo4</compoundname>
+    <title>1D adv-diff: POD Galerkin with collocation masking</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive &quot;masked&quot; Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. The term &quot;mask&quot; refers to using a &quot;trick&quot; to mimic hyper-reduction without actually needing to change the origian application. By the end, it should be clear how to setup the problem. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
+</simplesect>
+ <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>We are currently working on this page, it will be updated with more explanations.</title><para></para>
+</simplesect>
+</para>
+<sect1 id="md_pages_demos_demo4_1autotoc_md23">
+<title>Overview</title>
+<para>We cover these steps:<orderedlist>
+<listitem><para>generate of snapshots using the full-order model (FOM)</para>
+</listitem><listitem><para>compute the POD basis</para>
+</listitem><listitem><para>create the masking operator</para>
+</listitem><listitem><para>execute the ROM: here we leverage the GALERKIN ROM to demonstrate a <emphasis>reproductive</emphasis> test, i.e., we run the ROM using the same physical coefficients, b.c., etc.</para>
+</listitem></orderedlist>
+</para>
+<para>The key item introduced here is the &quot;masking&quot; operator. In simple words, masking allows us to mimic the effect of the hyper-reduction without changing the application code. Hyper-reduction is a fundamental part of ROMs needed to approximate the FOM operators, thus contributing significantly to the computational cost savings. However, the main difficulty of hyper-reduction is that it generally is quite intrusive to be done properly.</para>
+<para>To briefly explain what hyper-reduction, let&apos;s look at the most basic form of hyper-reduction, namely &quot;collocation&quot;. Consider the following system of <formula id="6">$N$f@ ODEs: @f[ \frac{du}{dt} = f(u,x,t) @f] A collocation-based hyper-reduction involves *approximating* the right-hand side by computing @ff()@f only at a subset of grid points. Obviously, the way we compute the locations to select is critical and there are several techniques available to do so. Here, we show a simple example just for demonstration purposes of performing collocation with randomly selected points @m_class{m-block m-warning} @par Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo. ## FOM Equations The governing equations for this problem are: @f[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} @f] where $</formula>@_fakenlk(u,x)=x^4 <formula id="7">$, the field is $</formula>u(x;t) <formula id="8">$, the advection velocity is fixed at $</formula>@_fakenla=2 <formula id="9">$, the spatial coordinate is $</formula>x <formula id="10">$ and the domain is $</formula>(0,1) </para>
+</sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

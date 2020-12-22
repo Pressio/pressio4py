@@ -76,7 +76,7 @@ private:
   using fom_native_t =
     typename ::pressio::containers::details::traits<fom_state_type>::wrapped_t;
 
-  matrix_type mappingJacobian_ = {};
+  matrix_type jacobian_ = {};
   mappingKind kind_ = {};
   pybind11::object customMapper_ = {};
 
@@ -94,9 +94,13 @@ public:
     // NOTE that for this to work, the layout of the jacobian object
     // returned by "jacobian" MUST be same as the layout of the matrix_type
     // otherwise pybind11 does not throw but just makes a copy of the data
-    : mappingJacobian_(jacobianMatrixIn, ::pressio::view()),
+    : jacobian_(jacobianMatrixIn, ::pressio::view()),
       kind_(mappingKind::Linear)
-  {}
+  {
+    PRESSIOLOG_DEBUG("linear: cnstr: matrix addr = {}, pyaddr = {}, size = ({},{})",
+		     fmt::ptr(&jacobian_), this->jacobianAddress(),
+		     jacobian_.extent(0), jacobian_.extent(1));
+  }
 
   // here the description is not necessarily needed but it is important
   // to keep because it enables the right overload. Otherwise the interpreter
@@ -108,10 +112,14 @@ public:
     // NOTE that for this to work, the layout of the jacobian object
     // returned by "jacobian" MUST be same as the layout of the matrix_type
     // otherwise pybind11 does not throw but just makes a copy of the data
-    : mappingJacobian_(customMapper.attr("jacobian")(), ::pressio::view()),
+    : jacobian_(customMapper.attr("jacobian")(), ::pressio::view()),
       kind_(mappingKind::Custom),
       customMapper_(customMapper)
-  {}
+  {
+    PRESSIOLOG_DEBUG("custom: cnstr: matrix addr = {}, pyaddr = {}, size = ({},{})",
+		     fmt::ptr(&jacobian_), this->jacobianAddress(),
+		     jacobian_.extent(0), jacobian_.extent(1));
+  }
 
   // applyMapping is templated because operand_t can be rom_state_type but
   // can also be an expression based on rom_state_type (e.g. for WLS)
@@ -124,7 +132,7 @@ public:
       constexpr auto zero = ::pressio::utils::constants<scalar_type>::zero();
       constexpr auto one  = ::pressio::utils::constants<scalar_type>::one();
       ::pressio::ops::product(::pressio::nontranspose(), one,
-			      mappingJacobian_, operand, zero, result);
+			      jacobian_, operand, zero, result);
     }
     else if(kind_ == mappingKind::Custom)
     {
@@ -135,7 +143,7 @@ public:
   }
 
   const jacobian_type & jacobianCRef() const{
-    return mappingJacobian_;
+    return jacobian_;
   }
 
   template<typename gen_coords_t>
@@ -153,7 +161,7 @@ public:
   }
 
   uintptr_t jacobianAddress() const{
-    return reinterpret_cast<uintptr_t>(mappingJacobian_.data()->data());
+    return reinterpret_cast<uintptr_t>(jacobian_.data()->data());
   }
 
 };

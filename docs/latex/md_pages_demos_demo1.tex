@@ -16,6 +16,9 @@ The governing equations for this problem are\+:
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{if \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal, \textcolor{stringliteral}{"{}null"{}})}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
 \DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, adv\_coef=2.0)}
 \DoxyCodeLine{}
@@ -34,7 +37,6 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 3. GALERKIN ROM -\/-\/-\/\#}}
 \DoxyCodeLine{  romTimeStepSize  = 3e-\/4}
 \DoxyCodeLine{  romNumberOfSteps = int(finalTime/romTimeStepSize)}
-\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# run with various number of modes}}
 \DoxyCodeLine{  romSizes = [2,4,6]}
 \DoxyCodeLine{  approximations = \{\}}
@@ -45,21 +47,13 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{    approximations[romSize] = currentSolution}
 \DoxyCodeLine{}
 \DoxyCodeLine{    \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
-\DoxyCodeLine{    fomNorm = linalg.norm(fomFinalState)}
-\DoxyCodeLine{    err = linalg.norm(fomFinalState-\/currentSolution)}
-\DoxyCodeLine{    print(\textcolor{stringliteral}{"{}With \{\} modes, final relative l2 error: \{\}"{}}.format(romSize, err/fomNorm))}
-\DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ plot -\/-\/-\/\#}}
-\DoxyCodeLine{  \textcolor{comment}{\# see actual demo for plotting}}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo1_autotoc_md4}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo1_autotoc_md5}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md5}
+\hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md4}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
 \DoxyCodeLine{  u = fom.u0.copy()}
 \DoxyCodeLine{  U = [u]}
-\DoxyCodeLine{  T = [0.0]}
 \DoxyCodeLine{  f = fom.createVelocity()}
 \DoxyCodeLine{  \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(1,nsteps+1):}
 \DoxyCodeLine{    \textcolor{comment}{\# query rhs of discretized system}}
@@ -68,11 +62,10 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{    u = u + dt*f}
 \DoxyCodeLine{    \textcolor{keywordflow}{if} i \% saveFreq == 0:}
 \DoxyCodeLine{      U.append(u)}
-\DoxyCodeLine{      T.append(i*dt)}
 \DoxyCodeLine{  Usolns = np.array(U)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md6}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo1_autotoc_md6}
+\hypertarget{md_pages_demos_demo1_autotoc_md5}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo1_autotoc_md5}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -80,7 +73,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md7}{}\doxysubsection{3. Construct and run Galerkin}\label{md_pages_demos_demo1_autotoc_md7}
+\hypertarget{md_pages_demos_demo1_autotoc_md6}{}\doxysubsection{3. Construct and run R\+OM}\label{md_pages_demos_demo1_autotoc_md6}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runGalerkin(fomObj, dt, nsteps, modes):}
@@ -117,5 +110,5 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md8}{}\doxysection{Results}\label{md_pages_demos_demo1_autotoc_md8}
-If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just five P\+OD modes.  
+\hypertarget{md_pages_demos_demo1_autotoc_md7}{}\doxysection{Results}\label{md_pages_demos_demo1_autotoc_md7}
+If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few P\+OD modes.  

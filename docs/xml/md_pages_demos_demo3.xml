@@ -10,13 +10,16 @@
 <para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</ulink></para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo3_1autotoc_md18">
+<sect1 id="md_pages_demos_demo3_1autotoc_md16">
 <title>Overview</title>
 <para>This demo solves the same problem as the one <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.</para>
 </sect1>
-<sect1 id="md_pages_demos_demo3_1autotoc_md19">
+<sect1 id="md_pages_demos_demo3_1autotoc_md17">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal,<sp/></highlight><highlight class="stringliteral">&quot;null&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomObj<sp/>=<sp/>AdvDiff1d(nGrid=120,<sp/>adv_coef=2.0)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -38,23 +41,13 @@
 <codeline><highlight class="normal"><sp/><sp/>romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>approximatedState<sp/>=<sp/>runLspg(fomObj,<sp/>romTimeStepSize,<sp/>romNumberOfSteps,<sp/>myNonLinearMapper)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>plot<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>see<sp/>actual<sp/>demo<sp/>for<sp/>plotting</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight></codeline>
 </programlisting></para>
-</sect1>
-<sect1 id="md_pages_demos_demo3_1autotoc_md20">
-<title>Code for the various stages in main</title>
-<para>Here we list the functions performing the various stages of the run.</para>
-<sect2 id="md_pages_demos_demo3_1autotoc_md21">
+<sect2 id="md_pages_demos_demo3_1autotoc_md18">
 <title>1. Run FOM and collect snapshots</title>
 <para>This step is the same as described <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>,</para>
 </sect2>
-<sect2 id="md_pages_demos_demo3_1autotoc_md22">
+<sect2 id="md_pages_demos_demo3_1autotoc_md19">
 <title>2. Setup and train the nonlinear kPCA mapper</title>
 <para>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods. <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMapperKPCA:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>snapshots,<sp/>numModes):</highlight></codeline>
@@ -99,7 +92,7 @@
 </simplesect>
 </para>
 </sect2>
-<sect2 id="md_pages_demos_demo3_1autotoc_md23">
+<sect2 id="md_pages_demos_demo3_1autotoc_md20">
 <title>3. Construct and run LSPG</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runLspg(fomObj,<sp/>dt,<sp/>nsteps,<sp/>customMapper):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>an<sp/>auxiliary<sp/>class<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>solve</highlight><highlight class="normal"></highlight></codeline>
@@ -107,7 +100,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RomStateObserver:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>state):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#----------------------------------------</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>linear<sp/>solver<sp/>is<sp/>used<sp/>at<sp/>each<sp/>gauss-newton<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
@@ -148,9 +141,9 @@
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo3_1autotoc_md24">
+<sect1 id="md_pages_demos_demo3_1autotoc_md21">
 <title>Results</title>
-<para>If everything works fine, the following plot shows the result. <image type="html" name="tutorial3.png"></image>
+<para>If everything works fine, the following plot shows the result. <image type="html" name="demo3.png"></image>
  </para>
 </sect1>
     </detaileddescription>

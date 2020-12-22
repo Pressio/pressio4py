@@ -1,1 +1,53 @@
-todo 
+
+
+\begin{DoxyParagraph}{Content}
+This tutorial shows how to create a linear decoder in pressio4py.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md38}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md38}
+A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
+
+where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being, assume it constant). A linear decoder in pressio4py implements this linear mapping. Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]\hypertarget{md_pages_tutorials_tutorial1_autotoc_md39}{}\doxysection{Code}\label{md_pages_tutorials_tutorial1_autotoc_md39}
+Here we demonstate how to create a linear decoder. The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{  A linear decoder (or mapping) represents}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{        y = phi * x}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{  where phi is the mapping's Jacobian (assumed constant for now).}}
+\DoxyCodeLine{\textcolor{stringliteral}{  This is a typical approximation adopted in projection-\/based ROMs,}}
+\DoxyCodeLine{\textcolor{stringliteral}{  where "{}x"{} is referred to as the generalized coordinates (or latent space)}}
+\DoxyCodeLine{\textcolor{stringliteral}{  and "{}y"{} represents an approximation of the FOM state.}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{  This tutorial shows how to create a linear decoder/mapper in pressio4py.}}
+\DoxyCodeLine{\textcolor{stringliteral}{  For examples using it, see subsequent tutorials.}}
+\DoxyCodeLine{\textcolor{stringliteral}{  '''}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create the matrix}}
+\DoxyCodeLine{  \textcolor{comment}{\# attention: we declare phi to be column-\/major for these reasons:}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,}}
+\DoxyCodeLine{  \textcolor{comment}{\#    so a column-\/major layout implies seamless compatiblity with blas}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# 2. when using column-\/major layout, pressio4py references the}}
+\DoxyCodeLine{  \textcolor{comment}{\#    matrix phi without doing a deep copy, which saves memory}}
+\DoxyCodeLine{  \textcolor{comment}{\#    since a single jacobian matrix is alive.}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# Note: you can also use a row-\/major layout, but that forces}}
+\DoxyCodeLine{  \textcolor{comment}{\# pressio4py to make a deep copy of matrix.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  phi = np.ones((10,3), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# to create the linear decoder, one can simply do}}
+\DoxyCodeLine{  linearDecoder = rom.Decoder(phi)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
+\DoxyCodeLine{  y,x = np.zeros(10), np.ones(3)}
+\DoxyCodeLine{  linearDecoder.applyMapping(x, y)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  print(y)}
+\end{DoxyCode}
+ 
