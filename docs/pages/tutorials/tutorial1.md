@@ -30,7 +30,7 @@ Since it is linear, the Jacobian of the mapping is:
 Here we demonstate how to create a linear decoder.
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py)
 
-```python
+```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
 12:52
