@@ -35,12 +35,12 @@ quite intrusive to be done properly.
 
 To briefly explain what hyper-reduction, let's look at
 the most basic form of hyper-reduction, namely "collocation".
-Consider the following system of @f$N@f$ ODEs:
+Consider the following system of N ODEs:
 @f[
 \frac{du}{dt} = f(u,x,t)
 @f]
 A collocation-based hyper-reduction involves *approximating*
-the right-hand side by computing @ff()@f only at a subset of grid points.
+the right-hand side by computing @f$f()@f$ only at a subset of grid points.
 Obviously, the way we compute the locations to select is critical and
 there are several techniques available to do so.
 Here, we show a simple example just for demonstration purposes of
