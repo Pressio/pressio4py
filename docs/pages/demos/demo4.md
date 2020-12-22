@@ -47,18 +47,6 @@ Here, we show a simple example just for demonstration purposes of
 performing collocation with randomly selected points
 
 
-@m_class{m-block m-warning}
-
-@par Warning
-Note that using the mask to mimic hyper-reduction is
-only helpful to assess the accuracy but not the computational performance.
-This is because the "masked" problem still requires the FOM
-to compute the full kernels. Hyper-reduction becomes computationally
-very efficient if implemented without the mask,
-which we will show in subsequent demo.
-
-
-
 ## FOM Equations
 The governing equations for this problem are:
 
@@ -120,3 +108,14 @@ If everything works fine, the following plot shows the result.
 We see that for this toy example, the full solution is recovered very well with Galerkin
 with just a few POD modes.
 @image html demo4.png
+
+
+@m_class{m-block m-warning}
+
+@par Warning
+Note that using the mask to mimic hyper-reduction is
+only helpful to assess the accuracy but not the computational performance.
+This is because the "masked" problem still requires the FOM
+to compute the full kernels. Hyper-reduction becomes computationally
+very efficient if implemented without the mask,
+which we will show in subsequent demos.

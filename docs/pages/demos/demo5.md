@@ -19,17 +19,6 @@ This is a follow up to the previous demo [here](./md_pages_demos_demo4.html)
 We compare here maskdd Galerkin and masked LSPG.
 
 
-@m_class{m-block m-warning}
-
-@par Warning
-Note that using the mask to mimic hyper-reduction is
-only helpful to assess the accuracy but not the computational performance.
-This is because the "masked" problem still requires the FOM
-to compute the full kernels. Hyper-reduction becomes computationally
-very efficient if implemented without the mask,
-which we will show in subsequent demo.
-
-
 ## Main function
 The main function of the demo is the following:
 ```py
@@ -92,3 +81,14 @@ We see that for this toy example, even with just 10% of the grid, LSPG
 with 5 modes accuractely reproduces the FOM solution.
 While for Galerkin the solution is less accurate.
 @image html demo5_f2.png
+
+
+@m_class{m-block m-warning}
+
+@par Warning
+Note that using the mask to mimic hyper-reduction is
+only helpful to assess the accuracy but not the computational performance.
+This is because the "masked" problem still requires the FOM
+to compute the full kernels. Hyper-reduction becomes computationally
+very efficient if implemented without the mask,
+which we will show in subsequent demos.

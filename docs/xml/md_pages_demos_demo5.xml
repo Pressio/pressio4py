@@ -16,10 +16,6 @@
 <sect1 id="md_pages_demos_demo5_1autotoc_md33">
 <title>Overview</title>
 <para>This is a follow up to the previous demo <ulink url="./md_pages_demos_demo4.html">here</ulink> We compare here maskdd Galerkin and masked LSPG.</para>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Warning</title><para>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo.</para>
-</simplesect>
-</para>
 </sect1>
 <sect1 id="md_pages_demos_demo5_1autotoc_md34">
 <title>Main function</title>
@@ -265,7 +261,11 @@
 <para>If everything works fine, the following plots shows the result. We first plot the result reconstructed <emphasis>only on the sample mesh</emphasis>. This can easily be done using the bases collocated on the sample mesh indices. <image type="html" name="demo5_f1.png"></image>
 </para>
 <para>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate. <image type="html" name="demo5_f2.png"></image>
- </para>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Warning</title><para>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo. </para>
+</simplesect>
+</para>
 </sect1>
     </detaileddescription>
   </compounddef>

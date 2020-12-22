@@ -26,12 +26,6 @@ LINKS_NAVBAR1 = [
      ("<a href=\"md_pages_demos_demo5.html\">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a>", ),
    ])
 
-  # # examples
-  # ("<a href=>Full Examples</a>", #("<a href=\"md_pages_examples.html\">Full Examples</a>",
-  #  [
-  #    ("<a href=\"md_pages_examples_example1.html\">Example1</a>", )
-  #  ]),
-
   # # hyper-reduction
   # ("<a href=\"md_pages_hyperreduction.html\">Hyper-reduction</a>",
   #  [

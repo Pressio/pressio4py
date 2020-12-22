@@ -9,14 +9,7 @@ This page describes a demo for a reproductive \char`\"{}masked\char`\"{} Galerki
 
 \end{DoxyParagraph}
 \hypertarget{md_pages_demos_demo5_autotoc_md33}{}\doxysection{Overview}\label{md_pages_demos_demo5_autotoc_md33}
-This is a follow up to the previous demo \href{./md_pages_demos_demo4.html}{\texttt{ here}} We compare here maskdd Galerkin and masked L\+S\+PG.
-
-
-
-\begin{DoxyParagraph}{Warning}
-Note that using the mask to mimic hyper-\/reduction is only helpful to assess the accuracy but not the computational performance. This is because the \char`\"{}masked\char`\"{} problem still requires the F\+OM to compute the full kernels. Hyper-\/reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo.
-\end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo5_autotoc_md34}{}\doxysection{Main function}\label{md_pages_demos_demo5_autotoc_md34}
+This is a follow up to the previous demo \href{./md_pages_demos_demo4.html}{\texttt{ here}} We compare here maskdd Galerkin and masked L\+S\+PG.\hypertarget{md_pages_demos_demo5_autotoc_md34}{}\doxysection{Main function}\label{md_pages_demos_demo5_autotoc_md34}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
@@ -258,4 +251,10 @@ The main function of the demo is the following\+:
 \hypertarget{md_pages_demos_demo5_autotoc_md41}{}\doxysection{Results}\label{md_pages_demos_demo5_autotoc_md41}
 If everything works fine, the following plots shows the result. We first plot the result reconstructed {\itshape only on the sample mesh}. This can easily be done using the bases collocated on the sample mesh indices. 
 
-We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10\% of the grid, L\+S\+PG with 5 modes accuractely reproduces the F\+OM solution. While for Galerkin the solution is less accurate.  
+We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10\% of the grid, L\+S\+PG with 5 modes accuractely reproduces the F\+OM solution. While for Galerkin the solution is less accurate. 
+
+
+
+\begin{DoxyParagraph}{Warning}
+Note that using the mask to mimic hyper-\/reduction is only helpful to assess the accuracy but not the computational performance. This is because the \char`\"{}masked\char`\"{} problem still requires the F\+OM to compute the full kernels. Hyper-\/reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demo. 
+\end{DoxyParagraph}
