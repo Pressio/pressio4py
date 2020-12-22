@@ -35,7 +35,7 @@ quite intrusive to be done properly.
 
 To briefly explain what hyper-reduction, let's look at
 the most basic form of hyper-reduction, namely "collocation".
-Consider the following system of @fN@f ODEs:
+Consider the following system of @f$N$f@ ODEs:
 @f[
 \frac{du}{dt} = f(u,x,t)
 @f]
