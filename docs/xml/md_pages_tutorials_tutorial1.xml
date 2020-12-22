@@ -56,7 +56,11 @@
 <codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(x,<sp/>y)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
-</programlisting> </para>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><simplesect kind="par"><title>Where can you use the linear decoder?</title><para>A linear decoder can be used for both Galerkin and LSPG as will be shown in subsequent tutorials and in the demos. </para>
+</simplesect>
+</para>
 </sect1>
     </detaileddescription>
   </compounddef>
