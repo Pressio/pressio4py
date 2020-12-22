@@ -47,8 +47,6 @@ there are several techniques available to do so.
 Here, we show a simple example just for demonstration purposes of
 performing collocation with randomly selected points
 
-@image html drawing.svg
-
 
 @m_class{m-block m-warning}
 
