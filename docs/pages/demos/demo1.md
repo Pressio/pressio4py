@@ -75,4 +75,4 @@ The main function of the demo is the following:
 If everything works fine, the following plot shows the result.
 We see that for this toy example, the full solution is recovered very well with Galerkin
 with just a few POD modes.
-@image html tutorial1.png
+@image html demo1.png

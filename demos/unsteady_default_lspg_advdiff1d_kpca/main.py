@@ -12,7 +12,7 @@ sys.path.append(str(file_path) + "/../..")      # to access pressio4py lib
 sys.path.append(str(file_path) + "/..")         # to access fom
 
 from adv_diff1d import *
-from pressio4py import rom as rom
+from pressio4py import rom as rom, logger
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
@@ -103,6 +103,9 @@ def runLspg(fomObj, dt, nsteps, customMapper):
 
 ######## MAIN ###########
 if __name__ == "__main__":
+  logger.initialize(logger.logto.terminal, "null")
+  logger.setVerbosity([logger.loglevel.info])
+
   # create fom object
   fomObj = AdvDiff1d(nGrid=120, adv_coef=2.0)
 
@@ -129,7 +132,6 @@ if __name__ == "__main__":
   err = linalg.norm(fomFinalState-approximatedState)
   print("Final state relative l2 error: {}".format(err/fomNorm))
 
-
   #--- plot ---#
   ax = plt.gca()
   plt.rcParams.update({'font.size': 18})
@@ -144,5 +146,5 @@ if __name__ == "__main__":
 
   #used to change color to text and axes
   edit_figure_for_web(ax, leg)
-  plt.savefig('tutorial3.png', dpi=200, transparent=True)
+  plt.savefig('demo3.png', dpi=200, transparent=True)
   plt.show()

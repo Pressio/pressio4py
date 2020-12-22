@@ -64,4 +64,4 @@ The main function of the demo is the following:
 
 ## Results
 If everything works fine, the following plot shows the result.
-@image html tutorial2.png
+@image html demo2.png

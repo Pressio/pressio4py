@@ -70,4 +70,4 @@ around but also it is fundamental for the update method below correctly.
 
 ## Results
 If everything works fine, the following plot shows the result.
-@image html tutorial3.png
+@image html demo3.png
