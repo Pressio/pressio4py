@@ -12,7 +12,7 @@ build pressio4py and use the library in Python.
 
 @m_class{m-block m-warning}
 
-@par We will soon enable installation via pip, stay tuned!
+@par We are working on supporting pip, stay tuned!
 
 
 ## Prerequisites
