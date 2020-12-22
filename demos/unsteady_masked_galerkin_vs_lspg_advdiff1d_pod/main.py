@@ -244,25 +244,25 @@ if __name__ == "__main__":
   #used to change color to text and axes
   edit_figure_for_web(ax, leg)
   plt.savefig('demo5_f1.png', dpi=250, transparent=True)
+  plt.show()
 
   fig = plt.figure(1)
-  ax = fig.gca()
+  ax1 = fig.gca()
   plt.rcParams.update({'font.size': 18})
-  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedStateLspg, 'oy',
+  ax1.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
+  ax1.plot(fomObj.xGrid, approximatedStateLspg, 'oy',
           markerfacecolor='None', markersize=4,
           label='LSPG on full mesh')
-  ax.plot(fomObj.xGrid, approximatedStateGal, 'om',
+  ax1.plot(fomObj.xGrid, approximatedStateGal, 'om',
           markerfacecolor='None', markersize=4,
           label='Galerkin solution on full mesh')
 
-  ax.set_ylabel("Solution")
-  ax.set_xlabel("x-coordinate")
+  ax1.set_ylabel("Solution")
+  ax1.set_xlabel("x-coordinate")
   leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='upper right')
-  ax.grid(True, linewidth=0.35, color='gray')
+  ax1.grid(True, linewidth=0.35, color='gray')
 
   #used to change color to text and axes
-  edit_figure_for_web(ax, leg)
+  edit_figure_for_web(ax1, leg)
   plt.savefig('demo5_f2.png', dpi=250, transparent=True)
-
   plt.show()

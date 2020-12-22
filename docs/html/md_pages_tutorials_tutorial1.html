@@ -43,6 +43,7 @@
                 <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
                 <li><a href="md_pages_demos_demo3.html">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a></li>
                 <li><a href="md_pages_demos_demo4.html">1D adv-diff: POD Galerkin with collocation mask</a></li>
+                <li><a href="md_pages_demos_demo5.html">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a></li>
               </ol>
             </li>
           </ol>
@@ -65,7 +66,7 @@
         <h1>
           Tutorial: Linear Decoder
         </h1>
-<aside class="m-block m-info"><h3>Content</h3><p>This tutorial shows how to create a linear decoder in pressio4py.</p></aside><section id="autotoc_md46"><h2><a href="#autotoc_md46">Context</a></h2><p>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <svg class="m-math" style="width: 2.316em; height: 0.884em;" viewBox="0 -5.147373 22.238045 8.490382">
+<aside class="m-block m-info"><h3>Content</h3><p>This tutorial shows how to create a linear decoder in pressio4py.</p></aside><section id="autotoc_md56"><h2><a href="#autotoc_md56">Context</a></h2><p>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <svg class="m-math" style="width: 2.316em; height: 0.884em;" viewBox="0 -5.147373 22.238045 8.490382">
 <title>
 $y_{fom}$
 </title>
@@ -212,7 +213,7 @@ $\phi$
 <use x='212.65971' y='-10.525258' xlink:href='#eq8-g1-30'/>
 <use x='219.587812' y='-10.525258' xlink:href='#eq8-g1-58'/>
 </g>
-</svg></div></section><section id="autotoc_md47"><h2><a href="#autotoc_md47">Code</a></h2><p>Here we demonstate how to create a linear decoder. The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</a></p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</svg></div></section><section id="autotoc_md57"><h2><a href="#autotoc_md57">Code</a></h2><p>Here we demonstate how to create a linear decoder. The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</a></p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
   <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">  A linear decoder (or mapping) represents</span>
 
