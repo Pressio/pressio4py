@@ -10,9 +10,6 @@ sys.path.append(str(file_path) + "/../..")      # to access pressio4py lib
 from pressio4py import rom as rom, logger
 
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
-  logger.setVerbosity([logger.loglevel.info])
-
   '''
   A linear decoder (or mapping) represents
 
