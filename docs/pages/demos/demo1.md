@@ -33,9 +33,8 @@ is fixed at @f$a=2@f$, the spatial coordinate is @f$x@f$ and the domain is @f$(0
 We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences
 is implemented [here](https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py).
 
-
 <!-- ## Imports -->
-<!-- Before looking at the code snippets below, the `pressio4py`-specific imports needed are: -->
+<!-- The imports needed are: -->
 <!-- ```py -->
 <!-- from adv_diff1d import *					# the fom class -->
 <!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
