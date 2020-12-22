@@ -93,7 +93,7 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # linear and non linear solver
   lsO = MyLinSolver()
   nlsO = solvers.NewtonRaphson(problem, romState, lsO)
-  nlsO.setMaxIterations(10)
+  nlsO.setMaxIterations(15)
 
   # solve the problem
   rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, nlsO)
@@ -103,7 +103,7 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # this reconstruction uses the POD modes on the full mesh stored in the decoder
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
-  return fomRecon.evaluate(romState)
+  return [fomRecon.evaluate(romState), romState]
 
 #----------------------------------------
 def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
@@ -137,9 +137,8 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.LevenbergMarquardt(problem, romState, lsO)
-  nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
-  nlsO.setMaxIterations(5)
+  nlsO = solvers.GaussNewton(problem, romState, lsO)
+  nlsO.setMaxIterations(10)
 
   # solve the problem
   rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, nlsO)
@@ -149,7 +148,7 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # this reconstruction uses the POD modes on the full mesh stored in the decoder
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
-  return fomRecon.evaluate(romState)
+  return [fomRecon.evaluate(romState), romState]
 
 
 ######## MAIN ###########
@@ -186,25 +185,29 @@ if __name__ == "__main__":
   # to "mask" the operators to compute the sample mesh version.
   # In this test, the meshSize = 200. Our sample mesh includes
   # the two end points since those contain the boundary conditions,
-  # and 150 randomly selected grid points inside the domain.
-  # So effectively we use 25% less of the full mesh.
-  random.seed(3123)
-  sampleMeshSize = 150
+  # and 18 randomly selected grid points inside the domain.
+  # So effectively we use 1/10 of the full mesh.
+  random.seed(26123)
+  sampleMeshSize = 18
   sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)
   sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])
+  # sort for convenience, not necessarily needed
+  sampleMeshIndices = np.sort(sampleMeshIndices)
 
-  romSize = 10  # number of modes to use
+  romSize = 5  # number of modes to use
   romTimeStepSize  = 1e-4
   romNumberOfSteps = int(finalTime/romTimeStepSize)
 
   # run the masked galerkin problem
-  approximatedStateGal = runMaskedGalerkin(fomObj, romTimeStepSize,
-                                           romNumberOfSteps, modes[:,:romSize],
-                                           sampleMeshIndices)
+  [approximatedStateGal, romGal] = runMaskedGalerkin(fomObj, romTimeStepSize,
+                                                     romNumberOfSteps,
+                                                     modes[:,:romSize],
+                                                     sampleMeshIndices)
   # run the masked galerkin problem
-  approximatedStateLspg = runMaskedLspg(fomObj, romTimeStepSize,
-                                        romNumberOfSteps, modes[:,:romSize],
-                                        sampleMeshIndices)
+  [approximatedStateLspg, romLspg] = runMaskedLspg(fomObj, romTimeStepSize,
+                                                   romNumberOfSteps,
+                                                   modes[:,:romSize],
+                                                   sampleMeshIndices)
 
   # compute l2-error between fom and approximate state
   fomNorm = linalg.norm(fomFinalState)
@@ -213,23 +216,53 @@ if __name__ == "__main__":
   err2 = linalg.norm(fomFinalState-approximatedStateLspg)
   print("LSPG: final state relative l2 error: {}".format(err2/fomNorm))
 
-  #--- plot ---#
-  ax = plt.gca()
+
+  #----------------------------------------------#
+  #--- plot solutions on sample and full mesh ---#
+
+  gridSM = fomObj.xGrid[np.sort(sampleMeshIndices)]
+  phiSM = np.take(modes[:,:romSize], sampleMeshIndices, axis=0)
+  # approxStateSM = phi_sm * romState (no need for reference state since = 0)
+  approxStateGalSM  = np.dot(phiSM, romGal)
+  approxStateLspgSM = np.dot(phiSM, romLspg)
+
+  fig = plt.figure(0)
+  ax = fig.gca()
   plt.rcParams.update({'font.size': 18})
-  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedStateGal, 'or',
-          markerfacecolor='None', markersize=5,
-          label='BDF1 Galerkin: '+str(romSize)+' POD modes')
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
+
+  ax.plot(gridSM, approxStateLspgSM, 'sy',
+          markerfacecolor='None', markersize=7,
+          label='LSPG solution on sample mesh')
+  ax.plot(gridSM, approxStateGalSM, 'sm',
+          markerfacecolor='None', markersize=7,
+          label='Galerkin solution on sample mesh')
+  ax.set_ylabel("Solution")
+  ax.set_xlabel("x-coordinate")
+  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='upper right')
+  ax.grid(True, linewidth=0.35, color='gray')
+  #used to change color to text and axes
+  edit_figure_for_web(ax, leg)
+  plt.savefig('demo5_f1.png', dpi=250, transparent=True)
+
+  fig = plt.figure(1)
+  ax = fig.gca()
+  plt.rcParams.update({'font.size': 18})
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
   ax.plot(fomObj.xGrid, approximatedStateLspg, 'oy',
-          markerfacecolor='None', markersize=5,
-          label='BDF1 LSPG: '+str(romSize)+' POD modes')
+          markerfacecolor='None', markersize=4,
+          label='LSPG on full mesh')
+  ax.plot(fomObj.xGrid, approximatedStateGal, 'om',
+          markerfacecolor='None', markersize=4,
+          label='Galerkin solution on full mesh')
 
   ax.set_ylabel("Solution")
   ax.set_xlabel("x-coordinate")
-  leg = plt.legend(fontsize=12, fancybox=True, framealpha=0, loc='lower right')
+  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='upper right')
   ax.grid(True, linewidth=0.35, color='gray')
 
   #used to change color to text and axes
   edit_figure_for_web(ax, leg)
-  plt.savefig('demo5.png', dpi=250, transparent=True)
+  plt.savefig('demo5_f2.png', dpi=250, transparent=True)
+
   plt.show()
