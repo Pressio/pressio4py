@@ -85,7 +85,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-20:23
+33:36
 ```
 
 ### 3. Create the sampling indices
