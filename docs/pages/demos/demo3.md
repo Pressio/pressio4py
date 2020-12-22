@@ -50,6 +50,7 @@ This is how we enable support for testing various methods.
 ../../../demos/unsteady_default_lspg_advdiff1d_kpca/main.py
 20:56
 ```
+
 @m_class{m-block m-warning}
 
 @par Important:
