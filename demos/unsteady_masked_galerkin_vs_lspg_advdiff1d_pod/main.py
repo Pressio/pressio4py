@@ -228,7 +228,7 @@ if __name__ == "__main__":
 
   fig = plt.figure(0)
   ax = fig.gca()
-  plt.rcParams.update({'font.size': 18})
+  #plt.rcParams.update({'font.size': 18})
   ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
 
   ax.plot(gridSM, approxStateLspgSM, 'sy',
@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
   fig = plt.figure(1)
   ax1 = fig.gca()
-  plt.rcParams.update({'font.size': 18})
+  #plt.rcParams.update({'font.size': 18})
   ax1.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=1.5, label='FOM')
   ax1.plot(fomObj.xGrid, approximatedStateLspg, 'oy',
           markerfacecolor='None', markersize=4,
