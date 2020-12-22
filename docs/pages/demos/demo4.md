@@ -14,8 +14,7 @@ The full demo script is [here.](https://github.com/Pressio/pressio4py/blob/maste
 
 @m_class{m-block m-warning}
 
-@par We are currently working on this page, it will be updated with
-more explanations.
+@par We are currently working on this page, it will be updated with more explanations.
 
 
 ## Overview
@@ -92,14 +91,14 @@ The main function of the demo is the following:
 ### 3. Create the sampling indices
 ```py
 @codesnippet
-../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
+../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
 119:134
 ```
 
 ### 4. The masker class
 ```py
 @codesnippet
-../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
+../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
 21:30
 ```
 
