@@ -25,7 +25,7 @@ The governing equations for this problem are the same
 as those in [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
 
 <!-- ## Imports -->
-<!-- Before looking at the code snippets below, the `pressio4py`-specific imports needed are: -->
+<!-- The imports needed are: -->
 <!-- ```py -->
 <!-- from adv_diff1d import *					# the fom class -->
 <!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->

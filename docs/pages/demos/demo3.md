@@ -19,7 +19,7 @@ but instead of using POD modes, we show here how to use
 a nonlinear manifold computed via kernel PCA.
 
 <!-- ## Imports -->
-<!-- Before looking at the code snippets below, the `pressio4py`-specific imports needed are: -->
+<!-- The imports needed are: -->
 <!-- ```py -->
 <!-- from adv_diff1d import *					# the fom class -->
 <!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
