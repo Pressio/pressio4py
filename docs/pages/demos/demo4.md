@@ -70,7 +70,7 @@ is implemented [here](https://github.com/Pressio/pressio4py/blob/master/apps/adv
 The main function of the demo is the following:
 ```py
 @codesnippet
-../../../demos/unsteady_masked_lspg_advdiff1d_kpca/main.py
+../../../demos/unsteady_masked_lspg_advdiff1d_pod/main.py
 92:144
 ```
 
@@ -84,28 +84,28 @@ The main function of the demo is the following:
 ### 2. Compute POD modes
 ```py
 @codesnippet
-../../../demos/unsteady_masked_lspg_advdiff1d_kpca/main.py
+../../../demos/unsteady_masked_lspg_advdiff1d_pod/main.py
 33:36
 ```
 
 ### 3. Create the sampling indices
 ```py
 @codesnippet
-../../../demos/unsteady_masked_lspg_advdiff1d_kpca/main.py
+../../../demos/unsteady_masked_lspg_advdiff1d_pod/main.py
 119:134
 ```
 
 ### 4. The masker class
 ```py
 @codesnippet
-../../../demos/unsteady_masked_lspg_advdiff1d_kpca/main.py
+../../../demos/unsteady_masked_lspg_advdiff1d_pod/main.py
 21:30
 ```
 
 ### 5. Construct and run the masked ROM
 ```py
 @codesnippet
-../../../demos/unsteady_masked_lspg_advdiff1d_kpca/main.py
+../../../demos/unsteady_masked_lspg_advdiff1d_pod/main.py
 39:86
 ```
 
