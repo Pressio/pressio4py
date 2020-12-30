@@ -63,37 +63,36 @@ struct bindGalerkinExplicitProbs;
 template<class problem>
 struct bindGalerkinExplicitProbs<std::tuple<problem>>
 {
-  template<class rom_native_state_t, class scalar_t, class collector_t>
+  template<class rom_state_t, class scalar_t, class collector_t>
   static void bind(pybind11::module & m)
   {
     m.def("advanceNSteps",
 	  &pressio::rom::galerkin::solveNSteps<
-	  problem, rom_native_state_t, scalar_t, collector_t>);
+	  problem, rom_state_t, scalar_t, collector_t>);
   }
 
-  template<class rom_native_state_t, class scalar_t>
+  template<class rom_state_t, class scalar_t>
   static void bind(pybind11::module & m)
   {
     m.def("advanceNSteps",
 	  &pressio::rom::galerkin::solveNSteps<
-	  problem, rom_native_state_t, scalar_t>);
+	  problem, rom_state_t, scalar_t>);
   }
 };
 
 template<class p1, class ... ptails>
 struct bindGalerkinExplicitProbs<std::tuple<p1, ptails...>>
 {
-  template<class rom_native_state_t, class ...args>
+  template<class rom_state_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindGalerkinExplicitProbs
-      <std::tuple<p1>>::template bind<rom_native_state_t, args...>(m);
+      <std::tuple<p1>>::template bind<rom_state_t, args...>(m);
 
     bindGalerkinExplicitProbs
-      <std::tuple<ptails...>>::template bind<rom_native_state_t, args...>(m);
+      <std::tuple<ptails...>>::template bind<rom_state_t, args...>(m);
   }
 };
-
 
 //--------------------------------------------------------------------
 /*
@@ -107,34 +106,34 @@ struct bindSingleSolverWithMultipleGalerkinProblems;
 template<class solver, class problem>
 struct bindSingleSolverWithMultipleGalerkinProblems<solver, std::tuple<problem>>
 {
-  template<class rom_native_state_t, class scalar_t, class collector_t>
+  template<class rom_state_t, class scalar_t, class collector_t>
   static void bind(pybind11::module & m)
   {
     m.def("advanceNSteps",
 	  &pressio::rom::galerkin::solveNSteps<
-	  problem, rom_native_state_t, scalar_t, collector_t, solver>);
+	  problem, rom_state_t, scalar_t, collector_t, solver>);
   }
 
-  template<class rom_native_state_t, class scalar_t>
+  template<class rom_state_t, class scalar_t>
   static void bind(pybind11::module & m)
   {
     m.def("advanceNSteps",
 	  &pressio::rom::galerkin::solveNSteps<
-	  problem, rom_native_state_t, scalar_t, solver>);
+	  problem, rom_state_t, scalar_t, solver>);
   }
 };
 
 template<class solver, class head, class ...tails>
 struct bindSingleSolverWithMultipleGalerkinProblems<solver, std::tuple<head, tails...>>
 {
-  template<class rom_native_state_t, class ...args>
+  template<class rom_state_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindSingleSolverWithMultipleGalerkinProblems
-      <solver, std::tuple<head>>::template bind<rom_native_state_t, args...>(m);
+      <solver, std::tuple<head>>::template bind<rom_state_t, args...>(m);
 
     bindSingleSolverWithMultipleGalerkinProblems
-      <solver, std::tuple<tails...>>::template bind<rom_native_state_t, args...>(m);
+      <solver, std::tuple<tails...>>::template bind<rom_state_t, args...>(m);
   }
 };
 

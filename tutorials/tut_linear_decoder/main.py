@@ -34,9 +34,6 @@ if __name__ == "__main__":
   #    matrix phi without doing a deep copy, which saves memory
   #    since a single jacobian matrix is alive.
   #
-  # Note: you can also use a row-major layout, but that forces
-  # pressio4py to make a deep copy of matrix.
-
   phi = np.ones((10,3), order='F')
 
   # to create the linear decoder, one can simply do
@@ -45,5 +42,4 @@ if __name__ == "__main__":
   # linearDecoder exposes a method to evaluate the mapping
   y,x = np.zeros(10), np.ones(3)
   linearDecoder.applyMapping(x, y)
-
   print(y)

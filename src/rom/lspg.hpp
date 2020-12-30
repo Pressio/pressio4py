@@ -61,7 +61,6 @@ namespace pressio4py{ namespace rom{ namespace impl{
 template <typename mytypes, int problemid>
 struct SteadyLSPGProblemBinder
 {
-  using scalar_t	   = typename mytypes::scalar_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
@@ -69,9 +68,10 @@ struct SteadyLSPGProblemBinder
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
   using sys_wrapper_t = pressio4py::rom::FomWrapperSteadyState<
-    scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
+    ::pressio4py::scalar_t, fom_native_state_t,
+    fom_native_state_t, decoder_native_jac_t>;
 
-  using masker_wrapper_t = pressio4py::rom::MaskerWrapper<scalar_t>;
+  using masker_wrapper_t = pressio4py::rom::MaskerWrapper<::pressio4py::scalar_t>;
 
   using lspg_problem_t =
     typename std::conditional<
@@ -151,7 +151,6 @@ struct SteadyLSPGProblemBinder
 template <typename mytypes, typename ode_tag, int problemid>
 struct UnsteadyLSPGProblemBinder
 {
-  using scalar_t	   = typename mytypes::scalar_t;
   using rom_native_state_t = typename mytypes::rom_native_state_t;
   using fom_native_state_t = typename mytypes::fom_native_state_t;
   using rom_state_t	   = typename mytypes::rom_state_t;
@@ -159,10 +158,10 @@ struct UnsteadyLSPGProblemBinder
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
 
   using sys_wrapper_t = pressio4py::rom::FomWrapperCTimeWithApplyJac<
-    scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
+    ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   // only used when problemid==2
-  using masker_wrapper_t = pressio4py::rom::MaskerWrapper<scalar_t>;
+  using masker_wrapper_t = pressio4py::rom::MaskerWrapper<::pressio4py::scalar_t>;
 
   using lspg_problem_t =
     typename std::conditional<
@@ -174,7 +173,7 @@ struct UnsteadyLSPGProblemBinder
       pressio::rom::lspg::impl::composeHyperReducedProblem_t<
 	ode_tag, sys_wrapper_t, decoder_t, rom_state_t,
 	// we use a py_f_arr to store indices for sample to stencil mapping
-	pressio::containers::Vector<typename mytypes::py_f_arr>>,
+	pressio::containers::Tensor<1, pressio4py::py_f_arr>>,
       typename std::conditional<
 	problemid==2,
 	pressio::rom::lspg::impl::composeMaskedProblem_t<
@@ -211,7 +210,7 @@ struct UnsteadyLSPGProblemBinder
 		const decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &,
-		typename mytypes::py_f_arr>());
+		pressio4py::py_f_arr>());
   }
 
   // constructor for masked lspg problem

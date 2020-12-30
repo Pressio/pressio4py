@@ -166,7 +166,7 @@ struct _have_rj_api<
   >
 {
   static constexpr auto value =
-    pressio::solvers::concepts::system_residual_jacobian<typename T::system_t>::value;
+    pressio::solvers::constraints::system_residual_jacobian<typename T::system_t>::value;
 };
 
 template<class T>
@@ -175,7 +175,7 @@ struct _have_rj_api<
   >
 {
   static constexpr auto value =
-    pressio::solvers::concepts::system_residual_jacobian<typename T::stepper_t>::value;
+    pressio::solvers::constraints::system_residual_jacobian<typename T::stepper_t>::value;
 };
 //------------------------------------------------
 
@@ -420,8 +420,8 @@ struct NewtonRaphsonBinder
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::stepper_t;
 
-  using nonlinear_solver_t = pressio::solvers::nonlinear::impl::composeNewtonRaphson_t<
-    system_t, linear_solver_t>;
+  using nonlinear_solver_t =
+    pressio::solvers::nonlinear::impl::composeNewtonRaphson_t<system_t, linear_solver_t>;
 
   static void bind(pybind11::module & m, std::string solverPythonName)
   {

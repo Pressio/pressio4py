@@ -60,24 +60,23 @@ namespace pressio4py{ namespace rom{ namespace impl{
 template <class mytypes, class ode_tag, int problemid, class projector_t = void>
 struct GalerkinBinder
 {
-  using scalar_t	     = typename mytypes::scalar_t;
   using rom_native_state_t   = typename mytypes::rom_native_state_t;
   using fom_native_state_t   = typename mytypes::fom_native_state_t;
   using rom_state_t	     = typename mytypes::rom_state_t;
-  using decoder_t	     = typename mytypes::decoder_t;
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
+  using decoder_t	     = typename mytypes::decoder_t;
 
   using sys_wrapper_t =
     typename std::conditional<
     ::pressio::ode::predicates::is_explicit_stepper_tag<ode_tag>::value,
     pressio4py::rom::FomWrapperCTimeNoApplyJac<
-      scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>,
+      ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>,
     pressio4py::rom::FomWrapperCTimeWithApplyJac<
-      scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>
+      ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>
     >::type;
 
   // makser_t only used when problemid==2
-  using masker_t = pressio4py::rom::MaskerWrapper<scalar_t>;
+  using masker_t = pressio4py::rom::MaskerWrapper<::pressio4py::scalar_t>;
 
   using galerkin_problem_t =
     typename std::conditional<
@@ -172,16 +171,23 @@ struct GalerkinBinder
 }//end namespace impl
 //--------------------------
 
+// binder for projector
 template <typename mytypes>
-struct GalerkinBinder
+void bindProjector(pybind11::module & m, std::string name)
 {
-  using decoder_jac_t        = typename mytypes::decoder_jac_t;
   using decoder_native_jac_t = typename mytypes::decoder_native_jac_t;
-  using projector_t = pressio::rom::galerkin::impl::ArbitraryProjector<decoder_jac_t, void>;
+  using projector_t	     = typename mytypes::projector_t;
 
-  //------------------
-  // explicit
-  //------------------
+  pybind11::class_<projector_t> arbProjPy(m, name.c_str());
+  arbProjPy.def(pybind11::init<decoder_native_jac_t>());
+}
+
+// binder for galerkin explicit
+template <typename mytypes>
+struct GalerkinBinderExplicit
+{
+  using projector_t = typename mytypes::projector_t;
+
   using tagE1 = pressio::ode::explicitmethods::Euler;
   using tagE2 = pressio::ode::explicitmethods::RungeKutta4;
   // default
@@ -200,9 +206,34 @@ struct GalerkinBinder
   using ma_rk4_binder_t    = impl::GalerkinBinder<mytypes, tagE2, 2, projector_t>;
   using ma_rk4_problem_t   = typename ma_rk4_binder_t::galerkin_problem_t;
 
-  //------------------
-  // implicit
-  //------------------
+  // tuple wiht all problems explicit in time
+  using problem_types = std::tuple<
+    de_euler_problem_t, de_rk4_problem_t,
+    hrv_euler_problem_t, hrv_rk4_problem_t,
+    ma_euler_problem_t, ma_rk4_problem_t
+    >;
+
+  static void bind(pybind11::module & m)
+  {
+    pybind11::module m1 = m.def_submodule("default");
+    de_euler_binder_t::bind(m1, "ForwardEuler");
+    de_rk4_binder_t::bind(m1, "RK4");
+
+    pybind11::module m2 = m.def_submodule("hyperreduced");
+    hrv_euler_binder_t::bind(m2, "ForwardEuler");
+    hrv_rk4_binder_t::bind(m2, "RK4");
+
+    pybind11::module m3 = m.def_submodule("masked");
+    ma_euler_binder_t::bind(m3, "ForwardEuler");
+    ma_rk4_binder_t::bind(m3, "RK4");
+  }
+};
+
+template <typename mytypes>
+struct GalerkinBinderImplicit
+{
+  using projector_t = typename mytypes::projector_t;
+
   using tagI1 = pressio::ode::implicitmethods::Euler;
   using tagI2 = pressio::ode::implicitmethods::BDF2;
   // default
@@ -221,28 +252,7 @@ struct GalerkinBinder
   using ma_bdf2_binder_t  = impl::GalerkinBinder<mytypes, tagI2, 2, projector_t>;
   using ma_bdf2_problem_t = typename ma_bdf2_binder_t::galerkin_problem_t;
 
-  //------------------------------------
-  // collect all types into tuples
-  //------------------------------------
-  // *** tuple with all problem types ***
   using problem_types = std::tuple<
-    de_euler_problem_t, de_rk4_problem_t,
-    hrv_euler_problem_t, hrv_rk4_problem_t,
-    ma_euler_problem_t, ma_rk4_problem_t,
-    de_bdf1_problem_t,  de_bdf2_problem_t,
-    hrv_bdf1_problem_t,  hrv_bdf2_problem_t,
-    ma_bdf1_problem_t,  ma_bdf2_problem_t
-    >;
-
-  // tuple wiht all problems explicit in time
-  using explicit_problem_types = std::tuple<
-    de_euler_problem_t, de_rk4_problem_t,
-    hrv_euler_problem_t, hrv_rk4_problem_t,
-    ma_euler_problem_t, ma_rk4_problem_t
-    >;
-
-  // tuple wiht all problems implicit in time
-  using implicit_problem_types = std::tuple<
     de_bdf1_problem_t, de_bdf2_problem_t,
     hrv_bdf1_problem_t, hrv_bdf2_problem_t,
     ma_bdf1_problem_t, ma_bdf2_problem_t
@@ -250,26 +260,15 @@ struct GalerkinBinder
 
   static void bind(pybind11::module & m)
   {
-    // bind arbitrary projector (this is needed for masked, hyper-reduced)
-    pybind11::class_<projector_t> arbProjPy(m, "ArbitraryProjector");
-    arbProjPy.def(pybind11::init<decoder_native_jac_t>());
-
-    // bind problems
     pybind11::module m1 = m.def_submodule("default");
-    de_euler_binder_t::bind(m1, "ForwardEuler");
-    de_rk4_binder_t::bind(m1, "RK4");
     de_bdf1_binder_t::bind(m1, "BackwardEuler");
     de_bdf2_binder_t::bind(m1, "BDF2");
 
     pybind11::module m2 = m.def_submodule("hyperreduced");
-    hrv_euler_binder_t::bind(m2, "ForwardEuler");
-    hrv_rk4_binder_t::bind(m2, "RK4");
     hrv_bdf1_binder_t::bind(m2, "BackwardEuler");
     hrv_bdf2_binder_t::bind(m2, "BDF2");
 
     pybind11::module m3 = m.def_submodule("masked");
-    ma_euler_binder_t::bind(m3, "ForwardEuler");
-    ma_rk4_binder_t::bind(m3, "RK4");
     ma_bdf1_binder_t::bind(m3, "BackwardEuler");
     ma_bdf2_binder_t::bind(m3, "BDF2");
   }

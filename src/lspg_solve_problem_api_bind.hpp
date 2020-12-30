@@ -62,39 +62,39 @@ template<class solver_t>
 struct bindOneProbToMultipleSolvers<solver_t>
 {
   // specialize for steady problem
-  template<class rom_native_state_t, class problem_t, class ...args>
+  template<class rom_state_t, class problem_t, class ...args>
   static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_steady_lspg>
   bind(pybind11::module & m)
   {
     m.def("solveSteady",
 	  &::pressio::rom::lspg::solveSteady<
 	  problem_t,
-	  rom_native_state_t,
+	  typename rom_state_t::traits::wrapped_t,
 	  solver_t>);
   }
 
   // specialize for unsteady problem without collector
-  template<class rom_native_state_t, class problem_t>
+  template<class rom_state_t, class problem_t>
   static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
   bind(pybind11::module & m)
   {
     m.def("solveNSequentialMinimizations",
 	  &::pressio::rom::lspg::solveNSequentialMinimizations<
 	  problem_t,
-	  rom_native_state_t,
+	  rom_state_t,
 	  typename pressio::rom::details::traits<problem_t>::scalar_t,
 	  solver_t>);
   }
 
   // specialize for unsteady problem with collector to monitor rom states
-  template<class rom_native_state_t, class problem_t, class collector_t>
+  template<class rom_state_t, class problem_t, class collector_t>
   static pressio::mpl::enable_if_t<pressio::rom::details::traits<problem_t>::is_unsteady_lspg>
   bind(pybind11::module & m)
   {
     m.def("solveNSequentialMinimizations",
 	  &::pressio::rom::lspg::solveNSequentialMinimizations<
 	  problem_t,
-	  rom_native_state_t,
+	  rom_state_t,
 	  typename pressio::rom::details::traits<problem_t>::scalar_t,
 	  collector_t,
 	  solver_t>);
@@ -104,13 +104,13 @@ struct bindOneProbToMultipleSolvers<solver_t>
 template<class solver_t, class ...other_solvers_t>
 struct bindOneProbToMultipleSolvers<solver_t, other_solvers_t...>
 {
-  template<class rom_native_state_t, class problem_t, class ...args>
+  template<class rom_state_t, class problem_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindOneProbToMultipleSolvers
-      <solver_t>::template bind<rom_native_state_t, problem_t, args...>(m);
+      <solver_t>::template bind<rom_state_t, problem_t, args...>(m);
     bindOneProbToMultipleSolvers
-      <other_solvers_t...>::template bind<rom_native_state_t,
+      <other_solvers_t...>::template bind<rom_state_t,
 					  problem_t, args...>(m);
   }
 };
@@ -127,37 +127,36 @@ struct bindLspgProbsWithMultipleSolvers;
 template<class p1, class ...solvers>
 struct bindLspgProbsWithMultipleSolvers<std::tuple<p1>, std::tuple<solvers...>>
 {
-  template<class rom_native_state_t, class ...args>
+  template<class rom_state_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindOneProbToMultipleSolvers
-      <solvers...>::template bind<rom_native_state_t, p1, args...>(m);
+      <solvers...>::template bind<rom_state_t, p1, args...>(m);
   }
 };
 
 template<class p1, class ...solvers>
 struct bindLspgProbsWithMultipleSolvers<p1, std::tuple<solvers...>>
 {
-  template<class rom_native_state_t, class ...args>
+  template<class rom_state_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindOneProbToMultipleSolvers
-      <solvers...>::template bind<rom_native_state_t, p1, args...>(m);
+      <solvers...>::template bind<rom_state_t, p1, args...>(m);
   }
 };
 
 template<class p1, class ... ptails, class ...solvers>
 struct bindLspgProbsWithMultipleSolvers<std::tuple<p1, ptails...>, std::tuple<solvers...>>
 {
-  template<class rom_native_state_t, class ...args>
+  template<class rom_state_t, class ...args>
   static void bind(pybind11::module & m)
   {
     bindOneProbToMultipleSolvers
-      <solvers...>::template bind<rom_native_state_t, p1, args...>(m);
+      <solvers...>::template bind<rom_state_t, p1, args...>(m);
 
     bindLspgProbsWithMultipleSolvers
-      <std::tuple<ptails...>, std::tuple<solvers...>>::template bind<rom_native_state_t,
-								     args...>(m);
+      <std::tuple<ptails...>, std::tuple<solvers...>>::template bind<rom_state_t,args...>(m);
   }
 };
 

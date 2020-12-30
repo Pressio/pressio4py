@@ -229,7 +229,7 @@ def test():
 
   appObj  = MyTestApp(Nstencil, Nsmesh, romSize)
   yRef    = np.zeros(Nstencil)
-  phi     = np.zeros((Nstencil, romSize))
+  phi     = np.zeros((Nstencil, romSize), order='F')
   for i in range(Nstencil): phi[i,:] = float(i+1)
 
   decoder = rom.Decoder(phi)

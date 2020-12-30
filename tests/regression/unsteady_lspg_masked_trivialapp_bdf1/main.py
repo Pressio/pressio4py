@@ -210,7 +210,7 @@ def test():
 
   appObj  = MyTestApp(Ngrid)
   yRef    = np.zeros(Ngrid)
-  phi     = np.zeros((Ngrid, romSize))
+  phi     = np.zeros((Ngrid, romSize), order='F')
   for i in range(Ngrid): phi[i,:] = float(i+1)
 
   decoder = rom.Decoder(phi)
