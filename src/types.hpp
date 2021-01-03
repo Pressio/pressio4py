@@ -106,15 +106,17 @@ struct GalerkinTypes : DecoderTypes<state_rank, decoder_j_rank>
   using projector_t = pressio::rom::galerkin::impl::ArbitraryProjector<decoder_jac_t, void>;
 };
 
+namespace impl{
 template<int state_rank=1, int decoder_j_rank=2>
-struct LspgTypesImpl : DecoderTypes<state_rank, decoder_j_rank>
+struct LspgTypes : DecoderTypes<state_rank, decoder_j_rank>
 {
   using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_jac_t;
   using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_native_jac_t;
   using lsq_hessian_t = pressio::containers::Tensor<2, decoder_native_jac_t>;
 };
+}
 
-using LspgTypes = LspgTypesImpl<1,2>;
+using LspgTypes = impl::LspgTypes<1,2>;
 
 }//end namespace pressio4py
 #endif

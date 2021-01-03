@@ -70,7 +70,7 @@ struct GalerkinBinder
     typename std::conditional<
     ::pressio::ode::predicates::is_explicit_stepper_tag<ode_tag>::value,
     pressio4py::rom::FomWrapperCTimeNoApplyJac<
-      ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>,
+      ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t>,
     pressio4py::rom::FomWrapperCTimeWithApplyJac<
       ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>
     >::type;
