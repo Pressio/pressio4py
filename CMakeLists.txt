@@ -113,7 +113,7 @@ endforeach()
 add_subdirectory(tests)
 
 # add demos
-#add_subdirectory(demos)
+add_subdirectory(demos)
 
 # add tutorials
 add_subdirectory(tutorials)
