@@ -43,9 +43,6 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>matrix<sp/>phi<sp/>without<sp/>doing<sp/>a<sp/>deep<sp/>copy,<sp/>which<sp/>saves<sp/>memory</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>since<sp/>a<sp/>single<sp/>jacobian<sp/>matrix<sp/>is<sp/>alive.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>Note:<sp/>you<sp/>can<sp/>also<sp/>use<sp/>a<sp/>row-major<sp/>layout,<sp/>but<sp/>that<sp/>forces</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>pressio4py<sp/>to<sp/>make<sp/>a<sp/>deep<sp/>copy<sp/>of<sp/>matrix.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>phi<sp/>=<sp/>np.ones((10,3),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>the<sp/>linear<sp/>decoder,<sp/>one<sp/>can<sp/>simply<sp/>do</highlight><highlight class="normal"></highlight></codeline>
@@ -54,7 +51,6 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>y,x<sp/>=<sp/>np.zeros(10),<sp/>np.ones(3)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(x,<sp/>y)</highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>

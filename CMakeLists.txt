@@ -19,8 +19,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # versioning
 #=====================================================================
 set(PressioFpy_VERSION_MAJOR 0)
-set(PressioFpy_VERSION_MINOR 5)
-set(PressioFpy_VERSION_PATCH 1)
+set(PressioFpy_VERSION_MINOR 6)
+set(PressioFpy_VERSION_PATCH 0)
 set(PressioFpy_VERSION
   "${PressioFpy_VERSION_MAJOR}.${PressioFpy_VERSION_MINOR}.${PressioFpy_VERSION_PATCH}")
 math(EXPR PRESSIO_VERSION

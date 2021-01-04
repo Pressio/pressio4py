@@ -41,7 +41,10 @@
 <codeline><highlight class="normal"><sp/><sp/>romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>approximatedState<sp/>=<sp/>runLspg(fomObj,<sp/>romTimeStepSize,<sp/>romNumberOfSteps,<sp/>myNonLinearMapper)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
 </programlisting></para>
 <sect2 id="md_pages_demos_demo3_1autotoc_md18">
 <title>1. Run FOM and collect snapshots</title>

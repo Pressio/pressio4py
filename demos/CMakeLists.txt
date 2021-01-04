@@ -4,6 +4,9 @@ message("${Magenta}----------------------------------${ColourReset}")
 message("${Magenta} Processing demos ${ColourReset}")
 message("${Magenta}----------------------------------${ColourReset}")
 
+# create the demos subdirectory
+file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/demos")
+
 # need to copy to destination all auxiliary python files in here
 file(GLOB auxPyFiles RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} REGEX "*.py*")
 foreach(f ${auxPyFiles})
@@ -11,6 +14,7 @@ foreach(f ${auxPyFiles})
 endforeach()
 
 # glob over current subdirectories and use relative to keep the dir name without full path
+# use *steady* regex to get all subdirs that contain the substring "steady"
 file(GLOB allDirs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} REGEX "*steady*")
 
 # create a file inside the build directory to run all demos

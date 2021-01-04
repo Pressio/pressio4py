@@ -36,9 +36,6 @@ Here we demonstate how to create a linear decoder. The full tutorial can be foun
 \DoxyCodeLine{  \textcolor{comment}{\#    matrix phi without doing a deep copy, which saves memory}}
 \DoxyCodeLine{  \textcolor{comment}{\#    since a single jacobian matrix is alive.}}
 \DoxyCodeLine{  \textcolor{comment}{\#}}
-\DoxyCodeLine{  \textcolor{comment}{\# Note: you can also use a row-\/major layout, but that forces}}
-\DoxyCodeLine{  \textcolor{comment}{\# pressio4py to make a deep copy of matrix.}}
-\DoxyCodeLine{}
 \DoxyCodeLine{  phi = np.ones((10,3), order=\textcolor{stringliteral}{'F'})}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# to create the linear decoder, one can simply do}}
@@ -47,7 +44,6 @@ Here we demonstate how to create a linear decoder. The full tutorial can be foun
 \DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
 \DoxyCodeLine{  y,x = np.zeros(10), np.ones(3)}
 \DoxyCodeLine{  linearDecoder.applyMapping(x, y)}
-\DoxyCodeLine{}
 \DoxyCodeLine{  print(y)}
 \end{DoxyCode}
 
