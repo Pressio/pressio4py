@@ -52,10 +52,10 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>&quot;mask&quot;<sp/>the<sp/>operators<sp/>to<sp/>compute<sp/>the<sp/>sample<sp/>mesh<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>In<sp/>this<sp/>test,<sp/>the<sp/>meshSize<sp/>=<sp/>200.<sp/>Our<sp/>sample<sp/>mesh<sp/>includes</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>two<sp/>end<sp/>points<sp/>since<sp/>those<sp/>contain<sp/>the<sp/>boundary<sp/>conditions,</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>and<sp/>18<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>and<sp/>20<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>So<sp/>effectively<sp/>we<sp/>use<sp/>1/10<sp/>of<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>random.seed(26123)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>sampleMeshSize<sp/>=<sp/>18</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>random.seed(22123)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>sampleMeshSize<sp/>=<sp/>20</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>sampleMeshIndices<sp/>=<sp/>random.sample(range(1,<sp/>199),<sp/>sampleMeshSize)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>sort<sp/>for<sp/>convenience,<sp/>not<sp/>necessarily<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
@@ -121,10 +121,10 @@
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>&quot;mask&quot;<sp/>the<sp/>operators<sp/>to<sp/>compute<sp/>the<sp/>sample<sp/>mesh<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>In<sp/>this<sp/>test,<sp/>the<sp/>meshSize<sp/>=<sp/>200.<sp/>Our<sp/>sample<sp/>mesh<sp/>includes</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>the<sp/>two<sp/>end<sp/>points<sp/>since<sp/>those<sp/>contain<sp/>the<sp/>boundary<sp/>conditions,</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>and<sp/>18<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>and<sp/>20<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>So<sp/>effectively<sp/>we<sp/>use<sp/>1/10<sp/>of<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal">random.seed(26123)</highlight></codeline>
-<codeline><highlight class="normal">sampleMeshSize<sp/>=<sp/>18</highlight></codeline>
+<codeline><highlight class="normal">random.seed(22123)</highlight></codeline>
+<codeline><highlight class="normal">sampleMeshSize<sp/>=<sp/>20</highlight></codeline>
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>random.sample(range(1,<sp/>199),<sp/>sampleMeshSize)</highlight></codeline>
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>sort<sp/>for<sp/>convenience,<sp/>not<sp/>necessarily<sp/>needed</highlight><highlight class="normal"></highlight></codeline>

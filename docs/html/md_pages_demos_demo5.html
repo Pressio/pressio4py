@@ -99,10 +99,10 @@
   <span class="c1"># to &quot;mask&quot; the operators to compute the sample mesh version.</span>
   <span class="c1"># In this test, the meshSize = 200. Our sample mesh includes</span>
   <span class="c1"># the two end points since those contain the boundary conditions,</span>
-  <span class="c1"># and 18 randomly selected grid points inside the domain.</span>
+  <span class="c1"># and 20 randomly selected grid points inside the domain.</span>
   <span class="c1"># So effectively we use 1/10 of the full mesh.</span>
-  <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">26123</span><span class="p">)</span>
-  <span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">18</span>
+  <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">22123</span><span class="p">)</span>
+  <span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">20</span>
   <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
   <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
   <span class="c1"># sort for convenience, not necessarily needed</span>
@@ -154,10 +154,10 @@
 <span class="c1"># to &quot;mask&quot; the operators to compute the sample mesh version.</span>
 <span class="c1"># In this test, the meshSize = 200. Our sample mesh includes</span>
 <span class="c1"># the two end points since those contain the boundary conditions,</span>
-<span class="c1"># and 18 randomly selected grid points inside the domain.</span>
+<span class="c1"># and 20 randomly selected grid points inside the domain.</span>
 <span class="c1"># So effectively we use 1/10 of the full mesh.</span>
-<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">26123</span><span class="p">)</span>
-<span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">22123</span><span class="p">)</span>
+<span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
 <span class="c1"># sort for convenience, not necessarily needed</span>

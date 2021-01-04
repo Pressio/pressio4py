@@ -45,10 +45,10 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
 \DoxyCodeLine{  \textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
 \DoxyCodeLine{  \textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
-\DoxyCodeLine{  \textcolor{comment}{\# and 18 randomly selected grid points inside the domain.}}
+\DoxyCodeLine{  \textcolor{comment}{\# and 20 randomly selected grid points inside the domain.}}
 \DoxyCodeLine{  \textcolor{comment}{\# So effectively we use 1/10 of the full mesh.}}
-\DoxyCodeLine{  random.seed(26123)}
-\DoxyCodeLine{  sampleMeshSize = 18}
+\DoxyCodeLine{  random.seed(22123)}
+\DoxyCodeLine{  sampleMeshSize = 20}
 \DoxyCodeLine{  sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
 \DoxyCodeLine{  sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
 \DoxyCodeLine{  \textcolor{comment}{\# sort for convenience, not necessarily needed}}
@@ -115,10 +115,10 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{\textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
 \DoxyCodeLine{\textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
 \DoxyCodeLine{\textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
-\DoxyCodeLine{\textcolor{comment}{\# and 18 randomly selected grid points inside the domain.}}
+\DoxyCodeLine{\textcolor{comment}{\# and 20 randomly selected grid points inside the domain.}}
 \DoxyCodeLine{\textcolor{comment}{\# So effectively we use 1/10 of the full mesh.}}
-\DoxyCodeLine{random.seed(26123)}
-\DoxyCodeLine{sampleMeshSize = 18}
+\DoxyCodeLine{random.seed(22123)}
+\DoxyCodeLine{sampleMeshSize = 20}
 \DoxyCodeLine{sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
 \DoxyCodeLine{sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
 \DoxyCodeLine{\textcolor{comment}{\# sort for convenience, not necessarily needed}}

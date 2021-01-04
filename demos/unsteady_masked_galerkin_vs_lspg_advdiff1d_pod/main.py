@@ -185,10 +185,10 @@ if __name__ == "__main__":
   # to "mask" the operators to compute the sample mesh version.
   # In this test, the meshSize = 200. Our sample mesh includes
   # the two end points since those contain the boundary conditions,
-  # and 18 randomly selected grid points inside the domain.
+  # and 20 randomly selected grid points inside the domain.
   # So effectively we use 1/10 of the full mesh.
-  random.seed(26123)
-  sampleMeshSize = 18
+  random.seed(22123)
+  sampleMeshSize = 20
   sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)
   sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])
   # sort for convenience, not necessarily needed
@@ -239,7 +239,7 @@ if __name__ == "__main__":
           label='Galerkin solution on sample mesh')
   ax.set_ylabel("Solution")
   ax.set_xlabel("x-coordinate")
-  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='upper right')
+  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='lower right')
   ax.grid(True, linewidth=0.35, color='gray')
   #used to change color to text and axes
   edit_figure_for_web(ax, leg)
@@ -259,7 +259,7 @@ if __name__ == "__main__":
 
   ax1.set_ylabel("Solution")
   ax1.set_xlabel("x-coordinate")
-  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='upper right')
+  leg = plt.legend(fontsize=10, fancybox=True, framealpha=0, loc='lower right')
   ax1.grid(True, linewidth=0.35, color='gray')
 
   #used to change color to text and axes
