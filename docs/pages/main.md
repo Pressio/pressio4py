@@ -25,6 +25,5 @@ The full license is available [here](https://pressio.github.io/various/license/)
 
 We are working on publishing this: you can find our arXiv preprint at: https://arxiv.org/abs/2003.07798
 
-
 ## Questions?
 Find us on Slack: https://pressioteam.slack.com or open an issue on [github](https://github.com/Pressio/pressio4py).
