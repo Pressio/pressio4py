@@ -157,7 +157,7 @@ public:
   }
 
   template<typename gen_coords_t>
-  void updateJacobian(const gen_coords_t & genCoordinates) const
+  void updateJacobian(const gen_coords_t & genCoordinates)
   {
     if (kind_ == mappingKind::Linear){
       // no op
