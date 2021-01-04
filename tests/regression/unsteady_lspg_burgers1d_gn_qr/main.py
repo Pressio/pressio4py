@@ -149,7 +149,7 @@ def test_bdf2():
   yRef = np.ones(meshSize)
   # load basis
   basisFile = str(file_path) + "/basis_bdf2.txt"
-  phi = np.loadtxt(basisFile)
+  phi = np.copy(np.loadtxt(basisFile), order='F')
 
   # decoder
   decoder = rom.Decoder(phi)

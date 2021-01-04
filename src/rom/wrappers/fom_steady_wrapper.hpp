@@ -65,7 +65,6 @@ public:
   using scalar_type       = scalar_t;
   using state_type	  = state_t;
   using residual_type	  = residual_t;
-  using dense_matrix_type = dense_matrix_t;
 
 public:
   FomWrapperSteadyState() = delete;
@@ -83,7 +82,7 @@ public:
     return pyObj_.attr("createResidual")();
   }
 
-  dense_matrix_type createApplyJacobianResult(const dense_matrix_type & B) const{
+  dense_matrix_t createApplyJacobianResult(const dense_matrix_t & B) const{
     return pyObj_.attr("createApplyJacobianResult")(B);
   }
 
@@ -94,8 +93,8 @@ public:
   }
 
   void applyJacobian(const state_type & state,
-		     const dense_matrix_type & operand,
-		     dense_matrix_type & result) const
+		     const dense_matrix_t & operand,
+		     dense_matrix_t & result) const
   {
     pyObj_.attr("applyJacobian")(state, operand, result);
   }

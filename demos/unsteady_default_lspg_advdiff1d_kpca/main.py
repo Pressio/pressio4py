@@ -12,9 +12,10 @@ sys.path.append(str(file_path) + "/../..")      # to access pressio4py lib
 sys.path.append(str(file_path) + "/..")         # to access fom
 
 from adv_diff1d import *
-from pressio4py import rom as rom
+from pressio4py import rom as rom, logger
 from pressio4py import solvers as solvers
 from adv_diff_1d_fom import doFom
+from settings_for_website import edit_figure_for_web
 
 class MyMapperKPCA:
   def __init__(self, snapshots, numModes):
@@ -61,7 +62,7 @@ def runLspg(fomObj, dt, nsteps, customMapper):
   class RomStateObserver:
     def __init__(self): pass
     def __call__(self, timeStep, time, state): pass
-  #----------------------------------------
+
   # this linear solver is used at each gauss-newton iteration
   class MyLinSolver:
     def __init__(self): pass
@@ -92,7 +93,7 @@ def runLspg(fomObj, dt, nsteps, customMapper):
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
-  # solver LSPG problems
+  # solve problem
   rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
@@ -102,10 +103,11 @@ def runLspg(fomObj, dt, nsteps, customMapper):
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  # initial condition u(x,t=0)
-  ic = lambda x: 2.*np.sin(9.*np.pi*x) - np.sin(4.*np.pi*x)
+  logger.initialize(logger.logto.terminal, "null")
+  logger.setVerbosity([logger.loglevel.info])
+
   # create fom object
-  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv_coef=2.0)
+  fomObj = AdvDiff1d(nGrid=120, adv_coef=2.0)
 
   # the final time to integrate to
   finalTime = .05
@@ -132,10 +134,17 @@ if __name__ == "__main__":
 
   #--- plot ---#
   ax = plt.gca()
-  ax.plot(fomObj.xGrid, fomFinalState, '-', linewidth=2, label='FOM')
-  ax.plot(fomObj.xGrid, approximatedState, 'or', label='LSPG: with kPCA mapping')
   plt.rcParams.update({'font.size': 18})
-  plt.ylabel("Solution", fontsize=18)
-  plt.xlabel("x-coordinate", fontsize=18)
-  plt.legend(fontsize=12)
+  ax.plot(fomObj.xGrid, fomFinalState, '-g', linewidth=2, label='FOM')
+  ax.plot(fomObj.xGrid, approximatedState, 'or',
+              markerfacecolor='None', markersize=5,
+              label='LSPG: with kPCA mapping')
+  ax.set_ylabel("Solution", fontsize=18)
+  ax.set_xlabel("x-coordinate", fontsize=18)
+  leg = plt.legend(fontsize=12, fancybox=True, framealpha=0, loc='lower right')
+  ax.grid(True, linewidth=0.35, color='gray')
+
+  #used to change color to text and axes
+  edit_figure_for_web(ax, leg)
+  plt.savefig('demo3.png', dpi=250, transparent=True)
   plt.show()

@@ -62,7 +62,7 @@ def test_steady_lspg():
   # set reference state
   yRef = np.ones(meshSize)
   # load basis
-  phi = np.ones((meshSize, romSize))
+  phi = np.ones((meshSize, romSize), order='F')
   phi[:,0] = 1
   phi[:,1] = 2
   phi[:,2] = 3

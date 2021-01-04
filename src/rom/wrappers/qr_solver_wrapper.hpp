@@ -54,10 +54,6 @@ namespace pressio4py{
 template<typename matrix_t>
 class QrSolverWrapper
 {
-  static_assert
-  (pressio::containers::predicates::is_dense_matrix_wrapper_pybind<matrix_t>::value,
-   "matrix_t for QrSolverWrapper must be a dense matrix wrapper pybind");
-
   pybind11::object pyObj_;
 
 public:
@@ -82,8 +78,8 @@ public:
 
   template<typename r_type, typename state_type>
   pressio::mpl::enable_if_t<
-    pressio::containers::predicates::is_vector_wrapper_pybind<r_type>::value and
-    pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+    pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<r_type>::value and
+    pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<state_type>::value
   >
   applyQTranspose(const r_type & operand, state_type & result) const
   {
@@ -92,7 +88,7 @@ public:
 
   template<typename state_type>
   pressio::mpl::enable_if_t<
-    pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+    pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<state_type>::value
   >
   applyRTranspose(const state_type & operand, state_type & result) const
   {
@@ -101,7 +97,7 @@ public:
 
   template<typename state_type>
   pressio::mpl::enable_if_t<
-    pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+    pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<state_type>::value
   >
   solve(const state_type & operand, state_type & result) const
   {

@@ -45,7 +45,11 @@ class AdvDiff1d():
     self.xL = xL
     self.xR = xR
     self.nGrid = nGrid+2 # include boundary points
-    self.ic = IC
+    if IC==None:
+      self.ic = lambda x: 2.*np.sin(9.*np.pi*x) - np.sin(4.*np.pi*x)
+    else:
+      self.ic = IC
+
     self.kfun = kfun
     self.adv_coef = adv_coef
     self.setup()

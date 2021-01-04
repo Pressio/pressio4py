@@ -5,10 +5,10 @@
 namespace
 {
 
-bool test1(typename pressio4py::CommonTypes::py_f_arr A)
+bool test1(pressio4py::py_f_arr A)
 {
-  using in_t = typename pressio4py::CommonTypes::py_f_arr;
-  using mat_t = ::pressio::containers::DenseMatrix<in_t>;
+  using in_t = pressio4py::py_f_arr;
+  using mat_t = ::pressio::containers::Tensor<2,in_t>;
   mat_t Aw(A);
   const auto d = pressio::containers::diag(Aw);
   if (d(0)!=1.) return false;
@@ -18,10 +18,10 @@ bool test1(typename pressio4py::CommonTypes::py_f_arr A)
   return true;
 }
 
-bool test2(typename pressio4py::CommonTypes::py_f_arr A)
+bool test2(pressio4py::py_f_arr A)
 {
-  using in_t = typename pressio4py::CommonTypes::py_f_arr;
-  using mat_t = ::pressio::containers::DenseMatrix<in_t>;
+  using in_t = pressio4py::py_f_arr;
+  using mat_t = ::pressio::containers::Tensor<2,in_t>;
   mat_t Aw(A);
   if (Aw(0,0)!=1.) return false;
   if (Aw(1,1)!=2.) return false;

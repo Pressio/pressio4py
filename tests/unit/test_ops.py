@@ -62,5 +62,7 @@ def testVectorUpdate1():
   v2 = np.ones(5); v2*=4;
   b = m.vecUpdTest(v,v1,v2)
   print(b)
-  # for i in range(5):
-  #   assert b[0]
+  for i in range(5): assert b[0]==18
+
+# def testprodRank3ARank2BRank2C():
+#   assert(m.prodR3AR2BR2C())

@@ -54,8 +54,7 @@ namespace pressio4py{ namespace rom{
 template<
   typename scalar_t,
   typename state_t,
-  typename velocity_t,
-  typename dense_matrix_t
+  typename velocity_t
   >
 class FomWrapperCTimeNoApplyJac
 {
@@ -66,7 +65,6 @@ public:
   using scalar_type       = scalar_t;
   using state_type	  = state_t;
   using velocity_type	  = velocity_t;
-  using dense_matrix_type = dense_matrix_t;
 
 public:
   explicit FomWrapperCTimeNoApplyJac(pybind11::object pyObj)
@@ -99,14 +97,13 @@ template<
   typename dense_matrix_t
   >
 class FomWrapperCTimeWithApplyJac
-  : public FomWrapperCTimeNoApplyJac<scalar_t, state_t, velocity_t, dense_matrix_t>
+  : public FomWrapperCTimeNoApplyJac<scalar_t, state_t, velocity_t>
 {
 public:
-  using base_t = FomWrapperCTimeNoApplyJac<scalar_t, state_t, velocity_t, dense_matrix_t>;
+  using base_t = FomWrapperCTimeNoApplyJac<scalar_t, state_t, velocity_t>;
   using typename base_t::scalar_type;
   using typename base_t::state_type;
   using typename base_t::velocity_type;
-  using typename base_t::dense_matrix_type;
   using base_t::pyObj_;
 
 public:
@@ -121,14 +118,14 @@ public:
   ~FomWrapperCTimeWithApplyJac() = default;
 
 public:
-  dense_matrix_type createApplyJacobianResult(const dense_matrix_type & B) const{
+  dense_matrix_t createApplyJacobianResult(const dense_matrix_t & B) const{
     return pyObj_.attr("createApplyJacobianResult")(B);
   }
 
   void applyJacobian(const state_type & state,
-		     const dense_matrix_type & operand,
+		     const dense_matrix_t & operand,
 		     const scalar_type time,
-		     dense_matrix_type & result) const
+		     dense_matrix_t & result) const
   {
     pyObj_.attr("applyJacobian")(state, operand, time, result);
   }

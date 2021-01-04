@@ -54,10 +54,6 @@ namespace pressio4py{
 template<typename matrix_t>
 class LinSolverWrapper
 {
-  static_assert
-  (pressio::containers::predicates::is_dense_matrix_wrapper_pybind<matrix_t>::value,
-   "matrix_t for LinSolverWrapper must be a dense matrix wrapper pybind");
-
   pybind11::object pyObj_;
 
 public:
@@ -77,7 +73,7 @@ public:
 public:
   template<typename state_type>
   pressio::mpl::enable_if_t<
-  pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+  pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<state_type>::value
   >
   solve(const matrix_type & A,
 	const state_type & b,
