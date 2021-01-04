@@ -97,7 +97,7 @@ struct SteadyLSPGProblemBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,
-		const decoder_t &,
+		decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t>());
   }
@@ -109,7 +109,7 @@ struct SteadyLSPGProblemBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,
-		const decoder_t &,
+		decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &,
 		pybind11::object>());
@@ -195,7 +195,7 @@ struct UnsteadyLSPGProblemBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,
-		const decoder_t &,
+		decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &>());
   }
@@ -207,7 +207,7 @@ struct UnsteadyLSPGProblemBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,
-		const decoder_t &,
+		decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &,
 		pressio4py::py_f_arr>());
@@ -220,7 +220,7 @@ struct UnsteadyLSPGProblemBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,
-		const decoder_t &,
+		decoder_t &,
 		const rom_native_state_t &,
 		const fom_native_state_t &,
 		pybind11::object>());

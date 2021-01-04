@@ -106,7 +106,7 @@ struct GalerkinBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,		//adapter object directly from Python
-		const decoder_t &,		//decoder
+		decoder_t &,			//decoder
 		const rom_native_state_t &,	//native python rom state
 		const fom_native_state_t &>()); //native python fom reference state
   }
@@ -118,7 +118,7 @@ struct GalerkinBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,	     //adapter object directly from Python
-		const decoder_t &,	     //decoder
+		decoder_t &,		     //decoder
 		const rom_native_state_t &,  //native python rom state
 		const fom_native_state_t &,  //native python fom reference state
 		const projector_t &	     //projection operator
@@ -132,7 +132,7 @@ struct GalerkinBinder
   {
     problem.def(pybind11::init<
 		pybind11::object,	     //adapter object directly from Python
-		const decoder_t &,	     //decoder
+		decoder_t &,		     //decoder
 		const rom_native_state_t &,  //native python rom state
 		const fom_native_state_t &,  //native python fom reference state
 		pybind11::object,	     //the masker object directly from python
