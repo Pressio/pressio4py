@@ -1,4 +1,4 @@
-include README.md
+include README.md DESCRIPTION.rst
 include LICENSE pybind11/LICENSE pressio/LICENSE
 graft pybind11/include
 graft pressio/packages
