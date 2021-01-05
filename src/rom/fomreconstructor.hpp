@@ -51,30 +51,36 @@
 
 namespace pressio4py{
 
-template <typename mytypes>
-void createFomReconstructorBindings(pybind11::module & m)
+template <typename decoder_types>
+void createFomReconstructorBindings(pybind11::module & m, std::string className)
 {
-  using scalar_t	   = typename mytypes::scalar_t;
-  using rom_native_state_t = typename mytypes::rom_native_state_t;
-  using fom_native_state_t = typename mytypes::fom_native_state_t;
-  using fom_state_t	   = typename mytypes::fom_state_t;
-  using decoder_t	   = typename mytypes::decoder_t;
+  using state_types	   = typename decoder_types::states_t;
+  using rom_state_t	   = typename state_types::rom_state_t;
+  using fom_state_t	   = typename state_types::fom_state_t;
+  using fom_native_state_t = typename state_types::fom_native_state_t;
+  using decoder_t	   = typename decoder_types::decoder_t;
 
   // fom reconstructor
   using fom_reconstructor_t =
-    pressio::rom::FomStateReconstructor<scalar_t, fom_state_t, decoder_t>;
+    pressio::rom::FomStateReconstructor<::pressio4py::scalar_t, fom_state_t, decoder_t>;
 
   // actual class
-  pybind11::class_<fom_reconstructor_t> fomReconstructor(m, "FomReconstructor");
+  pybind11::class_<fom_reconstructor_t> fomReconstructor(m, className.c_str());
   // constructor
+  fomReconstructor.def(pybind11::init<const fom_state_t &, const decoder_t &>());
+  // constructor
+  fomReconstructor.def(pybind11::init<const fom_native_state_t &,const decoder_t &>());
+
+  // expose the evaluate method.
+  // Note that rom_state_t is not the argument, but the template.
+  // From python one would need to pass a native numpy array to evaluate.
+  // By templating this with the wrapped rom_state_t, the template allows us
+  // to know the rank of the rom state since this should work for rank1 and rank2 rom states.
+  // If we only passed the native array wihtout the template, we would not know
+  // the propper rank of the fom state.
   fomReconstructor.def
-    (pybind11::init<const fom_state_t &, const decoder_t &>());
-  // evaluate method
-  fomReconstructor.def
-    ("__call__", &fom_reconstructor_t::template evaluate<rom_native_state_t>);
-  fomReconstructor.def
-    ("evaluate", &fom_reconstructor_t::template evaluate<rom_native_state_t>);
+    ("evaluate", &fom_reconstructor_t::template evaluate<rom_state_t>);
 }
 
-}
+}//end namespace pressio4py
 #endif

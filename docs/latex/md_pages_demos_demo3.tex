@@ -1,25 +1,18 @@
 
 
 \begin{DoxyParagraph}{What does this page describe?}
-This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via kernel P\+CA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py}{\texttt{ here.}}
+This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via kernel P\+CA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md18}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md18}
-This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}}, but instead of using P\+OD modes, we show here how to use a nonlinear manifold computed via kernel P\+CA.\hypertarget{md_pages_demos_demo3_autotoc_md19}{}\doxysection{Imports}\label{md_pages_demos_demo3_autotoc_md19}
-Before looking at the code snippets below, the {\ttfamily pressio4py}-\/specific imports needed are\+: 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keyword}{from} adv\_diff1d \textcolor{keyword}{import} *                    \textcolor{comment}{\# the fom class}}
-\DoxyCodeLine{\textcolor{keyword}{from} adv\_diff\_1d\_fom \textcolor{keyword}{import} doFom           \textcolor{comment}{\# the function to collect fom data}}
-\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
-\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} solvers \textcolor{keyword}{as} solvers}
-\end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md20}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md20}
+\hypertarget{md_pages_demos_demo3_autotoc_md16}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md16}
+This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}}, but instead of using P\+OD modes, we show here how to use a nonlinear manifold computed via kernel P\+CA.\hypertarget{md_pages_demos_demo3_autotoc_md17}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md17}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  \textcolor{comment}{\# initial condition u(x,t=0)}}
-\DoxyCodeLine{  ic = \textcolor{keyword}{lambda} x: 2.*np.sin(9.*np.pi*x) -\/ np.sin(4.*np.pi*x)}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal, \textcolor{stringliteral}{"{}null"{}})}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
-\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv\_coef=2.0)}
+\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, adv\_coef=2.0)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# the final time to integrate to}}
 \DoxyCodeLine{  finalTime = .05}
@@ -43,20 +36,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
 \DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
 \DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
-\DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ plot -\/-\/-\/\#}}
-\DoxyCodeLine{  ax = plt.gca()}
-\DoxyCodeLine{  ax.plot(fomObj.xGrid, fomFinalState, \textcolor{stringliteral}{'-\/'}, linewidth=2, label=\textcolor{stringliteral}{'FOM'})}
-\DoxyCodeLine{  ax.plot(fomObj.xGrid, approximatedState, \textcolor{stringliteral}{'or'}, label=\textcolor{stringliteral}{'LSPG: with kPCA mapping'})}
-\DoxyCodeLine{  plt.rcParams.update(\{\textcolor{stringliteral}{'font.size'}: 18\})}
-\DoxyCodeLine{  plt.ylabel(\textcolor{stringliteral}{"{}Solution"{}}, fontsize=18)}
-\DoxyCodeLine{  plt.xlabel(\textcolor{stringliteral}{"{}x-\/coordinate"{}}, fontsize=18)}
-\DoxyCodeLine{  plt.legend(fontsize=12)}
-\DoxyCodeLine{  plt.show()}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md21}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo3_autotoc_md21}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo3_autotoc_md22}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo3_autotoc_md22}
-This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md23}{}\doxysubsection{2. Setup and train the nonlinear k\+P\+C\+A mapper}\label{md_pages_demos_demo3_autotoc_md23}
+\hypertarget{md_pages_demos_demo3_autotoc_md18}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo3_autotoc_md18}
+This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md19}{}\doxysubsection{2. Setup and train the nonlinear k\+P\+C\+A mapper}\label{md_pages_demos_demo3_autotoc_md19}
 It is important to note that while the mapper class below has the A\+PI required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a k\+P\+C\+A-\/based representation, but one can use, e.\+g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMapperKPCA:}
@@ -104,7 +86,7 @@ It is important to note that while the mapper class below has the A\+PI required
 \begin{DoxyParagraph}{Important\+:}
 when creating an arbitrary mapping (as in the class above), the jacobian matrix {\bfseries{must}} be column-\/major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md24}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo3_autotoc_md24}
+\hypertarget{md_pages_demos_demo3_autotoc_md20}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo3_autotoc_md20}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, customMapper):}
@@ -113,7 +95,7 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  \textcolor{keyword}{class }RomStateObserver:}
 \DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
 \DoxyCodeLine{    \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, state): \textcolor{keyword}{pass}}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# this linear solver is used at each gauss-\/newton iteration}}
 \DoxyCodeLine{  \textcolor{keyword}{class }MyLinSolver:}
 \DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
@@ -144,7 +126,7 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
 \DoxyCodeLine{  myObs = RomStateObserver()}
-\DoxyCodeLine{  \textcolor{comment}{\# solver LSPG problems}}
+\DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
 \DoxyCodeLine{  rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
@@ -152,4 +134,5 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
 \end{DoxyCode}
- 
+\hypertarget{md_pages_demos_demo3_autotoc_md21}{}\doxysection{Results}\label{md_pages_demos_demo3_autotoc_md21}
+If everything works fine, the following plot shows the result.  

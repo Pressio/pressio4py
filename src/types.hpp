@@ -51,34 +51,72 @@
 
 // pressio include
 #include "pressio_rom.hpp"
-// local
-#include "./rom/wrappers/py_decoder.hpp"
 
 namespace pressio4py{
 
-struct CommonTypes
+using scalar_t	= double;
+using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
+using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
+
+template<int rank, typename = void>
+struct StateTypes;
+
+template<>
+struct StateTypes<1>
 {
-  using scalar_t	= double;
-  using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
-  using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
+  using rom_native_state_t	   = py_f_arr;
+  using rom_state_t		   = pressio::containers::Tensor<1, rom_native_state_t>;
+  using fom_native_state_t	   = py_f_arr;
+  using fom_state_t		   = pressio::containers::Tensor<1, fom_native_state_t>;
 };
 
-struct ROMTypes : CommonTypes
+template<int rank>
+struct StateTypes<rank, pressio::mpl::enable_if_t<rank >= 2>>
 {
-  using typename CommonTypes::scalar_t;
-  using typename CommonTypes::py_f_arr;
+  using rom_native_state_t	   = py_f_arr;
+  using rom_state_t		   = pressio::containers::Tensor<rank, rom_native_state_t>;
+  using fom_native_state_t	   = py_f_arr;
+  using fom_invalid_native_state_t = py_c_arr;
+  using fom_state_t		   = pressio::containers::Tensor<rank, fom_native_state_t>;
+};
+}//end namespace pressio4py
 
-  // currently use column-major format to be seamlessly compatible with blas/lapack
-  using rom_native_state_t   = py_f_arr;
-  using fom_native_state_t   = py_f_arr;
+#include "./rom/wrappers/py_decoder.hpp"
+
+namespace pressio4py{
+template<int state_rank, int decoder_j_rank>
+struct DecoderTypes : StateTypes<state_rank>
+{
+  static_assert
+  (decoder_j_rank >= 2, "The rank of the decoder's jacobian should always be >= 2");
+
+  using states_t = StateTypes<state_rank>;
+  using typename states_t::fom_state_t;
+
+  using decoder_native_jac_wrong_layout_t = py_c_arr;
   using decoder_native_jac_t = py_f_arr;
-
-  using rom_state_t   = pressio::containers::Vector<rom_native_state_t>;
-  using fom_state_t   = pressio::containers::Vector<fom_native_state_t>;
-  using decoder_jac_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
-  using lsq_hessian_t = pressio::containers::DenseMatrix<decoder_native_jac_t>;
-  using decoder_t     = pressio4py::PyDecoder<scalar_t, decoder_jac_t, fom_state_t>;
+  using decoder_jac_t	     = pressio::containers::Tensor<decoder_j_rank, decoder_native_jac_t>;
+  using decoder_t	     = pressio4py::PyDecoder<scalar_t, decoder_jac_t, fom_state_t>;
 };
 
+template<int state_rank, int decoder_j_rank>
+struct GalerkinTypes : DecoderTypes<state_rank, decoder_j_rank>
+{
+  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_jac_t;
+  using projector_t = pressio::rom::galerkin::impl::ArbitraryProjector<decoder_jac_t, void>;
+};
+
+namespace impl{
+template<int state_rank=1, int decoder_j_rank=2>
+struct LspgTypes : DecoderTypes<state_rank, decoder_j_rank>
+{
+  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_jac_t;
+  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_native_jac_t;
+  using lsq_hessian_t = pressio::containers::Tensor<2, decoder_native_jac_t>;
+};
 }
+
+using LspgTypes = impl::LspgTypes<1,2>;
+
+}//end namespace pressio4py
 #endif

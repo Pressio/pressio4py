@@ -1,11 +1,6 @@
 
 import numpy as np
 import pathlib, sys
-# need to add to python path location of the apps
-file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../../apps")
-
-from adv_diff1d import *
 
 def doFom(fom, dt, nsteps, saveFreq):
   u = fom.u0.copy()

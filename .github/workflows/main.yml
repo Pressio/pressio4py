@@ -10,102 +10,102 @@ on:
   pull_request:
     branches: [master, develop]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   # This workflow contains a single job called "build"
+#   build:
+#     # The type of runner that the job will run on
+#     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - name: install compilers
-        run: |
-          sudo apt install gcc-10 g++-10
-          export CC=/usr/bin/gcc-10
-          export CXX=/usr/bin/g++-10
-          echo "Compilers:"
-          echo $CXX
-          echo $CC
-      - name: Setup directories
-        run: |
-          mkdir ~/pressio_repos
-          mkdir ~/pressio_builds
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
+#       - name: install compilers
+#         run: |
+#           sudo apt install gcc-10 g++-10
+#           export CC=/usr/bin/gcc-10
+#           export CXX=/usr/bin/g++-10
+#           echo "Compilers:"
+#           echo $CXX
+#           echo $CC
+#       - name: Setup directories
+#         run: |
+#           mkdir ~/pressio_repos
+#           mkdir ~/pressio_builds
 
-      - name: Clone Repos
-        run: |
-          cd ~/pressio_repos
-          git clone https://github.com/Pressio/pressio.git
-          cd pressio
-          git checkout develop
-          cd ..
-          git clone https://github.com/Pressio/pressio-builder.git
-          git clone --branch develop https://github.com/Pressio/pressio4py.git
-          pwd
-          ls -lh
-          cd pressio4py
-          git branch -a
+#       - name: Clone Repos
+#         run: |
+#           cd ~/pressio_repos
+#           git clone https://github.com/Pressio/pressio.git
+#           cd pressio
+#           git checkout develop
+#           cd ..
+#           git clone https://github.com/Pressio/pressio-builder.git
+#           git clone --branch develop https://github.com/Pressio/pressio4py.git
+#           pwd
+#           ls -lh
+#           cd pressio4py
+#           git branch -a
 
-      - name: TPLs
-        run: |
-          cd ~/pressio_repos
-          cd pressio-builder
-          chmod +x main_tpls.sh
-          export TERM=xterm-256color
-          export CC=/usr/bin/gcc-10
-          export CXX=/usr/bin/g++-10
-          echo $TERM
-          bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=${HOME}/pressio_builds -tpls=pybind11
-          cd ~/pressio_builds
-          pwd
-          ls -lh ${HOME}/pressio_builds/pybind11
+#       - name: TPLs
+#         run: |
+#           cd ~/pressio_repos
+#           cd pressio-builder
+#           chmod +x main_tpls.sh
+#           export TERM=xterm-256color
+#           export CC=/usr/bin/gcc-10
+#           export CXX=/usr/bin/g++-10
+#           echo $TERM
+#           bash ./main_tpls.sh -dryrun=no -build-mode=Debug -target-dir=${HOME}/pressio_builds -tpls=pybind11
+#           cd ~/pressio_builds
+#           pwd
+#           ls -lh ${HOME}/pressio_builds/pybind11
 
-      - name: Install pressio
-        run: |
-          export TERM=xterm-256color
-          cd ~/pressio_repos/pressio-builder
-          export CC=/usr/bin/gcc-10
-          export CXX=/usr/bin/g++-10
-          chmod + main_pressio.sh
-          ./main_pressio.sh -dryrun=no \
-            -pressio-src=${HOME}/pressio_repos/pressio \
-            -target-dir=${HOME}/pressio_builds \
-            -cmake-generator-name=default_pybind \
-            -pybind11-path=${HOME}/pressio_builds/pybind11/install
+#       - name: Install pressio
+#         run: |
+#           export TERM=xterm-256color
+#           cd ~/pressio_repos/pressio-builder
+#           export CC=/usr/bin/gcc-10
+#           export CXX=/usr/bin/g++-10
+#           chmod + main_pressio.sh
+#           ./main_pressio.sh -dryrun=no \
+#             -pressio-src=${HOME}/pressio_repos/pressio \
+#             -target-dir=${HOME}/pressio_builds \
+#             -cmake-generator-name=default_pybind \
+#             -pybind11-path=${HOME}/pressio_builds/pybind11/install
 
-      - name: Build pressio4py
-        run: |
-          export TERM=xterm-256color
-          export CC=/usr/bin/gcc-10
-          export CXX=/usr/bin/g++-10
+#       - name: Build pressio4py
+#         run: |
+#           export TERM=xterm-256color
+#           export CC=/usr/bin/gcc-10
+#           export CXX=/usr/bin/g++-10
 
-          cd ~/pressio_builds
-          ls -lh ${HOME}/pressio_builds/pybind11/install
-          bdirname=pressio4py-build
-          rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
+#           cd ~/pressio_builds
+#           ls -lh ${HOME}/pressio_builds/pybind11/install
+#           bdirname=pressio4py-build
+#           rm -rf ${bdirname} && mkdir ${bdirname} && cd ${bdirname}
 
-          cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
-                -DCMAKE_INSTALL_PREFIX=${HOME}/pressio_builds/pressio4py-install \
-                -DCMAKE_CXX_COMPILER=${CXX} \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DPRESSIO_INCLUDE_DIR=${HOME}/pressio_builds/pressio/install/include \
-                -DPYBIND11_DIR=${HOME}/pressio_builds/pybind11/install \
-                ${HOME}/pressio_repos/pressio4py
-          make
-          make install
+#           cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+#                 -DCMAKE_INSTALL_PREFIX=${HOME}/pressio_builds/pressio4py-install \
+#                 -DCMAKE_CXX_COMPILER=${CXX} \
+#                 -DCMAKE_BUILD_TYPE=Release \
+#                 -DPRESSIO_INCLUDE_DIR=${HOME}/pressio_builds/pressio/install/include \
+#                 -DPYBIND11_DIR=${HOME}/pressio_builds/pybind11/install \
+#                 ${HOME}/pressio_repos/pressio4py
+#           make
+#           make install
 
-      - name: Test pressio4py
-        run: |
-          cd ${HOME}/pressio_builds/pressio4py-build
-          ls -lh
-          export PYTHONPATH="${PYTHONPATH}:/home/runner/pressio_builds/pressio4py-install"
-          python3 --version
-          pip3 --version
-          pip3 install --upgrade pip
-          pip3 --version
-          pip3 install pytest numpy scipy wheel
-          sudo apt-get install python3-setuptools
-          pip3 install numba
-          python3 -m pytest .
+#       - name: Test pressio4py
+#         run: |
+#           cd ${HOME}/pressio_builds/pressio4py-build
+#           ls -lh
+#           export PYTHONPATH="${PYTHONPATH}:/home/runner/pressio_builds/pressio4py-install"
+#           python3 --version
+#           pip3 --version
+#           pip3 install --upgrade pip
+#           pip3 --version
+#           pip3 install pytest numpy scipy wheel
+#           sudo apt-get install python3-setuptools
+#           pip3 install numba
+#           python3 -m pytest .

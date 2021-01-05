@@ -54,10 +54,6 @@ namespace pressio4py{
 template<typename state_t>
 class OdeCollectorWrapper
 {
-  static_assert
-  (pressio::containers::predicates::is_vector_wrapper_pybind<state_t>::value,
-   "state_t for OdeCollectorWrapper must be a vector wrapper pybind");
-
   pybind11::object pyObj_;
 
 public:
@@ -74,7 +70,7 @@ public:
 public:
   template<typename state_type, typename time_type>
   pressio::mpl::enable_if_t<
-  pressio::containers::predicates::is_vector_wrapper_pybind<state_type>::value
+   pressio::containers::predicates::is_tensor_wrapper_pybind<state_type>::value
   >
   operator()(pressio::ode::types::step_t step,
 	     time_type time,

@@ -68,15 +68,15 @@ public:
 
 public:
   template<class T>
-  void operator()(const pressio::containers::Vector<T> & operand,
-		  pressio::containers::Vector<T> & result) const
+  void operator()(const pressio::containers::Tensor<1, T> & operand,
+		  pressio::containers::Tensor<1, T> & result) const
   {
     pyObj_.attr("apply")(*operand.data(), *result.data());
   }
 
   template<class T>
-  void operator()(const pressio::containers::DenseMatrix<T> & operand,
-		  pressio::containers::DenseMatrix<T> & result) const
+  void operator()(const pressio::containers::Tensor<2, T> & operand,
+		  pressio::containers::Tensor<2, T> & result) const
   {
     pyObj_.attr("apply")(*operand.data(), *result.data());
   }

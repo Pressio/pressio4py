@@ -1,33 +1,26 @@
 
 
 \begin{DoxyParagraph}{What does this page describe?}
-This page describes a demo for a reproductive Galerkin R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem and the various steps involved. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. More complex cases will be added later. To jump directly at the full demo script, click \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
+This page describes a demo for a reproductive Galerkin R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and code. More complex cases will be shown in other demos. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
 \hypertarget{md_pages_demos_demo1_autotoc_md1}{}\doxysection{Overview}\label{md_pages_demos_demo1_autotoc_md1}
-Here, we cover the three typical steps needed for a R\+OM\+:
+We cover these three typical steps needed for a R\+OM\+:
 \begin{DoxyEnumerate}
-\item generating of snapshots using the full-\/order model (F\+OM)
-\item computing the basis\+: here we demonstrate the use of P\+OD modes
-\item executing the R\+OM\+: here we leverage the G\+A\+L\+E\+R\+K\+IN R\+OM to demonstrate a {\itshape reproductive} test, i.\+e., we run the R\+OM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different tutorial.
+\item generate of snapshots using the full-\/order model (F\+OM)
+\item compute the basis\+: here we demonstrate the use of P\+OD modes
+\item execute the R\+OM\+: here we leverage the G\+A\+L\+E\+R\+K\+IN R\+OM to demonstrate a {\itshape reproductive} test, i.\+e., we run the R\+OM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different demo.
 \end{DoxyEnumerate}\hypertarget{md_pages_demos_demo1_autotoc_md2}{}\doxysection{F\+O\+M Equations}\label{md_pages_demos_demo1_autotoc_md2}
 The governing equations for this problem are\+:
 
-\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the F\+OM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo1_autotoc_md3}{}\doxysection{Imports}\label{md_pages_demos_demo1_autotoc_md3}
-Before looking at the code snippets below, the {\ttfamily pressio4py}-\/specific imports needed are\+: 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{from adv\_diff1d \textcolor{keyword}{import} *                    \textcolor{comment}{\# the fom class}}
-\DoxyCodeLine{\textcolor{keyword}{from} adv\_diff\_1d\_fom \textcolor{keyword}{import} doFom           \textcolor{comment}{\# the function to collect fom data}}
-\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
-\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} solvers \textcolor{keyword}{as} solvers}
-\end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysection{Main function}\label{md_pages_demos_demo1_autotoc_md4}
+\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the F\+OM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo1_autotoc_md3}{}\doxysection{Main function}\label{md_pages_demos_demo1_autotoc_md3}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  \textcolor{comment}{\# initial condition u(x,t=0)}}
-\DoxyCodeLine{  ic = \textcolor{keyword}{lambda} x: 2.*np.sin(9.*np.pi*x) -\/ np.sin(4.*np.pi*x)}
+\DoxyCodeLine{if \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal, \textcolor{stringliteral}{"{}null"{}})}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
-\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, IC=ic, adv\_coef=2.0)}
+\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, adv\_coef=2.0)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# the final time to integrate to}}
 \DoxyCodeLine{  finalTime = .05}
@@ -42,36 +35,28 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  modes = computePodModes(snapshots)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 3. GALERKIN ROM -\/-\/-\/\#}}
-\DoxyCodeLine{  romSize = 5}
 \DoxyCodeLine{  romTimeStepSize  = 3e-\/4}
 \DoxyCodeLine{  romNumberOfSteps = int(finalTime/romTimeStepSize)}
-\DoxyCodeLine{  \textcolor{comment}{\# we pass only romSize modes}}
-\DoxyCodeLine{  approximatedState = runGalerkin(fomObj, romTimeStepSize,}
-\DoxyCodeLine{                              romNumberOfSteps, modes[:,:romSize])}
+\DoxyCodeLine{  \textcolor{comment}{\# run with various number of modes}}
+\DoxyCodeLine{  romSizes = [2,4,6]}
+\DoxyCodeLine{  approximations = \{\}}
+\DoxyCodeLine{  \textcolor{keywordflow}{for} romSize \textcolor{keywordflow}{in} romSizes:}
+\DoxyCodeLine{    currentSolution = runGalerkin(fomObj, romTimeStepSize,}
+\DoxyCodeLine{                                  romNumberOfSteps,}
+\DoxyCodeLine{                                  modes[:,:romSize])}
+\DoxyCodeLine{    approximations[romSize] = currentSolution}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
-\DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
-\DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
-\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
-\DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ plot -\/-\/-\/\#}}
-\DoxyCodeLine{  ax = plt.gca()}
-\DoxyCodeLine{  ax.plot(fomObj.xGrid, fomFinalState, \textcolor{stringliteral}{'-\/'}, linewidth=2, label=\textcolor{stringliteral}{'FOM'})}
-\DoxyCodeLine{  ax.plot(fomObj.xGrid, approximatedState, \textcolor{stringliteral}{'or'}, label=\textcolor{stringliteral}{'LSPG: '}+str(romSize)+\textcolor{stringliteral}{' POD modes'})}
-\DoxyCodeLine{  plt.rcParams.update(\{\textcolor{stringliteral}{'font.size'}: 18\})}
-\DoxyCodeLine{  plt.ylabel(\textcolor{stringliteral}{"{}Solution"{}}, fontsize=18)}
-\DoxyCodeLine{  plt.xlabel(\textcolor{stringliteral}{"{}x-\/coordinate"{}}, fontsize=18)}
-\DoxyCodeLine{  plt.legend(fontsize=12)}
-\DoxyCodeLine{  plt.show()}
+\DoxyCodeLine{    \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
+\DoxyCodeLine{    fomNorm = linalg.norm(fomFinalState)}
+\DoxyCodeLine{    err = linalg.norm(fomFinalState-\/currentSolution)}
+\DoxyCodeLine{    print(\textcolor{stringliteral}{"{}With \{\} modes, final relative l2 error: \{\}"{}}.format(romSize, err/fomNorm))}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md5}{}\doxysection{Code for the various stages in main}\label{md_pages_demos_demo1_autotoc_md5}
-Here we list the functions performing the various stages of the run.\hypertarget{md_pages_demos_demo1_autotoc_md6}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md6}
+\hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md4}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
 \DoxyCodeLine{  u = fom.u0.copy()}
 \DoxyCodeLine{  U = [u]}
-\DoxyCodeLine{  T = [0.0]}
 \DoxyCodeLine{  f = fom.createVelocity()}
 \DoxyCodeLine{  \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(1,nsteps+1):}
 \DoxyCodeLine{    \textcolor{comment}{\# query rhs of discretized system}}
@@ -80,11 +65,10 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{    u = u + dt*f}
 \DoxyCodeLine{    \textcolor{keywordflow}{if} i \% saveFreq == 0:}
 \DoxyCodeLine{      U.append(u)}
-\DoxyCodeLine{      T.append(i*dt)}
 \DoxyCodeLine{  Usolns = np.array(U)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md7}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo1_autotoc_md7}
+\hypertarget{md_pages_demos_demo1_autotoc_md5}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo1_autotoc_md5}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -92,7 +76,7 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md8}{}\doxysubsection{3. Construct and run Galerkin}\label{md_pages_demos_demo1_autotoc_md8}
+\hypertarget{md_pages_demos_demo1_autotoc_md6}{}\doxysubsection{3. Construct and run R\+OM}\label{md_pages_demos_demo1_autotoc_md6}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runGalerkin(fomObj, dt, nsteps, modes):}
@@ -116,12 +100,12 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  fomInitialState = fomObj.u0.copy()}
 \DoxyCodeLine{  romState = np.dot(modes.T, fomInitialState)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create GALERKIN problem}}
-\DoxyCodeLine{  problem = rom.galerkin.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)}
+\DoxyCodeLine{  \textcolor{comment}{\# create problem}}
+\DoxyCodeLine{  problem = rom.galerkin.default.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
 \DoxyCodeLine{  myObs = RomStateObserver()}
-\DoxyCodeLine{  \textcolor{comment}{\# solver GALERKIN problems}}
+\DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
 \DoxyCodeLine{  rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
@@ -129,4 +113,5 @@ Here we list the functions performing the various stages of the run.\hypertarget
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
 \end{DoxyCode}
- 
+\hypertarget{md_pages_demos_demo1_autotoc_md7}{}\doxysection{Results}\label{md_pages_demos_demo1_autotoc_md7}
+If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few P\+OD modes.  
