@@ -14,7 +14,7 @@
 <para>If you want to have pip fully build:</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
-<codeline><highlight class="normal">pip3<sp/>install<sp/>--no-binary<sp/>:all:<sp/>-i<sp/>https://test.pypi.org/simple/<sp/>pressio4py</highlight></codeline>
+<codeline><highlight class="normal">pip3<sp/>install<sp/>--no-binary<sp/>:all:<sp/>pressio4py</highlight></codeline>
 </programlisting></para>
 </simplesect>
 Or you can try pip diretly:</para>
