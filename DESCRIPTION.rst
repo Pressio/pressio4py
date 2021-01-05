@@ -12,11 +12,18 @@ reduction for (large-scale) linear and nonlinear dynamical systems.
 Install
 -------
 
-You need a C++14-compliant compiler and the following two steps:
+You need a C++14-compliant compiler and then do:
 
 .. code-block:: bash
 
   export CXX=<path-to-your-C++-compiler>
+  pip3 install --no-binary :all: -i https://test.pypi.org/simple/ pressio4py
+
+
+Or you can try to use `pip` directly:
+
+.. code-block:: bash
+
   pip install pressio4py
 
 
@@ -33,7 +40,16 @@ You can double check that everything worked fine by doing:
 Running Demos/Tutorials
 -----------------------
 
-After installing the library, you can check the demos:
+After installing the library, you can check run the regression tests:
+
+.. code-block:: bash
+
+  git clone git@github.com:Pressio/pressio4py.git
+  cd pressio4py/regression_tests
+  pytest -s
+
+
+And you can check out the demos:
 
 .. code-block:: bash
 
