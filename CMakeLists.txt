@@ -104,12 +104,6 @@ endforeach()
 # contain c++ code that is compiled too)
 add_subdirectory(unit_tests)
 
-## add demos
-#add_subdirectory(demos)
-
-## add tutorials
-#add_subdirectory(tutorials)
-
 message(${CMAKE_INSTALL_PREFIX})
 # install
 install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

@@ -11,3 +11,5 @@ def test1():
   print(x)
   assert(math.isclose(x[0], 0.))
   assert(math.isclose(fomObj.adv_coef, 2.))
+
+# todo: add more

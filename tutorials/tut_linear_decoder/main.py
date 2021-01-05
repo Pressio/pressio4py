@@ -2,11 +2,6 @@
 import numpy as np
 import random
 
-# if run from within a build of pressio4py, need to append to python path
-import pathlib, sys
-file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../..")      # to access pressio4py lib
-
 from pressio4py import rom as rom, logger
 
 if __name__ == "__main__":

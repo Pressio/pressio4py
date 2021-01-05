@@ -112,7 +112,7 @@ setup(
   long_description=description(),
   ext_modules=[CMakeExtension("pressio4py")],
   cmdclass={"build_ext": CMakeBuild},
-  install_requires=["numpy", "scipy", "numba"],
+  install_requires=["numpy", "scipy", "numba", "matplotlib", "sklearn"],
   zip_safe=False,
   #
   python_requires='>=3',

@@ -1,7 +1,7 @@
-pressio4py: Projection-based Model Reduction for Python
-=======================================================
+pressio4py: Projection-based Model Reduction for Scientific Computing
+=====================================================================
 
-This package provides Python bindings of the
+This package provides Python bindings for the
 **projection-based model reduction** C++ library Pressio (website_).
 The goal of this project is to enable leading-edge projection-based model
 reduction for (large-scale) linear and nonlinear dynamical systems.
@@ -11,7 +11,8 @@ reduction for (large-scale) linear and nonlinear dynamical systems.
 
 Install
 -------
-You need to have a C++14-compliant compiler and perform the following two steps:
+
+You need a C++14-compliant compiler and the following two steps:
 
 * create an environment variable to point to your C++ compiler as follows:
 
@@ -20,6 +21,17 @@ You need to have a C++14-compliant compiler and perform the following two steps:
 * install this package using ``pip``::
 
   $ pip install pressio4py
+
+
+Running Demos/Tutorials
+-----------------------
+
+After installing the library, you can check the demos:
+* clone the source code and unzip
+
+  git clone git@github.com:Pressio/pressio4py.git
+  cd pressio4py/demos
+  python3 ./<demo-subdir-name>/main.py
 
 
 Documentation

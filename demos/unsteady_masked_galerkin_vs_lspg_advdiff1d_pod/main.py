@@ -7,13 +7,11 @@ import random
 # if run from within a build of pressio4py, need to append to python path
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../../apps") # to access the apps
-sys.path.append(str(file_path) + "/../..")      # to access pressio4py lib
-sys.path.append(str(file_path) + "/..")         # to access fom
+sys.path.append(str(file_path) + "/..")         # to access doFom
 
-from adv_diff1d import *
-from pressio4py import logger, rom as rom
+from pressio4py import rom as rom, logger
 from pressio4py import solvers as solvers
+from pressio4pyApps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
 
