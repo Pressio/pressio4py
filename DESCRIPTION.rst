@@ -14,13 +14,12 @@ Install
 
 You need a C++14-compliant compiler and the following two steps:
 
-* create an environment variable to point to your C++ compiler as follows:
+.. code-block:: bash
 
-  $ export CXX=<path-to-your-compiler>
+  export CXX=<path-to-your-compiler>
+  pip install pressio4py
 
-* install this package using ``pip``::
 
-  $ pip install pressio4py
 
 You can double check that everything worked fine by doing:
 
@@ -35,7 +34,8 @@ Running Demos/Tutorials
 -----------------------
 
 After installing the library, you can check the demos:
-* clone the source code and unzip
+
+.. code-block:: bash
 
   git clone git@github.com:Pressio/pressio4py.git
   cd pressio4py/demos
