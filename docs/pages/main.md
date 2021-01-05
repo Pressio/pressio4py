@@ -18,7 +18,7 @@ If you want to have pip fully build:
 @par
 ```bash
 export CXX=<path-to-your-C++-compiler>
-pip3 install --no-binary :all: -i https://test.pypi.org/simple/ pressio4py
+pip3 install --no-binary :all: pressio4py
 ```
 
 Or you can try pip diretly:

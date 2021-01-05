@@ -17,7 +17,7 @@ You need a C++14-compliant compiler and then do:
 .. code-block:: bash
 
   export CXX=<path-to-your-C++-compiler>
-  pip3 install --no-binary :all: -i https://test.pypi.org/simple/ pressio4py
+  pip3 install --no-binary :all: pressio4py
 
 
 Or you can try to use `pip` directly:
