@@ -39,7 +39,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
-59:92
+59:93
 ```
 
 ### 1. Run FOM and collect snapshots
