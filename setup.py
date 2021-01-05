@@ -117,7 +117,7 @@ setup(
   #
   python_requires='>=3',
   classifiers=[
-    "License :: OSI Approved :: BSD3 License",
+    "License :: OSI Approved :: BSD License",
     "Operating System :: Unix",
     "Environment :: MacOS X",
     "Programming Language :: C++",
