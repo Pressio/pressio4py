@@ -22,6 +22,14 @@ You need a C++14-compliant compiler and the following two steps:
 
   $ pip install pressio4py
 
+You can double check that everything worked fine by doing:
+
+.. code-block:: python
+
+  import pressio4py
+  print(pressio4py.__version__)
+
+
 
 Running Demos/Tutorials
 -----------------------
