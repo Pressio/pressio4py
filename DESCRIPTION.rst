@@ -17,15 +17,7 @@ You need a C++14-compliant compiler and then do:
 .. code-block:: bash
 
   export CXX=<path-to-your-C++-compiler>
-  pip3 install --no-binary :all: pressio4py
-
-
-Or you can try to use `pip` directly:
-
-.. code-block:: bash
-
   pip install pressio4py
-
 
 
 You can double check that everything worked fine by doing:

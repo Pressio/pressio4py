@@ -11,27 +11,31 @@ If this is a mistake, please go back to the [project website](https://pressio.gi
 
 # Get Started
 
-If you want to have a full build:
+Should be just a couple steps:
 
 @m_class{m-block m-warning}
 
 @par
 ```bash
 export CXX=<path-to-your-C++-compiler>
-pip3 install --no-binary :all: pressio4py
+git clone git@github.com:Pressio/pressio4py.git
+pip install ./pressio4py
 ```
 
-Or you can try pip directly:
-
-@m_class{m-block m-warning}
-
-@par
+You can then run the regression tests:
 ```bash
-pip3 install pressio4py
+cd pressio4py
+pytest -s
 ```
 
-And then you can look at the [demos](./md_pages_demos_demo1.html) and/or
-[tutorials](./md_pages_tutorials_tutorial1.html)--- both in progress.
+Or look at the demos:
+```bash
+cd pressio4py/demos
+python3 ./<demo-subdir-name>/main.py
+```
+
+You can find descriptions of the demos [here](./md_pages_demos_demo1.html)
+and of the tutorials [here](./md_pages_tutorials_tutorial1.html)--- both in progress.
 
 <!-- read the [building/installation process](./md_pages_getstarted_build_and_install.html)>
 <!-- Untill we start filling the tutorials and examples, you can peek at the [test subdirectory](https://github.com/Pressio/pressio/tree/master/tests/rom/burgers1d) of the C++ library. -->
