@@ -11,18 +11,20 @@
 <para>If this is a mistake, please go back to the <ulink url="https://pressio.github.io/">project website</ulink>.</para>
 <sect1 id="index_1autotoc_md52">
 <title>Get Started</title>
-<para>If you want to have a full build:</para>
+<para>Should be just a couple steps:</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
-<codeline><highlight class="normal">pip3<sp/>install<sp/>--no-binary<sp/>:all:<sp/>pressio4py</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio4py.git</highlight></codeline>
+<codeline><highlight class="normal">pip<sp/>install<sp/>./pressio4py</highlight></codeline>
 </programlisting></para>
 </simplesect>
-Or you can try pip directly:</para>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">pip3<sp/>install<sp/>pressio4py</highlight></codeline>
+You can then run the regression tests: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py</highlight></codeline>
+<codeline><highlight class="normal">pytest<sp/>-s</highlight></codeline>
 </programlisting></para>
-</simplesect>
-And then you can look at the <ulink url="./md_pages_demos_demo1.html">demos</ulink> and/or <ulink url="./md_pages_tutorials_tutorial1.html">tutorials</ulink><mdash/> both in progress.</para>
+<para>Or look at the demos: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py/demos</highlight></codeline>
+<codeline><highlight class="normal">python3<sp/>./&lt;demo-subdir-name&gt;/main.py</highlight></codeline>
+</programlisting></para>
+<para>You can find descriptions of the demos <ulink url="./md_pages_demos_demo1.html">here</ulink> and of the tutorials <ulink url="./md_pages_tutorials_tutorial1.html">here</ulink><mdash/> both in progress.</para>
 <sect2 id="index_1autotoc_md53">
 <title>License and Citation</title>
 <para>The full license is available <ulink url="https://pressio.github.io/various/license/">here</ulink>.</para>

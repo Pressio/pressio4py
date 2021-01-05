@@ -5,7 +5,7 @@
 You landed on the documentation of the Python bindings library!
 
 If this is a mistake, please go back to the \href{https://pressio.github.io/}{\texttt{ project website}}.\hypertarget{index_autotoc_md52}{}\doxysection{Get Started}\label{index_autotoc_md52}
-If you want to have a full build\+:
+Should be just a couple steps\+:
 
 
 
@@ -13,22 +13,26 @@ If you want to have a full build\+:
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{export CXX=<path-\/to-\/your-\/C++-\/compiler>}
-\DoxyCodeLine{pip3 install -\/-\/no-\/binary :all: pressio4py}
+\DoxyCodeLine{git clone git@github.com:Pressio/pressio4py.git}
+\DoxyCodeLine{pip install ./pressio4py}
 \end{DoxyCode}
 
 \end{DoxyParagraph}
-Or you can try pip directly\+:
-
-
-
-\begin{DoxyParagraph}{}
-
+You can then run the regression tests\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{pip3 install pressio4py}
+\DoxyCodeLine{cd pressio4py}
+\DoxyCodeLine{pytest -\/s}
 \end{DoxyCode}
 
-\end{DoxyParagraph}
-And then you can look at the \href{./md_pages_demos_demo1.html}{\texttt{ demos}} and/or \href{./md_pages_tutorials_tutorial1.html}{\texttt{ tutorials}}--- both in progress.\hypertarget{index_autotoc_md53}{}\doxysubsection{License and Citation}\label{index_autotoc_md53}
+
+Or look at the demos\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd pressio4py/demos}
+\DoxyCodeLine{python3 ./<demo-\/subdir-\/name>/main.py}
+\end{DoxyCode}
+
+
+You can find descriptions of the demos \href{./md_pages_demos_demo1.html}{\texttt{ here}} and of the tutorials \href{./md_pages_tutorials_tutorial1.html}{\texttt{ here}}--- both in progress.\hypertarget{index_autotoc_md53}{}\doxysubsection{License and Citation}\label{index_autotoc_md53}
 The full license is available \href{https://pressio.github.io/various/license/}{\texttt{ here}}.
 
 We are working on publishing this\+: you can find our ar\+Xiv preprint at\+: \href{https://arxiv.org/abs/2003.07798}{\texttt{ https\+://arxiv.\+org/abs/2003.\+07798}}\hypertarget{index_autotoc_md54}{}\doxysubsection{Questions?}\label{index_autotoc_md54}
