@@ -60,6 +60,7 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-currentSolution)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;With<sp/>{}<sp/>modes,<sp/>final<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(romSize,<sp/>err/fomNorm))</highlight></codeline>
 </programlisting></para>
 <sect2 id="md_pages_demos_demo1_1autotoc_md4">
 <title>1. Run FOM and collect snapshots</title>

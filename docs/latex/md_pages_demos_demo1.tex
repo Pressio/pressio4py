@@ -49,6 +49,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{    \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
 \DoxyCodeLine{    fomNorm = linalg.norm(fomFinalState)}
 \DoxyCodeLine{    err = linalg.norm(fomFinalState-\/currentSolution)}
+\DoxyCodeLine{    print(\textcolor{stringliteral}{"{}With \{\} modes, final relative l2 error: \{\}"{}}.format(romSize, err/fomNorm))}
 \end{DoxyCode}
 \hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md4}
 
