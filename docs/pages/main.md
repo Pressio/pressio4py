@@ -11,7 +11,7 @@ If this is a mistake, please go back to the [project website](https://pressio.gi
 
 # Get Started
 
-If you want to have pip fully build:
+If you want to have a full build:
 
 @m_class{m-block m-warning}
 
@@ -21,7 +21,7 @@ export CXX=<path-to-your-C++-compiler>
 pip3 install --no-binary :all: pressio4py
 ```
 
-Or you can try pip diretly:
+Or you can try pip directly:
 
 @m_class{m-block m-warning}
 

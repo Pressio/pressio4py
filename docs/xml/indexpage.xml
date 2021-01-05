@@ -11,13 +11,13 @@
 <para>If this is a mistake, please go back to the <ulink url="https://pressio.github.io/">project website</ulink>.</para>
 <sect1 id="index_1autotoc_md52">
 <title>Get Started</title>
-<para>If you want to have pip fully build:</para>
+<para>If you want to have a full build:</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
 <codeline><highlight class="normal">pip3<sp/>install<sp/>--no-binary<sp/>:all:<sp/>pressio4py</highlight></codeline>
 </programlisting></para>
 </simplesect>
-Or you can try pip diretly:</para>
+Or you can try pip directly:</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">pip3<sp/>install<sp/>pressio4py</highlight></codeline>
 </programlisting></para>

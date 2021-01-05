@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Author:  Francesco Rizzi
-# Contact: francesco.rizzi@ng-analytics.com
+# Contact: fnrizzi@sandia.gov, francesco.rizzi@ng-analytics.com
 
 import os
 import sys
@@ -99,7 +99,7 @@ class CMakeBuild(build_ext):
 
 setup(
   name="pressio4py",
-  version="0.6.1rc2",
+  version="0.6.1rc3",
   author="Francesco Rizzi",
   author_email="fnrizzi@sandia.gov",
   description="pressio4py: projection-based model reduction for Python",
