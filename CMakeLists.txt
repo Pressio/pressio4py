@@ -15,16 +15,16 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#=====================================================================
-# versioning
-#=====================================================================
-set(PressioFpy_VERSION_MAJOR 0)
-set(PressioFpy_VERSION_MINOR 6)
-set(PressioFpy_VERSION_PATCH 0)
-set(PressioFpy_VERSION
-  "${PressioFpy_VERSION_MAJOR}.${PressioFpy_VERSION_MINOR}.${PressioFpy_VERSION_PATCH}")
-math(EXPR PRESSIO_VERSION
-  "${PressioFpy_VERSION_MAJOR} * 10000 + ${PressioFpy_VERSION_MINOR} * 100 + ${PressioFpy_VERSION_PATCH}")
+# #=====================================================================
+# # versioning
+# #=====================================================================
+# set(PressioFpy_VERSION_MAJOR 0)
+# set(PressioFpy_VERSION_MINOR 6)
+# set(PressioFpy_VERSION_PATCH 0)
+# set(PressioFpy_VERSION
+#   "${PressioFpy_VERSION_MAJOR}.${PressioFpy_VERSION_MINOR}.${PressioFpy_VERSION_PATCH}")
+# math(EXPR PRESSIO_VERSION
+#   "${PressioFpy_VERSION_MAJOR} * 10000 + ${PressioFpy_VERSION_MINOR} * 100 + ${PressioFpy_VERSION_PATCH}")
 
 #=====================================================================
 #=====================================================================
@@ -80,6 +80,9 @@ execute_process(
 #----------------------------------------------------------------
 # command to create the pressio4py library
 pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
+# VERSION_INFO is defined by setup.py and passed into the C++ code
+set(PressioFpy_VERSION ${VERSION_INFO})
+target_compile_definitions(pressio4py PRIVATE PFPY_VERSION=${VERSION_INFO})
 
 #=====================================================================
 ### display some info
@@ -87,13 +90,13 @@ pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
 message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} Pressio4Py config info: ${ColourReset}")
 message("${Yellow}----------------------------------${ColourReset}")
-message("${Yellow} - C++ std = ${CMAKE_CXX_STANDARD} ${ColourReset}")
-message("${Yellow} - p4py version = ${PressioFpy_VERSION} ${ColourReset}")
-message("${Yellow} - p4py branch  = ${PFPY_BRANCH} ${ColourReset}")
-message("${Yellow} - p4py hash    = ${PFPY_HASH} ${ColourReset}")
-message("${Yellow} - Build dir       = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
-message("${Yellow} - prefix          = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
-message("${Yellow} - Pressio include = ${PRESSIO_INCLUDE_DIR} ${ColourReset}")
+message("${Yellow} - C++ standard   = ${CMAKE_CXX_STANDARD} ${ColourReset}")
+message("${Yellow} - p4py version   = ${PressioFpy_VERSION} ${ColourReset}")
+message("${Yellow} - p4py branch    = ${PFPY_BRANCH} ${ColourReset}")
+message("${Yellow} - p4py hash      = ${PFPY_HASH} ${ColourReset}")
+message("${Yellow} - Build dir      = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
+message("${Yellow} - prefix         = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
+#message("${Yellow} - Pressio include = ${PRESSIO_INCLUDE_DIR} ${ColourReset}")
 
 ## need to process the apps directory ##
 message("")
@@ -112,11 +115,12 @@ endforeach()
 # add tests
 add_subdirectory(tests)
 
-# add demos
-add_subdirectory(demos)
+## add demos
+#add_subdirectory(demos)
 
-# add tutorials
-add_subdirectory(tutorials)
+## add tutorials
+#add_subdirectory(tutorials)
 
+message(${CMAKE_INSTALL_PREFIX})
 # install
-#install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

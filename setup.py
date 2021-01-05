@@ -1,10 +1,19 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# Author:  Francesco Rizzi
+# Contact: francesco.rizzi@ng-analytics.com
+
 import os
 import sys
 import subprocess
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
+
+topdir = os.path.abspath(os.path.dirname(__file__))
+
+def description():
+    with open(os.path.join(topdir, 'DESCRIPTION.rst')) as f:
+        return f.read()
 
 # A CMakeExtension needs a sourcedir instead of a file list.
 class CMakeExtension(Extension):
@@ -59,6 +68,7 @@ class CMakeBuild(build_ext):
       "-DPYTHON_EXECUTABLE={}".format(sys.executable),
       "-DCMAKE_BUILD_TYPE={}".format(cfg),
       "-DPRESSIO_INCLUDE_DIR={}".format(pressioIncludeDir),
+      "-DVERSION_INFO={}".format(self.distribution.get_version()),
     ]
     build_args = []
 
@@ -69,11 +79,13 @@ class CMakeBuild(build_ext):
     # Set CMAKE_BUILD_PARALLEL_LEVEL to control the parallel build level
     # across all generators.
     if "CMAKE_BUILD_PARALLEL_LEVEL" not in os.environ:
-      # self.parallel is a Python 3 only way to set parallel jobs by hand
-      # using -j in the build_ext call, not supported by pip or PyPA-build.
-      if hasattr(self, "parallel") and self.parallel:
-        # CMake 3.12+ only.
-        build_args += ["-j{}".format(self.parallel)]
+      # for now, set parallel level to 4
+      build_args += ["-j4"]
+      # # self.parallel is a Python 3 only way to set parallel jobs by hand
+      # # using -j in the build_ext call, not supported by pip or PyPA-build.
+      # if hasattr(self, "parallel") and self.parallel:
+      #   # CMake 3.12+ only.
+      #   build_args += ["-j{}".format(self.parallel)]
 
     if not os.path.exists(self.build_temp):
       os.makedirs(self.build_temp)
@@ -87,14 +99,34 @@ class CMakeBuild(build_ext):
 
 setup(
   name="pressio4py",
-  version="0.5.2",
+  version="0.6.0",
   author="Francesco Rizzi",
   author_email="fnrizzi@sandia.gov",
   description="pressio4py: projection-based model reduction for Python",
-  url="https://github.com/Pressio/pressio4py",
-  long_description="Projection-based model reduction for (large-scale) linear and nonlinear dynamical systems",
+  #
+  project_urls={
+    'Documentation': 'https://github.com/Pressio/pressio4py',
+    'Source': 'https://github.com/Pressio/pressio4py'
+  },
+  #
+  long_description=description(),
   ext_modules=[CMakeExtension("pressio4py")],
   cmdclass={"build_ext": CMakeBuild},
-  install_requires=["numpy", "scipy", "pybind11", "numba"],
+  install_requires=["numpy", "scipy", "numba"],
   zip_safe=False,
+  #
+  python_requires='>=3',
+  classifiers=[
+    "License :: OSI Approved :: BSD3 License",
+    "Operating System :: Unix",
+    "Environment :: MacOS X",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries",
+    "Development Status :: 4 - Beta"
+  ],
+  keywords=["model reduction", "scientific computing", "dense linear algebra", "HPC"],
 )

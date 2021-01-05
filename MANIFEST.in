@@ -1,0 +1,9 @@
+include README.md
+include LICENSE pybind11/LICENSE pressio/LICENSE
+graft pybind11/include
+graft pressio/packages
+graft src
+graft apps
+graft demos
+graft tutorials
+global-include CMakeLists.txt *.cmake

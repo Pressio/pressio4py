@@ -77,8 +77,12 @@
 #include "./lspg_solve_problem_api_bind.hpp"
 #include "./galerkin_solve_problem_api_bind.hpp"
 
+#define PFOURPY_MACRO_STRINGIFY(x) #x
+
 PYBIND11_MODULE(pressio4py, mParent)
 {
+  mParent.attr("__version__") = PFOURPY_MACRO_STRINGIFY(PFPY_VERSION);
+
   //*****************
   // bind logging
   //*****************
