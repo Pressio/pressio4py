@@ -33,42 +33,34 @@ is fixed at @f$a=2@f$, the spatial coordinate is @f$x@f$ and the domain is @f$(0
 We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences
 is implemented [here](https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py).
 
-<!-- ## Imports -->
-<!-- The imports needed are: -->
-<!-- ```py -->
-<!-- from adv_diff1d import *					# the fom class -->
-<!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
-<!-- from pressio4py import rom as rom -->
-<!-- from pressio4py import solvers as solvers -->
-<!-- ``` -->
 
 ## Main function
 The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
-61:92
+59:90
 ```
 
 ### 1. Run FOM and collect snapshots
 ```py
 @codesnippet
 ../../../demos/adv_diff_1d_fom.py
-10:22
+5:17
 ```
 
 ### 2. Compute POD modes
 ```py
 @codesnippet
 ../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
-20:23
+18:21
 ```
 
 ### 3. Construct and run ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
-26:58
+24:56
 ```
 
 ## Results

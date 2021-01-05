@@ -7,7 +7,7 @@ import random
 # if run from within a build of pressio4py, need to append to python path
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/..")         # to access doFom
+sys.path.append(str(file_path) + "/..") # to access doFom
 
 from pressio4py import rom as rom, logger
 from pressio4py import solvers as solvers
@@ -82,7 +82,6 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
   return fomRecon.evaluate(romState)
-
 
 #------------------------
 ######## MAIN ###########

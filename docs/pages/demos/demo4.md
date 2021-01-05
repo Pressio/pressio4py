@@ -65,42 +65,42 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-92:144
+89:141
 ```
 
 ### 1. Run FOM and collect snapshots
 ```py
 @codesnippet
 ../../../demos/adv_diff_1d_fom.py
-10:22
+5:17
 ```
 
 ### 2. Compute POD modes
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-33:36
+31:34
 ```
 
 ### 3. Create the sampling indices
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-119:134
+116:131
 ```
 
 ### 4. The masker class
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-21:30
+19:28
 ```
 
 ### 5. Construct and run the masked ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_advdiff1d_pod/main.py
-39:86
+37:84
 ```
 
 ## Results

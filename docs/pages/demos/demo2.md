@@ -24,42 +24,34 @@ A predictive run is demonstrated in a different tutorial.
 The governing equations for this problem are the same
 as those in [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html),
 
-<!-- ## Imports -->
-<!-- The imports needed are: -->
-<!-- ```py -->
-<!-- from adv_diff1d import *					# the fom class -->
-<!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
-<!-- from pressio4py import rom as rom -->
-<!-- from pressio4py import solvers as solvers -->
-<!-- ``` -->
 
 ## Main function
 The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-76:105
+74:103
 ```
 
 ### 1. Run FOM and collect snapshots
 ```py
 @codesnippet
 ../../../demos/adv_diff_1d_fom.py
-10:22
+5:17
 ```
 
 ### 2. Compute POD modes
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-20:23
+18:21
 ```
 
 ### 3. Construct and run ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-26:73
+24:71
 ```
 
 ## Results

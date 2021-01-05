@@ -5,10 +5,10 @@ MAIN_PROJECT_URL: "Pressio"
 LINKS_NAVBAR1 = [
   # Get Started
   #("<a href=\"md_pages_get_started.html\">Get Started</a>",
-  ("<a href=>Get Started</a>", # empty href so that get started only has children
-   [
-     ("<a href=\"md_pages_getstarted_build_and_install.html\">Installation and Dependencies</a>",)
-   ]),
+  # ("<a href=>Get Started</a>", # empty href so that get started only has children
+  #  [
+  #    ("<a href=\"md_pages_getstarted_build_and_install.html\">Installation and Dependencies</a>",)
+  #  ]),
 
   # tutorials
   ("<a href=>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",

@@ -10,8 +10,14 @@ If this is a mistake, please go back to the [project website](https://pressio.gi
 
 
 ## Getting Started
-You can start by reading the [building/installation process](./md_pages_getstarted_build_and_install.html)
-or look at the [demos](./md_pages_demos_demo1.html).
+Get started as follows:
+```bash
+export CXX=<path-to-your-C++-compiler>
+pip3 install --no-binary :all: -i https://test.pypi.org/simple/ pressio4py
+```
+
+And then you can or look at the [demos](./md_pages_demos_demo1.html).
+<!-- read the [building/installation process](./md_pages_getstarted_build_and_install.html)>
 <!-- Untill we start filling the tutorials and examples, you can peek at the [test subdirectory](https://github.com/Pressio/pressio/tree/master/tests/rom/burgers1d) of the C++ library. -->
 
 

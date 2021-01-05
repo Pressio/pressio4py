@@ -32,7 +32,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_kpca/main.py
-105:130
+103:131
 ```
 
 ### 1. Run FOM and collect snapshots
@@ -48,7 +48,7 @@ This is how we enable support for testing various methods.
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_kpca/main.py
-20:56
+18:54
 ```
 
 @m_class{m-block m-warning}
@@ -65,7 +65,7 @@ around but also it is fundamental for the update method below correctly.
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_kpca/main.py
-59:102
+57:100
 ```
 
 ## Results
