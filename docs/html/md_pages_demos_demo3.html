@@ -25,12 +25,6 @@
         <div class="m-row">
           <ol class="m-col-t-6 m-col-m-none">
             <li>
-              <a href=>Get Started</a>
-              <ol>
-                <li><a href="md_pages_getstarted_build_and_install.html">Installation and Dependencies</a></li>
-              </ol>
-            </li>
-            <li>
               <a href=>Tutorials</a>
               <ol>
                 <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
@@ -47,7 +41,7 @@
               </ol>
             </li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
+          <ol class="m-col-t-6 m-col-m-none" start="3">
             <li><a href="annotated.html">Classes</a></li>
             <li><a href="namespaces.html">Namespaces</a></li>
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
@@ -91,7 +85,10 @@
   <span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span>
   <span class="n">approximatedState</span> <span class="o">=</span> <span class="n">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span> <span class="n">romNumberOfSteps</span><span class="p">,</span> <span class="n">myNonLinearMapper</span><span class="p">)</span>
 
-  <span class="c1"># compute l2-error between fom and approximate state</span></pre><section id="autotoc_md18"><h3><a href="#autotoc_md18">1. Run FOM and collect snapshots</a></h3><p>This step is the same as described <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>,</p></section><section id="autotoc_md19"><h3><a href="#autotoc_md19">2. Setup and train the nonlinear kPCA mapper</a></h3><p>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods.</p><pre class="m-code"><span class="k">class</span> <span class="nc">MyMapperKPCA</span><span class="p">:</span>
+  <span class="c1"># compute l2-error between fom and approximate state</span>
+  <span class="n">fomNorm</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="p">)</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedState</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span></pre><section id="autotoc_md18"><h3><a href="#autotoc_md18">1. Run FOM and collect snapshots</a></h3><p>This step is the same as described <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>,</p></section><section id="autotoc_md19"><h3><a href="#autotoc_md19">2. Setup and train the nonlinear kPCA mapper</a></h3><p>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods.</p><pre class="m-code"><span class="k">class</span> <span class="nc">MyMapperKPCA</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">,</span> <span class="n">numModes</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span> <span class="o">=</span> <span class="n">skd</span><span class="o">.</span><span class="n">KernelPCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">numModes</span><span class="p">,</span>\
                                       <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span>

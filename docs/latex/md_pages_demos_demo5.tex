@@ -104,7 +104,6 @@ The main function of the demo is the following\+:
 \hypertarget{md_pages_demos_demo5_autotoc_md37}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo5_autotoc_md37}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 3. MASKED GALERKIN and LSPG ROM -\/-\/-\/\#}}
 \DoxyCodeLine{\textcolor{comment}{\# a masked problem is supposed to make it easier to emulate the}}
 \DoxyCodeLine{\textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
 \DoxyCodeLine{\textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
@@ -123,6 +122,10 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
 \DoxyCodeLine{\textcolor{comment}{\# sort for convenience, not necessarily needed}}
 \DoxyCodeLine{sampleMeshIndices = np.sort(sampleMeshIndices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{romSize = 5  \textcolor{comment}{\# number of modes to use}}
+\DoxyCodeLine{romTimeStepSize  = 1e-\/4}
+\DoxyCodeLine{romNumberOfSteps = int(finalTime/romTimeStepSize)}
 \end{DoxyCode}
 \hypertarget{md_pages_demos_demo5_autotoc_md38}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo5_autotoc_md38}
 

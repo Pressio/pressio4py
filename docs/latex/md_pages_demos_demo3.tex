@@ -33,6 +33,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  approximatedState = runLspg(fomObj, romTimeStepSize, romNumberOfSteps, myNonLinearMapper)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
+\DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
+\DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
+\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
 \end{DoxyCode}
 \hypertarget{md_pages_demos_demo3_autotoc_md18}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo3_autotoc_md18}
 This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md19}{}\doxysubsection{2. Setup and train the nonlinear k\+P\+C\+A mapper}\label{md_pages_demos_demo3_autotoc_md19}

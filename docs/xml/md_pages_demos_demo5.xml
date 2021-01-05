@@ -110,8 +110,7 @@
 </sect2>
 <sect2 id="md_pages_demos_demo5_1autotoc_md37">
 <title>3. Create the sampling indices</title>
-<para><programlisting filename=".py"><codeline><highlight class="comment">#---<sp/>3.<sp/>MASKED<sp/>GALERKIN<sp/>and<sp/>LSPG<sp/>ROM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>a<sp/>masked<sp/>problem<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>a<sp/>masked<sp/>problem<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>we<sp/>need<sp/>to<sp/>select<sp/>and<sp/>provide<sp/>to<sp/>pressio<sp/>a<sp/>set<sp/>of<sp/>indices</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>identifying<sp/>a<sp/>subset<sp/>of<sp/>the<sp/>grid<sp/>points<sp/>in<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
@@ -129,6 +128,10 @@
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>sort<sp/>for<sp/>convenience,<sp/>not<sp/>necessarily<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.sort(sampleMeshIndices)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">romSize<sp/>=<sp/>5<sp/><sp/></highlight><highlight class="comment">#<sp/>number<sp/>of<sp/>modes<sp/>to<sp/>use</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">romTimeStepSize<sp/><sp/>=<sp/>1e-4</highlight></codeline>
+<codeline><highlight class="normal">romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
 </programlisting></para>
 </sect2>
 <sect2 id="md_pages_demos_demo5_1autotoc_md38">

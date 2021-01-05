@@ -25,12 +25,6 @@
         <div class="m-row">
           <ol class="m-col-t-6 m-col-m-none">
             <li>
-              <a href=>Get Started</a>
-              <ol>
-                <li><a href="md_pages_getstarted_build_and_install.html">Installation and Dependencies</a></li>
-              </ol>
-            </li>
-            <li>
               <a href=>Tutorials</a>
               <ol>
                 <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
@@ -47,7 +41,7 @@
               </ol>
             </li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
+          <ol class="m-col-t-6 m-col-m-none" start="3">
             <li><a href="annotated.html">Classes</a></li>
             <li><a href="namespaces.html">Namespaces</a></li>
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
@@ -143,8 +137,7 @@
   <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md36"><h3><a href="#autotoc_md36">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
   <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md37"><h3><a href="#autotoc_md37">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1">#--- 3. MASKED GALERKIN and LSPG ROM ---#</span>
-<span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
+  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md37"><h3><a href="#autotoc_md37">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
 <span class="c1"># effect of hyper-reduction. To create a mask ROM problem,</span>
 <span class="c1"># we need to select and provide to pressio a set of indices</span>
 <span class="c1"># identifying a subset of the grid points in the full mesh.</span>
@@ -161,7 +154,11 @@
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
 <span class="c1"># sort for convenience, not necessarily needed</span>
-<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span></pre></section><section id="autotoc_md38"><h3><a href="#autotoc_md38">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
+
+<span class="n">romSize</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of modes to use</span>
+<span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span></pre></section><section id="autotoc_md38"><h3><a href="#autotoc_md38">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span> <span class="o">=</span> <span class="n">indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampleMeshSize_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>

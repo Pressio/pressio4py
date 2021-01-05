@@ -11,7 +11,10 @@
 <para>If this is a mistake, please go back to the <ulink url="https://pressio.github.io/">project website</ulink>.</para>
 <sect1 id="index_1autotoc_md52">
 <title>Getting Started</title>
-<para>You can start by reading the <ulink url="./md_pages_getstarted_build_and_install.html">building/installation process</ulink> or look at the <ulink url="./md_pages_demos_demo1.html">demos</ulink>.</para>
+<para>Get started as follows: <programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
+<codeline><highlight class="normal">pip3<sp/>install<sp/>--no-binary<sp/>:all:<sp/>-i<sp/>https://test.pypi.org/simple/<sp/>pressio4py</highlight></codeline>
+</programlisting></para>
+<para>And then you can or look at the <ulink url="./md_pages_demos_demo1.html">demos</ulink>.</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title>We are working on supporting pip, stay tuned!</title><para></para>
 </simplesect>
