@@ -2,12 +2,6 @@
 import numpy as np
 from scipy import linalg
 
-# need to add to python path location of the apps
-import pathlib, sys
-file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../apps")
-
-from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 
 np.set_printoptions(linewidth=140)

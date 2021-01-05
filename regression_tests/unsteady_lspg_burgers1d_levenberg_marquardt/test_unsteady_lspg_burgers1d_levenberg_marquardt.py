@@ -1,15 +1,12 @@
 
 import numpy as np
 from scipy import linalg
-
-# need to add to python path location of the apps
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../apps")
 
-from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
+from pressio4pyApps.burgers1d import Burgers1d
 
 np.set_printoptions(linewidth=140)
 
@@ -62,7 +59,7 @@ def test_euler():
   t0       = 0.
 
   # create app
-  appObj = Burgers1dSparseJacobian(meshSize)
+  appObj = Burgers1d(meshSize)
 
   # set reference state
   yRef = np.ones(meshSize)

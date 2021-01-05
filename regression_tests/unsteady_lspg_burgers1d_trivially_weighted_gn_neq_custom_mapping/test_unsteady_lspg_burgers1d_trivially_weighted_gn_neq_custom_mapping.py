@@ -1,15 +1,12 @@
 
 import numpy as np
 from scipy import linalg
-
-# need to add to python path location of the apps
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(str(file_path) + "/../apps")
 
-from burgers1d_sparse_jacobian import Burgers1dSparseJacobian
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
+from pressio4pyApps.burgers1d import Burgers1d
 
 #----------------------------
 class MyLinSolver:
@@ -23,12 +20,10 @@ class MyLinSolver:
 #----------------------------
 class MyMapper:
   def __init__(self):
-    fname = str(file_path) + "/basis_euler.txt"
     # I have to make phi a column-major array to ensure
     # pressio does not make a copy of this
+    fname = str(file_path) + "/basis_euler.txt"
     self.phi_ = np.copy(np.loadtxt(fname), order='F')
-    phi_addr = self.phi_.__array_interface__['data'][0]
-    print("map:phi: ", hex(phi_addr))
 
   def jacobian(self):
     return self.phi_
@@ -49,6 +44,15 @@ class OdeObserver:
     assert(state.shape[0]==11)
 
 #----------------------------
+class MyWeigher:
+  def __init__(self): pass
+
+  def apply(self, operand, result):
+    # trivial
+    print("weigher: shapes", operand.shape, result.shape)
+    np.copyto(result, operand)
+
+#----------------------------
 def test_euler():
   meshSize = 20
   romSize  = 11
@@ -57,7 +61,7 @@ def test_euler():
   t0       = 0.
 
   # create app
-  appObj = Burgers1dSparseJacobian(meshSize)
+  appObj = Burgers1d(meshSize)
   # set reference state
   yRef = np.ones(meshSize)
 
@@ -65,15 +69,17 @@ def test_euler():
   mymap   = MyMapper()
   # needs a description string
   decoder = rom.Decoder(mymap, "MyMapper")
-  print("dec:add: ", hex(decoder.jacobianAddress()))
   # LSPG state
   yRom = np.zeros(romSize)
 
   lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
 
+  # weighting operator
+  wOp = MyWeigher()
+
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.WeightedGaussNewton(lspgProblem, yRom, lsO, wOp)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)

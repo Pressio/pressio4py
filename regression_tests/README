@@ -1,0 +1,19 @@
+
+Guidelines to create a regression test:
+1. create a subdirectory and name it properly:
+
+  <steady/unsteady>_method_app_somethingelse
+
+Note: the directory name MUST contains "steady" or "unsteady".
+
+2. add a "test_<some_name>_main.py" inside the test directory.
+You can have multiple mains but make sure you name them uniquely.
+And make sure the file starts with "test_"
+
+3. add other files needed for the test, e.g. inputs, basis files, etc
+
+--------------------------------------------------------------
+This is it! What happens then?
+When you configure, the cmakelist automatically globs over
+the directories and creates the tests, and uses the directory name
+and the main file to generate a test name that is unique.

@@ -15,17 +15,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# #=====================================================================
-# # versioning
-# #=====================================================================
-# set(PressioFpy_VERSION_MAJOR 0)
-# set(PressioFpy_VERSION_MINOR 6)
-# set(PressioFpy_VERSION_PATCH 0)
-# set(PressioFpy_VERSION
-#   "${PressioFpy_VERSION_MAJOR}.${PressioFpy_VERSION_MINOR}.${PressioFpy_VERSION_PATCH}")
-# math(EXPR PRESSIO_VERSION
-#   "${PressioFpy_VERSION_MAJOR} * 10000 + ${PressioFpy_VERSION_MINOR} * 100 + ${PressioFpy_VERSION_PATCH}")
-
 #=====================================================================
 #=====================================================================
 ### guard against in-source builds ###
@@ -54,7 +43,7 @@ add_subdirectory(pybind11)
 # dir where all sources for pressio4py are
 set(PRESSIO4PY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 # dir where all python apps are
-set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/apps)
+set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pressio4pyApps)
 
 #----------------------------------------------------------------
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -81,8 +70,7 @@ execute_process(
 # command to create the pressio4py library
 pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
 # VERSION_INFO is defined by setup.py and passed into the C++ code
-set(PressioFpy_VERSION ${VERSION_INFO})
-target_compile_definitions(pressio4py PRIVATE PFPY_VERSION=${VERSION_INFO})
+target_compile_definitions(pressio4py PRIVATE VERSION_IN=${VERSION_INFO})
 
 #=====================================================================
 ### display some info
@@ -91,7 +79,7 @@ message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} Pressio4Py config info: ${ColourReset}")
 message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} - C++ standard   = ${CMAKE_CXX_STANDARD} ${ColourReset}")
-message("${Yellow} - p4py version   = ${PressioFpy_VERSION} ${ColourReset}")
+message("${Yellow} - p4py version   = ${VERSION_INFO} ${ColourReset}")
 message("${Yellow} - p4py branch    = ${PFPY_BRANCH} ${ColourReset}")
 message("${Yellow} - p4py hash      = ${PFPY_HASH} ${ColourReset}")
 message("${Yellow} - Build dir      = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
@@ -103,7 +91,7 @@ message("")
 message("${Magenta}----------------------------------${ColourReset}")
 message("${Magenta} Processing apps for tests/demos ${ColourReset}")
 message("${Magenta}----------------------------------${ColourReset}")
-set(appsDestDir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/apps)
+set(appsDestDir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/pressio4pyApps)
 file(MAKE_DIRECTORY ${appsDestDir})
 file(GLOB allApps "${PRESSIO4PY_APPS_DIR}/*.py")
 foreach(f ${allApps})
@@ -112,8 +100,9 @@ foreach(f ${allApps})
   configure_file(${f} ${appsDestDir} COPYONLY)
 endforeach()
 
-# add tests
-add_subdirectory(tests)
+# add unit tests (we have to do this because unit tests
+# contain c++ code that is compiled too)
+add_subdirectory(unit_tests)
 
 ## add demos
 #add_subdirectory(demos)

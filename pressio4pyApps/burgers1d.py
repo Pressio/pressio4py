@@ -45,7 +45,7 @@ else:
       ldiag[i] = dxInv*u[i]
     diag[n-1] = -dxInv*u[n-1]
 
-class Burgers1dSparseJacobian:
+class Burgers1d:
   def __init__(self, Ncell):
     self.mu_    = np.array([5., 0.02, 0.02])
     self.xL_    = 0.
