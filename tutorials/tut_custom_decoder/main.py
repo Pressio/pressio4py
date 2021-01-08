@@ -27,11 +27,11 @@ if __name__ == "__main__":
 
     def applyMapping(self, romState, fomState):
       pass
-     #fomState[:] = whatever is needed
+      #fomState[:] = whatever is needed
 
     def updateJacobian(self, romState):
       romStateLocal = romState.copy()
-      # update the self.jacobian_[:,i]
+      # update the self.jacobian_[:,:]
 
   # create the mapper
   myMapper = CustomMapper(10,3)
