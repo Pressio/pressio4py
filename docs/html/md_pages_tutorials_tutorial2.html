@@ -163,7 +163,7 @@ $g$
 <use x='212.13656' y='-.531333' xlink:href='#eq5-g0-109'/>
 <use x='221.320716' y='-10.525258' xlink:href='#eq5-g1-58'/>
 </g>
-</svg></div><p>A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the ROM state to the FOM state.</p></section><section id="autotoc_md66"><h2><a href="#autotoc_md66">Code</a></h2><p>Here we demonstate how to create a linear decoder. The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</a></p><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</svg></div><p>A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the ROM state to the FOM state.</p></section><section id="autotoc_md66"><h2><a href="#autotoc_md66">Code</a></h2><p>The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</a></p><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">pressio4py</span> <span class="kn">import</span> <span class="n">rom</span> <span class="k">as</span> <span class="n">rom</span><span class="p">,</span> <span class="n">logger</span>
 
@@ -200,7 +200,7 @@ $g$
   <span class="c1"># create the mapper</span>
   <span class="n">myMapper</span> <span class="o">=</span> <span class="n">CustomMapper</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
   <span class="c1"># to create a custom decoder, one can do</span>
-  <span class="n">customDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">myMapper</span><span class="p">,</span> <span class="s2">&quot;MyMapper&quot;</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use a custom decoder?</h3><p>Currently, a custom decoder can only be used for LSPG.</p></aside></section>
+  <span class="n">customDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">myMapper</span><span class="p">,</span> <span class="s2">&quot;MyMapper&quot;</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use a custom decoder?</h3><p>Currently, a custom decoder can only be used for LSPG. See <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo3.html">this demo</a> for an example usage.</p></aside></section>
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial2_1autotoc_md66">
 <title>Code</title>
-<para>Here we demonstate how to create a linear decoder. The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</ulink></para>
+<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</ulink></para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>random</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom,<sp/>logger</highlight></codeline>
@@ -57,7 +57,7 @@
 <codeline><highlight class="normal"><sp/><sp/>customDecoder<sp/>=<sp/>rom.Decoder(myMapper,<sp/></highlight><highlight class="stringliteral">&quot;MyMapper&quot;</highlight><highlight class="normal">)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Where can you use a custom decoder?</title><para>Currently, a custom decoder can only be used for LSPG. </para>
+<para><simplesect kind="par"><title>Where can you use a custom decoder?</title><para>Currently, a custom decoder can only be used for LSPG. See <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo3.html">this demo</ulink> for an example usage. </para>
 </simplesect>
 </para>
 </sect1>
