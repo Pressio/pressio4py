@@ -1,7 +1,6 @@
 
 import numpy as np
 import random
-
 from pressio4py import rom as rom, logger
 
 if __name__ == "__main__":
