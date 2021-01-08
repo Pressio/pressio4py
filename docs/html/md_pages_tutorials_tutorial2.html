@@ -191,11 +191,11 @@ $g$
 
     <span class="k">def</span> <span class="nf">applyMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
       <span class="k">pass</span>
-     <span class="c1">#fomState[:] = whatever is needed</span>
+      <span class="c1">#fomState[:] = whatever is needed</span>
 
     <span class="k">def</span> <span class="nf">updateJacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">):</span>
       <span class="n">romStateLocal</span> <span class="o">=</span> <span class="n">romState</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-      <span class="c1"># update the self.jacobian_[:,i]</span>
+      <span class="c1"># update the self.jacobian_[:,:]</span>
 
   <span class="c1"># create the mapper</span>
   <span class="n">myMapper</span> <span class="o">=</span> <span class="n">CustomMapper</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>

@@ -37,11 +37,11 @@ The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/
 \DoxyCodeLine{}
 \DoxyCodeLine{    \textcolor{keyword}{def }applyMapping(self, romState, fomState):}
 \DoxyCodeLine{      \textcolor{keywordflow}{pass}}
-\DoxyCodeLine{     \textcolor{comment}{\#fomState[:] = whatever is needed}}
+\DoxyCodeLine{      \textcolor{comment}{\#fomState[:] = whatever is needed}}
 \DoxyCodeLine{}
 \DoxyCodeLine{    \textcolor{keyword}{def }updateJacobian(self, romState):}
 \DoxyCodeLine{      romStateLocal = romState.copy()}
-\DoxyCodeLine{      \textcolor{comment}{\# update the self.jacobian\_[:,i]}}
+\DoxyCodeLine{      \textcolor{comment}{\# update the self.jacobian\_[:,:]}}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create the mapper}}
 \DoxyCodeLine{  myMapper = CustomMapper(10,3)}
