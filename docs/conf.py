@@ -10,6 +10,10 @@ LINKS_NAVBAR1 = [
   #    ("<a href=\"md_pages_getstarted_build_and_install.html\">Installation and Dependencies</a>",)
   #  ]),
 
+  # preparing your app
+  ("<a href=\"md_pages_prepare_your_app.html\">How to interface your app</a>",
+   []),
+
   # tutorials
   ("<a href=>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
    [

@@ -16,6 +16,8 @@
   </compound>
   <compound refid="main_8md" kind="file"><name>main.md</name>
   </compound>
+  <compound refid="prepare__your__app_8md" kind="file"><name>prepare_your_app.md</name>
+  </compound>
   <compound refid="tutorial1_8md" kind="file"><name>tutorial1.md</name>
   </compound>
   <compound refid="md_pages_demos_demo1" kind="page"><name>md_pages_demos_demo1</name>
@@ -31,6 +33,8 @@
   <compound refid="md_pages_examples_example1" kind="page"><name>md_pages_examples_example1</name>
   </compound>
   <compound refid="md_pages_getstarted_build_and_install" kind="page"><name>md_pages_getstarted_build_and_install</name>
+  </compound>
+  <compound refid="md_pages_prepare_your_app" kind="page"><name>md_pages_prepare_your_app</name>
   </compound>
   <compound refid="md_pages_tutorials_tutorial1" kind="page"><name>md_pages_tutorials_tutorial1</name>
   </compound>

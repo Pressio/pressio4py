@@ -7,33 +7,43 @@
     </briefdescription>
     <detaileddescription>
 <para><anchor id="index_1md_pages_main"/> <emphasis>Leading-edge projection-based reduced order models (pROMs) for dynamical systems in science and engineering.</emphasis></para>
-<para>You landed on the documentation of the Python bindings library!</para>
+<para>You landed on the documentation of the pressio Python bindings library!</para>
 <para>If this is a mistake, please go back to the <ulink url="https://pressio.github.io/">project website</ulink>.</para>
 <sect1 id="index_1autotoc_md52">
-<title>Get Started</title>
-<para>Should be just a couple steps:</para>
+<title>Install pressio4py</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
-<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio4py.git</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio4py.git<sp/>#<sp/>or<sp/>https://github.com/Pressio/pressio4py.git</highlight></codeline>
 <codeline><highlight class="normal">pip<sp/>install<sp/>./pressio4py</highlight></codeline>
 </programlisting></para>
 </simplesect>
-You can then run the regression tests: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py</highlight></codeline>
+To make sure everything worked, run the <ulink url="https://github.com/Pressio/pressio4py/tree/master/regression_tests">regression tests</ulink> as follows: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py</highlight></codeline>
 <codeline><highlight class="normal">pytest<sp/>-s</highlight></codeline>
 </programlisting></para>
-<para>Or look at the demos: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py/demos</highlight></codeline>
+<para>If you get an import error it might be that the version of <computeroutput>pytest</computeroutput> you are using is not compatible with the <computeroutput>pip</computeroutput> command you used to install. Make sure you use Python commands from the <bold>same</bold> distribution.</para>
+</sect1>
+<sect1 id="index_1autotoc_md53">
+<title>Learn how to interface your app</title>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title></title><para>To enable pressio4py to communicate with your app, you might have to prepare some glue code in the form of an adapter class. You can find the details <ulink url="./md_pages_prepare_your_app.html">here</ulink>. Note that this step only needs to be done once: the same interface class can then be used to run all the ROMs in pressio4py.</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="index_1autotoc_md54">
+<title>Explore the tutorials and demos</title>
+<para>You can find descriptions of the demos <ulink url="./md_pages_demos_demo1.html">here</ulink> and of the tutorials <ulink url="./md_pages_tutorials_tutorial1.html">here</ulink><mdash/> both in progress.</para>
+<para>To run the demos: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py/demos</highlight></codeline>
 <codeline><highlight class="normal">python3<sp/>./&lt;demo-subdir-name&gt;/main.py</highlight></codeline>
 </programlisting></para>
-<para>You can find descriptions of the demos <ulink url="./md_pages_demos_demo1.html">here</ulink> and of the tutorials <ulink url="./md_pages_tutorials_tutorial1.html">here</ulink><mdash/> both in progress.</para>
-<sect2 id="index_1autotoc_md53">
+</sect1>
+<sect1 id="index_1autotoc_md55">
 <title>License and Citation</title>
 <para>The full license is available <ulink url="https://pressio.github.io/various/license/">here</ulink>.</para>
 <para>We are working on publishing this: you can find our arXiv preprint at: <ulink url="https://arxiv.org/abs/2003.07798">https://arxiv.org/abs/2003.07798</ulink></para>
-</sect2>
-<sect2 id="index_1autotoc_md54">
+</sect1>
+<sect1 id="index_1autotoc_md56">
 <title>Questions?</title>
 <para>Find us on Slack: <ulink url="https://pressioteam.slack.com">https://pressioteam.slack.com</ulink> or open an issue on <ulink url="https://github.com/Pressio/pressio4py">github</ulink>. </para>
-</sect2>
 </sect1>
     </detaileddescription>
   </compounddef>
