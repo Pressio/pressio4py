@@ -23,7 +23,6 @@ This allows one to use an arbitrary function to map the ROM state to
 the FOM state.
 
 ## Code
-Here we demonstate how to create a linear decoder.
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py)
 
 ```py
@@ -37,3 +36,4 @@ The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob
 
 @par Where can you use a custom decoder?
 Currently, a custom decoder can only be used for LSPG.
+See [this demo](https://pressio.github.io/pressio4py/html/md_pages_demos_demo3.html) for an example usage.

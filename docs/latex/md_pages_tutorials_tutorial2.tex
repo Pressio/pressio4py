@@ -4,7 +4,7 @@
 This tutorial shows how to create a {\itshape custom} decoder in pressio4py.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial2_autotoc_md65}{}\doxysection{Context}\label{md_pages_tutorials_tutorial2_autotoc_md65}
-A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \] where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. The Jacobian of the mapping is\+: \[ J_g = \frac{d g_{fom}}{d y_{rom}}. \] A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the R\+OM state to the F\+OM state.\hypertarget{md_pages_tutorials_tutorial2_autotoc_md66}{}\doxysection{Code}\label{md_pages_tutorials_tutorial2_autotoc_md66}
+A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \] where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. The Jacobian of the mapping is\+: \[ J_g = \frac{d g}{d y_{rom}}. \] A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the R\+OM state to the F\+OM state.\hypertarget{md_pages_tutorials_tutorial2_autotoc_md66}{}\doxysection{Code}\label{md_pages_tutorials_tutorial2_autotoc_md66}
 Here we demonstate how to create a linear decoder. The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py}{\texttt{ here}}
 
 
