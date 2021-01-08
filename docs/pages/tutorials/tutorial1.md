@@ -37,7 +37,7 @@ The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob
 ```
 
 
-@m_class{m-block m-info}
+@m_class{m-block m-warning}
 
 @par Where can you use the linear decoder?
 A linear decoder can be used for both Galerkin and LSPG
