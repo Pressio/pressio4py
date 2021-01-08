@@ -1,0 +1,57 @@
+
+
+\begin{DoxyParagraph}{Content}
+This tutorial shows how to create a {\itshape custom} decoder in pressio4py.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial2_autotoc_md65}{}\doxysection{Context}\label{md_pages_tutorials_tutorial2_autotoc_md65}
+A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \] where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. The Jacobian of the mapping is\+: \[ J_g = \frac{d g_{fom}}{d y_{rom}}. \] A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the R\+OM state to the F\+OM state.\hypertarget{md_pages_tutorials_tutorial2_autotoc_md66}{}\doxysection{Code}\label{md_pages_tutorials_tutorial2_autotoc_md66}
+Here we demonstate how to create a linear decoder. The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py}{\texttt{ here}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{import} random}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom, logger}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{  A custom decoder (or mapping) represents the arbitrary transformation}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{        y = g(x)}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{  Where "{}x"{} is referred to as the generalized coordinates (or latent space)}}
+\DoxyCodeLine{\textcolor{stringliteral}{  and "{}y"{} represents an approximation of the FOM state.}}
+\DoxyCodeLine{\textcolor{stringliteral}{}}
+\DoxyCodeLine{\textcolor{stringliteral}{  For an example using this, see https://pressio.github.io/pressio4py/html/md\_pages\_demos\_demo3.html}}
+\DoxyCodeLine{\textcolor{stringliteral}{  '''}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{class }CustomMapper:}
+\DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self, fomSize, romSize):}
+\DoxyCodeLine{      \textcolor{comment}{\# attention: the jacobian of the mapping must be column-\/major oder}}
+\DoxyCodeLine{      \textcolor{comment}{\# so that pressio can view it without deep copying it, this enables}}
+\DoxyCodeLine{      \textcolor{comment}{\# to keep only one jacobian object around and to call the update}}
+\DoxyCodeLine{      \textcolor{comment}{\# method below correctly}}
+\DoxyCodeLine{      self.jacobian\_ = np.zeros((fomSize,romSize), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keyword}{def }jacobian(self): \textcolor{keywordflow}{return} self.jacobian\_}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keyword}{def }applyMapping(self, romState, fomState):}
+\DoxyCodeLine{      \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{     \textcolor{comment}{\#fomState[:] = whatever is needed}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keyword}{def }updateJacobian(self, romState):}
+\DoxyCodeLine{      romStateLocal = romState.copy()}
+\DoxyCodeLine{      \textcolor{comment}{\# update the self.jacobian\_[:,i]}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create the mapper}}
+\DoxyCodeLine{  myMapper = CustomMapper(10,3)}
+\DoxyCodeLine{  \textcolor{comment}{\# to create a custom decoder, one can do}}
+\DoxyCodeLine{  customDecoder = rom.Decoder(myMapper, \textcolor{stringliteral}{"{}MyMapper"{}})}
+\end{DoxyCode}
+
+
+
+
+\begin{DoxyParagraph}{Where can you use a custom decoder?}
+Currently, a custom decoder can only be used for L\+S\+PG. 
+\end{DoxyParagraph}

@@ -16,7 +16,7 @@ where @f$y_{rom}@f$ is the reduced state, also called
 generalized coordinates, and @f$g@f$ is the mapping between the two.
 The Jacobian of the mapping is:
 @f[
-J_g = \frac{d g_{fom}}{d y_{rom}}.
+J_g = \frac{d g}{d y_{rom}}.
 @f]
 A custom decoder in pressio4py implements this general mapping.
 This allows one to use an arbitrary function to map the ROM state to
