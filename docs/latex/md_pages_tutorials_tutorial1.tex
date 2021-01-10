@@ -4,9 +4,9 @@
 This tutorial shows how to create a linear decoder in pressio4py.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md62}
-A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $fomState$, as\+: \[ fomState = g(romState) \]
+A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
 
-where $romState$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ fomState = \phi romState \] where $\phi$ is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d fomState}{d romState} = \phi. \]
+where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
 
 A linear decoder in pressio4py represents this linear mapping.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Code}\label{md_pages_tutorials_tutorial1_autotoc_md63}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
@@ -17,16 +17,15 @@ The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/
 \DoxyCodeLine{}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
 \DoxyCodeLine{  \textcolor{stringliteral}{'''}}
-\DoxyCodeLine{\textcolor{stringliteral}{  A linear decoder (or mapping) represents}}
+\DoxyCodeLine{\textcolor{stringliteral}{  In the ROM context, a linear decoder (or mapping) represents}}
 \DoxyCodeLine{\textcolor{stringliteral}{}}
-\DoxyCodeLine{\textcolor{stringliteral}{        y = phi * x}}
+\DoxyCodeLine{\textcolor{stringliteral}{        y\_fom = phi * y\_rom}}
 \DoxyCodeLine{\textcolor{stringliteral}{}}
 \DoxyCodeLine{\textcolor{stringliteral}{  where phi is the mapping's Jacobian (assumed constant for now).}}
 \DoxyCodeLine{\textcolor{stringliteral}{  This is a typical approximation adopted in projection-\/based ROMs,}}
-\DoxyCodeLine{\textcolor{stringliteral}{  where "{}x"{} is referred to as the generalized coordinates (or latent space)}}
-\DoxyCodeLine{\textcolor{stringliteral}{  and "{}y"{} represents an approximation of the FOM state.}}
+\DoxyCodeLine{\textcolor{stringliteral}{  where "{}y\_rom"{} is referred to as the generalized coordinates (or latent space)}}
+\DoxyCodeLine{\textcolor{stringliteral}{  and "{}y\_fom"{} represents an approximation of the FOM state.}}
 \DoxyCodeLine{\textcolor{stringliteral}{}}
-\DoxyCodeLine{\textcolor{stringliteral}{  This tutorial shows how to create a linear decoder/mapper in pressio4py.}}
 \DoxyCodeLine{\textcolor{stringliteral}{  For examples using it, see subsequent tutorials.}}
 \DoxyCodeLine{\textcolor{stringliteral}{  '''}}
 \DoxyCodeLine{}
@@ -46,8 +45,8 @@ The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/
 \DoxyCodeLine{  linearDecoder = rom.Decoder(phi)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
-\DoxyCodeLine{  y,x = np.zeros(10), np.ones(3)}
-\DoxyCodeLine{  linearDecoder.applyMapping(x, y)}
+\DoxyCodeLine{  fomState, romState = np.zeros(10), np.ones(3)}
+\DoxyCodeLine{  linearDecoder.applyMapping(romState, fomState)}
 \DoxyCodeLine{  print(y)}
 \end{DoxyCode}
 
@@ -55,5 +54,5 @@ The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/
 
 
 \begin{DoxyParagraph}{Where can you use the linear decoder?}
-A linear decoder can be used for both Galerkin and L\+S\+PG as will be shown in subsequent tutorials and in the demos. 
+A linear decoder can be used for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos. 
 \end{DoxyParagraph}

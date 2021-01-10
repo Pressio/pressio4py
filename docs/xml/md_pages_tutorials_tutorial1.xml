@@ -12,8 +12,8 @@
 </para>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md62">
 <title>Context</title>
-<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$fomState$</formula>, as: <formula id="15">\[ fomState = g(romState) \]</formula></para>
-<para>where <formula id="16">$romState$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ fomState = \phi romState \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is: <formula id="20">\[ \frac{d fomState}{d romState} = \phi. \]</formula></para>
+<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
+<para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md63">
@@ -23,16 +23,15 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>A<sp/>linear<sp/>decoder<sp/>(or<sp/>mapping)<sp/>represents</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/>In<sp/>the<sp/>ROM<sp/>context,<sp/>a<sp/>linear<sp/>decoder<sp/>(or<sp/>mapping)<sp/>represents</highlight></codeline>
 <codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y<sp/>=<sp/>phi<sp/>*<sp/>x</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_fom<sp/>=<sp/>phi<sp/>*<sp/>y_rom</highlight></codeline>
 <codeline><highlight class="stringliteral"></highlight></codeline>
 <codeline><highlight class="stringliteral"><sp/><sp/>where<sp/>phi<sp/>is<sp/>the<sp/>mapping&apos;s<sp/>Jacobian<sp/>(assumed<sp/>constant<sp/>for<sp/>now).</highlight></codeline>
 <codeline><highlight class="stringliteral"><sp/><sp/>This<sp/>is<sp/>a<sp/>typical<sp/>approximation<sp/>adopted<sp/>in<sp/>projection-based<sp/>ROMs,</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>where<sp/>&quot;x&quot;<sp/>is<sp/>referred<sp/>to<sp/>as<sp/>the<sp/>generalized<sp/>coordinates<sp/>(or<sp/>latent<sp/>space)</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>and<sp/>&quot;y&quot;<sp/>represents<sp/>an<sp/>approximation<sp/>of<sp/>the<sp/>FOM<sp/>state.</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/>where<sp/>&quot;y_rom&quot;<sp/>is<sp/>referred<sp/>to<sp/>as<sp/>the<sp/>generalized<sp/>coordinates<sp/>(or<sp/>latent<sp/>space)</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/>and<sp/>&quot;y_fom&quot;<sp/>represents<sp/>an<sp/>approximation<sp/>of<sp/>the<sp/>FOM<sp/>state.</highlight></codeline>
 <codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>This<sp/>tutorial<sp/>shows<sp/>how<sp/>to<sp/>create<sp/>a<sp/>linear<sp/>decoder/mapper<sp/>in<sp/>pressio4py.</highlight></codeline>
 <codeline><highlight class="stringliteral"><sp/><sp/>For<sp/>examples<sp/>using<sp/>it,<sp/>see<sp/>subsequent<sp/>tutorials.</highlight></codeline>
 <codeline><highlight class="stringliteral"><sp/><sp/>&apos;&apos;&apos;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -52,12 +51,12 @@
 <codeline><highlight class="normal"><sp/><sp/>linearDecoder<sp/>=<sp/>rom.Decoder(phi)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>y,x<sp/>=<sp/>np.zeros(10),<sp/>np.ones(3)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(x,<sp/>y)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomState,<sp/>romState<sp/>=<sp/>np.zeros(10),<sp/>np.ones(3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(romState,<sp/>fomState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Where can you use the linear decoder?</title><para>A linear decoder can be used for both Galerkin and LSPG as will be shown in subsequent tutorials and in the demos. </para>
+<para><simplesect kind="par"><title>Where can you use the linear decoder?</title><para>A linear decoder can be used for both Galerkin and LSPG as shown in subsequent tutorials and in the demos. </para>
 </simplesect>
 </para>
 </sect1>

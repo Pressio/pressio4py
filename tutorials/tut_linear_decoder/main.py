@@ -2,19 +2,6 @@
 from pressio4py import rom as rom
 
 if __name__ == "__main__":
-  '''
-  In the ROM context, a linear decoder (or mapping) represents
-
-        y_fom = phi * y_rom
-
-  where phi is the mapping's Jacobian (assumed constant for now).
-  This is a typical approximation adopted in projection-based ROMs,
-  where "y_rom" is referred to as the generalized coordinates (or latent space)
-  and "y_fom" represents an approximation of the FOM state.
-
-  For examples using it, see subsequent tutorials.
-  '''
-
   # create the matrix
   # attention: we declare phi to be column-major for these reasons:
   #

@@ -33,7 +33,7 @@ The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
-2:37
+2:23
 ```
 
 
