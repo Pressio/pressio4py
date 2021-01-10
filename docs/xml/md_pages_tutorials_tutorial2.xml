@@ -7,12 +7,13 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>Content</title><para>This tutorial shows how to create a <emphasis>custom</emphasis> decoder in pressio4py.</para>
+<para><simplesect kind="par"><title></title><para>This tutorial shows how to create a <emphasis>custom</emphasis> decoder in pressio4py.</para>
 </simplesect>
 </para>
 <sect1 id="md_pages_tutorials_tutorial2_1autotoc_md65">
 <title>Context</title>
-<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula> where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. The Jacobian of the mapping is: <formula id="21">\[ J_g = \frac{d g}{d y_{rom}}. \]</formula> A custom decoder in pressio4py implements this general mapping. This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
+<para>A custom decoder in pressio4py implements a general mapping: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula> where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, <formula id="14">$y_{fom}$</formula> is the full-order model (FOM) state, and <formula id="17">$g$</formula> is the mapping between the two. The Jacobian of the mapping is: <formula id="21">\[ J_g = \frac{d g}{d y_{rom}}. \]</formula></para>
+<para>This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial2_1autotoc_md66">
 <title>Code</title>
@@ -20,17 +21,6 @@
 <para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>A<sp/>custom<sp/>decoder<sp/>(or<sp/>mapping)<sp/>represents<sp/>the<sp/>arbitrary<sp/>transformation</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y<sp/>=<sp/>g(x)</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>Where<sp/>&quot;x&quot;<sp/>is<sp/>referred<sp/>to<sp/>as<sp/>the<sp/>generalized<sp/>coordinates<sp/>(or<sp/>latent<sp/>space)</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>and<sp/>&quot;y&quot;<sp/>represents<sp/>an<sp/>approximation<sp/>of<sp/>the<sp/>FOM<sp/>state.</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>For<sp/>an<sp/>example<sp/>using<sp/>this,<sp/>see<sp/>https://pressio.github.io/pressio4py/html/md_pages_demos_demo3.html</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>&apos;&apos;&apos;</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">CustomMapper:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>fomSize,<sp/>romSize):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>attention:<sp/>the<sp/>jacobian<sp/>of<sp/>the<sp/>mapping<sp/>must<sp/>be<sp/>column-major<sp/>oder</highlight><highlight class="normal"></highlight></codeline>

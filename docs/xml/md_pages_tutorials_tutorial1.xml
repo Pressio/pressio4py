@@ -22,19 +22,6 @@
 <para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>In<sp/>the<sp/>ROM<sp/>context,<sp/>a<sp/>linear<sp/>decoder<sp/>(or<sp/>mapping)<sp/>represents</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_fom<sp/>=<sp/>phi<sp/>*<sp/>y_rom</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>where<sp/>phi<sp/>is<sp/>the<sp/>mapping&apos;s<sp/>Jacobian<sp/>(assumed<sp/>constant<sp/>for<sp/>now).</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>This<sp/>is<sp/>a<sp/>typical<sp/>approximation<sp/>adopted<sp/>in<sp/>projection-based<sp/>ROMs,</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>where<sp/>&quot;y_rom&quot;<sp/>is<sp/>referred<sp/>to<sp/>as<sp/>the<sp/>generalized<sp/>coordinates<sp/>(or<sp/>latent<sp/>space)</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>and<sp/>&quot;y_fom&quot;<sp/>represents<sp/>an<sp/>approximation<sp/>of<sp/>the<sp/>FOM<sp/>state.</highlight></codeline>
-<codeline><highlight class="stringliteral"></highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>For<sp/>examples<sp/>using<sp/>it,<sp/>see<sp/>subsequent<sp/>tutorials.</highlight></codeline>
-<codeline><highlight class="stringliteral"><sp/><sp/>&apos;&apos;&apos;</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>attention:<sp/>we<sp/>declare<sp/>phi<sp/>to<sp/>be<sp/>column-major<sp/>for<sp/>these<sp/>reasons:</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
