@@ -3,16 +3,15 @@ from pressio4py import rom as rom
 
 if __name__ == "__main__":
   '''
-  A linear decoder (or mapping) represents
+  In the ROM context, a linear decoder (or mapping) represents
 
-        y = phi * x
+        y_fom = phi * y_rom
 
   where phi is the mapping's Jacobian (assumed constant for now).
   This is a typical approximation adopted in projection-based ROMs,
-  where "x" is referred to as the generalized coordinates (or latent space)
-  and "y" represents an approximation of the FOM state.
+  where "y_rom" is referred to as the generalized coordinates (or latent space)
+  and "y_fom" represents an approximation of the FOM state.
 
-  This tutorial shows how to create a linear decoder/mapper in pressio4py.
   For examples using it, see subsequent tutorials.
   '''
 
@@ -32,6 +31,6 @@ if __name__ == "__main__":
   linearDecoder = rom.Decoder(phi)
 
   # linearDecoder exposes a method to evaluate the mapping
-  y,x = np.zeros(10), np.ones(3)
-  linearDecoder.applyMapping(x, y)
+  fomState, romState = np.zeros(10), np.ones(3)
+  linearDecoder.applyMapping(romState, fomState)
   print(y)

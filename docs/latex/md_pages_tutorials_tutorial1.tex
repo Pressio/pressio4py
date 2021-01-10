@@ -1,18 +1,18 @@
 
 
-\begin{DoxyParagraph}{Content}
+\begin{DoxyParagraph}{}
 This tutorial shows how to create a linear decoder in pressio4py.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md62}
-A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
+A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $fomState$, as\+: \[ fomState = g(romState) \]
 
-where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being, assume it constant). A linear decoder in pressio4py implements this linear mapping. Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Code}\label{md_pages_tutorials_tutorial1_autotoc_md63}
-Here we demonstate how to create a linear decoder. The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
+where $romState$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ fomState = \phi romState \] where $\phi$ is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d fomState}{d romState} = \phi. \]
+
+A linear decoder in pressio4py represents this linear mapping.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Code}\label{md_pages_tutorials_tutorial1_autotoc_md63}
+The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
-\DoxyCodeLine{\textcolor{keyword}{import} random}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
 \DoxyCodeLine{}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}

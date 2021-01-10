@@ -7,20 +7,19 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>Content</title><para>This tutorial shows how to create a linear decoder in pressio4py.</para>
+<para><simplesect kind="par"><title></title><para>This tutorial shows how to create a linear decoder in pressio4py.</para>
 </simplesect>
 </para>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md62">
 <title>Context</title>
-<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
-<para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being, assume it constant). A linear decoder in pressio4py implements this linear mapping. Due to the linearity, the Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
+<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$fomState$</formula>, as: <formula id="15">\[ fomState = g(romState) \]</formula></para>
+<para>where <formula id="16">$romState$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ fomState = \phi romState \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is: <formula id="20">\[ \frac{d fomState}{d romState} = \phi. \]</formula></para>
+<para>A linear decoder in pressio4py represents this linear mapping.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md63">
 <title>Code</title>
-<para>Here we demonstate how to create a linear decoder. The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink></para>
-<para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>random</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
+<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink></para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
