@@ -3,37 +3,37 @@
 
 @m_class{m-block m-info}
 
-@par Content
+@par
 This tutorial shows how to create a linear decoder in pressio4py.
 
 ## Context
 A key assumption of projection-based ROMs relies on approximating
-a full-order model (FOM) state, @f$y_{fom}@f$, as:
+a full-order model (FOM) state, @f$fomState@f$, as:
 @f[
-y_{fom} = g(y_{rom})
+fomState = g(romState)
 @f]
 
-where @f$y_{rom}@f$ is the reduced state, also called
+where @f$romState@f$ is the reduced state, also called
 generalized coordinates, and @f$g@f$ is the mapping between the two.
 If @f$g@f$ is linear, then we can write:
 @f[
-y_{fom} = \phi y_{rom}
+fomState = \phi romState
 @f]
 where @f$\phi@f$ is a matrix (for the time being, assume it constant).
-A linear decoder in pressio4py implements this linear mapping.
 Due to the linearity, the Jacobian of the mapping is:
 @f[
-\frac{d y_{fom}}{d y_{rom}} = \phi.
+\frac{d fomState}{d romState} = \phi.
 @f]
 
+A linear decoder in pressio4py represents this linear mapping.
+
 ## Code
-Here we demonstate how to create a linear decoder.
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py)
 
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
-2:39
+2:37
 ```
 
 
