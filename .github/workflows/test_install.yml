@@ -35,9 +35,9 @@ jobs:
       - name: Clone Repos
         run: |
           git clone --recurse-submodules https://github.com/Pressio/pressio4py.git
-          cd pressio4py
-          cd pressio/; git pull; git checkout develop; git branch; 
-          cd ..
+          # cd pressio4py
+          # cd pressio/; git pull; git checkout develop; git branch; 
+          # cd ..
           pwd
           ls -lh
 
