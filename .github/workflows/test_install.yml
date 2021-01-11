@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7]
-        gcc-compilers: [gcc-10]
+        cxx-compilers: [g++-10]
 
     steps:
     - uses: actions/checkout@v2
@@ -41,8 +41,7 @@ jobs:
 
     - name: Build
       env:
-        CC:   gcc-10
-        CXX:  g++-10
+        CXX:  ${{matrix.cxx-compilers}}
       run: |
         # sudo apt install gcc-10 g++-10
         # export CXX=/usr/bin/g++-10
@@ -53,7 +52,6 @@ jobs:
 
     - name: install
       env:
-        CC:   gcc-10
         CXX:  g++-10
       run: |
         python setup.py install
