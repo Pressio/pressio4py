@@ -38,7 +38,7 @@ jobs:
         git branch
         ls -lh
 
-    - name: Build repo
+    - name: Build repo and install
       run: |
         sudo apt install gcc-10 g++-10
         export CXX=/usr/bin/g++-10
@@ -46,13 +46,11 @@ jobs:
         echo "Compilers:"
         echo $CXX
         python setup.py build
-
-    - name: Install repo
-      run: |
         sudo python setup.py install
 
-      # - name: Unittests and regression tests
-      #   run: |
-      #     cd build
-      #     pytest
-      #     cd ..
+    - name: Unittests and regression tests
+      run: |
+        cd build
+        pytest
+        cd ..
+        pytest
