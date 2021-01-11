@@ -47,8 +47,8 @@ jobs:
         echo $CXX
         python setup.py build
 
-      # - name: Install repo
-      #     python setup.py install
+    - name: Install repo
+        sudo python setup.py install
 
       # - name: Unittests and regression tests
       #   run: |
