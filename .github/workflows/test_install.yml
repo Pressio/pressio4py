@@ -16,45 +16,42 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     strategy:
       matrix:
         python-version: [3.6, 3.7]
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
       
-      - name: Clone Repos
-        run: |
-          pwd
-          ls -lh
-          git submodule update --init
-          cd pressio/
-          git checkout develop
-          git branch
-          ls -lh
+    - name: Clone Repos
+      run: |
+        pwd
+        ls -lh
+        git submodule update --init
+        cd pressio/
+        git checkout develop
+        git branch
+        ls -lh
 
-      - name: Build repo
-        run: |
-          sudo apt install gcc-10 g++-10
-          export CXX=/usr/bin/g++-10
-          export CC=/usr/bin/gcc-10
-          echo "Compilers:"
-          echo $CXX
-          python setup.py build
+      # - name: Build repo
+      #   run: |
+      #     sudo apt install gcc-10 g++-10
+      #     export CXX=/usr/bin/g++-10
+      #     export CC=/usr/bin/gcc-10
+      #     echo "Compilers:"
+      #     echo $CXX
+      #     python setup.py build
 
-      - name: Install repo
-          python setup.py install
+      # - name: Install repo
+      #     python setup.py install
 
-      - name: Unittests and regression tests
-        run: |
-          cd build
-          pytest
-          cd ..
+      # - name: Unittests and regression tests
+      #   run: |
+      #     cd build
+      #     pytest
+      #     cd ..
