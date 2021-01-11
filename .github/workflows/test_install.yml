@@ -40,7 +40,8 @@ jobs:
           # cd ..
           pwd
           ls -lh
-          cd pressio
+          git submodule update --init
+          cd pressio/
           ls -lh
 #       - name: TPLs
 #         run: |
