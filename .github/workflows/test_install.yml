@@ -57,9 +57,9 @@ jobs:
       run: |
         python setup.py install
 
-    # - name: Unittests and regression tests
-    #   run: |
-    #     cd build
-    #     pytest
-    #     cd ..
-    #     pytest
+    - name: Unittests and regression tests
+      run: |
+        cd build
+        pytest
+        cd ..
+        pytest
