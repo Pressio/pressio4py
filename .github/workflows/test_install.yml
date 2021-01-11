@@ -32,19 +32,14 @@ jobs:
 #           mkdir ~/pressio_repos
 #           mkdir ~/pressio_builds
 
-#       - name: Clone Repos
-#         run: |
-#           cd ~/pressio_repos
-#           git clone https://github.com/Pressio/pressio.git
-#           cd pressio
-#           git checkout develop
-#           cd ..
-#           git clone https://github.com/Pressio/pressio-builder.git
-#           git clone --branch develop https://github.com/Pressio/pressio4py.git
-#           pwd
-#           ls -lh
-#           cd pressio4py
-#           git branch -a
+      - name: Clone Repos
+        run: |
+          git clone --recurse-submodules https://github.com/Pressio/pressio4py.git
+          cd pressio4py
+          cd pressio/; git pull; git checkout develop; git branch; 
+          cd ..
+          pwd
+          ls -lh
 
 #       - name: TPLs
 #         run: |
