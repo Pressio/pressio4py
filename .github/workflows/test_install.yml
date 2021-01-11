@@ -38,14 +38,14 @@ jobs:
         git branch
         ls -lh
 
-      # - name: Build repo
-      #   run: |
-      #     sudo apt install gcc-10 g++-10
-      #     export CXX=/usr/bin/g++-10
-      #     export CC=/usr/bin/gcc-10
-      #     echo "Compilers:"
-      #     echo $CXX
-      #     python setup.py build
+    - name: Build repo
+      run: |
+        sudo apt install gcc-10 g++-10
+        export CXX=/usr/bin/g++-10
+        export CC=/usr/bin/gcc-10
+        echo "Compilers:"
+        echo $CXX
+        python setup.py build
 
       # - name: Install repo
       #     python setup.py install
