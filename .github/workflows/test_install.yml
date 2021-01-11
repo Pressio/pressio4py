@@ -21,12 +21,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: install compilers
-        run: |
-          sudo apt install gcc-10 g++-10
-          export CXX=/usr/bin/g++-10
-          echo "Compilers:"
-          echo $CXX
+      # - name: install compilers
+      #   run: |
+      #     sudo apt install gcc-10 g++-10
+      #     export CXX=/usr/bin/g++-10
+      #     echo "Compilers:"
+      #     echo $CXX
 #       - name: Setup directories
 #         run: |
 #           mkdir ~/pressio_repos
@@ -46,7 +46,10 @@ jobs:
 
       - name: Install repo and run tests
         run: |
+          sudo apt install gcc-10 g++-10
           export CXX=/usr/bin/g++-10
+          echo "Compilers:"
+          echo $CXX
           python setup.py build
 
 #       - name: TPLs
