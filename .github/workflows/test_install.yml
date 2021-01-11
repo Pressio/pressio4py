@@ -43,9 +43,10 @@ jobs:
           git checkout develop
           git branch
           ls -lh
-          
+
       - name: Install repo and run tests
         run: |
+          export CXX=/usr/bin/g++-10
           python setup.py build
 
 #       - name: TPLs
