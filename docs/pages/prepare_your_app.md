@@ -17,12 +17,12 @@ how to setup this "glue code".
 Pressio targets any system expressible as a parameterized
 system of ordinary differential equations (ODEs) as
 @f[
-\frac{d \boldsymbol{x}}{dt} =
-\boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu}),
-\quad \boldsymbol{x}(0;\boldsymbol{\mu}) = \boldsymbol{x}(\boldsymbol{\mu}),
+\frac{d \boldsymbol{y}}{dt} =
+\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}),
+\quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}),
 @f]
-where @f$\boldsymbol{x}@f$ is the state, @f$\mu@f$ are parameters,
-@f$t@f$ is time and @f$\boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu})@f$
+where @f$\boldsymbol{y}@f$ is the state, @f$\mu@f$ are parameters,
+@f$t@f$ is time and @f$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})@f$
 is referred to as "velocity" (or RHS).
 If your problem can be expressed as the system of ODEs above, then you
 can use and experiment with any of the ROM algorithms implemented in pressio4py.
@@ -47,9 +47,9 @@ molecular-dynamics problems).
 # What glue code do you need on your end to use pressio4py?
 
 pressio4py requires your application to expose the
-"velocity" @f$\boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu})@f$
+"velocity" @f$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})@f$
 and (optionally) the action of the
-Jacobian matrix @f$\partial f/\partial x@f$.
+Jacobian matrix @f$\partial f/\partial y@f$.
 This design choice pivots on the generality of the formulation above.
 We remark that the *same* expressive model/API is being used/expected
 by other well-established Python libraries, e.g., `scipy.ode`.
@@ -63,21 +63,21 @@ class FomAdapter:
     # initialize as you want/needed by your application
 	# e.g. mesh, inputs, bc, commandline aguments, etc.
 
-  # compute velocity, f(x,t;...), for a given state, x
-  def velocity(self, x, t, f):
+  # compute velocity, f(y,t;...), for a given state, y
+  def velocity(self, y, t, f):
 	f[:] = #compute velocity as needed
 
-  # given current state x(t):
-  # compute A=df/dx*B, where B is a skinny dense matrix
+  # given current state y(t):
+  # compute A=df/dy*B, where B is a skinny dense matrix
   # Note that we just require the *action* of the Jacobian.
-  def applyJacobian(self, x, B, t, A):
-    A[:,:] = # compute df/dx * B
+  def applyJacobian(self, y, B, t, A):
+    A[:,:] = # compute df/dy * B
 
-  # create f(x,t,...)
+  # create f(y,t,...)
   def createVelocity():
 	return np.zeros(N) # say N is the total number of of unknowns
 
-  # create result of df/dx*B, B is typically a skinny dense matrix
+  # create result of df/dy*B, B is typically a skinny dense matrix
   def createApplyJacobianResult(self, B):
 	return np.zeros_like(B)
 ```

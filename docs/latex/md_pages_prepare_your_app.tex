@@ -4,7 +4,7 @@
 This page describes how to setup the interface enabling pressio4py to communicate with your application. Note that this step only needs to be done once\+: the same interface class can then be used to run all the R\+O\+Ms in pressio4py. By the end, it should be clear our design choice and how to setup this \char`\"{}glue code\char`\"{}.
 \end{DoxyParagraph}
 \hypertarget{md_pages_prepare_your_app_autotoc_md58}{}\doxysection{Is pressio4py applicable to your problem and application?}\label{md_pages_prepare_your_app_autotoc_md58}
-Pressio targets any system expressible as a parameterized system of ordinary differential equations (O\+D\+Es) as \[ \frac{d \boldsymbol{x}}{dt} = \boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu}), \quad \boldsymbol{x}(0;\boldsymbol{\mu}) = \boldsymbol{x}(\boldsymbol{\mu}), \] where $\boldsymbol{x}$ is the state, $\mu$ are parameters, $t$ is time and $\boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu})$ is referred to as \char`\"{}velocity\char`\"{} (or R\+HS). If your problem can be expressed as the system of O\+D\+Es above, then you can use and experiment with any of the R\+OM algorithms implemented in pressio4py. Note that this is a {\itshape practical} assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that R\+O\+Ms would work well for your problem. But this is why you should try using presio4py to see if R\+O\+Ms can be useful for you!
+Pressio targets any system expressible as a parameterized system of ordinary differential equations (O\+D\+Es) as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \] where $\boldsymbol{y}$ is the state, $\mu$ are parameters, $t$ is time and $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ is referred to as \char`\"{}velocity\char`\"{} (or R\+HS). If your problem can be expressed as the system of O\+D\+Es above, then you can use and experiment with any of the R\+OM algorithms implemented in pressio4py. Note that this is a {\itshape practical} assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that R\+O\+Ms would work well for your problem. But this is why you should try using presio4py to see if R\+O\+Ms can be useful for you!
 
 
 
@@ -12,7 +12,7 @@ Pressio targets any system expressible as a parameterized system of ordinary dif
 This formulation is quite general and does not make any assumption on its origin\+: it may be derived from the spatial discretization (regardless of the discretization method) of a P\+DE problem, or from naturally discrete systems (e.\+g., molecular-\/dynamics problems).
 \end{DoxyParagraph}
 \hypertarget{md_pages_prepare_your_app_autotoc_md59}{}\doxysection{What glue code do you need on your end to use pressio4py?}\label{md_pages_prepare_your_app_autotoc_md59}
-pressio4py requires your application to expose the \char`\"{}velocity\char`\"{} $\boldsymbol{f}(\boldsymbol{x},t; \boldsymbol{\mu})$ and (optionally) the action of the Jacobian matrix $\partial f/\partial x$. This design choice pivots on the generality of the formulation above. We remark that the {\itshape same} expressive model/\+A\+PI is being used/expected by other well-\/established Python libraries, e.\+g., {\ttfamily scipy.\+ode}.
+pressio4py requires your application to expose the \char`\"{}velocity\char`\"{} $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ and (optionally) the action of the Jacobian matrix $\partial f/\partial y$. This design choice pivots on the generality of the formulation above. We remark that the {\itshape same} expressive model/\+A\+PI is being used/expected by other well-\/established Python libraries, e.\+g., {\ttfamily scipy.\+ode}.
 
 In practice, this can be done by writing an adapter class for your full-\/order model (F\+OM) that meets the A\+PI required by pressio4py as follows\+: 
 \begin{DoxyCode}{0}
@@ -21,21 +21,21 @@ In practice, this can be done by writing an adapter class for your full-\/order 
 \DoxyCodeLine{    \textcolor{comment}{\# initialize as you want/needed by your application}}
 \DoxyCodeLine{    \textcolor{comment}{\# e.g. mesh, inputs, bc, commandline aguments, etc.}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(x,t;...), for a given state, x}}
-\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, x, t, f):}
+\DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(y,t;...), for a given state, y}}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, y, t, f):}
 \DoxyCodeLine{    f[:] = \textcolor{comment}{\#compute velocity as needed}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# given current state x(t):}}
-\DoxyCodeLine{  \textcolor{comment}{\# compute A=df/dx*B, where B is a skinny dense matrix}}
+\DoxyCodeLine{  \textcolor{comment}{\# given current state y(t):}}
+\DoxyCodeLine{  \textcolor{comment}{\# compute A=df/dy*B, where B is a skinny dense matrix}}
 \DoxyCodeLine{  \textcolor{comment}{\# Note that we just require the *action* of the Jacobian.}}
-\DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, x, B, t, A):}
-\DoxyCodeLine{    A[:,:] = \textcolor{comment}{\# compute df/dx * B}}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, y, B, t, A):}
+\DoxyCodeLine{    A[:,:] = \textcolor{comment}{\# compute df/dy * B}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create f(x,t,...)}}
+\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
 \DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
 \DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N) \textcolor{comment}{\# say N is the total number of of unknowns}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create result of df/dx*B, B is typically a skinny dense matrix}}
+\DoxyCodeLine{  \textcolor{comment}{\# create result of df/dy*B, B is typically a skinny dense matrix}}
 \DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, B):}
 \DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros\_like(B)}
 \end{DoxyCode}

@@ -4,7 +4,7 @@
 
 @m_class{m-block m-info}
 
-@par What does this page describe?
+@par
 This page describes a demo for a reproductive LSPG ROM applied to a
 1D advection-diffusion problem using a nonlinear manifold via kernel PCA.
 This demo purposefully focuses on a simple test since the main goal is

@@ -4,7 +4,7 @@
 
 @m_class{m-block m-info}
 
-@par What does this page describe?
+@par
 This page describes a demo for a reproductive "masked" Galerkin ROM
 applied to a 1D advection-diffusion problem using POD modes as basis.
 The term "mask" refers to using a "trick" to mimic hyper-reduction

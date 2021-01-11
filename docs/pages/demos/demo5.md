@@ -4,7 +4,7 @@
 
 @m_class{m-block m-info}
 
-@par What does this page describe?
+@par
 This page describes a demo for a reproductive "masked" Galerkin and LSPG ROMs
 applied to a 1D advection-diffusion problem using POD modes as basis.
 The full demo script is [here.](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py)
