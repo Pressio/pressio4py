@@ -20,7 +20,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     strategy:
       matrix:
-        python-version: [3.6]
+        python-version: [3.6, 3.7]
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
