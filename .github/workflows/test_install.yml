@@ -43,6 +43,11 @@ jobs:
           git checkout develop
           git branch
           ls -lh
+          
+      - name: Install repo and run tests
+        run: |
+          python setup.py build
+
 #       - name: TPLs
 #         run: |
 #           cd ~/pressio_repos
