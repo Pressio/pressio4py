@@ -49,7 +49,7 @@ jobs:
         echo "Compilers:"
         echo $CXX
         python setup.py build
-        sudo python setup.py install
+        # sudo python setup.py install
 
     # - name: Unittests and regression tests
     #   run: |
