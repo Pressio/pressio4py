@@ -52,7 +52,7 @@ jobs:
 
     - name: install
       env:
-        CXX:  g++-10
+        CXX:  ${{matrix.cxx-compilers}}
       run: |
         python setup.py install
 
