@@ -19,6 +19,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7]
+        gcc-compilers: [gcc-10]
 
     steps:
     - uses: actions/checkout@v2
@@ -59,6 +60,7 @@ jobs:
 
     - name: Unittests and regression tests
       run: |
+        pip install pytest
         cd build
         pytest
         cd ..
