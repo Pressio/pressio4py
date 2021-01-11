@@ -7,7 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</ulink></para>
+<para><simplesect kind="par"><title></title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</ulink></para>
 </simplesect>
 </para>
 <sect1 id="md_pages_demos_demo3_1autotoc_md16">

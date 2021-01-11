@@ -7,7 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes a demo for a reproductive &quot;masked&quot; Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. The term &quot;mask&quot; refers to using a &quot;trick&quot; to mimic hyper-reduction without actually needing to change the origian application. By the end, it should be clear how to setup the problem. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
+<para><simplesect kind="par"><title></title><para>This page describes a demo for a reproductive &quot;masked&quot; Galerkin ROM applied to a 1D advection-diffusion problem using POD modes as basis. The term &quot;mask&quot; refers to using a &quot;trick&quot; to mimic hyper-reduction without actually needing to change the origian application. By the end, it should be clear how to setup the problem. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py">here.</ulink></para>
 </simplesect>
  <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title>We are currently working on this page, it will be updated with more explanations.</title><para></para>
