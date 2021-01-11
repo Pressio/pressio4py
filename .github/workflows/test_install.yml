@@ -39,18 +39,21 @@ jobs:
         ls -lh
 
     - name: Build repo and install
+      env:
+        CC:   gcc-10
+        CXX:  g++-10
       run: |
-        sudo apt install gcc-10 g++-10
-        export CXX=/usr/bin/g++-10
-        export CC=/usr/bin/gcc-10
+        # sudo apt install gcc-10 g++-10
+        # export CXX=/usr/bin/g++-10
+        # export CC=/usr/bin/gcc-10
         echo "Compilers:"
         echo $CXX
         python setup.py build
-        sudo python setup.py install
+        # sudo python setup.py install
 
-    - name: Unittests and regression tests
-      run: |
-        cd build
-        pytest
-        cd ..
-        pytest
+    # - name: Unittests and regression tests
+    #   run: |
+    #     cd build
+    #     pytest
+    #     cd ..
+    #     pytest
