@@ -48,9 +48,17 @@ jobs:
         run: |
           sudo apt install gcc-10 g++-10
           export CXX=/usr/bin/g++-10
+          export CC=/usr/bin/gcc-10
           echo "Compilers:"
           echo $CXX
           python setup.py build
+          python setup.py install
+
+      - name: Unittests and regression tests
+        run: |
+          cd build
+          pytest
+          cd ..
 
 #       - name: TPLs
 #         run: |
