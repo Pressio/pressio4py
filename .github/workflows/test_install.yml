@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
+    strategy:
+      matrix:
+        python-version: [3.6]
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -42,7 +46,7 @@ jobs:
           echo "Compilers:"
           echo $CXX
           python setup.py build
-          
+
       - name: Install repo
           python setup.py install
 
