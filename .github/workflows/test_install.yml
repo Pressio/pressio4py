@@ -29,6 +29,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
       
+    - name: set environment variables
+        uses: allenevans/set-env@v2.0.0
+        with:
+          CXX: ${{matrix.cxx-compilers}}
+
     - name: Clone Repos
       run: |
         pwd
@@ -41,7 +46,7 @@ jobs:
 
     - name: Build
       env:
-        CXX:  ${{matrix.cxx-compilers}}
+        CXX: ${{matrix.cxx-compilers}}
       run: |
         echo "Compilers:"
         echo $CXX
@@ -56,13 +61,13 @@ jobs:
 
     - name: Build wheels
       run: |
+        echo "Compilers:"
         echo $CXX
         pip install wheel
         python setup.py sdist bdist_wheel
-            
+
     - name: install
       run: |
-        echo $CXX
         python setup.py install
 
     - name: Regression tests
