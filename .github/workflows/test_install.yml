@@ -47,12 +47,6 @@ jobs:
         echo $CXX
         python setup.py build
 
-    - name: Build wheels
-      env:
-        CXX:  ${{matrix.cxx-compilers}}
-      run: |
-        python setup.py sdist bdist_wheel    
-
     - name: Unit tests
       run: |
         python -m pip install --upgrade pip
@@ -60,10 +54,15 @@ jobs:
         cd build/lib*
         python -m pytest
 
-    - name: install
-      env:
-        CXX:  ${{matrix.cxx-compilers}}
+    - name: Build wheels
       run: |
+        echo $CXX
+        pip install wheel
+        python setup.py sdist bdist_wheel
+            
+    - name: install
+      run: |
+        echo $CXX
         python setup.py install
 
     - name: Regression tests
