@@ -49,7 +49,7 @@ jobs:
 
     - name: Unit tests
       run: |
-        pip install pytest
+        pip install pytest numpy
         cd build/lib*
         python -m pytest
 
