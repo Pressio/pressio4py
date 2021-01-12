@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7]
-        cxx-compilers: [g++-9]
+        python-version: [3.7, 3.8]
+        cxx-compilers: [clang, g++-9, g++-10]
 
     steps:
     - uses: actions/checkout@v2
