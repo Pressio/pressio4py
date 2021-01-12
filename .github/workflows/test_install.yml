@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
-        cxx-compilers: [g++-9, g++-10]
+        python-version: [3.7]
+        cxx-compilers: [g++-9]
 
     steps:
     - uses: actions/checkout@v2
@@ -46,6 +46,12 @@ jobs:
         echo "Compilers:"
         echo $CXX
         python setup.py build
+
+    - name: Build wheels
+      env:
+        CXX:  ${{matrix.cxx-compilers}}
+      run: |
+        python setup.py sdist bdist_wheel    
 
     - name: Unit tests
       run: |
