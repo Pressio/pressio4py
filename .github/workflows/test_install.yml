@@ -46,7 +46,7 @@ jobs:
         echo "Compilers:"
         echo $CXX
         python setup.py build
-        cd build/
+        cd build/lib*
         ls -lh
 
     - name: install
