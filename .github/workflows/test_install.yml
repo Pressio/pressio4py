@@ -43,12 +43,11 @@ jobs:
       env:
         CXX:  ${{matrix.cxx-compilers}}
       run: |
-        # sudo apt install gcc-10 g++-10
-        # export CXX=/usr/bin/g++-10
-        # export CC=/usr/bin/gcc-10
         echo "Compilers:"
         echo $CXX
         python setup.py build
+        cd build/
+        ls -lh
 
     - name: install
       env:
