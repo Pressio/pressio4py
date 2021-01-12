@@ -46,8 +46,12 @@ jobs:
         echo "Compilers:"
         echo $CXX
         python setup.py build
+
+    - name: Unit tests
+      run: |
+        pip install pytest
         cd build/lib*
-        ls -lh
+        python -m pytest
 
     - name: install
       env:
@@ -55,10 +59,7 @@ jobs:
       run: |
         python setup.py install
 
-    - name: Unittests and regression tests
+    - name: Regression tests
       run: |
         pip install pytest
-        cd build
-        pytest
-        cd ..
         pytest
