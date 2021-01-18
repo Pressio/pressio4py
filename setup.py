@@ -99,7 +99,7 @@ class CMakeBuild(build_ext):
 
 setup(
   name="pressio4py",
-  version="0.6.1rc4",
+  version="0.6.1rc5",
   author="Francesco Rizzi",
   author_email="fnrizzi@sandia.gov",
   description="pressio4py: projection-based model reduction for Python",
