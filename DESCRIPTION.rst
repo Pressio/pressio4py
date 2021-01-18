@@ -36,7 +36,7 @@ After installing the library, you can check run the regression tests:
 
 .. code-block:: bash
 
-  git clone git@github.com:Pressio/pressio4py.git
+  git clone --recursive git@github.com:Pressio/pressio4py.git
   cd pressio4py/regression_tests
   pytest -s
 
@@ -45,7 +45,7 @@ And you can check out the demos:
 
 .. code-block:: bash
 
-  git clone git@github.com:Pressio/pressio4py.git
+  git clone --recursive git@github.com:Pressio/pressio4py.git
   cd pressio4py/demos
   python3 ./<demo-subdir-name>/main.py
 
