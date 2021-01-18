@@ -13,7 +13,7 @@
 <title>Install pressio4py</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
-<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio4py.git<sp/>#<sp/>or<sp/>https://github.com/Pressio/pressio4py.git</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>--recursive<sp/>git@github.com:Pressio/pressio4py.git<sp/>#<sp/>or<sp/>https://github.com/Pressio/pressio4py.git</highlight></codeline>
 <codeline><highlight class="normal">pip<sp/>install<sp/>./pressio4py</highlight></codeline>
 </programlisting></para>
 </simplesect>
