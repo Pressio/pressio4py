@@ -19,7 +19,7 @@ Suppose that your full-order model (FOM) is written as
 @f]
 
 where @f$y@f$ is the FOM state and @f$f(...)@f$ is the FOM velocity.
-Note that here both @f$y@f$ and @f$f@f$ are large, see figure below.
+Both @f$y@f$ and @f$f@f$ are large, see figure below.
 @image html tut_gal_1_f1.png width=30%
 
 pressio4py defines a *default Galerkin* problem to be
