@@ -25,8 +25,10 @@ A linear decoder in pressio4py represents this linear mapping.
 
 Note that the above expressions are abtract, since they do not specify
 what kind of data structures are used.
-Therefore, pressio4py supports two scenarios,
-namely the state is an rank-1 tensor (i.e., vector) or a rank-2 tensor.
+pressio4py supports two scenarios:
+1. the FOM and ROM states are *rank-1 tensors* (i.e., vectors)
+2. the FOM and ROM states are *rank-2 tensors* (i.e., matrices)
+
 
 ## Rank-1 state
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py).

@@ -6,7 +6,7 @@ If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$
 
 A linear decoder in pressio4py represents this linear mapping.
 
-Note that the above expressions are abtract, since they do not specify what kind of data structure is used for $y_{fom}$. Therefore, pressio4py supports two scenarios, namely the state is an rank-\/1 tensor (i.\+e., vector) or a rank-\/2 tensor.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
+Note that the above expressions are abtract, since they do not specify what kind of data structures are used. Therefore, pressio4py supports two scenarios, namely the state is an rank-\/1 tensor (i.\+e., vector) or a rank-\/2 tensor.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
 
 In this case, the F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores in a single array all the spatial degrees of freedom. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell. This is common when the application needs to do implicit time-\/integration such that a large system needed to be solved.
