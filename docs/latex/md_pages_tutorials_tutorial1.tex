@@ -2,7 +2,13 @@ A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\
 
 where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being assumed constant). The Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
 
-A linear decoder in pressio4py represents this linear mapping. Note that we have not specified what kind of data structure is used for $y_{fom}$.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
+A linear decoder in pressio4py represents this linear mapping.
+
+Note that we have not specified what kind of data structure is used for $y_{fom}$. We envision two scenarios\+:
+\begin{DoxyItemize}
+\item the F\+OM state is represented as an array, i.\+e. $y_{fom} \in R^N$, where $N$ is the {\bfseries{total number of degrees of freedom}}. In this case, even if the application involves multiple fields (e.\+g., density, chemical species, etc), one stores all the spatial degrees of freedom this is typically used when the application needs to do implicit time-\/integration such that a large system needed to be solve.\+d
+\item the F\+OM state is represented as rank-\/2 tensor, i.\+e. $y_{fom} \in R^N$
+\end{DoxyItemize}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
 
 
