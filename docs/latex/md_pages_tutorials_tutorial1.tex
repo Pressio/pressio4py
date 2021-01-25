@@ -1,3 +1,9 @@
+
+
+\begin{DoxyParagraph}{}
+The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
 
 where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two.
@@ -6,16 +12,11 @@ If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$
 
 A linear decoder in pressio4py represents this linear mapping.
 
-
-
-\begin{DoxyParagraph}{}
-The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
-\end{DoxyParagraph}
 Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios\+:
 \begin{DoxyEnumerate}
 \item the F\+OM and R\+OM states are {\itshape rank-\/1 tensors} (i.\+e., vectors)
 \item the F\+OM and R\+OM states are {\itshape rank-\/2 tensors} (i.\+e., matrices)
-\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
+\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
 The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needed to be solved. 
 
 
@@ -50,7 +51,7 @@ The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries
 \begin{DoxyParagraph}{Where can you use the linear decoder with a rank-\/1 state?}
 It can be employed for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md64}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md64}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
 
 In this case, the F\+OM state is stored as a matrix, $y_{fom} \in R^{N,m}$, where\+:

@@ -10,12 +10,12 @@
 <para><simplesect kind="par"><title></title><para>This tutorial shows how to create a <emphasis>custom</emphasis> decoder in pressio4py.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md65">
+<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md66">
 <title>Context</title>
 <para>A custom decoder in pressio4py implements a general mapping: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula> where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, <formula id="14">$y_{fom}$</formula> is the full-order model (FOM) state, and <formula id="17">$g$</formula> is the mapping between the two. The Jacobian of the mapping is: <formula id="25">\[ J_g = \frac{d g}{d y_{rom}}. \]</formula></para>
 <para>This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md66">
+<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md67">
 <title>Code</title>
 <para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</ulink></para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>

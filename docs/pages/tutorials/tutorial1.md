@@ -36,8 +36,10 @@ pressio4py supports two scenarios:
 2. the FOM and ROM states are *rank-2 tensors* (i.e., matrices)
 
 ## Rank-1 state
-The FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
-where @f$N@f$ = **total number of degrees of freedom**.
+The FOM state is stored as an array, @f$y_{fom} \in R^N@f$, where @f$N@f$ = **total number
+of degrees of freedom**, while the ROM state is stored as an array, @f$y_{rom} \in R^p@f$,
+where @f$p@ff$ is the number of modes.
+
 In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc),
 but stores all the spatial degrees of freedom in a single array.
 For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells.
