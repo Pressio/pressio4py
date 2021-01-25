@@ -23,6 +23,12 @@ The Jacobian of the mapping is:
 
 A linear decoder in pressio4py represents this linear mapping.
 
+@m_class{m-block m-warning}
+
+@par
+The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py).
+
+
 Note that the above expressions are abtract, since they do not specify
 what kind of data structures are used.
 pressio4py supports two scenarios:
@@ -30,8 +36,9 @@ pressio4py supports two scenarios:
 2. the FOM and ROM states are *rank-2 tensors* (i.e., matrices)
 
 
+
 ## Rank-1 state
-The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py).
+
 
 The FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
 where @f$N@f$ = **total number of degrees of freedom**.
