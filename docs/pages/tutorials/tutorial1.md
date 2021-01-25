@@ -24,7 +24,7 @@ The Jacobian of the mapping is:
 A linear decoder in pressio4py represents this linear mapping.
 
 Note that the above expressions are abtract, since they do not specify
-what kind of data structure is used for @f$y_{fom}@f$.
+what kind of data structures are used.
 Therefore, pressio4py supports two scenarios,
 namely the state is an rank-1 tensor (i.e., vector) or a rank-2 tensor.
 

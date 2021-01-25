@@ -7,7 +7,8 @@
     </briefdescription>
     <detaileddescription>
 <para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
-<para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
+<para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two.</para>
+<para>If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
 <para>Note that the above expressions are abtract, since they do not specify what kind of data structure is used for <formula id="14">$y_{fom}$</formula>. Therefore, pressio4py supports two scenarios, namely the state is an rank-1 tensor (i.e., vector) or a rank-2 tensor.</para>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md62">

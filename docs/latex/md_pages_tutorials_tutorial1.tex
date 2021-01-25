@@ -1,6 +1,8 @@
 A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
 
-where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being assumed constant). The Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
+where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two.
+
+If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being assumed constant). The Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
 
 A linear decoder in pressio4py represents this linear mapping.
 
