@@ -38,15 +38,14 @@ pressio4py supports two scenarios:
 ## Rank-1 state
 The FOM state is stored as an array, @f$y_{fom} \in R^N@f$, where @f$N@f$ = **total number
 of degrees of freedom**, while the ROM state is stored as an array, @f$y_{rom} \in R^p@f$,
-where @f$p@f$ is the number of modes.
+where @f$p@f$ is the number of modes, see the figure below.
+@image html tut_lindec_f1.png width=32%
 
 In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc),
 it stores all the spatial degrees of freedom in a single array.
 For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells.
 This is common, for example, when the application needs to do implicit time-integration
 such that a large system needs to be solved.
-@image html tut_lindec_f1.png width=32%
-
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
