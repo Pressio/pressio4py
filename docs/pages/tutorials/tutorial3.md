@@ -47,7 +47,7 @@ To create a Galerkin problem, one needs:
 3. a rom state
 4. a FOM reference state
 
-The synopsis to create the problem is then:
+Synopsis:
 
 ```py
 problem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
@@ -61,6 +61,7 @@ To use a different time stepping scheme, one can simply change the last
 part of the class name.
 We currently support forward Euler and 4th-order Runge Kutta.
 For RK4, one would do:
+
 ```py
 problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
 ```
@@ -69,7 +70,8 @@ problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
 
 Once the problem object is created, one needs to integrate
 in time the reduced system.
-This can be done as follows:
+Synopsis:
+
 ```py
 rom.galerkin.advanceNSteps(problem, yRom, t0, dt, Nsteps [, observer])
 ```

@@ -27,4 +27,15 @@ The synopsis to create the problem is then\+:
 \end{DoxyCode}
 
 
-Here we highlight how the time-\/stepping scheme is part of the class name. This stems from how the Python bindings are created via C++ templates. 
+Here we highlight that the problem class is within the {\ttfamily default} module and how the time-\/stepping scheme is part of the class name. This stems from the fact that the Python bindings are built from the C++ library, which is heavy on templates, thus leading to this solution.
+
+To use a different time stepping scheme, one can simply change the last part of the class name. We currently support forward Euler and 4th-\/order Runge Kutta. For R\+K4, one would do\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)}
+\end{DoxyCode}
+\hypertarget{md_pages_tutorials_tutorial3_autotoc_md71}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md71}
+Once the problem object is created, one needs to integrate in time the reduced system. This can be done as follows\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{rom.galerkin.advanceNSteps(problem, yRom, t0, dt, Nsteps [, observer])}
+\end{DoxyCode}
+ 
