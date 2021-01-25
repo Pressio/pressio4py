@@ -12,9 +12,10 @@
 </para>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md69">
 <title>What is a default Galerkin problem?</title>
-<para>pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials. The &quot;default&quot; qualification refers to a formulation that does <emphasis>not</emphasis> use hyper-reduction. In practice, a <emphasis>default Galerkin</emphasis> problem corresponds to solving the following problem:</para>
+<para>pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials. The &quot;default&quot; qualification refers to a formulation that does <emphasis>not</emphasis> use hyper-reduction. Suppose that your full-order model (FOM) is written as <formula id="8">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula></para>
+<para>In practice, a <emphasis>default Galerkin</emphasis> problem corresponds to solving the following problem:</para>
 <para><formula id="29">\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^+ \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]</formula></para>
-<para>where <formula id="30">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="31">$y$</formula> is the full-order model (FOM) state, <formula id="32">$y_{ref}$</formula> is the reference FOM state, <formula id="19">$\phi$</formula> is the basis, and <formula id="33">$f(.)$</formula> is the FOM velocity. </para>
+<para>where <formula id="30">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="31">$y$</formula> is the full-order model (FOM) state, <formula id="32">$y_{ref}$</formula> is the reference FOM state, <formula id="19">$\phi$</formula> is the basis, and <formula id="33">$f(...)$</formula> is the FOM velocity. </para>
 </sect1>
     </detaileddescription>
   </compounddef>

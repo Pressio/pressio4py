@@ -17,8 +17,7 @@ Suppose that your full-order model (FOM) is written as
 \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}),
 @f]
 
-In practice, a *default Galerkin* problem corresponds to solving the following
-problem:
+In practice, a *default Galerkin* problem corresponds to the following formulation:
 
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
