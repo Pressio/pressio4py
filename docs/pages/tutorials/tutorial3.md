@@ -10,6 +10,13 @@ This tutorial shows how to create and solve a *default* time-explicit Galerkin p
 
 pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials.
 The "default" qualification refers to a formulation that does *not* use hyper-reduction.
+Suppose that your full-order model (FOM) is written as
+@f[
+\frac{d \boldsymbol{y}}{dt} =
+\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}),
+\quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}),
+@f]
+
 In practice, a *default Galerkin* problem corresponds to solving the following
 problem:
 
@@ -24,4 +31,4 @@ problem:
 where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$y@f$ is the full-order model (FOM) state,
 @f$y_{ref}@f$ is the reference FOM state, @f$\phi@f$ is the basis, and
-@f$f(.)@f$ is the FOM velocity.
+@f$f(...)@f$ is the FOM velocity.
