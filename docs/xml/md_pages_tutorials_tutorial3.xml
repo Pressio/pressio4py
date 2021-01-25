@@ -28,7 +28,8 @@
 </listitem><listitem><para>a FOM reference state</para>
 </listitem></orderedlist>
 </para>
-<para>The synopsis to create the problem is then: <programlisting filename=".py"><codeline><highlight class="normal">galerkinProblem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
+<para>The synopsis to create the problem is then:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">galerkinProblem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
 </programlisting> </para>
 </sect1>
     </detaileddescription>

@@ -50,5 +50,7 @@ To create a Galerkin problem, one needs:
 The synopsis to create the problem is then:
 
 ```py
-galerkinProblem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
+problem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
 ```
+Here we highlight how the time-stepping scheme is part of the class name.
+This stems from how the Python bindings are created via C++ templates.
