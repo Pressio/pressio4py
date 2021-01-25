@@ -51,7 +51,7 @@ The code snippet below demonstrates how to setup such linear mapping between ran
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
-2:23
+4:23
 ```
 
 @m_class{m-block m-warning}
@@ -72,7 +72,12 @@ In such case, the FOM state can be represented as a tensor, @f$y_{fom} \in R^{N,
 
 This scenario is intended for applications that prefer to separate the degress of freedom,
 and is frequently found when using explicit time integration.
-
+The code snippet below demonstrates how to setup such linear mapping between rank-1 states.
+```py
+@codesnippet
+../../../tutorials/tut_linear_decoder/main.py
+25:55
+```
 
 @m_class{m-block m-warning}
 
