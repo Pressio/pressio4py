@@ -27,9 +27,10 @@ what kind of data structure is used for @f$y_{fom}@f$.
 We envision the following scenarios:
 * rank-1 state: the FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
 where @f$N@f$ = **total number of degrees of freedom**.
-In this case, even if the application involves multiple fields (e.g., density, chemical species, etc),
-one stores all the spatial degrees of freedom this is typically used when the application needs to do implicit time-integration
-such that a large system needed to be solve.d
+In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc),
+but stores in a single array all the spatial degrees of freedom.
+this is common when the application needs to do implicit time-integration
+such that a large system needed to be solved.
 
 * the FOM state is represented as rank-2 tensor, i.e. @f$y_{fom} \in R^N@f$
 
