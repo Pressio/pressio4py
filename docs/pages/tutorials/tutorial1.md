@@ -25,8 +25,9 @@ A linear decoder in pressio4py represents this linear mapping.
 Note that the above expressions are abtract, since they do not specify
 what kind of data structure is used for @f$y_{fom}@f$.
 We envision the following scenarios:
-* the FOM relies on the FOM state to be an array, @f$y_{fom} \in R^N@f$,
-where @f$N@f$ = the **total number of degrees of freedom**. In this case, even if the application involves multiple fields (e.g., density, chemical species, etc),
+* rank-1 state: the FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
+where @f$N@f$ = **total number of degrees of freedom**.
+In this case, even if the application involves multiple fields (e.g., density, chemical species, etc),
 one stores all the spatial degrees of freedom this is typically used when the application needs to do implicit time-integration
 such that a large system needed to be solve.d
 
