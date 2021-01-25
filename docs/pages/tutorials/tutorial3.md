@@ -22,8 +22,7 @@ where @f$y@f$ is the FOM state and @f$f(...)@f$ is the FOM velocity.
 Note that here both @f$y@f$ and @f$f@f$ are large, see figure below.
 @image html tut_gal_1_f1.png width=35%
 
-In practice, a *default Galerkin* problem corresponds to the following formulation:
-
+pressio4py defines a *default Galerkin* problem to be
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
 \mathbf{\phi}^T
@@ -34,5 +33,6 @@ In practice, a *default Galerkin* problem corresponds to the following formulati
 
 where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$y@f$ is the full-order model (FOM) state,
-@f$y_{ref}@f$ is the reference FOM state, @f$\phi@f$ is the basis, and
+@f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
 @f$f(...)@f$ is the FOM velocity.
+@image html tut_gal_1_f2.png width=35%
