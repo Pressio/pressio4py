@@ -38,7 +38,7 @@ pressio4py supports two scenarios:
 ## Rank-1 state
 The FOM state is stored as an array, @f$y_{fom} \in R^N@f$, where @f$N@f$ = **total number
 of degrees of freedom**, while the ROM state is stored as an array, @f$y_{rom} \in R^p@f$,
-where @f$p@ff$ is the number of modes.
+where @f$p@f$ is the number of modes.
 
 In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc),
 but stores all the spatial degrees of freedom in a single array.
