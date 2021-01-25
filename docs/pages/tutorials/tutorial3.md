@@ -22,6 +22,9 @@ where @f$y@f$ is the FOM state and @f$f(...)@f$ is the FOM velocity.
 Both @f$y@f$ and @f$f@f$ are large, see figure below.
 @image html tut_gal_1_f1.png width=30%
 
+@m_class{m-block m-success}
+
+@par Default Galerkin
 pressio4py defines a *default Galerkin* problem to be
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
