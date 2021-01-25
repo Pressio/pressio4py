@@ -1,12 +1,7 @@
 
+
 # Tutorial: Linear Decoder
 
-@m_class{m-block m-info}
-
-@par
-This tutorial shows how to create a linear decoder in pressio4py.
-
-## Context
 A key assumption of projection-based ROMs relies on approximating
 a full-order model (FOM) state, @f$y_{fom}@f$, as:
 @f[
@@ -19,15 +14,18 @@ If @f$g@f$ is linear, then we can write:
 @f[
 y_{fom} = \phi y_{rom}
 @f]
-where @f$\phi@f$ is a matrix (for the time being, assume it constant).
-Due to the linearity, the Jacobian of the mapping is:
+where @f$\phi@f$ is a matrix (for the time being assumed constant).
+The Jacobian of the mapping is:
 @f[
 \frac{d y_{fom}}{d y_{rom}} = \phi.
 @f]
 
 A linear decoder in pressio4py represents this linear mapping.
+Note that we have not specified what kind of data structure is used
+for @f$y_{fom}@f$.
 
-## Code
+
+## Rank-1 state
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py)
 
 ```py
