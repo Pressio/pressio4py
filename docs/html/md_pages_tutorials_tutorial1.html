@@ -273,9 +273,7 @@ $p$
 <g id='eq12-page1'>
 <use x='0' y='0' xlink:href='#eq12-g0-112'/>
 </g>
-</svg> is the number of modes, see the figure below.</p><img class="m-image" src="tut_lindec_f1.png" alt="Image" style="width: 30%;" /><p>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</p><p>The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="kn">from</span> <span class="nn">pressio4py</span> <span class="kn">import</span> <span class="n">rom</span> <span class="k">as</span> <span class="n">rom</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</svg> is the number of modes, see the figure below.</p><img class="m-image" src="tut_lindec_f1.png" alt="Image" style="width: 30%;" /><p>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</p><p>The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank1StateDecoder</span><span class="p">():</span>
   <span class="c1"># create the matrix</span>
   <span class="c1"># attention: we declare phi to be column-major for these reasons:</span>
   <span class="c1">#</span>
@@ -349,7 +347,37 @@ $N$
 <g id='eq16-page1'>
 <use x='0' y='0' xlink:href='#eq16-g0-78'/>
 </g>
-</svg> = number of degrees of freedom of each field</p><img class="m-image" src="tut_lindec_f2.png" alt="Image" style="width: 34%;" /></li></ul><p>This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration.</p><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-2 state?</h3><p>Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping.</p></aside></section>
+</svg> = number of degrees of freedom of each field</p><img class="m-image" src="tut_lindec_f2.png" alt="Image" style="width: 34%;" /></li></ul><p>This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration. The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank2StateDecoder</span><span class="p">():</span>
+  <span class="c1"># create the phi tensor</span>
+  <span class="c1"># attention: we declare phi to be column-major for these reasons:</span>
+  <span class="c1">#</span>
+  <span class="c1"># 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,</span>
+  <span class="c1">#    so a column-major layout implies seamless compatiblity with blas</span>
+  <span class="c1">#</span>
+  <span class="c1"># 2. when using column-major layout, pressio4py references the</span>
+  <span class="c1">#    matrix phi without doing a deep copy, which saves memory</span>
+  <span class="c1">#    since a single jacobian matrix is alive.</span>
+  <span class="c1">#</span>
+  <span class="c1"># suppose that:</span>
+  <span class="c1"># N = 10 is total FOM deg of freedom</span>
+  <span class="c1"># numFields = 4 (e.g. density, x-vel, y-vel, temperature)</span>
+  <span class="c1"># and romSize = 3</span>
+  <span class="c1">#</span>
+  <span class="c1"># each slice phi[:,:,k] basically corresponds to the POD modes for the k-th field</span>
+  <span class="c1">#</span>
+  <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>
+  <span class="n">romSize</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="n">numFields</span> <span class="o">=</span> <span class="mi">4</span>
+  <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">romSize</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+  <span class="c1"># to create the linear decoder, one can simply do</span>
+  <span class="n">linearDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">rank2state</span><span class="o">.</span><span class="n">MultiFieldDecoder</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
+  <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>
+  <span class="n">fomState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+  <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">romSize</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+  <span class="n">linearDecoder</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-2 state?</h3><p>Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping.</p></aside></section>
       </div>
     </div>
   </div>

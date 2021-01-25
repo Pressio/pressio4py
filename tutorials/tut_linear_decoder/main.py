@@ -1,4 +1,5 @@
 
+import numpy as np
 from pressio4py import rom as rom
 
 def rank1StateDecoder():
@@ -20,7 +21,7 @@ def rank1StateDecoder():
   # linearDecoder exposes a method to evaluate the mapping
   fomState, romState = np.zeros(10), np.ones(3)
   linearDecoder.applyMapping(romState, fomState)
-  print(y)
+  print(fomState)
 
 def rank2StateDecoder():
   # create the phi tensor
@@ -50,10 +51,10 @@ def rank2StateDecoder():
 
   # linearDecoder exposes a method to evaluate the mapping
   fomState = np.zeros((N, numFields), order='F')
-  romState = np.zeros((romSize, numFields), order='F')
+  romState = np.ones((romSize, numFields), order='F')
   linearDecoder.applyMapping(romState, fomState)
-  print(y)
+  print(fomState)
 
 if __name__ == "__main__":
   rank1StateDecoder()
-  rank2StateDecoder():
+  rank2StateDecoder()

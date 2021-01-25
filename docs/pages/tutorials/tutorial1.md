@@ -51,7 +51,7 @@ The code snippet below demonstrates how to setup such linear mapping between ran
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
-4:23
+5:24
 ```
 
 @m_class{m-block m-warning}
@@ -76,7 +76,7 @@ The code snippet below demonstrates how to setup such linear mapping between ran
 ```py
 @codesnippet
 ../../../tutorials/tut_linear_decoder/main.py
-25:55
+26:56
 ```
 
 @m_class{m-block m-warning}

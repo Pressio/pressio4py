@@ -23,9 +23,7 @@ In this case, even if the application possibly involves multiple fields (e.\+g.,
 
 The code snippet below demonstrates how to setup such linear mapping between rank-\/1 states. 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
-\DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{\textcolor{keyword}{def }rank1StateDecoder():}
 \DoxyCodeLine{  \textcolor{comment}{\# create the matrix}}
 \DoxyCodeLine{  \textcolor{comment}{\# attention: we declare phi to be column-\/major for these reasons:}}
 \DoxyCodeLine{  \textcolor{comment}{\#}}
@@ -62,7 +60,41 @@ In such case, the F\+OM state can be represented as a tensor, $y_{fom} \in R^{N,
 \item $N$ = number of degrees of freedom of each field 
 \end{DoxyItemize}
 
-This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration.
+This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration. The code snippet below demonstrates how to setup such linear mapping between rank-\/1 states. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{def }rank2StateDecoder():}
+\DoxyCodeLine{  \textcolor{comment}{\# create the phi tensor}}
+\DoxyCodeLine{  \textcolor{comment}{\# attention: we declare phi to be column-\/major for these reasons:}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,}}
+\DoxyCodeLine{  \textcolor{comment}{\#    so a column-\/major layout implies seamless compatiblity with blas}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# 2. when using column-\/major layout, pressio4py references the}}
+\DoxyCodeLine{  \textcolor{comment}{\#    matrix phi without doing a deep copy, which saves memory}}
+\DoxyCodeLine{  \textcolor{comment}{\#    since a single jacobian matrix is alive.}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# suppose that:}}
+\DoxyCodeLine{  \textcolor{comment}{\# N = 10 is total FOM deg of freedom}}
+\DoxyCodeLine{  \textcolor{comment}{\# numFields = 4 (e.g. density, x-\/vel, y-\/vel, temperature)}}
+\DoxyCodeLine{  \textcolor{comment}{\# and romSize = 3}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# each slice phi[:,:,k] basically corresponds to the POD modes for the k-\/th field}}
+\DoxyCodeLine{  \textcolor{comment}{\#}}
+\DoxyCodeLine{  N = 10}
+\DoxyCodeLine{  romSize = 3}
+\DoxyCodeLine{  numFields = 4}
+\DoxyCodeLine{  phi = np.ones((N, romSize, numFields), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# to create the linear decoder, one can simply do}}
+\DoxyCodeLine{  linearDecoder = rom.rank2state.MultiFieldDecoder(phi)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
+\DoxyCodeLine{  fomState = np.zeros((N, numFields), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{  romState = np.zeros((romSize, numFields), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{  linearDecoder.applyMapping(romState, fomState)}
+\DoxyCodeLine{  print(y)}
+\end{DoxyCode}
+
 
 
 
