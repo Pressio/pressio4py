@@ -37,7 +37,8 @@ pressio4py defines a *default Galerkin* problem as:
 where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$y@f$ is the full-order model (FOM) state,
 @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
-@f$f(...)@f$ is the FOM velocity.
+@f$f(...)@f$ is the FOM velocity. Schematically, this system corresponds
+to the figure below.
 @image html tut_gal_1_f2.png width=65%
 
 # How to create a default Galerkin problem?
