@@ -13,8 +13,14 @@ pressio4py defines a {\itshape default Galerkin} problem to be \[ \dot{\hat{\mat
 where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. \hypertarget{md_pages_tutorials_tutorial3_autotoc_md70}{}\doxysection{How to create a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md70}
 Here we focus on explicit time integration, leaving the implicit one for a different tutorial. To create a Galerkin problem, one needs\+:
 \begin{DoxyEnumerate}
-\item a F\+OM object to compute the velocity satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}};
+\item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}};
 \item a linear decoder object (see \href{./md_pages_tutorials_tutorial1.html}{\texttt{ this tutorial}});
 \item a rom state
-\item a F\+OM reference state 
+\item a F\+OM reference state
 \end{DoxyEnumerate}
+
+The synopsis to create the problem is then\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{galerkinProblem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)}
+\end{DoxyCode}
+ 

@@ -48,6 +48,7 @@ To create a Galerkin problem, one needs:
 4. a FOM reference state
 
 The synopsis to create the problem is then:
+
 ```py
 galerkinProblem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
 ```

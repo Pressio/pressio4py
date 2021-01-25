@@ -22,12 +22,14 @@
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md70">
 <title>How to create a default Galerkin problem?</title>
 <para>Here we focus on explicit time integration, leaving the implicit one for a different tutorial. To create a Galerkin problem, one needs:<orderedlist>
-<listitem><para>a FOM object to compute the velocity satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink>;</para>
+<listitem><para>a FOM object satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink>;</para>
 </listitem><listitem><para>a linear decoder object (see <ulink url="./md_pages_tutorials_tutorial1.html">this tutorial</ulink>);</para>
 </listitem><listitem><para>a rom state</para>
-</listitem><listitem><para>a FOM reference state </para>
+</listitem><listitem><para>a FOM reference state</para>
 </listitem></orderedlist>
 </para>
+<para>The synopsis to create the problem is then: <programlisting filename=".py"><codeline><highlight class="normal">galerkinProblem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
+</programlisting> </para>
 </sect1>
     </detaileddescription>
   </compounddef>
