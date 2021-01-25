@@ -43,27 +43,26 @@ to the figure below.
 
 # How to create a default Galerkin problem?
 
-Here we focus on explicit time integration, leaving the implicit one
-for a different tutorial.
-To create a Galerkin problem, one needs:
-1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html);
-2. a linear decoder object (see [this tutorial](./md_pages_tutorials_tutorial1.html));
+To create a default Galerkin problem object, one needs:
+1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html)
+2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html))
 3. a rom state
 4. a FOM reference state
 
-Synopsis:
+The synopsis is as follows:
 
 ```py
 problem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
 ```
 Here we highlight that the problem class is within the `default`
-module and how the time-stepping scheme is part of the class name.
-This stems from the fact that the Python bindings are built from the C++ library,
-which is heavy on templates, thus leading to this solution.
+module and that the time stepping scheme is part of the class name.
+This stems from the fact that the Python bindings are built
+from the C++ library, which is heavy on templates, thus leading to this solution.
 
-To use a different time stepping scheme, one can simply change the last
+To select a different time stepping scheme, one can change the last
 part of the class name.
-We currently support forward Euler and 4th-order Runge Kutta.
+We currently support forward Euler and 4th-order Runge Kutta, and are
+adding several others.
 For RK4, one would do:
 
 ```py
@@ -72,9 +71,9 @@ problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
 
 # How to solve a default Galerkin problem?
 
-Once the problem object is created, the reduced system can be integrated
-in time. Here we provide the most basic funtion, which advances the
-system for a fixed number of steps.
+Once the target problem object is created, the reduced system
+can be integrated in time. Here we provide the most basic function
+to do so, which advances the system for a fixed number of steps.
 Synopsis:
 
 ```py
@@ -99,3 +98,7 @@ class OdeObserver:
   def __call__(self, timeStep, time, romState):
 	# do what you want with romState
 ```
+
+# Want to see all the pieces in action?
+
+Look at [this demo](./md_pages_demos_demo1.html).

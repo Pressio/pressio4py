@@ -13,7 +13,7 @@ where $y$ is the F\+OM state and $f(...)$ is the F\+OM velocity. Both $y$ and $f
 \begin{DoxyParagraph}{Default Galerkin}
 pressio4py defines a {\itshape default Galerkin} problem as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 \end{DoxyParagraph}
-where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. \hypertarget{md_pages_tutorials_tutorial3_autotoc_md70}{}\doxysection{How to create a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md70}
+where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. Schematically, this system corresponds to the figure below. \hypertarget{md_pages_tutorials_tutorial3_autotoc_md70}{}\doxysection{How to create a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md70}
 Here we focus on explicit time integration, leaving the implicit one for a different tutorial. To create a Galerkin problem, one needs\+:
 \begin{DoxyEnumerate}
 \item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}};
