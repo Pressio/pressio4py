@@ -10,14 +10,16 @@
 <para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two.</para>
 <para>If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
-<para>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios:<orderedlist>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title></title><para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
+</simplesect>
+Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios:<orderedlist>
 <listitem><para>the FOM and ROM states are <emphasis>rank-1 tensors</emphasis> (i.e., vectors)</para>
 </listitem><listitem><para>the FOM and ROM states are <emphasis>rank-2 tensors</emphasis> (i.e., matrices)</para>
 </listitem></orderedlist>
 </para>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md62">
 <title>Rank-1 state</title>
-<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
 <para>The FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>. In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc), but stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needed to be solved. <image type="html" name="tut_lindec_f1.png" width="200px"></image>
 </para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
