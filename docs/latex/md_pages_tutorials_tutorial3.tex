@@ -50,4 +50,12 @@ Once the problem object is created, the reduced system can be integrated in time
 \end{DoxyCode}
 
 
-Note that 
+The optional argument allows one to pass an \char`\"{}observer\char`\"{} object whose purpose is to monitor the evolution of the reduced state. The observer is called back by pressio4py during the time integration. This can be useful to, e.\+g., save the generalized coordinates, or perfom some other operation. The observer class must meee the following A\+PI\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }OdeObserver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, romState):}
+\DoxyCodeLine{    \textcolor{comment}{\# do what you want with romState}}
+\end{DoxyCode}
+ 

@@ -6,7 +6,7 @@
 @par
 This tutorial shows how to create and solve a *default* time-explicit Galerkin problem.
 
-## What is a default Galerkin problem?
+# What is a default Galerkin problem?
 
 pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials.
 The "default" qualification in pressio4py refers to a
@@ -37,7 +37,7 @@ where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$f(...)@f$ is the FOM velocity.
 @image html tut_gal_1_f2.png width=65%
 
-## How to create a default Galerkin problem?
+# How to create a default Galerkin problem?
 
 Here we focus on explicit time integration, leaving the implicit one
 for a different tutorial.
@@ -66,7 +66,7 @@ For RK4, one would do:
 problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
 ```
 
-## How to solve a default Galerkin problem?
+# How to solve a default Galerkin problem?
 
 Once the problem object is created, the reduced system can be integrated
 in time. Here we provide the most basic funtion, which advances the
