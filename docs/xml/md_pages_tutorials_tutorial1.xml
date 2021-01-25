@@ -26,7 +26,8 @@
 <title>Rank-1 state</title>
 <para>The FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>, while the ROM state is stored as an array, <formula id="23">$y_{rom} \in R^p$</formula>, where <formula id="24">$p$</formula> is the number of modes, see the figure below. <image type="html" name="tut_lindec_f1.png" width="32%"></image>
 </para>
-<para>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved. The code snippet below demonstrates how to setup such linear mapping between rank-1 states. <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
+<para>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</para>
+<para>The code snippet below demonstrates how to setup such linear mapping between rank-1 states. <programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
@@ -64,7 +65,7 @@
 </para>
 <para>This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration.</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-1 state?</title><para>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos. </para>
+<para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-2 state?</title><para>Currently, a linear decoder with rank-2 states can only be employed when doing Galerkin with explicit time stepping. </para>
 </simplesect>
 </para>
 </sect1>

@@ -77,5 +77,4 @@ and is frequently found when using explicit time integration.
 @m_class{m-block m-warning}
 
 @par Where can you use the linear decoder with a rank-2 state?
-Currently, a linear decoder with rank-2 states can only be employed when
-doing Galerkin with explicit time stepping.
+Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping.
