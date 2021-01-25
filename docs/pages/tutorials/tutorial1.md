@@ -40,7 +40,7 @@ but stores all the spatial degrees of freedom in a single array.
 For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells.
 This is common, for example, when the application needs to do implicit time-integration
 such that a large system needed to be solved.
-@image html tut_lindec_f1.png width=150px
+@image html tut_lindec_f1.png width=200px
 
 ```py
 @codesnippet
