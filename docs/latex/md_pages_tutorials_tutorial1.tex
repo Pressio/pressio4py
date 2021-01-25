@@ -19,7 +19,7 @@ Note that the above expressions are abtract, since they do not specify what kind
 \end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
 The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}, while the R\+OM state is stored as an array, $y_{rom} \in R^p$, where $p$ is the number of modes, see the figure below. 
 
-In this case, even if the application possibly involves multiple fields (e.\+g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needs to be solved. 
+In this case, even if the application possibly involves multiple fields (e.\+g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needs to be solved. The code snippet below demonstrates how to setup such linear mapping between rank-\/1 states. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} rom \textcolor{keyword}{as} rom}
 \DoxyCodeLine{}
@@ -52,15 +52,15 @@ In this case, even if the application possibly involves multiple fields (e.\+g.,
 It can be employed for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial1_autotoc_md64}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md64}
-The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
+Suppose now that an application involves $m$ fields, e.\+g., density, x-\/velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.
 
-In this case, the F\+OM state is stored as a matrix, $y_{fom} \in R^{N,m}$, where\+:
+In such case, the F\+OM state can be represented as a matrix, $y_{fom} \in R^{N,m}$, where\+:
 \begin{DoxyItemize}
 \item $m$ = the total number of fields. E.\+g., density, x-\/velocity, tracer concentration, etc.
 \item $N$ = number of degrees of freedom of each field
 \end{DoxyItemize}
 
-This scenario is intended for applications that prefer to separate the degress of freedom, and is more commonly found for explicit time integration.
+This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration.
 
 
 

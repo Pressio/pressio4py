@@ -46,6 +46,7 @@ it stores all the spatial degrees of freedom in a single array.
 For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells.
 This is common, for example, when the application needs to do implicit time-integration
 such that a large system needs to be solved.
+
 The code snippet below demonstrates how to setup such linear mapping between rank-1 states.
 ```py
 @codesnippet
@@ -75,6 +76,6 @@ and is frequently found when using explicit time integration.
 
 @m_class{m-block m-warning}
 
-@par Where can you use the linear decoder with a rank-1 state?
-It can be employed for both Galerkin and LSPG
-as shown in subsequent tutorials and in the demos.
+@par Where can you use the linear decoder with a rank-2 state?
+Currently, a linear decoder with rank-2 states can only be employed when
+doing Galerkin with explicit time stepping.
