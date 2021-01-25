@@ -39,7 +39,7 @@ pressio4py supports two scenarios:
 The FOM state is stored as an array, @f$y_{fom} \in R^N@f$, where @f$N@f$ = **total number
 of degrees of freedom**, while the ROM state is stored as an array, @f$y_{rom} \in R^p@f$,
 where @f$p@f$ is the number of modes, see the figure below.
-@image html tut_lindec_f1.png width=32%
+@image html tut_lindec_f1.png width=30%
 
 In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc),
 it stores all the spatial degrees of freedom in a single array.
@@ -68,7 +68,7 @@ and rather than storing all degrees of freedom in a single array, one wants to k
 In such case, the FOM state can be represented as a matrix, @f$y_{fom} \in R^{N,m}@f$, where:
 * @f$m@f$ = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.
 * @f$N@f$ = number of degrees of freedom of each field
-@image html tut_lindec_f2.png width=32%
+@image html tut_lindec_f2.png width=34%
 
 This scenario is intended for applications that prefer to separate the degress of freedom,
 and is frequently found when using explicit time integration.
