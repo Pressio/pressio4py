@@ -33,12 +33,12 @@ pressio4py supports two scenarios:
 ## Rank-1 state
 The full tutorial can be found [here](https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py).
 
-In this case, the FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
+The FOM state is stored as an array, @f$y_{fom} \in R^N@f$,
 where @f$N@f$ = **total number of degrees of freedom**.
 In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc),
-but stores in a single array all the spatial degrees of freedom.
-For example, in a finite-volume code, one stores contiguously all field values of a given cell.
-This is common when the application needs to do implicit time-integration
+but stores all the spatial degrees of freedom in a single array.
+For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells.
+This is common, for example, when the application needs to do implicit time-integration
 such that a large system needed to be solved.
 
 

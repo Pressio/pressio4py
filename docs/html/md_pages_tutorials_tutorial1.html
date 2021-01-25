@@ -209,7 +209,7 @@ $\phi$
 <use x='212.65971' y='-10.525258' xlink:href='#eq8-g1-30'/>
 <use x='219.587812' y='-10.525258' xlink:href='#eq8-g1-58'/>
 </g>
-</svg></div><p>A linear decoder in pressio4py represents this linear mapping.</p><p>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. Therefore, pressio4py supports two scenarios, namely the state is an rank-1 tensor (i.e., vector) or a rank-2 tensor.</p><section id="autotoc_md62"><h2><a href="#autotoc_md62">Rank-1 state</a></h2><p>The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</a>.</p><p>In this case, the FOM state is stored as an array, <svg class="m-math" style="width: 5.617em; height: 1.367em;" viewBox="0 -9.784673 53.926795 13.127682">
+</svg></div><p>A linear decoder in pressio4py represents this linear mapping.</p><p>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios:</p><ol><li>the FOM and ROM states are <em>rank-1 tensors</em> (i.e., vectors)</li><li>the FOM and ROM states are <em>rank-2 tensors</em> (i.e., matrices)</li></ol><section id="autotoc_md62"><h2><a href="#autotoc_md62">Rank-1 state</a></h2><p>The full tutorial can be found <a href="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</a>.</p><p>In this case, the FOM state is stored as an array, <svg class="m-math" style="width: 5.617em; height: 1.367em;" viewBox="0 -9.784673 53.926795 13.127682">
 <title>
 $y_{fom} \in R^N$
 </title>
