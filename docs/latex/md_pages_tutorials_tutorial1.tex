@@ -13,7 +13,7 @@ Note that the above expressions are abtract, since they do not specify what kind
 \end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
 
-The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needed to be solved.
+The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needed to be solved. 
 
 
 \begin{DoxyCode}{0}
