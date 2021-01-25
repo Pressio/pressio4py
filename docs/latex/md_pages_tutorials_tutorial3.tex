@@ -32,7 +32,7 @@ The synopsis is as follows\+:
 
 Here we highlight that the problem class is within the {\ttfamily default} module and that the time stepping scheme is part of the class name. This stems from the fact that the Python bindings are built from the C++ library, which is heavy on templates, thus leading to this solution.
 
-To select a different time stepping scheme, one can change the last part of the class name. We currently support forward Euler and 4th-\/order Runge Kutta, and are adding several others. For R\+K4, one would do\+:
+To select a different time stepping scheme, one can change the last part of the class name. We currently support forward Euler and 4th-\/order Runge Kutta, and are adding several others. The doc will be updated as we make progress. For R\+K4, one would do\+:
 
 
 \begin{DoxyCode}{0}
@@ -53,7 +53,9 @@ Once the target problem object is created, the reduced system can be integrated 
 \end{DoxyCode}
 
 
-The optional argument allows one to pass an \char`\"{}observer\char`\"{} object whose purpose is to monitor the evolution of the reduced state. The observer is called back by pressio4py during the time integration. This can be useful to, e.\+g., save the generalized coordinates, or perfom some other operation. The observer class must meee the following A\+PI\+: 
+The optional argument allows one to pass an \char`\"{}observer\char`\"{} object whose purpose is to monitor the evolution of the reduced state. The observer is called back by pressio4py during the time integration at every time step. This can be useful to, e.\+g., save the generalized coordinates, or usign them to perfom some other operation.
+
+The observer class must meee the following A\+PI\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }OdeObserver:}
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
@@ -61,5 +63,6 @@ The optional argument allows one to pass an \char`\"{}observer\char`\"{} object 
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, romState):}
 \DoxyCodeLine{    \textcolor{comment}{\# do what you want with romState}}
 \end{DoxyCode}
-\hypertarget{md_pages_tutorials_tutorial3_autotoc_md72}{}\doxysection{Want to see all the pieces in action?}\label{md_pages_tutorials_tutorial3_autotoc_md72}
-Look at \href{./md_pages_demos_demo1.html}{\texttt{ this demo}}. 
+\hypertarget{md_pages_tutorials_tutorial3_autotoc_md72}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial3_autotoc_md72}
+Look at \href{./md_pages_demos_demo1.html}{\texttt{ this demo}} that uses default Galerkin for a 1d P\+DE.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md73}{}\doxysection{Some considerations}\label{md_pages_tutorials_tutorial3_autotoc_md73}
+One might wonder how the above formulation can be efficient, given that the right-\/hand side of the reduced system scales with the F\+OM degrees of freedom. This is indeed true\+: the reduced system obtained with a {\itshape default} problem reduced the spatial degrees of freedom, but is typically not efficient because it requires a matrix vector product. Thus, the default Galerkin is typically used for exploratory analysis when computational efficiency is {\bfseries{not}} a primary goal, e.\+g. to test the feasibility of R\+O\+Ms for a target problem, or try different basis. If computational efficiency is critical, then one needs to resort to hyper-\/reduction. This is covered in subsequent tutorials. 

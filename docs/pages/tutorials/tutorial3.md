@@ -105,7 +105,11 @@ class OdeObserver:
 Look at [this demo](./md_pages_demos_demo1.html) that uses
 default Galerkin for a 1d PDE.
 
+
 # Some considerations
+@m_class{m-block m-warning}
+
+@par
 One might wonder how the above formulation can be efficient,
 given that the right-hand side of the reduced system scales
 with the FOM degrees of freedom.
