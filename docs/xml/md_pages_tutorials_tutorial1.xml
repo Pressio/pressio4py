@@ -46,7 +46,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomState,<sp/>romState<sp/>=<sp/>np.zeros(10),<sp/>np.ones(3)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(romState,<sp/>fomState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(fomState)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-1 state?</title><para>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</para>
@@ -90,9 +90,9 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomState<sp/>=<sp/>np.zeros((N,<sp/>numFields),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>np.zeros((romSize,<sp/>numFields),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>np.ones((romSize,<sp/>numFields),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>linearDecoder.applyMapping(romState,<sp/>fomState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(fomState)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-2 state?</title><para>Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping. </para>

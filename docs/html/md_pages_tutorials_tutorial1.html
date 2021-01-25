@@ -292,7 +292,7 @@ $p$
   <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>
   <span class="n">fomState</span><span class="p">,</span> <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
   <span class="n">linearDecoder</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-1 state?</h3><p>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</p></aside></section><section id="autotoc_md64"><h2><a href="#autotoc_md64">Rank-2 state</a></h2><p>Suppose now that an application includes <svg class="m-math" style="width: 1.067em; height: 0.536em;" viewBox="0 -5.147373 10.239267 5.147373">
+  <span class="nb">print</span><span class="p">(</span><span class="n">fomState</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-1 state?</h3><p>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</p></aside></section><section id="autotoc_md64"><h2><a href="#autotoc_md64">Rank-2 state</a></h2><p>Suppose now that an application includes <svg class="m-math" style="width: 1.067em; height: 0.536em;" viewBox="0 -5.147373 10.239267 5.147373">
 <title>
 $m$
 </title>
@@ -375,9 +375,9 @@ $N$
 
   <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>
   <span class="n">fomState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-  <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">romSize</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+  <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">romSize</span><span class="p">,</span> <span class="n">numFields</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
   <span class="n">linearDecoder</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-2 state?</h3><p>Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping.</p></aside></section>
+  <span class="nb">print</span><span class="p">(</span><span class="n">fomState</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-2 state?</h3><p>Currently, a linear decoder with rank-2 states can only be used for Galerkin with explicit time stepping.</p></aside></section>
       </div>
     </div>
   </div>

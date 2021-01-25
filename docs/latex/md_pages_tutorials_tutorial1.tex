@@ -42,7 +42,7 @@ The code snippet below demonstrates how to setup such linear mapping between ran
 \DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
 \DoxyCodeLine{  fomState, romState = np.zeros(10), np.ones(3)}
 \DoxyCodeLine{  linearDecoder.applyMapping(romState, fomState)}
-\DoxyCodeLine{  print(y)}
+\DoxyCodeLine{  print(fomState)}
 \end{DoxyCode}
 
 
@@ -90,9 +90,9 @@ This scenario is intended for applications that prefer to separate the degress o
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
 \DoxyCodeLine{  fomState = np.zeros((N, numFields), order=\textcolor{stringliteral}{'F'})}
-\DoxyCodeLine{  romState = np.zeros((romSize, numFields), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{  romState = np.ones((romSize, numFields), order=\textcolor{stringliteral}{'F'})}
 \DoxyCodeLine{  linearDecoder.applyMapping(romState, fomState)}
-\DoxyCodeLine{  print(y)}
+\DoxyCodeLine{  print(fomState)}
 \end{DoxyCode}
 
 

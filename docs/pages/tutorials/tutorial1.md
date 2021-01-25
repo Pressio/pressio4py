@@ -64,14 +64,19 @@ as shown in subsequent tutorials and in the demos.
 ## Rank-2 state
 Suppose now that an application includes @f$m@f$ fields, e.g., density, x-velocity, tracer concentration, etc,
 and rather than storing all degrees of freedom in a single array, one wants to keep them separate.
+This is frequently found when using explicit time integration.
 
-In such case, the FOM state can be represented as a tensor, @f$y_{fom} \in R^{N,m}@f$, where:
+In such case, the FOM state can be represented as a tensor, @f$y_{fom} \in R^{N,m}@f$ and
+the ROM state is @f$y_{rom} \in R^{p,m}@f$, where:
 * @f$m@f$ = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.
 * @f$N@f$ = number of degrees of freedom of each field
+* @f$p@f$ = number of modes
 @image html tut_lindec_f2.png width=34%
 
-This scenario is intended for applications that prefer to separate the degress of freedom,
-and is frequently found when using explicit time integration.
+Note that here we assumed that we also have separate generalized coordinates for each field,
+each using the same number of modes.
+
+This scenario is intended for applications that prefer to separate the degress of freedom.
 The code snippet below demonstrates how to setup such linear mapping between rank-1 states.
 ```py
 @codesnippet
