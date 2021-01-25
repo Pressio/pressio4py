@@ -60,7 +60,8 @@
 <para>Suppose now that an application involves <formula id="25">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.</para>
 <para>In such case, the FOM state can be represented as a matrix, <formula id="26">$y_{fom} \in R^{N,m}$</formula>, where:<itemizedlist>
 <listitem><para><formula id="25">$m$</formula> = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.</para>
-</listitem><listitem><para><formula id="22">$N$</formula> = number of degrees of freedom of each field</para>
+</listitem><listitem><para><formula id="22">$N$</formula> = number of degrees of freedom of each field <image type="html" name="tut_lindec_f2.png" width="32%"></image>
+</para>
 </listitem></itemizedlist>
 </para>
 <para>This scenario is intended for applications that prefer to separate the degress of freedom, and is frequently found when using explicit time integration.</para>
