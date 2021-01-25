@@ -38,9 +38,16 @@
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md71">
 <title>How to solve a default Galerkin problem?</title>
-<para>Once the problem object is created, one needs to integrate in time the reduced system. Synopsis:</para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">rom.galerkin.advanceNSteps(problem,<sp/>yRom,<sp/>t0,<sp/>dt,<sp/>Nsteps<sp/>[,<sp/>observer])</highlight></codeline>
-</programlisting> </para>
+<para>Once the problem object is created, the reduced system can be integrated in time. Here we provide the most basic funtion, which advances the system for a fixed number of steps. Synopsis:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">rom.galerkin.advanceNSteps(problem,<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>problem<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yRom,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>rom<sp/>state<sp/>to<sp/>advance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>initial<sp/>time</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dt,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>time<sp/>step</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Nsteps<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>number<sp/>of<sp/>steps</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[,<sp/>observer]<sp/></highlight><highlight class="comment">#<sp/>optional<sp/>observer<sp/>(see<sp/>below)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+</programlisting></para>
+<para>Note that </para>
 </sect1>
     </detaileddescription>
   </compounddef>

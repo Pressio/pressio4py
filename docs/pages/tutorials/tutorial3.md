@@ -82,4 +82,16 @@ rom.galerkin.advanceNSteps(problem,     # problem object
 						   [, observer] # optional observer (see below)
 						   )
 ```
-Note that
+The optional argument allows one to pass an "observer" object whose
+purpose is to monitor the evolution of the reduced state.
+The observer is called back by pressio4py during the time integration.
+This can be useful to, e.g., save the generalized coordinates,
+or perfom some other operation.
+The observer class must meee the following API:
+```py
+class OdeObserver:
+  def __init__(self): pass
+
+  def __call__(self, timeStep, time, romState):
+	# do what you want with romState
+```

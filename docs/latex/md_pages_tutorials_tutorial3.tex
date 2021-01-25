@@ -36,10 +36,18 @@ To use a different time stepping scheme, one can simply change the last part of 
 \DoxyCodeLine{problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)}
 \end{DoxyCode}
 \hypertarget{md_pages_tutorials_tutorial3_autotoc_md71}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md71}
-Once the problem object is created, one needs to integrate in time the reduced system. Synopsis\+:
+Once the problem object is created, the reduced system can be integrated in time. Here we provide the most basic funtion, which advances the system for a fixed number of steps. Synopsis\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{rom.galerkin.advanceNSteps(problem, yRom, t0, dt, Nsteps [, observer])}
+\DoxyCodeLine{rom.galerkin.advanceNSteps(problem,     \textcolor{comment}{\# problem object}}
+\DoxyCodeLine{                           yRom,        \textcolor{comment}{\# rom state to advance}}
+\DoxyCodeLine{                           t0,          \textcolor{comment}{\# initial time}}
+\DoxyCodeLine{                           dt,          \textcolor{comment}{\# time step}}
+\DoxyCodeLine{                           Nsteps       \textcolor{comment}{\# number of steps}}
+\DoxyCodeLine{                           [, observer] \textcolor{comment}{\# optional observer (see below)}}
+\DoxyCodeLine{                           )}
 \end{DoxyCode}
- 
+
+
+Note that 
