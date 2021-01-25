@@ -99,6 +99,10 @@ class OdeObserver:
   def __call__(self, timeStep, time, romState):
 	# do what you want with romState
 ```
+Note that we are working on enriching the API to integrate in time.
+For example, we will soon support function class to advance the problem
+until a condition is met, or until a target time is reached.
+
 
 # Want to see all the above pieces in action?
 
