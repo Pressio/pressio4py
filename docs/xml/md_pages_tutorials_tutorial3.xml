@@ -29,8 +29,9 @@
 </listitem></orderedlist>
 </para>
 <para>The synopsis to create the problem is then:</para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">galerkinProblem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
-</programlisting> </para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
+</programlisting></para>
+<para>Here we highlight how the time-stepping scheme is part of the class name. This stems from how the Python bindings are created via C++ templates. </para>
 </sect1>
     </detaileddescription>
   </compounddef>

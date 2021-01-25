@@ -23,6 +23,8 @@ The synopsis to create the problem is then\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{galerkinProblem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)}
+\DoxyCodeLine{problem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)}
 \end{DoxyCode}
- 
+
+
+Here we highlight how the time-\/stepping scheme is part of the class name. This stems from how the Python bindings are created via C++ templates. 

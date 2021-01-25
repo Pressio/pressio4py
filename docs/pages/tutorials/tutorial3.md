@@ -52,5 +52,24 @@ The synopsis to create the problem is then:
 ```py
 problem = rom.galerkin.default.ProblemForwardEuler(fomObj, decoder, yRom, yRef)
 ```
-Here we highlight how the time-stepping scheme is part of the class name.
-This stems from how the Python bindings are created via C++ templates.
+Here we highlight that the problem class is within the `default`
+module and how the time-stepping scheme is part of the class name.
+This stems from the fact that the Python bindings are built from the C++ library,
+which is heavy on templates, thus leading to this solution.
+
+To use a different time stepping scheme, one can simply change the last
+part of the class name.
+We currently support forward Euler and 4th-order Runge Kutta.
+For RK4, one would do:
+```py
+problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
+```
+
+## How to solve a default Galerkin problem?
+
+Once the problem object is created, one needs to integrate
+in time the reduced system.
+This can be done as follows:
+```py
+rom.galerkin.advanceNSteps(problem, yRom, t0, dt, Nsteps [, observer])
+```
