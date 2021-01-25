@@ -19,7 +19,7 @@ Note that the above expressions are abtract, since they do not specify what kind
 \end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
 The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}, while the R\+OM state is stored as an array, $y_{rom} \in R^p$, where $p$ is the number of modes.
 
-In this case, even if the application possibly involves multiple fields (e.\+g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needed to be solved. 
+In this case, even if the application possibly involves multiple fields (e.\+g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needs to be solved. 
 
 
 \begin{DoxyCode}{0}
