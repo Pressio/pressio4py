@@ -8,8 +8,6 @@ pressio4py supports different variants of Galerkin, as we will show in subsequen
 
 where $y$ is the F\+OM state and $f(...)$ is the F\+OM velocity. Note that here both $y$ and $f$ are large, see figure below. 
 
-In practice, a {\itshape default Galerkin} problem corresponds to the following formulation\+:
+pressio4py defines a {\itshape default Galerkin} problem to be \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 
-\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
-
-where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is the reference F\+OM state, $\phi$ is the basis, and $f(...)$ is the F\+OM velocity. 
+where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity.  
