@@ -65,7 +65,7 @@ as shown in subsequent tutorials and in the demos.
 Suppose now that an application includes @f$m@f$ fields, e.g., density, x-velocity, tracer concentration, etc,
 and rather than storing all degrees of freedom in a single array, one wants to keep them separate.
 
-In such case, the FOM state can be represented as a tensor, @f$y_{fom} \in R^{N,1,m}@f$, where:
+In such case, the FOM state can be represented as a tensor, @f$y_{fom} \in R^{N,m}@f$, where:
 * @f$m@f$ = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.
 * @f$N@f$ = number of degrees of freedom of each field
 @image html tut_lindec_f2.png width=34%

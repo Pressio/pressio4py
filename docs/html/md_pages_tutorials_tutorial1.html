@@ -209,7 +209,7 @@ $\phi$
 <use x='212.65971' y='-10.525258' xlink:href='#eq8-g1-30'/>
 <use x='219.587812' y='-10.525258' xlink:href='#eq8-g1-58'/>
 </g>
-</svg></div><p>A linear decoder in pressio4py represents this linear mapping.</p><p>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios:</p><ol><li>the FOM and ROM states are <em>rank-1 tensors</em> (i.e., vectors)</li><li>the FOM and ROM states are <em>rank-2 tensors</em> (i.e., matrices)</li></ol></section><section id="autotoc_md63"><h2><a href="#autotoc_md63">Rank-1 state</a></h2><p>The FOM state is stored as an array, <svg class="m-math" style="width: 5.617em; height: 1.367em;" viewBox="0 -9.784673 53.926795 13.127682">
+</svg></div><p>A linear decoder in pressio4py represents this linear mapping.</p><p>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports the following scenarios:</p><ol><li>the FOM and ROM states are <em>rank-1 tensors</em></li><li>the FOM and ROM states are <em>rank-2 tensors</em></li></ol></section><section id="autotoc_md63"><h2><a href="#autotoc_md63">Rank-1 state</a></h2><p>The FOM state is stored as an array, <svg class="m-math" style="width: 5.617em; height: 1.367em;" viewBox="0 -9.784673 53.926795 13.127682">
 <title>
 $y_{fom} \in R^N$
 </title>
@@ -294,7 +294,7 @@ $p$
   <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>
   <span class="n">fomState</span><span class="p">,</span> <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
   <span class="n">linearDecoder</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-1 state?</h3><p>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</p></aside></section><section id="autotoc_md64"><h2><a href="#autotoc_md64">Rank-2 state</a></h2><p>Suppose now that an application involves <svg class="m-math" style="width: 1.067em; height: 0.536em;" viewBox="0 -5.147373 10.239267 5.147373">
+  <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></pre><aside class="m-block m-warning"><h3>Where can you use the linear decoder with a rank-1 state?</h3><p>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</p></aside></section><section id="autotoc_md64"><h2><a href="#autotoc_md64">Rank-2 state</a></h2><p>Suppose now that an application includes <svg class="m-math" style="width: 1.067em; height: 0.536em;" viewBox="0 -5.147373 10.239267 5.147373">
 <title>
 $m$
 </title>
@@ -304,11 +304,12 @@ $m$
 <g id='eq13-page1'>
 <use x='0' y='0' xlink:href='#eq13-g0-109'/>
 </g>
-</svg> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.</p><p>In such case, the FOM state can be represented as a matrix, <svg class="m-math" style="width: 6.594em; height: 1.367em;" viewBox="0 -9.784673 63.299181 13.127682">
+</svg> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.</p><p>In such case, the FOM state can be represented as a tensor, <svg class="m-math" style="width: 7.280em; height: 1.367em;" viewBox="0 -9.784673 69.885687 13.127682">
 <title>
-$y_{fom} \in R^{N,m}$
+$y_{fom} \in R^{N,1,m}$
 </title>
 <defs>
+<path id='eq14-g3-49' d='M2.502615-5.076961C2.502615-5.292154 2.486675-5.300125 2.271482-5.300125C1.944707-4.98132 1.522291-4.790037 .765131-4.790037V-4.527024C.980324-4.527024 1.41071-4.527024 1.872976-4.742217V-.653549C1.872976-.358655 1.849066-.263014 1.091905-.263014H.812951V0C1.139726-.02391 1.825156-.02391 2.183811-.02391S3.235866-.02391 3.56264 0V-.263014H3.283686C2.526526-.263014 2.502615-.358655 2.502615-.653549V-5.076961Z'/>
 <path id='eq14-g0-50' d='M6.551432-2.749689C6.75467-2.749689 6.969863-2.749689 6.969863-2.988792S6.75467-3.227895 6.551432-3.227895H1.482441C1.625903-4.829888 3.000747-5.977584 4.686426-5.977584H6.551432C6.75467-5.977584 6.969863-5.977584 6.969863-6.216687S6.75467-6.455791 6.551432-6.455791H4.662516C2.618182-6.455791 .992279-4.901619 .992279-2.988792S2.618182 .478207 4.662516 .478207H6.551432C6.75467 .478207 6.969863 .478207 6.969863 .239103S6.75467 0 6.551432 0H4.686426C3.000747 0 1.625903-1.147696 1.482441-2.749689H6.551432Z'/>
 <path id='eq14-g1-59' d='M1.490411-.119552C1.490411 .398506 1.378829 .852802 .884682 1.346949C.852802 1.370859 .836862 1.3868 .836862 1.42665C.836862 1.490411 .900623 1.538232 .956413 1.538232C1.052055 1.538232 1.713574 .908593 1.713574-.02391C1.713574-.533998 1.522291-.884682 1.171606-.884682C.892653-.884682 .73325-.661519 .73325-.446326C.73325-.223163 .884682 0 1.179577 0C1.370859 0 1.490411-.111582 1.490411-.119552Z'/>
 <path id='eq14-g1-78' d='M6.312329-4.574844C6.40797-4.96538 6.583313-5.156663 7.157161-5.180573C7.236862-5.180573 7.300623-5.228394 7.300623-5.332005C7.300623-5.379826 7.260772-5.443587 7.181071-5.443587C7.12528-5.443587 6.973848-5.419676 6.38406-5.419676C5.746451-5.419676 5.642839-5.443587 5.571108-5.443587C5.443587-5.443587 5.419676-5.355915 5.419676-5.292154C5.419676-5.188543 5.523288-5.180573 5.595019-5.180573C6.081196-5.164633 6.081196-4.94944 6.081196-4.837858C6.081196-4.798007 6.081196-4.758157 6.049315-4.630635L5.172603-1.139726L3.251806-5.300125C3.188045-5.443587 3.172105-5.443587 2.980822-5.443587H1.944707C1.801245-5.443587 1.697634-5.443587 1.697634-5.292154C1.697634-5.180573 1.793275-5.180573 1.960648-5.180573C2.024408-5.180573 2.263512-5.180573 2.446824-5.132752L1.378829-.852802C1.283188-.454296 1.075965-.278954 .541968-.263014C.494147-.263014 .398506-.255044 .398506-.111582C.398506-.063761 .438356 0 .518057 0C.549938 0 .73325-.02391 1.307098-.02391C1.936737-.02391 2.056289 0 2.12802 0C2.1599 0 2.279452 0 2.279452-.151432C2.279452-.247073 2.191781-.263014 2.13599-.263014C1.849066-.270984 1.609963-.318804 1.609963-.597758C1.609963-.637609 1.633873-.749191 1.633873-.757161L2.677958-4.917559H2.685928L4.901619-.143462C4.95741-.01594 4.96538 0 5.053051 0C5.164633 0 5.172603-.03188 5.204483-.167372L6.312329-4.574844Z'/>
@@ -327,7 +328,9 @@ $y_{fom} \in R^{N,m}$
 <use x='37.347975' y='0' xlink:href='#eq14-g2-82'/>
 <use x='46.35649' y='-4.338437' xlink:href='#eq14-g1-78'/>
 <use x='53.45633' y='-4.338437' xlink:href='#eq14-g1-59'/>
-<use x='55.808654' y='-4.338437' xlink:href='#eq14-g1-109'/>
+<use x='55.808654' y='-4.338437' xlink:href='#eq14-g3-49'/>
+<use x='60.042837' y='-4.338437' xlink:href='#eq14-g1-59'/>
+<use x='62.395161' y='-4.338437' xlink:href='#eq14-g1-109'/>
 </g>
 </svg>, where:</p><ul><li><svg class="m-math" style="width: 1.067em; height: 0.536em;" viewBox="0 -5.147373 10.239267 5.147373">
 <title>

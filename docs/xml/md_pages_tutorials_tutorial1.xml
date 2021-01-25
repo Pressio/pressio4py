@@ -16,9 +16,9 @@
 <para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two.</para>
 <para>If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
-<para>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports two scenarios:<orderedlist>
-<listitem><para>the FOM and ROM states are <emphasis>rank-1 tensors</emphasis> (i.e., vectors)</para>
-</listitem><listitem><para>the FOM and ROM states are <emphasis>rank-2 tensors</emphasis> (i.e., matrices)</para>
+<para>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports the following scenarios:<orderedlist>
+<listitem><para>the FOM and ROM states are <emphasis>rank-1 tensors</emphasis></para>
+</listitem><listitem><para>the FOM and ROM states are <emphasis>rank-2 tensors</emphasis></para>
 </listitem></orderedlist>
 </para>
 </sect1>
@@ -57,8 +57,8 @@
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md64">
 <title>Rank-2 state</title>
-<para>Suppose now that an application involves <formula id="25">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.</para>
-<para>In such case, the FOM state can be represented as a matrix, <formula id="26">$y_{fom} \in R^{N,m}$</formula>, where:<itemizedlist>
+<para>Suppose now that an application includes <formula id="25">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate.</para>
+<para>In such case, the FOM state can be represented as a tensor, <formula id="26">$y_{fom} \in R^{N,1,m}$</formula>, where:<itemizedlist>
 <listitem><para><formula id="25">$m$</formula> = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.</para>
 </listitem><listitem><para><formula id="22">$N$</formula> = number of degrees of freedom of each field <image type="html" name="tut_lindec_f2.png" width="34%"></image>
 </para>
