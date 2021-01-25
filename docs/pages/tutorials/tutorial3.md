@@ -68,10 +68,18 @@ problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)
 
 ## How to solve a default Galerkin problem?
 
-Once the problem object is created, one needs to integrate
-in time the reduced system.
+Once the problem object is created, the reduced system can be integrated
+in time. Here we provide the most basic funtion, which advances the
+system for a fixed number of steps.
 Synopsis:
 
 ```py
-rom.galerkin.advanceNSteps(problem, yRom, t0, dt, Nsteps [, observer])
+rom.galerkin.advanceNSteps(problem,     # problem object
+				           yRom,        # rom state to advance
+						   t0,          # initial time
+						   dt,          # time step
+						   Nsteps       # number of steps
+						   [, observer] # optional observer (see below)
+						   )
 ```
+Note that
