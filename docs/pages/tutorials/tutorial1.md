@@ -21,8 +21,15 @@ The Jacobian of the mapping is:
 @f]
 
 A linear decoder in pressio4py represents this linear mapping.
-Note that we have not specified what kind of data structure is used
-for @f$y_{fom}@f$.
+
+Note that we have not specified what kind of data structure is used for @f$y_{fom}@f$.
+We envision two scenarios:
+* the FOM state is represented as an array, i.e. @f$y_{fom} \in R^N@f$, where @f$N@f$ is
+the **total number of degrees of freedom**. In this case, even if the application involves multiple fields (e.g., density, chemical species, etc),
+one stores all the spatial degrees of freedom this is typically used when the application needs to do implicit time-integration
+such that a large system needed to be solve.d
+
+* the FOM state is represented as rank-2 tensor, i.e. @f$y_{fom} \in R^N@f$
 
 
 ## Rank-1 state

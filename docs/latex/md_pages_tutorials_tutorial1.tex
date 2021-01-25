@@ -1,14 +1,8 @@
-
-
-\begin{DoxyParagraph}{}
-This tutorial shows how to create a linear decoder/mapping in pressio4py.
-\end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
 
-where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being, assume it constant). Due to the linearity, the Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
+where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two. If $g$ is linear, then we can write\+: \[ y_{fom} = \phi y_{rom} \] where $\phi$ is a matrix (for the time being assumed constant). The Jacobian of the mapping is\+: \[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]
 
-A linear decoder in pressio4py represents this linear mapping. Note that we have not specified what kind of data structure is used for $y_{fom}$.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
+A linear decoder in pressio4py represents this linear mapping. Note that we have not specified what kind of data structure is used for $y_{fom}$.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
 
 
