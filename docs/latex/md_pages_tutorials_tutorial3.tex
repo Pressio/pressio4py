@@ -1,0 +1,9 @@
+
+
+\begin{DoxyParagraph}{}
+This tutorial shows how to create and solve a {\itshape defalt} time-\/explicit Galerkin problem.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial3_autotoc_md69}{}\doxysection{What is a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md69}
+pressio4py supports different variants of Galerkin. The \char`\"{}default\char`\"{} qualification is used to indicate a formulation that does {\itshape not} use hyper-\/reduction. In practice, a {\itshape default Galerkin} problem corresponds to solving the following problem\+:
+
+\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \Big( \mathbf{A} \mathbf{\phi} \Big)^+ \mathbf{A} \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \] 
