@@ -4,12 +4,10 @@ where $y_{rom}$ is the reduced state, also called generalized coordinates, and $
 
 A linear decoder in pressio4py represents this linear mapping.
 
-Note that the above expressions are abtract, since they do not specify what kind of data structure is used for $y_{fom}$. We envision the following scenarios\+:
-\begin{DoxyItemize}
-\item rank-\/1 state\+: the F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores in a single array all the spatial degrees of freedom. this is common when the application needs to do implicit time-\/integration such that a large system needed to be solved.
-\item the F\+OM state is represented as rank-\/2 tensor, i.\+e. $y_{fom} \in R^N$
-\end{DoxyItemize}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
-The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}
+Note that the above expressions are abtract, since they do not specify what kind of data structure is used for $y_{fom}$. Therefore, pressio4py supports two scenarios, namely the state is an rank-\/1 tensor (i.\+e., vector) or a rank-\/2 tensor.\hypertarget{md_pages_tutorials_tutorial1_autotoc_md62}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md62}
+The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
+
+In this case, the F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}. In this case, the application possibly involves multiple fields (e.\+g., density, chemical species, etc), but stores in a single array all the spatial degrees of freedom. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell. This is common when the application needs to do implicit time-\/integration such that a large system needed to be solved.
 
 
 \begin{DoxyCode}{0}
@@ -40,6 +38,22 @@ The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/
 
 
 
-\begin{DoxyParagraph}{Where can you use the linear decoder?}
-A linear decoder can be used for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos. 
+\begin{DoxyParagraph}{Where can you use the linear decoder with a rank-\/1 state?}
+It can be employed for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md63}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md63}
+The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
+
+In this case, the F\+OM state is stored as a matrix, $y_{fom} \in R^{N,m}$, where\+:
+\begin{DoxyItemize}
+\item $m$ = the total number of fields. E.\+g., density, x-\/velocity, tracer concentration, etc.
+\item $N$ = number of degrees of freedom of each field
+\end{DoxyItemize}
+
+This scenario is intended for applications that prefer to separate the degress of freedom, and is more commonly found for explicit time integration.
+
+
+
+\begin{DoxyParagraph}{Where can you use the linear decoder with a rank-\/1 state?}
+It can be employed for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos. 
 \end{DoxyParagraph}

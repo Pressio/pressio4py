@@ -9,14 +9,11 @@
 <para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
 <para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two. If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
-<para>Note that the above expressions are abtract, since they do not specify what kind of data structure is used for <formula id="14">$y_{fom}$</formula>. We envision the following scenarios:<itemizedlist>
-<listitem><para>rank-1 state: the FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>. In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc), but stores in a single array all the spatial degrees of freedom. this is common when the application needs to do implicit time-integration such that a large system needed to be solved.</para>
-</listitem><listitem><para>the FOM state is represented as rank-2 tensor, i.e. <formula id="21">$y_{fom} \in R^N$</formula></para>
-</listitem></itemizedlist>
-</para>
+<para>Note that the above expressions are abtract, since they do not specify what kind of data structure is used for <formula id="14">$y_{fom}$</formula>. Therefore, pressio4py supports two scenarios, namely the state is an rank-1 tensor (i.e., vector) or a rank-2 tensor.</para>
 <sect1 id="md_pages_tutorials_tutorial1_1autotoc_md62">
 <title>Rank-1 state</title>
-<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink></para>
+<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
+<para>In this case, the FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>. In this case, the application possibly involves multiple fields (e.g., density, chemical species, etc), but stores in a single array all the spatial degrees of freedom. For example, in a finite-volume code, one stores contiguously all field values of a given cell. This is common when the application needs to do implicit time-integration such that a large system needed to be solved.</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
@@ -41,7 +38,21 @@
 <codeline><highlight class="normal"><sp/><sp/>print(y)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
-<para><simplesect kind="par"><title>Where can you use the linear decoder?</title><para>A linear decoder can be used for both Galerkin and LSPG as shown in subsequent tutorials and in the demos. </para>
+<para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-1 state?</title><para>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos.</para>
+</simplesect>
+</para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md63">
+<title>Rank-2 state</title>
+<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
+<para>In this case, the FOM state is stored as a matrix, <formula id="23">$y_{fom} \in R^{N,m}$</formula>, where:<itemizedlist>
+<listitem><para><formula id="24">$m$</formula> = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.</para>
+</listitem><listitem><para><formula id="22">$N$</formula> = number of degrees of freedom of each field</para>
+</listitem></itemizedlist>
+</para>
+<para>This scenario is intended for applications that prefer to separate the degress of freedom, and is more commonly found for explicit time integration.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Where can you use the linear decoder with a rank-1 state?</title><para>It can be employed for both Galerkin and LSPG as shown in subsequent tutorials and in the demos. </para>
 </simplesect>
 </para>
 </sect1>
