@@ -17,7 +17,17 @@
 </para>
 <para>pressio4py defines a <emphasis>default Galerkin</emphasis> problem to be <formula id="32">\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]</formula></para>
 <para>where <formula id="33">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, and <formula id="30">$f(...)$</formula> is the FOM velocity. <image type="html" name="tut_gal_1_f2.png" width="65%"></image>
- </para>
+</para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md70">
+<title>How to create a default Galerkin problem?</title>
+<para>Here we focus on explicit time integration, leaving the implicit one for a different tutorial. To create a Galerkin problem, one needs:<orderedlist>
+<listitem><para>a FOM object to compute the velocity satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink>;</para>
+</listitem><listitem><para>a linear decoder object (see <ulink url="./md_pages_tutorials_tutorial1.html">this tutorial</ulink>);</para>
+</listitem><listitem><para>a rom state</para>
+</listitem><listitem><para>a FOM reference state </para>
+</listitem></orderedlist>
+</para>
 </sect1>
     </detaileddescription>
   </compounddef>
