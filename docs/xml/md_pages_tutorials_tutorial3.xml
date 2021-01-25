@@ -56,6 +56,7 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>romState):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>do<sp/>what<sp/>you<sp/>want<sp/>with<sp/>romState</highlight></codeline>
 </programlisting></para>
+<para>Note that we are working on enriching the API to integrate in time. For example, we will soon support function class to advance the problem until a condition is met, or until a target time is reached.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md72">
 <title>Want to see all the above pieces in action?</title>
