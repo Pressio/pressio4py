@@ -36,3 +36,14 @@ where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
 @f$f(...)@f$ is the FOM velocity.
 @image html tut_gal_1_f2.png width=65%
+
+## How to create a default Galerkin problem?
+
+Here we focus on explicit time integration, leaving the implicit one
+for a different tutorial.
+To create a Galerkin problem, one needs:
+1. a FOM object to compute the velocity satisfying the API
+described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html);
+2. a linear decoder object (see [this tutorial](./md_pages_tutorials_tutorial1.html));
+3. a rom state
+4. a FOM reference state

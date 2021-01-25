@@ -16,7 +16,7 @@
 <para>where <formula id="29">$y$</formula> is the FOM state and <formula id="30">$f(...)$</formula> is the FOM velocity. Note that here both <formula id="29">$y$</formula> and <formula id="31">$f$</formula> are large, see figure below. <image type="html" name="tut_gal_1_f1.png" width="30%"></image>
 </para>
 <para>pressio4py defines a <emphasis>default Galerkin</emphasis> problem to be <formula id="32">\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]</formula></para>
-<para>where <formula id="33">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, and <formula id="30">$f(...)$</formula> is the FOM velocity. <image type="html" name="tut_gal_1_f2.png" width="55%"></image>
+<para>where <formula id="33">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, and <formula id="30">$f(...)$</formula> is the FOM velocity. <image type="html" name="tut_gal_1_f2.png" width="65%"></image>
  </para>
 </sect1>
     </detaileddescription>
