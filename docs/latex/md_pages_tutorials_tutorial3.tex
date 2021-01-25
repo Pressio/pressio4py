@@ -65,4 +65,8 @@ The observer class must meee the following A\+PI\+:
 \end{DoxyCode}
 \hypertarget{md_pages_tutorials_tutorial3_autotoc_md72}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial3_autotoc_md72}
 Look at \href{./md_pages_demos_demo1.html}{\texttt{ this demo}} that uses default Galerkin for a 1d P\+DE.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md73}{}\doxysection{Some considerations}\label{md_pages_tutorials_tutorial3_autotoc_md73}
+
+
+\begin{DoxyParagraph}{}
 One might wonder how the above formulation can be efficient, given that the right-\/hand side of the reduced system scales with the F\+OM degrees of freedom. This is indeed true\+: the reduced system obtained with a {\itshape default} problem reduced the spatial degrees of freedom, but is typically not efficient because it requires a matrix vector product. Thus, the default Galerkin is typically used for exploratory analysis when computational efficiency is {\bfseries{not}} a primary goal, e.\+g. to test the feasibility of R\+O\+Ms for a target problem, or try different basis. If computational efficiency is critical, then one needs to resort to hyper-\/reduction. This is covered in subsequent tutorials. 
+\end{DoxyParagraph}

@@ -113,14 +113,14 @@ default Galerkin for a 1d PDE.
 One might wonder how the above formulation can be efficient,
 given that the right-hand side of the reduced system scales
 with the FOM degrees of freedom.
-This is indeed true: the reduced system obtained with a
-*default* problem reduced the spatial degrees of freedom,
-but is typically not efficient because it requires
-a matrix vector product. Thus, the default Galerkin
-is typically used for exploratory analysis when computational
-efficiency is **not** a primary goal, e.g. to test
-the feasibility of ROMs for a target problem, or try
-different basis.
-If computational efficiency is critical, then one needs to
-resort to hyper-reduction. This is covered in subsequent
-tutorials.
+This is true: the reduced system obtained from a
+*default* problem reduces the spatial degrees of freedom,
+but is typically not efficient because at every evaluation of the RHS,
+it requires a large matrix vector product.
+Thus, a default Galerkin is typically used for exploratory
+analysis when computational efficiency is **not** a primary
+goal, e.g. to test the feasibility of ROMs for a target problem,
+or try different basis.
+When computational efficiency is critical, one needs to
+resort to hyper-reduction techniques to reduce the cost of the matrix-vector
+product. This is covered in subsequent tutorials.

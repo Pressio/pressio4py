@@ -63,7 +63,10 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md73">
 <title>Some considerations</title>
-<para>One might wonder how the above formulation can be efficient, given that the right-hand side of the reduced system scales with the FOM degrees of freedom. This is indeed true: the reduced system obtained with a <emphasis>default</emphasis> problem reduced the spatial degrees of freedom, but is typically not efficient because it requires a matrix vector product. Thus, the default Galerkin is typically used for exploratory analysis when computational efficiency is <bold>not</bold> a primary goal, e.g. to test the feasibility of ROMs for a target problem, or try different basis. If computational efficiency is critical, then one needs to resort to hyper-reduction. This is covered in subsequent tutorials. </para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title></title><para>One might wonder how the above formulation can be efficient, given that the right-hand side of the reduced system scales with the FOM degrees of freedom. This is indeed true: the reduced system obtained with a <emphasis>default</emphasis> problem reduced the spatial degrees of freedom, but is typically not efficient because it requires a matrix vector product. Thus, the default Galerkin is typically used for exploratory analysis when computational efficiency is <bold>not</bold> a primary goal, e.g. to test the feasibility of ROMs for a target problem, or try different basis. If computational efficiency is critical, then one needs to resort to hyper-reduction. This is covered in subsequent tutorials. </para>
+</simplesect>
+</para>
 </sect1>
     </detaileddescription>
   </compounddef>
