@@ -23,24 +23,24 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md70">
 <title>How to create a default Galerkin problem?</title>
-<para>Here we focus on explicit time integration, leaving the implicit one for a different tutorial. To create a Galerkin problem, one needs:<orderedlist>
-<listitem><para>a FOM object satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink>;</para>
-</listitem><listitem><para>a linear decoder object (see <ulink url="./md_pages_tutorials_tutorial1.html">this tutorial</ulink>);</para>
+<para>To create a default Galerkin problem object, one needs:<orderedlist>
+<listitem><para>a FOM object satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink></para>
+</listitem><listitem><para>a linear decoder (see <ulink url="./md_pages_tutorials_tutorial1.html">this tutorial</ulink>)</para>
 </listitem><listitem><para>a rom state</para>
 </listitem><listitem><para>a FOM reference state</para>
 </listitem></orderedlist>
 </para>
-<para>Synopsis:</para>
+<para>The synopsis is as follows:</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.default.ProblemForwardEuler(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
 </programlisting></para>
-<para>Here we highlight that the problem class is within the <computeroutput>default</computeroutput> module and how the time-stepping scheme is part of the class name. This stems from the fact that the Python bindings are built from the C++ library, which is heavy on templates, thus leading to this solution.</para>
-<para>To use a different time stepping scheme, one can simply change the last part of the class name. We currently support forward Euler and 4th-order Runge Kutta. For RK4, one would do:</para>
+<para>Here we highlight that the problem class is within the <computeroutput>default</computeroutput> module and that the time stepping scheme is part of the class name. This stems from the fact that the Python bindings are built from the C++ library, which is heavy on templates, thus leading to this solution.</para>
+<para>To select a different time stepping scheme, one can change the last part of the class name. We currently support forward Euler and 4th-order Runge Kutta, and are adding several others. For RK4, one would do:</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.default.ProblemRK4(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
 </programlisting></para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial3_1autotoc_md71">
 <title>How to solve a default Galerkin problem?</title>
-<para>Once the problem object is created, the reduced system can be integrated in time. Here we provide the most basic funtion, which advances the system for a fixed number of steps. Synopsis:</para>
+<para>Once the target problem object is created, the reduced system can be integrated in time. Here we provide the most basic function to do so, which advances the system for a fixed number of steps. Synopsis:</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">rom.galerkin.advanceNSteps(problem,<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>problem<sp/>object</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yRom,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>rom<sp/>state<sp/>to<sp/>advance</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>initial<sp/>time</highlight><highlight class="normal"></highlight></codeline>
@@ -54,7 +54,11 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>romState):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>do<sp/>what<sp/>you<sp/>want<sp/>with<sp/>romState</highlight></codeline>
-</programlisting> </para>
+</programlisting></para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md72">
+<title>Want to see all the pieces in action?</title>
+<para>Look at <ulink url="./md_pages_demos_demo1.html">this demo</ulink>. </para>
 </sect1>
     </detaileddescription>
   </compounddef>

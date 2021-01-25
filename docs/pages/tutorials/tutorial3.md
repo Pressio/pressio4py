@@ -62,7 +62,7 @@ from the C++ library, which is heavy on templates, thus leading to this solution
 To select a different time stepping scheme, one can change the last
 part of the class name.
 We currently support forward Euler and 4th-order Runge Kutta, and are
-adding several others.
+adding several others. The doc will be updated as we make progress.
 For RK4, one would do:
 
 ```py
@@ -87,9 +87,10 @@ rom.galerkin.advanceNSteps(problem,     # problem object
 ```
 The optional argument allows one to pass an "observer" object whose
 purpose is to monitor the evolution of the reduced state.
-The observer is called back by pressio4py during the time integration.
-This can be useful to, e.g., save the generalized coordinates,
-or perfom some other operation.
+The observer is called back by pressio4py during the time integration
+at every time step. This can be useful to, e.g., save the
+generalized coordinates, or usign them to perfom some other operation.
+
 The observer class must meee the following API:
 ```py
 class OdeObserver:
@@ -99,6 +100,23 @@ class OdeObserver:
 	# do what you want with romState
 ```
 
-# Want to see all the pieces in action?
+# Want to see all the above pieces in action?
 
-Look at [this demo](./md_pages_demos_demo1.html).
+Look at [this demo](./md_pages_demos_demo1.html) that uses
+default Galerkin for a 1d PDE.
+
+# Some considerations
+One might wonder how the above formulation can be efficient,
+given that the right-hand side of the reduced system scales
+with the FOM degrees of freedom.
+This is indeed true: the reduced system obtained with a
+*default* problem reduced the spatial degrees of freedom,
+but is typically not efficient because it requires
+a matrix vector product. Thus, the default Galerkin
+is typically used for exploratory analysis when computational
+efficiency is **not** a primary goal, e.g. to test
+the feasibility of ROMs for a target problem, or try
+different basis.
+If computational efficiency is critical, then one needs to
+resort to hyper-reduction. This is covered in subsequent
+tutorials.
