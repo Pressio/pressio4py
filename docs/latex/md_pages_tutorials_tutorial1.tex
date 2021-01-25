@@ -4,7 +4,7 @@ where $y_{rom}$ is the reduced state, also called generalized coordinates, and $
 
 A linear decoder in pressio4py represents this linear mapping.
 
-Note that we have not specified what kind of data structure is used for $y_{fom}$. We envision two scenarios\+:
+Note that the above expressions are abtract. Indeed, we have not yet specified what kind of data structure is used for $y_{fom}$. pressio4py supports the following scenarios\+:
 \begin{DoxyItemize}
 \item the F\+OM state is represented as an array, i.\+e. $y_{fom} \in R^N$, where $N$ is the {\bfseries{total number of degrees of freedom}}. In this case, even if the application involves multiple fields (e.\+g., density, chemical species, etc), one stores all the spatial degrees of freedom this is typically used when the application needs to do implicit time-\/integration such that a large system needed to be solve.\+d
 \item the F\+OM state is represented as rank-\/2 tensor, i.\+e. $y_{fom} \in R^N$
