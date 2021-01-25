@@ -34,13 +34,15 @@ class MyMapperKPCA:
     # method below correctly
     self.jacobian_ = np.zeros((fomSize,numModes), order='F')
 
+  def numModes(self): return self.numModes_
+
   def jacobian(self): return self.jacobian_
 
   def applyMapping(self, romState, fomState):
     fomState[:] = np.squeeze(self.transformer_.inverse_transform(romState.reshape(1,-1)))
 
-  def applyInverseMapping(self, fomState):
-    return np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))
+  def applyInverseMapping(self, romState, fomState):
+    romState[:] = np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))
 
   def updateJacobian(self, romState):
     romStateLocal = romState.copy()
@@ -77,7 +79,8 @@ def runLspg(fomObj, dt, nsteps, customMapper):
 
   # create ROM state by projecting the fom initial condition
   fomInitialState = fomObj.u0.copy()
-  romState = customMapper.applyInverseMapping(fomInitialState)
+  romState = np.zeros(customMapper.numModes())
+  customMapper.applyInverseMapping(romState, fomInitialState)
 
   # create LSPG problem
   problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, customDecoder, romState, fomReferenceState)
