@@ -110,13 +110,15 @@
     <span class="c1"># method below correctly</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">fomSize</span><span class="p">,</span><span class="n">numModes</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
 
+  <span class="k">def</span> <span class="nf">numModes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">numModes_</span>
+
   <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span>
 
   <span class="k">def</span> <span class="nf">applyMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
     <span class="n">fomState</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">romState</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
 
-  <span class="k">def</span> <span class="nf">applyInverseMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">fomState</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+  <span class="k">def</span> <span class="nf">applyInverseMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
+    <span class="n">romState</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">fomState</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
 
   <span class="k">def</span> <span class="nf">updateJacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">):</span>
     <span class="n">romStateLocal</span> <span class="o">=</span> <span class="n">romState</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -150,7 +152,8 @@
 
   <span class="c1"># create ROM state by projecting the fom initial condition</span>
   <span class="n">fomInitialState</span> <span class="o">=</span> <span class="n">fomObj</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-  <span class="n">romState</span> <span class="o">=</span> <span class="n">customMapper</span><span class="o">.</span><span class="n">applyInverseMapping</span><span class="p">(</span><span class="n">fomInitialState</span><span class="p">)</span>
+  <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">customMapper</span><span class="o">.</span><span class="n">numModes</span><span class="p">())</span>
+  <span class="n">customMapper</span><span class="o">.</span><span class="n">applyInverseMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomInitialState</span><span class="p">)</span>
 
   <span class="c1"># create LSPG problem</span>
   <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">ProblemEuler</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">customDecoder</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">)</span>
@@ -169,8 +172,7 @@
 
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># get the reconstructor object: this allows to map romState to fomState</span>
-  <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="n">fomRecon</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md21"><h2><a href="#autotoc_md21">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo3.png" alt="Image" /></section>
+  <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span></pre></section></section><section id="autotoc_md21"><h2><a href="#autotoc_md21">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo3.png" alt="Image" /></section>
       </div>
     </div>
   </div>

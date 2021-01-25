@@ -71,13 +71,15 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>method<sp/>below<sp/>correctly</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.jacobian_<sp/>=<sp/>np.zeros((fomSize,numModes),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">numModes(self):<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.numModes_</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self):<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.jacobian_</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyMapping(self,<sp/>romState,<sp/>fomState):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>fomState[:]<sp/>=<sp/>np.squeeze(self.transformer_.inverse_transform(romState.reshape(1,-1)))</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyInverseMapping(self,<sp/>fomState):</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyInverseMapping(self,<sp/>romState,<sp/>fomState):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>romState[:]<sp/>=<sp/>np.squeeze(self.transformer_.transform(fomState.reshape(1,-1)))</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">updateJacobian(self,<sp/>romState):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>romStateLocal<sp/>=<sp/>romState.copy()</highlight></codeline>
@@ -120,7 +122,8 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>ROM<sp/>state<sp/>by<sp/>projecting<sp/>the<sp/>fom<sp/>initial<sp/>condition</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomInitialState<sp/>=<sp/>fomObj.u0.copy()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>customMapper.applyInverseMapping(fomInitialState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>np.zeros(customMapper.numModes())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>customMapper.applyInverseMapping(romState,<sp/>fomInitialState)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>LSPG<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.default.ProblemEuler(fomObj,<sp/>customDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
@@ -140,7 +143,6 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>after<sp/>we<sp/>are<sp/>done,<sp/>use<sp/>the<sp/>reconstructor<sp/>object<sp/>to<sp/>reconstruct<sp/>the<sp/>fom<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>get<sp/>the<sp/>reconstructor<sp/>object:<sp/>this<sp/>allows<sp/>to<sp/>map<sp/>romState<sp/>to<sp/>fomState</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomRecon<sp/>=<sp/>problem.fomStateReconstructor()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon.evaluate(romState)</highlight></codeline>
 </programlisting></para>
 </sect2>
 </sect1>

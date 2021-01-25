@@ -60,13 +60,15 @@ It is important to note that while the mapper class below has the A\+PI required
 \DoxyCodeLine{    \textcolor{comment}{\# method below correctly}}
 \DoxyCodeLine{    self.jacobian\_ = np.zeros((fomSize,numModes), order=\textcolor{stringliteral}{'F'})}
 \DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }numModes(self): \textcolor{keywordflow}{return} self.numModes\_}
+\DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self): \textcolor{keywordflow}{return} self.jacobian\_}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{keyword}{def }applyMapping(self, romState, fomState):}
 \DoxyCodeLine{    fomState[:] = np.squeeze(self.transformer\_.inverse\_transform(romState.reshape(1,-\/1)))}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{def }applyInverseMapping(self, fomState):}
-\DoxyCodeLine{    \textcolor{keywordflow}{return} np.squeeze(self.transformer\_.transform(fomState.reshape(1,-\/1)))}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyInverseMapping(self, romState, fomState):}
+\DoxyCodeLine{    romState[:] = np.squeeze(self.transformer\_.transform(fomState.reshape(1,-\/1)))}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{keyword}{def }updateJacobian(self, romState):}
 \DoxyCodeLine{    romStateLocal = romState.copy()}
@@ -112,7 +114,8 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create ROM state by projecting the fom initial condition}}
 \DoxyCodeLine{  fomInitialState = fomObj.u0.copy()}
-\DoxyCodeLine{  romState = customMapper.applyInverseMapping(fomInitialState)}
+\DoxyCodeLine{  romState = np.zeros(customMapper.numModes())}
+\DoxyCodeLine{  customMapper.applyInverseMapping(romState, fomInitialState)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create LSPG problem}}
 \DoxyCodeLine{  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, customDecoder, romState, fomReferenceState)}
@@ -132,7 +135,6 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
 \DoxyCodeLine{  \textcolor{comment}{\# get the reconstructor object: this allows to map romState to fomState}}
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
-\DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
 \end{DoxyCode}
 \hypertarget{md_pages_demos_demo3_autotoc_md21}{}\doxysection{Results}\label{md_pages_demos_demo3_autotoc_md21}
 If everything works fine, the following plot shows the result.  
