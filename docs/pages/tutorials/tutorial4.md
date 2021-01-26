@@ -124,8 +124,7 @@ class MyMasker:
 masker = MyMasker(collocationIndices)
 ```
 
-5. creating the masked Galerkin problem: note that as in the default case,
-the time-stepping scheme is part of the class name.
+5. creating the masked Galerkin problem: note that as in the default case, the time-stepping scheme is part of the class name.
 ```py
 problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)
 ```

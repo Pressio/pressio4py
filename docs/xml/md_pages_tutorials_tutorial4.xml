@@ -43,25 +43,14 @@
 <listitem><para>creating the decoder on the <bold>FULL</bold> mesh <programlisting filename=".py"><codeline><highlight class="comment">#<sp/>e.g.<sp/>let<sp/>phi<sp/>contain<sp/>the<sp/>POD<sp/>modes<sp/>on<sp/>the<sp/>full<sp/>mesh</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">linearDecoder<sp/>=<sp/>rom.Decoder(phi)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>selecting the row indices to use for the collocation</para>
-</listitem></orderedlist>
-</para>
-<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>as<sp/>anticipated<sp/>above,<sp/>there<sp/>are<sp/>various<sp/>methods<sp/>to<sp/>select<sp/>indices,</highlight><highlight class="normal"></highlight></codeline>
+</listitem><listitem><para>selecting the row indices to use for the collocation <programlisting filename=".py"><codeline><highlight class="comment">#<sp/>as<sp/>anticipated<sp/>above,<sp/>there<sp/>are<sp/>various<sp/>methods<sp/>to<sp/>select<sp/>indices,</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>the<sp/>most<sp/>basic<sp/>one<sp/>is<sp/>random<sp/>sampling</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">collocationIndices<sp/>=<sp/>np.array([2,3,10,56,<sp/>whatever])</highlight></codeline>
 </programlisting></para>
-<para><orderedlist>
-<listitem><para>creating a &quot;projector operator&quot; that is responsible to project the FOM velocity. Basically, this projector knows how to compute the action of <formula id="37">$(A\phi)^T$</formula>.</para>
-</listitem></orderedlist>
-</para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">modesOnSampleMesh<sp/>=<sp/>np.take(modes,<sp/>collocationIndices,<sp/>axis=0)</highlight></codeline>
+</listitem><listitem><para>creating a &quot;projector operator&quot; that is responsible to project the FOM velocity. Basically, this projector knows how to compute the action of <formula id="37">$(A\phi)^T$</formula>. <programlisting filename=".py"><codeline><highlight class="normal">modesOnSampleMesh<sp/>=<sp/>np.take(modes,<sp/>collocationIndices,<sp/>axis=0)</highlight></codeline>
 <codeline><highlight class="normal">projector<sp/>=<sp/>rom.galerkin.ArbitraryProjector(modesOnSampleMesh)</highlight></codeline>
 </programlisting></para>
-<para><orderedlist>
-<listitem><para>creating a masker object: the masker is responsible to act on the FOM velocity vector and &quot;mask&quot; it to return the collocated values.</para>
-</listitem></orderedlist>
-</para>
-<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
+</listitem><listitem><para>creating a masker object: the masker is responsible to act on the FOM velocity vector and &quot;mask&quot; it to return the collocated values. <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>indices):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.rows_<sp/>=<sp/>indices</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.collocationSize_<sp/>=<sp/>len(indices)</highlight></codeline>
@@ -74,12 +63,10 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">masker<sp/>=<sp/>MyMasker(collocationIndices)</highlight></codeline>
 </programlisting></para>
-<para><orderedlist>
-<listitem><para>creating the masked Galerkin problem: note that as in the default case, the time-stepping scheme is part of the class name.</para>
+</listitem><listitem><para>creating the masked Galerkin problem: note that as in the default case, the time-stepping scheme is part of the class name. <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
+</programlisting></para>
 </listitem></orderedlist>
 </para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
-</programlisting></para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md78">
 <title>How to solve a default Galerkin problem?</title>
