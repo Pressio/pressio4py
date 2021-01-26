@@ -30,31 +30,56 @@ Schematically, the system above corresponds to the figure below.
 \begin{DoxyParagraph}{}
 To define the sampling matrix there are various techniques (todo, add reference to pressio-\/tools etc). The most basic one is just random sampling\+: given the set of indices of the full mesh, one simply randomly picks a subset of it.
 \end{DoxyParagraph}
+
+
+\begin{DoxyParagraph}{}
+Note that to access the masking functionality you don\textquotesingle{}t need to change the F\+OM applicatio. This is because the F\+OM always handles the full operators, and the masking is applied {\itshape after} the F\+OM computes the velocity. In other words, to access the masked Galerkin you can use the same F\+OM object you use for the default Galerkin problem discussed in \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}}.
+\end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md77}{}\doxysection{How to create a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md77}
 In practice, for a {\itshape masked} Galerkin problem with collocation one needs\+:
-\begin{DoxyEnumerate}
-\item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}}\+: note that this is a regular F\+OM, nothing needs to change
-\item a linear decoder (see \href{./md_pages_tutorials_tutorial1.html}{\texttt{ this tutorial}})
-\item a masker object\+: the role of the masker is to extract from an operand the rows needed
-\end{DoxyEnumerate}
 
-And creating it involves these steps\+:
+
 \begin{DoxyEnumerate}
-\item creating the decoder on the {\bfseries{F\+U\+LL}} mesh 
+\item to create the decoder on the {\bfseries{F\+U\+LL}} mesh 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# e.g. let phi contain the POD modes on the full mesh}}
 \DoxyCodeLine{linearDecoder = rom.Decoder(phi)}
 \end{DoxyCode}
 
-\item selecting the row indices to use for the collocation 
+\item to select the row indices to use for the collocation 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{comment}{\# to select rows there are various methods wee.g. one can use random or some other way}}
-\DoxyCodeLine{collocationIndices = np.array([2,3,10,56])}
+\DoxyCodeLine{\textcolor{comment}{\# as anticipated above, there are various methods to select indices,}}
+\DoxyCodeLine{\textcolor{comment}{\# the most basic one is random sampling}}
+\DoxyCodeLine{collocationIndices = np.array([2,3,10,56, whatever])}
 \end{DoxyCode}
 
-\item creating a \char`\"{}projector operator\char`\"{} by filtering/extracting the target rows of the basis. The projector operator The projector is responsible to project the F\+OM velocity.
+\item to create a \char`\"{}projector operator\char`\"{} that is responsible to project the F\+OM velocity. Basically, this projector knows how to compute the action of $(A\phi)^T$. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{modesOnSampleMesh = np.take(modes, collocationIndices, axis=0)}
+\DoxyCodeLine{projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)}
+\end{DoxyCode}
+
 \end{DoxyEnumerate}
 \begin{DoxyEnumerate}
-\item creating a masker object responsible to mask the F\+OM operators
+\item creating a masker object\+: the masker is responsible to act on the F\+OM velocity vector and \char`\"{}mask\char`\"{} it to return the collocated values. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, indices):}
+\DoxyCodeLine{    self.rows\_ = indices}
+\DoxyCodeLine{    self.collocationSize\_ = len(indices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyMaskResult(self, operand):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(self.collocationSize\_)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyMask(self, operand, time, result):}
+\DoxyCodeLine{    result[:] = np.take(operand, self.rows\_)}
+\DoxyCodeLine{}
+\DoxyCodeLine{masker = MyMasker(collocationIndices)}
+\end{DoxyCode}
+
 \item creating the actual masked Galerkin problem 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)}
+\end{DoxyCode}
+ 
 \end{DoxyEnumerate}
