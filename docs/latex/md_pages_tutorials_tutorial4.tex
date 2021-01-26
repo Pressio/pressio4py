@@ -46,22 +46,35 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{linearDecoder = rom.Decoder(phi)}
 \end{DoxyCode}
 
-\item selecting the row indices to use for the collocation 
+\item selecting the row indices to use for the collocation
+\end{DoxyEnumerate}
+
+
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# as anticipated above, there are various methods to select indices,}}
 \DoxyCodeLine{\textcolor{comment}{\# the most basic one is random sampling}}
 \DoxyCodeLine{collocationIndices = np.array([2,3,10,56, whatever])}
 \end{DoxyCode}
 
-\item creating a \char`\"{}projector operator\char`\"{} that is responsible to project the F\+OM velocity. Basically, this projector knows how to compute the action of $(A\phi)^T$. 
+
+
+\begin{DoxyEnumerate}
+\item creating a \char`\"{}projector operator\char`\"{} that is responsible to project the F\+OM velocity. Basically, this projector knows how to compute the action of $(A\phi)^T$.
+\end{DoxyEnumerate}
+
+
 \begin{DoxyCode}{0}
 \DoxyCodeLine{modesOnSampleMesh = np.take(modes, collocationIndices, axis=0)}
 \DoxyCodeLine{projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)}
 \end{DoxyCode}
 
-\end{DoxyEnumerate}
+
+
 \begin{DoxyEnumerate}
-\item creating a masker object\+: the masker is responsible to act on the F\+OM velocity vector and \char`\"{}mask\char`\"{} it to return the collocated values. 
+\item creating a masker object\+: the masker is responsible to act on the F\+OM velocity vector and \char`\"{}mask\char`\"{} it to return the collocated values.
+\end{DoxyEnumerate}
+
+
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, indices):}
@@ -77,11 +90,16 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{masker = MyMasker(collocationIndices)}
 \end{DoxyCode}
 
-\item creating the actual masked Galerkin problem\+: note that as in the default case, the time-\/stepping scheme is part of the class name. 
+
+
+\begin{DoxyEnumerate}
+\item creating the masked Galerkin problem\+: note that as in the default case, the time-\/stepping scheme is part of the class name.
+\end{DoxyEnumerate}
+
+
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)}
 \end{DoxyCode}
-
-\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial4_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md78}
+\hypertarget{md_pages_tutorials_tutorial4_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md78}
 Solving the masked problem can be done using the same A\+PI for solving a default problem, see \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this}}.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md79}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial4_autotoc_md79}
 Look at \href{./md_pages_demos_demo4.html}{\texttt{ this demo}} that shows a masked Galerkin for a 1d P\+DE. 
