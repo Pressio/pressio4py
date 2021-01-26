@@ -46,7 +46,7 @@ basic hyper-reduction technique, namely *collocation*.
 
 # Masked Galerkin with collocation
 
-pressio4py defines a *masked Galerkin* with collocation a problem as:
+pressio4py defines a *masked Galerkin* with collocation a problem defined as:
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
 \mathbf{(A\phi)}^T
@@ -60,10 +60,12 @@ where @f$\hat{y}@f$ is the reduced state,
 @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis,
 @f$f(...)@f$ is the FOM velocity and @f$A@f$ is a sampling matrix that picks
 only target rows of @f$\phi@f$ and @f$f@f$.
+Note that the only difference with the Galerkin formulation presented
+in [this tutorial](./md_pages_tutorials_tutorial3.html) is the
+presence of the sampling operator @f$A@f$.
 
-
-Schematically, this system corresponds to the figure below.
-<!-- @image html tut_gal_1_f2.png width=65% -->
+Schematically, the system above corresponds to the figure below.
+@image html tut_gal_2_f1.png width=65%
 
 
 <!-- In practice, to use a *masked* Galerkin problem one needs: -->
