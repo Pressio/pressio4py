@@ -19,7 +19,8 @@ LINKS_NAVBAR1 = [
    [
      ("<a href=\"md_pages_tutorials_tutorial1.html\">Linear Decoder</a>", ),
      ("<a href=\"md_pages_tutorials_tutorial2.html\">Custom Decoder</a>", ),
-     ("<a href=\"md_pages_tutorials_tutorial3.html\">Default Galerkin explicit</a>", )
+     ("<a href=\"md_pages_tutorials_tutorial3.html\">Default Galerkin explicit</a>", ),
+     ("<a href=\"md_pages_tutorials_tutorial3.html\">Masked Galerkin explicit</a>", )
    ]),
 
   # demos
