@@ -39,17 +39,34 @@ hyper-reduction techniques **without** having to change the FOM code.
 @m_class{m-block m-info}
 
 @par
-This tutorial shows how to construct a masked Galerkin problem using the most
+This tutorial aims at introducing the concept of the *mask* by showing how
+to construct a masked Galerkin problem using the most
 basic hyper-reduction technique, namely *collocation*.
 
 
 # Masked Galerkin with collocation
 
+pressio4py defines a *masked Galerkin* with collocation a problem as:
+@f[
+\dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
+\mathbf{A\phi}^T
+A\mathbf{f}
+\Big(\mathbf{y}_{ref}(\mathbf{\mu})
++ \mathbf{\phi}\hat{\mathbf{y}} \Big)
+@f]
 
-In practice, to use a *masked* Galerkin problem one needs:
-1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM, nothing needs to change
-2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html))
-3. a masker object: the role of the ma
+where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
+@f$y@f$ is the full-order model (FOM) state,
+@f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
+@f$f(...)@f$ is the FOM velocity. Schematically, this system corresponds
+to the figure below.
+<!-- @image html tut_gal_1_f2.png width=65% -->
+
+
+<!-- In practice, to use a *masked* Galerkin problem one needs: -->
+<!-- 1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM, nothing needs to change -->
+<!-- 2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html)) -->
+<!-- 3. a masker object: the role of the ma -->
 
 
 

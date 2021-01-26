@@ -10,8 +10,11 @@ To overcome this obstacle, one can rely on hyper-\/reduction techniques\+: hyper
 
 A key aspect of hyper-\/reduction is that to get the most benefits out of it from a computational cost viewpoint, one has to implement it directly inside the F\+OM code. In practice, oversimplifying a bit, we can say that at its core, it involves enabling the F\+OM code to compute the F\+OM velocity at only a subset of the mesh. A few questions then arise\+: why should one risk investing the time in implementing such technique without assessing upfront whether it will work? how can one evaluate and compare different hyper-\/reduction techniques without modifying the F\+OM code?
 
-To address these questions, pressio4py provides a variant of the Galerkin problem, called {\itshape masked Galerkin}, that allows one to test the {\itshape accuracy} of various hyper-\/reduction techniques {\bfseries{without}} having to change the F\+OM code.
 
+
+\begin{DoxyParagraph}{}
+pressio4py provides a variant of the Galerkin problem, called {\itshape masked Galerkin}, that allows one to test and compare the {\itshape accuracy} of various hyper-\/reduction techniques {\bfseries{without}} having to change the F\+OM code.
+\end{DoxyParagraph}
 
 
 \begin{DoxyParagraph}{}
