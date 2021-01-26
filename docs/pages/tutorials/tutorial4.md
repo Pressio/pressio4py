@@ -46,7 +46,7 @@ basic hyper-reduction technique, namely *collocation*.
 
 # Masked Galerkin with collocation
 
-pressio4py defines a *masked Galerkin* with collocation a problem defined as:
+In pressio4py, a *masked Galerkin* with collocation problem is defined as:
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
 \mathbf{(A\phi)}^T

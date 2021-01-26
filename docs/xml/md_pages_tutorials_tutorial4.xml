@@ -19,7 +19,7 @@
 <para><simplesect kind="par"><title></title><para>pressio4py provides a variant of the Galerkin problem, called <emphasis>masked Galerkin</emphasis>, that allows one to test and compare the <emphasis>accuracy</emphasis> of various hyper-reduction techniques <bold>without</bold> having to change the FOM code.</para>
 </simplesect>
  <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title></title><para>This tutorial aims at introducing the concept of the <emphasis>mask</emphasis> by showing how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <emphasis>collocation</emphasis>.</para>
+<para><simplesect kind="par"><title></title><para>This tutorial introduces the concept of the <emphasis>mask</emphasis> by showing how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <emphasis>collocation</emphasis>.</para>
 </simplesect>
 </para>
 </sect1>
