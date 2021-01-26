@@ -25,4 +25,21 @@ pressio4py defines a {\itshape masked Galerkin} with collocation a problem defin
 
 where $\hat{y}$ is the reduced state, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, $f(...)$ is the F\+OM velocity and $A$ is a sampling matrix that picks only target rows of $\phi$ and $f$. Note that the only difference with the Galerkin formulation presented in \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}} is the presence of the sampling operator $A$.
 
-Schematically, the system above corresponds to the figure below.  
+Schematically, the system above corresponds to the figure below. \hypertarget{md_pages_tutorials_tutorial4_autotoc_md77}{}\doxysection{How to create a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md77}
+In practice, for a {\itshape masked} Galerkin problem with collocation one needs\+:
+\begin{DoxyEnumerate}
+\item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}}\+: note that this is a regular F\+OM, nothing needs to change
+\item a linear decoder (see \href{./md_pages_tutorials_tutorial1.html}{\texttt{ this tutorial}})
+\item a masker object\+: the role of the masker is to extract from an operand the rows needed
+\end{DoxyEnumerate}
+
+And creating it involves these steps\+:
+\begin{DoxyEnumerate}
+\item creating the decoder on the F\+U\+LL mesh
+\item selecting the indices to use for the collocation
+\item creating a \char`\"{}projector operator\char`\"{} by filtering/extracting the target rows of the basis. The projector operator The projector is responsible to project the F\+OM velocity.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item creating a masker object responsible to mask the F\+OM operators
+\item creating the actual masked Galerkin problem 
+\end{DoxyEnumerate}

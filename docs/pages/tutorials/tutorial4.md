@@ -67,6 +67,11 @@ presence of the sampling operator @f$A@f$.
 Schematically, the system above corresponds to the figure below.
 @image html tut_gal_2_f1.png width=65%
 
+@par
+To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc).
+The most basic one is just random sampling: given the set of indices of the full mesh,
+one simply randomly picks a subset of it.
+
 
 # How to create a masked Galerkin problem?
 
@@ -76,9 +81,17 @@ In practice, for a *masked* Galerkin problem with collocation one needs:
 3. a masker object: the role of the masker is to extract from an operand the rows needed
 
 And creating it involves these steps:
-1. creating the decoder on the FULL mesh
+1. creating the decoder on the **FULL** mesh
+```py
+# e.g. let phi contain the POD modes on the full mesh
+linearDecoder = rom.Decoder(phi)
+```
 
-2. selecting the indices to use for the collocation
+2. selecting the row indices to use for the collocation
+```py
+# to select rows there are various methods wee.g. one can use random or some other way
+collocationIndices = np.array([2,3,10,56])
+```
 
 3. creating a "projector operator" by filtering/extracting the target rows of the basis.
 The projector operator

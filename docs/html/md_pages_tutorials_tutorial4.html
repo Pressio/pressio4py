@@ -227,7 +227,7 @@ $A$
 <g id='eq10-page1'>
 <use x='0' y='0' xlink:href='#eq10-g0-65'/>
 </g>
-</svg>.</p><p>Schematically, the system above corresponds to the figure below.</p><img class="m-image" src="tut_gal_2_f1.png" alt="Image" style="width: 65%;" /></section>
+</svg>.</p><p>Schematically, the system above corresponds to the figure below.</p><img class="m-image" src="tut_gal_2_f1.png" alt="Image" style="width: 65%;" /></section><section id="autotoc_md77"><h2><a href="#autotoc_md77">How to create a masked Galerkin problem?</a></h2><p>In practice, for a <em>masked</em> Galerkin problem with collocation one needs:</p><ol><li>a FOM object satisfying the API described <a href="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</a>: note that this is a regular FOM, nothing needs to change</li><li>a linear decoder (see <a href="./md_pages_tutorials_tutorial1.html">this tutorial</a>)</li><li>a masker object: the role of the masker is to extract from an operand the rows needed</li></ol><p>And creating it involves these steps:</p><ol><li>creating the decoder on the FULL mesh</li><li>selecting the indices to use for the collocation</li><li>creating a &quot;projector operator&quot; by filtering/extracting the target rows of the basis. The projector operator The projector is responsible to project the FOM velocity.</li></ol><ol><li>creating a masker object responsible to mask the FOM operators</li><li>creating the actual masked Galerkin problem</li></ol></section>
       </div>
     </div>
   </div>
