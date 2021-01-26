@@ -19,18 +19,14 @@
 <para><simplesect kind="par"><title></title><para>pressio4py provides a variant of the Galerkin problem, called <emphasis>masked Galerkin</emphasis>, that allows one to test and compare the <emphasis>accuracy</emphasis> of various hyper-reduction techniques <bold>without</bold> having to change the FOM code.</para>
 </simplesect>
  <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title></title><para>This tutorial shows how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <emphasis>collocation</emphasis>.</para>
+<para><simplesect kind="par"><title></title><para>This tutorial aims at introducing the concept of the <emphasis>mask</emphasis> by showing how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <emphasis>collocation</emphasis>.</para>
 </simplesect>
 </para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md76">
 <title>Masked Galerkin with collocation</title>
-<para>In practice, to use a <emphasis>masked</emphasis> Galerkin problem one needs:<orderedlist>
-<listitem><para>a FOM object satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink>: note that this is a regular FOM, nothing needs to change</para>
-</listitem><listitem><para>a linear decoder (see <ulink url="./md_pages_tutorials_tutorial1.html">this tutorial</ulink>)</para>
-</listitem><listitem><para>a masker object: the role of the ma </para>
-</listitem></orderedlist>
-</para>
+<para>pressio4py defines a <emphasis>masked Galerkin</emphasis> with collocation a problem as: <formula id="35">\[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{A\phi}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]</formula></para>
+<para>where <formula id="33">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, and <formula id="30">$f(...)$</formula> is the FOM velocity. Schematically, this system corresponds to the figure below. </para>
 </sect1>
     </detaileddescription>
   </compounddef>

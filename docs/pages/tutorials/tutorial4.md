@@ -49,7 +49,7 @@ basic hyper-reduction technique, namely *collocation*.
 pressio4py defines a *masked Galerkin* with collocation a problem as:
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
-\mathbf{A\phi}^T
+\mathbf{(A\phi)}^T
 A\mathbf{f}
 \Big(\mathbf{y}_{ref}(\mathbf{\mu})
 + \mathbf{\phi}\hat{\mathbf{y}} \Big)

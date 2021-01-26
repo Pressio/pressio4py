@@ -18,12 +18,9 @@ pressio4py provides a variant of the Galerkin problem, called {\itshape masked G
 
 
 \begin{DoxyParagraph}{}
-This tutorial shows how to construct a masked Galerkin problem using the most basic hyper-\/reduction technique, namely {\itshape collocation}.
+This tutorial aims at introducing the concept of the {\itshape mask} by showing how to construct a masked Galerkin problem using the most basic hyper-\/reduction technique, namely {\itshape collocation}.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md76}{}\doxysection{Masked Galerkin with collocation}\label{md_pages_tutorials_tutorial4_autotoc_md76}
-In practice, to use a {\itshape masked} Galerkin problem one needs\+:
-\begin{DoxyEnumerate}
-\item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}}\+: note that this is a regular F\+OM, nothing needs to change
-\item a linear decoder (see \href{./md_pages_tutorials_tutorial1.html}{\texttt{ this tutorial}})
-\item a masker object\+: the role of the ma 
-\end{DoxyEnumerate}
+pressio4py defines a {\itshape masked Galerkin} with collocation a problem as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{A\phi}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
+
+where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. Schematically, this system corresponds to the figure below. 
