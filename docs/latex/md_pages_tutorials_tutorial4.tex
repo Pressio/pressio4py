@@ -36,24 +36,24 @@ To define the sampling matrix there are various techniques (todo, add reference 
 Note that to access the masking functionality you don\textquotesingle{}t need to change the F\+OM application. This is because the F\+OM always handles the full operators, and the masking is applied {\itshape after} the F\+OM computes the velocity. In other words, to access the masked Galerkin you can use the same F\+OM object you use for the default Galerkin problem discussed in \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}}.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md77}{}\doxysection{How to create a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md77}
-In practice, for a {\itshape masked} Galerkin problem with collocation one needs\+:
+In practice, a {\itshape masked} Galerkin problem needs the following main steps\+:
 
 
 \begin{DoxyEnumerate}
-\item to create the decoder on the {\bfseries{F\+U\+LL}} mesh 
+\item creating the decoder on the {\bfseries{F\+U\+LL}} mesh 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# e.g. let phi contain the POD modes on the full mesh}}
 \DoxyCodeLine{linearDecoder = rom.Decoder(phi)}
 \end{DoxyCode}
 
-\item to select the row indices to use for the collocation 
+\item selecting the row indices to use for the collocation 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# as anticipated above, there are various methods to select indices,}}
 \DoxyCodeLine{\textcolor{comment}{\# the most basic one is random sampling}}
 \DoxyCodeLine{collocationIndices = np.array([2,3,10,56, whatever])}
 \end{DoxyCode}
 
-\item to create a \char`\"{}projector operator\char`\"{} that is responsible to project the F\+OM velocity. Basically, this projector knows how to compute the action of $(A\phi)^T$. 
+\item creating a \char`\"{}projector operator\char`\"{} that is responsible to project the F\+OM velocity. Basically, this projector knows how to compute the action of $(A\phi)^T$. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{modesOnSampleMesh = np.take(modes, collocationIndices, axis=0)}
 \DoxyCodeLine{projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)}

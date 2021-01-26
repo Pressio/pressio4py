@@ -97,6 +97,7 @@ linearDecoder = rom.Decoder(phi)
 ```
 
 2. selecting the row indices to use for the collocation
+
 ```py
 # as anticipated above, there are various methods to select indices,
 # the most basic one is random sampling
@@ -105,6 +106,7 @@ collocationIndices = np.array([2,3,10,56, whatever])
 
 3. creating a "projector operator" that is responsible to project the FOM velocity.
 Basically, this projector knows how to compute the action of @f$(A\phi)^T@f$.
+
 ```py
 modesOnSampleMesh = np.take(modes, collocationIndices, axis=0)
 projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
@@ -112,6 +114,7 @@ projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
 
 3. creating a masker object: the masker is responsible to
 act on the FOM velocity vector and "mask" it to return the collocated values.
+
 ```py
 class MyMasker:
   def __init__(self, indices):
@@ -127,8 +130,9 @@ class MyMasker:
 masker = MyMasker(collocationIndices)
 ```
 
-4. creating the actual masked Galerkin problem: note that as in the default case,
+4. creating the masked Galerkin problem: note that as in the default case,
 the time-stepping scheme is part of the class name.
+
 ```py
 problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)
 ```
