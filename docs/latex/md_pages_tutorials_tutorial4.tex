@@ -75,7 +75,7 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{masker = MyMasker(collocationIndices)}
 \end{DoxyCode}
 
-\item creating the masked Galerkin problem\+: note that as in the default case, the time-\/stepping scheme is part of the class name. 
+\item creating the masked Galerkin problem 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)}
 \end{DoxyCode}

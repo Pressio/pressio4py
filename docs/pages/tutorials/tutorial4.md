@@ -125,6 +125,7 @@ masker = MyMasker(collocationIndices)
 ```
 
 5. creating the masked Galerkin problem
+
 ```py
 problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)
 ```

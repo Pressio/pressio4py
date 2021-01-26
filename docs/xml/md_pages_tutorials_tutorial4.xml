@@ -63,7 +63,7 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">masker<sp/>=<sp/>MyMasker(collocationIndices)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>creating the masked Galerkin problem: note that as in the default case, the time-stepping scheme is part of the class name. <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
+</listitem><listitem><para>creating the masked Galerkin problem <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
 </programlisting></para>
 </listitem></orderedlist>
 </para>
