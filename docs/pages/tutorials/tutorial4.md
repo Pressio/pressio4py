@@ -68,53 +68,30 @@ Schematically, the system above corresponds to the figure below.
 @image html tut_gal_2_f1.png width=65%
 
 
-<!-- In practice, to use a *masked* Galerkin problem one needs: -->
-<!-- 1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM, nothing needs to change -->
-<!-- 2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html)) -->
-<!-- 3. a masker object: the role of the ma -->
+# How to create a masked Galerkin problem?
+
+In practice, for a *masked* Galerkin problem with collocation one needs:
+1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM, nothing needs to change
+2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html))
+3. a masker object: the role of the masker is to extract from an operand the rows needed
+
+And creating it involves these steps:
+1. creating the decoder on the FULL mesh
+
+2. selecting the indices to use for the collocation
+
+3. creating a "projector operator" by filtering/extracting the target rows of the basis.
+The projector operator
+The projector is responsible to project the FOM velocity.
+
+
+3. creating a masker object responsible to mask the FOM operators
+
+
+4. creating the actual masked Galerkin problem
 
 
 
-
-
-
-
-
-
-<!-- pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials. -->
-<!-- The "default" qualification in pressio4py refers to a -->
-<!-- formulation that does *not* use hyper-reduction. -->
-<!-- Suppose that your full-order model (FOM) is written as -->
-<!-- @f[ -->
-<!-- \frac{d \boldsymbol{y}}{dt} = -->
-<!-- \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), -->
-<!-- \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), -->
-<!-- @f] -->
-
-<!-- where @f$y@f$ is the FOM state and @f$f(...)@f$ is the FOM velocity. -->
-<!-- Both @f$y@f$ and @f$f@f$ are large, see figure below. -->
-<!-- @image html tut_gal_1_f1.png width=30% -->
-
-<!-- @m_class{m-block m-info} -->
-
-<!-- @par Default Galerkin -->
-<!-- pressio4py defines a *default Galerkin* problem as: -->
-<!-- @f[ -->
-<!-- \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = -->
-<!-- \mathbf{\phi}^T -->
-<!-- \mathbf{f} -->
-<!-- \Big(\mathbf{y}_{ref}(\mathbf{\mu}) -->
-<!-- + \mathbf{\phi}\hat{\mathbf{y}} \Big) -->
-<!-- @f] -->
-
-<!-- where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates, -->
-<!-- @f$y@f$ is the full-order model (FOM) state, -->
-<!-- @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and -->
-<!-- @f$f(...)@f$ is the FOM velocity. Schematically, this system corresponds -->
-<!-- to the figure below. -->
-<!-- @image html tut_gal_1_f2.png width=65% -->
-
-<!-- # How to create a default Galerkin problem? -->
 
 <!-- To create a default Galerkin problem object, one needs: -->
 <!-- 1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html) -->
