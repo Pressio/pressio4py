@@ -8,13 +8,26 @@ This tutorial shows how to create and solve a *masked* time-explicit Galerkin pr
 
 # What is a masked Galerkin problem?
 
-In [this tutorial](./md_pages_tutorials_tutorial3.html) we explained that using
-a default Galerkin problem is inefficient for large problems because ones has to compute
-the FOM velocity and project it using the basis matrix, both of which
-scale with the FOM degrees of freedom.
-To overcome this obstacle, one resorts to hyper-reduction techniques,
-which aim at approximating the FOM nonlinear operators for a fraction
+In [this tutorial](./md_pages_tutorials_tutorial3.html) we introduced the *default Galerkin problem*
+and explained that it is inefficient for large systems because ones has to compute
+the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom.
+This implies that even if the reduced system to integrate in time is much smaller,
+the computational gains are practically zero becuase of the above bottleneck.
+
+To overcome this obstacle, one typically resorts to hyper-reduction techniques.
+Hyper-reduction aims at approximating the FOM nonlinear operators for a fraction
 of the computational cost.
+There are several hyper-reduction methods available and this tutorial is not
+aimed at presenting all of them.
+
+A key aspect of hyper-reduction is that to get the most benefits out of it,
+one has to implement it directly inside the FOM code. We can say that, in practice,
+it boils down to enabling the FOM code to computing the FOM velocity
+at only a subset of the mesh.
+So
+
+
+
 
 
 

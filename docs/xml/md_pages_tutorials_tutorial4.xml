@@ -12,7 +12,7 @@
 </para>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md75">
 <title>What is a masked Galerkin problem?</title>
-<para>In [this tutorial]() we explained that using a default Galerkin problem is inefficient for large problems because ones has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. To overcome this obstacle, one resorts to hyper-reduction techniques, which aim at approximating the FOM nonlinear operators for a fraction of the computational cost. </para>
+<para>In <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink> we explained that using a default Galerkin problem is inefficient for large problems because ones has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. To overcome this obstacle, one resorts to hyper-reduction techniques, which aim at approximating the FOM nonlinear operators for a fraction of the computational cost. </para>
 </sect1>
     </detaileddescription>
   </compounddef>
