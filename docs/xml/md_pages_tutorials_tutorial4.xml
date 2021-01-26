@@ -12,7 +12,9 @@
 </para>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md75">
 <title>What is a masked Galerkin problem?</title>
-<para>In <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink> we explained that using a default Galerkin problem is inefficient for large problems because ones has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. To overcome this obstacle, one resorts to hyper-reduction techniques, which aim at approximating the FOM nonlinear operators for a fraction of the computational cost. </para>
+<para>In <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink> we introduced the <emphasis>default Galerkin problem</emphasis> and explained that it is inefficient for large systems because ones has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.</para>
+<para>To overcome this obstacle, one typically resorts to hyper-reduction techniques. Hyper-reduction aims at approximating the FOM nonlinear operators for a fraction of the computational cost. There are several hyper-reduction methods available and this tutorial is not aimed at presenting all of them.</para>
+<para>A key aspect of hyper-reduction is that to get the most benefits out of it, one has to implement it directly inside the FOM code. We can say that, in practice, it boils down to enabling the FOM code to computing the FOM velocity at only a subset of the mesh. So </para>
 </sect1>
     </detaileddescription>
   </compounddef>
