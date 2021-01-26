@@ -32,7 +32,7 @@
 <para><simplesect kind="par"><title></title><para>To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc). The most basic one is just random sampling: given the set of indices of the full mesh, one simply randomly picks a subset of it.</para>
 </simplesect>
  <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-success" /></para>
-<para><simplesect kind="par"><title></title><para>Note that to access the masking functionality you don&apos;t need to change the FOM applicatio. This is because the FOM always handles the full operators, and the masking is applied <emphasis>after</emphasis> the FOM computes the velocity. In other words, to access the masked Galerkin you can use the same FOM object you use for the default Galerkin problem discussed in <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink>.</para>
+<para><simplesect kind="par"><title></title><para>Note that to access the masking functionality you don&apos;t need to change the FOM application. This is because the FOM always handles the full operators, and the masking is applied <emphasis>after</emphasis> the FOM computes the velocity. In other words, to access the masked Galerkin you can use the same FOM object you use for the default Galerkin problem discussed in <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink>.</para>
 </simplesect>
 </para>
 </sect1>
@@ -65,10 +65,18 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">masker<sp/>=<sp/>MyMasker(collocationIndices)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>creating the actual masked Galerkin problem <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
-</programlisting> </para>
+</listitem><listitem><para>creating the actual masked Galerkin problem: note that as in the default case, the time-stepping scheme is part of the class name. <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
+</programlisting></para>
 </listitem></orderedlist>
 </para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial4_1autotoc_md78">
+<title>How to solve a default Galerkin problem?</title>
+<para>Solving the masked problem can be done using the same API for solving a default problem, see <ulink url="./md_pages_tutorials_tutorial3.html">this</ulink>.</para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial4_1autotoc_md79">
+<title>Want to see all the above pieces in action?</title>
+<para>Look at <ulink url="./md_pages_demos_demo4.html">this demo</ulink> that shows a masked Galerkin for a 1d PDE. </para>
 </sect1>
     </detaileddescription>
   </compounddef>
