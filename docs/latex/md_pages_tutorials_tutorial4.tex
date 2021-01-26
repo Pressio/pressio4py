@@ -75,10 +75,7 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{masker = MyMasker(collocationIndices)}
 \end{DoxyCode}
 
-\item creating the masked Galerkin problem
-\end{DoxyEnumerate}
-
-
+\item creating the masked Galerkin problem 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj,}
 \DoxyCodeLine{                                                  linearDecoder,}
@@ -87,6 +84,7 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{                                                  masker,}
 \DoxyCodeLine{                                                  projector)}
 \end{DoxyCode}
-\hypertarget{md_pages_tutorials_tutorial4_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md78}
+
+\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial4_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md78}
 Solving the masked problem can be done using the same A\+PI for solving a default problem, see \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this}}.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md79}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial4_autotoc_md79}
 Look at \href{./md_pages_demos_demo4.html}{\texttt{ this demo}} that shows a masked Galerkin for a 1d P\+DE. 
