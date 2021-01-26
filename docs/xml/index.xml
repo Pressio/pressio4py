@@ -24,6 +24,8 @@
   </compound>
   <compound refid="tutorial3_8md" kind="file"><name>tutorial3.md</name>
   </compound>
+  <compound refid="tutorial4_8md" kind="file"><name>tutorial4.md</name>
+  </compound>
   <compound refid="md_pages_demos_demo1" kind="page"><name>md_pages_demos_demo1</name>
   </compound>
   <compound refid="md_pages_demos_demo2" kind="page"><name>md_pages_demos_demo2</name>
@@ -45,6 +47,8 @@
   <compound refid="md_pages_tutorials_tutorial2" kind="page"><name>md_pages_tutorials_tutorial2</name>
   </compound>
   <compound refid="md_pages_tutorials_tutorial3" kind="page"><name>md_pages_tutorials_tutorial3</name>
+  </compound>
+  <compound refid="md_pages_tutorials_tutorial4" kind="page"><name>md_pages_tutorials_tutorial4</name>
   </compound>
   <compound refid="dir_e3e5033bce933e9613999c4991aa42b8" kind="dir"><name>pages/demos</name>
   </compound>
