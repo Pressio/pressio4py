@@ -73,35 +73,66 @@ The most basic one is just random sampling: given the set of indices of the full
 one simply randomly picks a subset of it.
 
 
+@m_class{m-block m-success}
+
+@par
+Note that to access the masking functionality you don't need to change the FOM applicatio.
+This is because the FOM always handles the full operators, and the masking is applied
+*after* the FOM computes the velocity.
+In other words, to access the masked Galerkin you can use the same FOM object you use
+for the default Galerkin problem discussed in [this tutorial](./md_pages_tutorials_tutorial3.html).
+
+
 # How to create a masked Galerkin problem?
 
 In practice, for a *masked* Galerkin problem with collocation one needs:
-1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM, nothing needs to change
-2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html))
-3. a masker object: the role of the masker is to extract from an operand the rows needed
+<!-- 1. a FOM object satisfying the API described [here](file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html): note that this is a regular FOM object, nothing needs to change -->
+<!-- 2. a linear decoder (see [this tutorial](./md_pages_tutorials_tutorial1.html)) -->
+<!-- 3. a masker object: the role of the masker is to extract from an operand the rows needed -->
 
-And creating it involves these steps:
-1. creating the decoder on the **FULL** mesh
+1. to create the decoder on the **FULL** mesh
 ```py
 # e.g. let phi contain the POD modes on the full mesh
 linearDecoder = rom.Decoder(phi)
 ```
 
-2. selecting the row indices to use for the collocation
+2. to select the row indices to use for the collocation
 ```py
-# to select rows there are various methods wee.g. one can use random or some other way
-collocationIndices = np.array([2,3,10,56])
+# as anticipated above, there are various methods to select indices,
+# the most basic one is random sampling
+collocationIndices = np.array([2,3,10,56, whatever])
 ```
 
-3. creating a "projector operator" by filtering/extracting the target rows of the basis.
-The projector operator
-The projector is responsible to project the FOM velocity.
+3. to create a "projector operator" that is responsible to project the FOM velocity.
+Basically, this projector knows how to compute the action of @f$(A\phi)^T@f$.
+```py
+modesOnSampleMesh = np.take(modes, collocationIndices, axis=0)
+projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
+```
 
+3. creating a masker object: the masker is responsible to
+act on the FOM velocity vector and "mask" it to return the collocated values.
+```py
+class MyMasker:
+  def __init__(self, indices):
+    self.rows_ = indices
+    self.collocationSize_ = len(indices)
 
-3. creating a masker object responsible to mask the FOM operators
+  def createApplyMaskResult(self, operand):
+    return np.zeros(self.collocationSize_)
+
+  def applyMask(self, operand, time, result):
+    result[:] = np.take(operand, self.rows_)
+
+masker = MyMasker(collocationIndices)
+```
 
 
 4. creating the actual masked Galerkin problem
+```py
+problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)
+```
+
 
 
 
