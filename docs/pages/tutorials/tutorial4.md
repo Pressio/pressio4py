@@ -55,11 +55,14 @@ A\mathbf{f}
 + \mathbf{\phi}\hat{\mathbf{y}} \Big)
 @f]
 
-where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
+where @f$\hat{y}@f$ is the reduced state,
 @f$y@f$ is the full-order model (FOM) state,
-@f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
-@f$f(...)@f$ is the FOM velocity. Schematically, this system corresponds
-to the figure below.
+@f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis,
+@f$f(...)@f$ is the FOM velocity and @$fA@f$ is a sampling matrix that picks
+only target rows of @$f\phi@f$ and @$ff@f$.
+
+
+Schematically, this system corresponds to the figure below.
 <!-- @image html tut_gal_1_f2.png width=65% -->
 
 

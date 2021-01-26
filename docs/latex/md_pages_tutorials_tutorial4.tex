@@ -21,6 +21,6 @@ pressio4py provides a variant of the Galerkin problem, called {\itshape masked G
 This tutorial aims at introducing the concept of the {\itshape mask} by showing how to construct a masked Galerkin problem using the most basic hyper-\/reduction technique, namely {\itshape collocation}.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md76}{}\doxysection{Masked Galerkin with collocation}\label{md_pages_tutorials_tutorial4_autotoc_md76}
-pressio4py defines a {\itshape masked Galerkin} with collocation a problem as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{A\phi}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
+pressio4py defines a {\itshape masked Galerkin} with collocation a problem as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{(A\phi)}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 
 where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. Schematically, this system corresponds to the figure below. 
