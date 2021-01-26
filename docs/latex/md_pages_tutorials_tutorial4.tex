@@ -59,7 +59,7 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 \DoxyCodeLine{projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)}
 \end{DoxyCode}
 
-\item creating a masker object\+: the masker is responsible to act on the F\+OM velocity vector and \char`\"{}mask\char`\"{} it to return the collocated values. 
+\item creating a masker object\+: the masker is responsible to act on the F\+OM velocity vector and \char`\"{}mask\char`\"{} it to return the collocated values. pressio4py will call this every time it needs to compute the collocated F\+OM velocity. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, indices):}

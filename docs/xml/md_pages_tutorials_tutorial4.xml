@@ -50,7 +50,7 @@
 </listitem><listitem><para>creating a &quot;projector operator&quot; that is responsible to project the FOM velocity. Basically, this projector knows how to compute the action of <formula id="37">$(A\phi)^T$</formula>. <programlisting filename=".py"><codeline><highlight class="normal">modesOnSampleMesh<sp/>=<sp/>np.take(modes,<sp/>collocationIndices,<sp/>axis=0)</highlight></codeline>
 <codeline><highlight class="normal">projector<sp/>=<sp/>rom.galerkin.ArbitraryProjector(modesOnSampleMesh)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>creating a masker object: the masker is responsible to act on the FOM velocity vector and &quot;mask&quot; it to return the collocated values. <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
+</listitem><listitem><para>creating a masker object: the masker is responsible to act on the FOM velocity vector and &quot;mask&quot; it to return the collocated values. pressio4py will call this every time it needs to compute the collocated FOM velocity. <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>indices):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.rows_<sp/>=<sp/>indices</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.collocationSize_<sp/>=<sp/>len(indices)</highlight></codeline>
