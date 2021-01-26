@@ -80,7 +80,12 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState, masker, projector)}
+\DoxyCodeLine{problem = rom.galerkin.masked.ProblemForwardEuler(fomObj,}
+\DoxyCodeLine{                                                  linearDecoder,}
+\DoxyCodeLine{                                                  romState,}
+\DoxyCodeLine{                                                  fomReferenceState,}
+\DoxyCodeLine{                                                  masker,}
+\DoxyCodeLine{                                                  projector)}
 \end{DoxyCode}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md78}
 Solving the masked problem can be done using the same A\+PI for solving a default problem, see \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this}}.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md79}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial4_autotoc_md79}
