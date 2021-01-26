@@ -28,8 +28,11 @@ A few questions then arise: why should one risk investing the time in
 implementing such technique without assessing upfront whether it will work?
 how can one evaluate and compare different hyper-reduction techniques without modifying the FOM code?
 
-To address these questions, pressio4py provides a variant of the Galerkin problem,
-called *masked Galerkin*, that allows one to test the *accuracy* of various
+@m_class{m-block m-success}
+
+@par
+pressio4py provides a variant of the Galerkin problem,
+called *masked Galerkin*, that allows one to test and compare the *accuracy* of various
 hyper-reduction techniques **without** having to change the FOM code.
 
 

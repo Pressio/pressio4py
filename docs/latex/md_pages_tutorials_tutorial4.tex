@@ -4,8 +4,23 @@
 This tutorial shows how to create and solve a {\itshape masked} time-\/explicit Galerkin problem.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md75}{}\doxysection{What is a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md75}
-In \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}} we introduced the {\itshape default Galerkin problem} and explained that it is inefficient for large systems because ones has to compute the F\+OM velocity and project it using the basis matrix, both of which scale with the F\+OM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.
+In \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this previous tutorial}} we introduced the {\itshape default Galerkin problem} and explained that it is inefficient for large systems because, at every time step, one has to compute the F\+OM velocity and project it using the basis matrix, both of which scale with the F\+OM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.
 
-To overcome this obstacle, one typically resorts to hyper-\/reduction techniques. Hyper-\/reduction aims at approximating the F\+OM nonlinear operators for a fraction of the computational cost. There are several hyper-\/reduction methods available and this tutorial is not aimed at presenting all of them.
+To overcome this obstacle, one can rely on hyper-\/reduction techniques\+: hyper-\/reduction aims at approximating the F\+OM nonlinear operators for a fraction of the computational cost. There are several hyper-\/reduction methods available (todo, cite).
 
-A key aspect of hyper-\/reduction is that to get the most benefits out of it, one has to implement it directly inside the F\+OM code. We can say that, in practice, it boils down to enabling the F\+OM code to computing the F\+OM velocity at only a subset of the mesh. So 
+A key aspect of hyper-\/reduction is that to get the most benefits out of it from a computational cost viewpoint, one has to implement it directly inside the F\+OM code. In practice, oversimplifying a bit, we can say that at its core, it involves enabling the F\+OM code to compute the F\+OM velocity at only a subset of the mesh. A few questions then arise\+: why should one risk investing the time in implementing such technique without assessing upfront whether it will work? how can one evaluate and compare different hyper-\/reduction techniques without modifying the F\+OM code?
+
+To address these questions, pressio4py provides a variant of the Galerkin problem, called {\itshape masked Galerkin}, that allows one to test the {\itshape accuracy} of various hyper-\/reduction techniques {\bfseries{without}} having to change the F\+OM code.
+
+
+
+\begin{DoxyParagraph}{}
+This tutorial shows how to construct a masked Galerkin problem using the most basic hyper-\/reduction technique, namely {\itshape collocation}.
+\end{DoxyParagraph}
+\hypertarget{md_pages_tutorials_tutorial4_autotoc_md76}{}\doxysection{Masked Galerkin with collocation}\label{md_pages_tutorials_tutorial4_autotoc_md76}
+In practice, to use a {\itshape masked} Galerkin problem one needs\+:
+\begin{DoxyEnumerate}
+\item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}}\+: note that this is a regular F\+OM, nothing needs to change
+\item a linear decoder (see \href{./md_pages_tutorials_tutorial1.html}{\texttt{ this tutorial}})
+\item a masker object\+: the role of the ma 
+\end{DoxyEnumerate}
