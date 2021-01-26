@@ -59,7 +59,7 @@ where @f$\hat{y}@f$ is the reduced state,
 @f$y@f$ is the full-order model (FOM) state,
 @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis,
 @f$f(...)@f$ is the FOM velocity and @f$A@f$ is a sampling matrix that picks
-only target rows of @$f\phi@f$ and @f$f@f$.
+only target rows of @f$\phi@f$ and @f$f@f$.
 
 
 Schematically, this system corresponds to the figure below.
