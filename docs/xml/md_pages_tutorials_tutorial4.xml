@@ -63,10 +63,11 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">masker<sp/>=<sp/>MyMasker(collocationIndices)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>creating the masked Galerkin problem <programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
-</programlisting></para>
+</listitem><listitem><para>creating the masked Galerkin problem</para>
 </listitem></orderedlist>
 </para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.masked.ProblemForwardEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState,<sp/>masker,<sp/>projector)</highlight></codeline>
+</programlisting></para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md78">
 <title>How to solve a default Galerkin problem?</title>
