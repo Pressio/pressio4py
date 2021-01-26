@@ -135,7 +135,7 @@ problem = rom.galerkin.masked.ProblemForwardEuler(fomObj,
 ```
 Note that as in the default case, the time-stepping scheme is part of the class name.
 
-# How to solve a default Galerkin problem?
+# How to solve a masked Galerkin problem?
 Solving the masked problem can be done using the same API for solving
 a default problem, see [this](./md_pages_tutorials_tutorial3.html).
 
