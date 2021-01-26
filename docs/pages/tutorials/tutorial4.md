@@ -8,8 +8,8 @@ This tutorial shows how to create and solve a *masked* time-explicit Galerkin pr
 
 # What is a masked Galerkin problem?
 
-In [this tutorial]() we explained that using a default Galerkin problem
-is inefficient for large problems because ones has to compute
+In [this tutorial](./md_pages_tutorials_tutorial3.html) we explained that using
+a default Galerkin problem is inefficient for large problems because ones has to compute
 the FOM velocity and project it using the basis matrix, both of which
 scale with the FOM degrees of freedom.
 To overcome this obstacle, one resorts to hyper-reduction techniques,
