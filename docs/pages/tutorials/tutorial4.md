@@ -39,7 +39,7 @@ hyper-reduction techniques **without** having to change the FOM code.
 @m_class{m-block m-info}
 
 @par
-This tutorial aims at introducing the concept of the *mask* by showing how
+This tutorial introduces the concept of the *mask* by showing how
 to construct a masked Galerkin problem using the most
 basic hyper-reduction technique, namely *collocation*.
 

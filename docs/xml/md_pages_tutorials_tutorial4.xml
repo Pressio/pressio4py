@@ -7,7 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title></title><para>This tutorial shows how to create and solve a <emphasis>masked</emphasis> time-explicit Galerkin problem.</para>
+<para><simplesect kind="par"><title></title><para>This tutorial shows how to create and solve a time-explicit <emphasis>masked</emphasis> Galerkin problem.</para>
 </simplesect>
 </para>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md75">

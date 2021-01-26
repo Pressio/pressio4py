@@ -1,7 +1,7 @@
 
 
 \begin{DoxyParagraph}{}
-This tutorial shows how to create and solve a {\itshape masked} time-\/explicit Galerkin problem.
+This tutorial shows how to create and solve a time-\/explicit {\itshape masked} Galerkin problem.
 \end{DoxyParagraph}
 \hypertarget{md_pages_tutorials_tutorial4_autotoc_md75}{}\doxysection{What is a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md75}
 In \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this previous tutorial}} we introduced the {\itshape default Galerkin problem} and explained that it is inefficient for large systems because, at every time step, one has to compute the F\+OM velocity and project it using the basis matrix, both of which scale with the F\+OM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.
