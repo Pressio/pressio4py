@@ -75,7 +75,7 @@
 <para>Note that as in the default case, the time-stepping scheme is part of the class name.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md78">
-<title>How to solve a default Galerkin problem?</title>
+<title>How to solve a masked Galerkin problem?</title>
 <para>Solving the masked problem can be done using the same API for solving a default problem, see <ulink url="./md_pages_tutorials_tutorial3.html">this</ulink>.</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md79">

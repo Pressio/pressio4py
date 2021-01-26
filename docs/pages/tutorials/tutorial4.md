@@ -109,6 +109,7 @@ projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
 ```
 4. creating a masker object: the masker is responsible to
 act on the FOM velocity vector and "mask" it to return the collocated values.
+pressio4py will call this every time it needs to compute the collocated FOM velocity.
 ```py
 class MyMasker:
   def __init__(self, indices):
