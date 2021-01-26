@@ -4,7 +4,7 @@
 @m_class{m-block m-info}
 
 @par
-This tutorial shows how to create and solve a *default* time-explicit Galerkin problem.
+This tutorial shows how to create and solve a time-explicit *default* Galerkin problem.
 
 # What is a default Galerkin problem?
 

@@ -29,6 +29,9 @@
 <para>where <formula id="33">$\hat{y}$</formula> is the reduced state, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, <formula id="30">$f(...)$</formula> is the FOM velocity and <formula id="36">$A$</formula> is a sampling matrix that picks only target rows of <formula id="19">$\phi$</formula> and <formula id="31">$f$</formula>. Note that the only difference with the Galerkin formulation presented in <ulink url="./md_pages_tutorials_tutorial3.html">this tutorial</ulink> is the presence of the sampling operator <formula id="36">$A$</formula>.</para>
 <para>Schematically, the system above corresponds to the figure below. <image type="html" name="tut_gal_2_f1.png" width="65%"></image>
 </para>
+<para><simplesect kind="par"><title></title><para>To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc). The most basic one is just random sampling: given the set of indices of the full mesh, one simply randomly picks a subset of it.</para>
+</simplesect>
+</para>
 </sect1>
 <sect1 id="md_pages_tutorials_tutorial4_1autotoc_md77">
 <title>How to create a masked Galerkin problem?</title>
@@ -39,8 +42,12 @@
 </listitem></orderedlist>
 </para>
 <para>And creating it involves these steps:<orderedlist>
-<listitem><para>creating the decoder on the FULL mesh</para>
-</listitem><listitem><para>selecting the indices to use for the collocation</para>
+<listitem><para>creating the decoder on the <bold>FULL</bold> mesh <programlisting filename=".py"><codeline><highlight class="comment">#<sp/>e.g.<sp/>let<sp/>phi<sp/>contain<sp/>the<sp/>POD<sp/>modes<sp/>on<sp/>the<sp/>full<sp/>mesh</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">linearDecoder<sp/>=<sp/>rom.Decoder(phi)</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>selecting the row indices to use for the collocation <programlisting filename=".py"><codeline><highlight class="comment">#<sp/>to<sp/>select<sp/>rows<sp/>there<sp/>are<sp/>various<sp/>methods<sp/>wee.g.<sp/>one<sp/>can<sp/>use<sp/>random<sp/>or<sp/>some<sp/>other<sp/>way</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">collocationIndices<sp/>=<sp/>np.array([2,3,10,56])</highlight></codeline>
+</programlisting></para>
 </listitem><listitem><para>creating a &quot;projector operator&quot; by filtering/extracting the target rows of the basis. The projector operator The projector is responsible to project the FOM velocity.</para>
 </listitem></orderedlist>
 <orderedlist>
