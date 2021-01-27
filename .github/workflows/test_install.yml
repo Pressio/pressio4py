@@ -69,6 +69,8 @@ jobs:
         python setup.py sdist bdist_wheel
 
     - name: install
+      env:
+        CXX: ${{matrix.cxx-compilers}}
       run: |
         python setup.py install
 
