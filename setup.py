@@ -34,6 +34,8 @@ class CMakeBuild(build_ext):
     # Can be set with Conda-Build, for example.
     cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
 
+    cfg = "Debug" if self.debug else "Release"
+
     #------------------------
     # --- pressio ---
     #------------------------
@@ -43,6 +45,7 @@ class CMakeBuild(build_ext):
     cmake_args = [
       "-DPRESSIO_ENABLE_TPL_EIGEN=OFF",
       "-DPRESSIO_ENABLE_TPL_PYBIND11=ON",
+      "-DCMAKE_BUILD_TYPE={}".format(cfg),
       "-DCMAKE_INSTALL_PREFIX={}".format(pressioPfxDir),
     ]
     if not os.path.exists(pressioBuildDir): os.makedirs(pressioBuildDir)
@@ -58,8 +61,6 @@ class CMakeBuild(build_ext):
     #------------------------
     # --- pressio4py ---
     #------------------------
-    cfg = "Debug" if self.debug else "Release"
-
     # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
     # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
     # from Python.
@@ -99,7 +100,7 @@ class CMakeBuild(build_ext):
 
 setup(
   name="pressio4py",
-  version="0.6.1rc4",
+  version="0.6.2rc1",
   author="Francesco Rizzi",
   author_email="fnrizzi@sandia.gov",
   description="pressio4py: projection-based model reduction for Python",
@@ -119,7 +120,6 @@ setup(
   classifiers=[
     "License :: OSI Approved :: BSD License",
     "Operating System :: Unix",
-    "Environment :: MacOS X",
     "Programming Language :: C++",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Scientific/Engineering",

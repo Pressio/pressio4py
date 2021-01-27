@@ -87,6 +87,9 @@ PYBIND11_MODULE(pressio4py, mParent)
   //*****************
   // bind logging
   //*****************
+  // make sure to redirect stdout/stderr streams to python stdout
+  pybind11::add_ostream_redirect(mParent, "ostream_redirect");
+
   pybind11::module loggerModule = mParent.def_submodule("logger");
   pybind11::enum_<pressio::logto>(loggerModule, "logto")
     .value("terminal", pressio::logto::terminal)
@@ -101,9 +104,6 @@ PYBIND11_MODULE(pressio4py, mParent)
     .value("critical",	pressio::log::level::critical)
     .value("off",	pressio::log::level::off)
     .export_values();
-
-  // make sure to redirect stdout/stderr streams to python stdout
-  pybind11::add_ostream_redirect(mParent, "ostream_redirect");
 
   // bind the initialization and setVerbosity functions
   loggerModule.def("initialize",

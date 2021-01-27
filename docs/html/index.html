@@ -30,6 +30,8 @@
               <ol>
                 <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
                 <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
+                <li><a href="md_pages_tutorials_tutorial3.html">Default Galerkin explicit</a></li>
+                <li><a href="md_pages_tutorials_tutorial4.html">Masked Galerkin explicit</a></li>
               </ol>
             </li>
             <li>
@@ -63,7 +65,7 @@
           Python Bindings for Pressio
         </h1>
 <p><a name="md_pages_main"></a> <em>Leading-edge projection-based reduced order models (pROMs) for dynamical systems in science and engineering.</em></p><p>You landed on the documentation of the pressio Python bindings library!</p><p>If this is a mistake, please go back to the <a href="https://pressio.github.io/">project website</a>.</p><section id="autotoc_md52"><h2><a href="#autotoc_md52">Install pressio4py</a></h2><aside class="m-block m-warning"><pre class="m-code"><span class="nb">export</span> <span class="nv">CXX</span><span class="o">=</span>&lt;path-to-your-C++-compiler&gt;
-git clone git@github.com:Pressio/pressio4py.git <span class="c1"># or https://github.com/Pressio/pressio4py.git</span>
+git clone --recursive git@github.com:Pressio/pressio4py.git <span class="c1"># or https://github.com/Pressio/pressio4py.git</span>
 pip install ./pressio4py</pre></aside><p>To make sure everything worked, run the <a href="https://github.com/Pressio/pressio4py/tree/master/regression_tests">regression tests</a> as follows:</p><pre class="m-code"><span class="nb">cd</span> pressio4py
 pytest -s</pre><p>If you get an import error it might be that the version of <code>pytest</code> you are using is not compatible with the <code>pip</code> command you used to install. Make sure you use Python commands from the <strong>same</strong> distribution.</p></section><section id="autotoc_md53"><h2><a href="#autotoc_md53">Learn how to interface your app</a></h2><aside class="m-block m-warning"><p>To enable pressio4py to communicate with your app, you might have to prepare some glue code in the form of an adapter class. You can find the details <a href="./md_pages_prepare_your_app.html">here</a>. Note that this step only needs to be done once: the same interface class can then be used to run all the ROMs in pressio4py.</p></aside></section><section id="autotoc_md54"><h2><a href="#autotoc_md54">Explore the tutorials and demos</a></h2><p>You can find descriptions of the demos <a href="./md_pages_demos_demo1.html">here</a> and of the tutorials <a href="./md_pages_tutorials_tutorial1.html">here</a>&mdash; both in progress.</p><p>To run the demos:</p><pre class="m-code"><span class="nb">cd</span> pressio4py/demos
 python3 ./&lt;demo-subdir-name&gt;/main.py</pre></section><section id="autotoc_md55"><h2><a href="#autotoc_md55">License and Citation</a></h2><p>The full license is available <a href="https://pressio.github.io/various/license/">here</a>.</p><p>We are working on publishing this: you can find our arXiv preprint at: <a href="https://arxiv.org/abs/2003.07798">https:/<wbr />/<wbr />arxiv.org/<wbr />abs/<wbr />2003.07798</a></p></section><section id="autotoc_md56"><h2><a href="#autotoc_md56">Questions?</a></h2><p>Find us on Slack: <a href="https://pressioteam.slack.com">https:/<wbr />/<wbr />pressioteam.slack.com</a> or open an issue on <a href="https://github.com/Pressio/pressio4py">github</a>.</p></section>

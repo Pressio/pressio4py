@@ -8,9 +8,6 @@ You landed on the documentation of the pressio Python bindings library!
 
 If this is a mistake, please go back to the [project website](https://pressio.github.io/).
 
-<!-- If you want to explore the C++ code, you can -->
-<!-- find it [here](https://pressio.github.io/pressio/html/index.html). -->
-
 
 ## Install pressio4py
 
@@ -19,7 +16,7 @@ If this is a mistake, please go back to the [project website](https://pressio.gi
 @par
 ```bash
 export CXX=<path-to-your-C++-compiler>
-git clone git@github.com:Pressio/pressio4py.git # or https://github.com/Pressio/pressio4py.git
+git clone --recursive git@github.com:Pressio/pressio4py.git # or https://github.com/Pressio/pressio4py.git
 pip install ./pressio4py
 ```
 

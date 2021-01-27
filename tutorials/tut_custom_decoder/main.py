@@ -1,4 +1,5 @@
 
+import numpy as np
 from pressio4py import rom as rom
 
 if __name__ == "__main__":
