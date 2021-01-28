@@ -275,7 +275,7 @@ $p$
 <g id='eq12-page1'>
 <use x='0' y='0' xlink:href='#eq12-g0-112'/>
 </g>
-</svg> is the number of modes, see the figure below.</p><img class="m-image" src="tut_lindec_f1.png" alt="Image" style="width: 35%;" /><p>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</p><p>The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank1StateDecoder</span><span class="p">():</span>
+</svg> is the number of modes, see the figure below.</p><img class="m-image" src="tut_f1.png" alt="Image" style="width: 35%;" /><p>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</p><p>The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank1StateDecoder</span><span class="p">():</span>
   <span class="c1"># create the matrix</span>
   <span class="c1"># attention: we declare phi to be column-major for these reasons:</span>
   <span class="c1">#</span>
@@ -384,7 +384,7 @@ $p$
 <g id='eq18-page1'>
 <use x='0' y='0' xlink:href='#eq18-g0-112'/>
 </g>
-</svg> = number of modes</p><img class="m-image" src="tut_lindec_f2.png" alt="Image" style="width: 40%;" /></li></ul><p>Note that here we assumed that we also have separate generalized coordinates for each field, each using the same number of modes.</p><p>This scenario is intended for applications that prefer to separate the degress of freedom. The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank2StateDecoder</span><span class="p">():</span>
+</svg> = number of modes</p><img class="m-image" src="tut_f2.png" alt="Image" style="width: 40%;" /></li></ul><p>Note that here we assumed that we also have separate generalized coordinates for each field, each using the same number of modes.</p><p>This scenario is intended for applications that prefer to separate the degress of freedom. The code snippet below demonstrates how to setup such linear mapping between rank-1 states.</p><pre class="m-code"><span class="k">def</span> <span class="nf">rank2StateDecoder</span><span class="p">():</span>
   <span class="c1"># create the phi tensor</span>
   <span class="c1"># attention: we declare phi to be column-major for these reasons:</span>
   <span class="c1">#</span>
