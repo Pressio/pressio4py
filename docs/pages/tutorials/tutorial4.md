@@ -65,7 +65,7 @@ in [this tutorial](./md_pages_tutorials_tutorial3.html) is the
 presence of the sampling operator @f$A@f$.
 
 Schematically, the system above corresponds to the figure below.
-@image html tut_gal_2_f1.png width=65%
+@image html tut_f5.png width=65%
 
 @par
 To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc).

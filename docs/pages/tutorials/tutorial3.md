@@ -20,7 +20,7 @@ Suppose that your full-order model (FOM) is written as
 
 where @f$y@f$ is the FOM state and @f$f(...)@f$ is the FOM velocity.
 Both @f$y@f$ and @f$f@f$ are large, see figure below.
-@image html tut_gal_1_f1.png width=30%
+@image html tut_f3.png width=30%
 
 @m_class{m-block m-info}
 
@@ -39,7 +39,7 @@ where @f$\hat{y}@f$ is the reduced state, also called generalized coordinates,
 @f$y_{ref}@f$ is a reference FOM state, @f$\phi@f$ is the orthonormal basis, and
 @f$f(...)@f$ is the FOM velocity. Schematically, this system corresponds
 to the figure below.
-@image html tut_gal_1_f2.png width=65%
+@image html tut_f4.png width=65%
 
 # How to create a default Galerkin problem?
 
