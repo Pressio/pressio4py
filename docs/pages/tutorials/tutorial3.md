@@ -24,7 +24,7 @@ Both @f$y@f$ and @f$f@f$ are large, see figure below.
 
 @m_class{m-block m-info}
 
-@par Default Galerkin
+@par
 pressio4py defines a *default Galerkin* problem as:
 @f[
 \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) =
