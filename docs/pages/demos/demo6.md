@@ -11,18 +11,19 @@ This demo purposefully focuses on a simple test since the main goal is
 to demonstrate the steps and the code.
 The full demo script is [here](https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/main.py).
 
-@m_class{m-block m-warning}
-
-@par Important:
-The MLP used in this demo is implemented in PyTorch and thus PyTorch must be installed prior to executing this demo.
-
-
 ## Overview
 This demo solves the same problem as the one
 [here](https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html),
 but instead of using POD modes, we show here how to use
 a nonlinear manifold computed approximated by a neural network.
 Specifically, we use a MLP with 2 hidden layers of sizes 64 and 200.
+
+@m_class{m-block m-warning}
+
+@par Important:
+The MLP used in this demo is implemented in PyTorch, thus PyTorch must be installed prior to executing this demo.
+Look [here](https://pytorch.org/get-started/locally/) for information on how to install PyTorch on your system.
+
 
 <!-- ## Imports -->
 <!-- The imports needed are: -->
