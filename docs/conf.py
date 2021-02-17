@@ -29,6 +29,7 @@ LINKS_NAVBAR1 = [
      ("<a href=\"md_pages_demos_demo3.html\">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a>", ),
      ("<a href=\"md_pages_demos_demo4.html\">1D adv-diff: POD Galerkin with collocation mask</a>", ),
      ("<a href=\"md_pages_demos_demo5.html\">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a>", ),
+     ("<a href=\"md_pages_demos_demo6.html\">1D adv-diff: LSPG with nonlinear manifold (MLP) </a>", ),
    ])
 
   # # hyper-reduction
