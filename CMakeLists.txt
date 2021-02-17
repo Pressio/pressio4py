@@ -71,6 +71,11 @@ pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
 # VERSION_INFO is defined by setup.py and passed into the C++ code
 target_compile_definitions(pressio4py PRIVATE VERSION_IN=${VERSION_INFO})
 
+if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+  # 2 corresponds to info which is on for release
+  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=2)
+endif()
+
 #=====================================================================
 ### display some info
 #=====================================================================
