@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title></title><para>This tutorial shows how to create and solve a time-explicit <emphasis>default</emphasis> Galerkin problem.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md69">
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md76">
 <title>What is a default Galerkin problem?</title>
 <para>pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials. The &quot;default&quot; qualification in pressio4py refers to a formulation that does <emphasis>not</emphasis> use hyper-reduction. Suppose that your full-order model (FOM) is written as <formula id="8">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula></para>
 <para>where <formula id="29">$y$</formula> is the FOM state and <formula id="30">$f(...)$</formula> is the FOM velocity. Both <formula id="29">$y$</formula> and <formula id="31">$f$</formula> are large, see figure below. <image type="html" name="tut_f3.png" width="30%"></image>
@@ -21,7 +21,7 @@
 where <formula id="33">$\hat{y}$</formula> is the reduced state, also called generalized coordinates, <formula id="29">$y$</formula> is the full-order model (FOM) state, <formula id="34">$y_{ref}$</formula> is a reference FOM state, <formula id="19">$\phi$</formula> is the orthonormal basis, and <formula id="30">$f(...)$</formula> is the FOM velocity. Schematically, this system corresponds to the figure below. <image type="html" name="tut_f4.png" width="65%"></image>
 </para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md70">
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md77">
 <title>How to create a default Galerkin problem?</title>
 <para>To create a default Galerkin problem object, one needs:<orderedlist>
 <listitem><para>a FOM object satisfying the API described <ulink url="file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html">here</ulink></para>
@@ -38,7 +38,7 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.default.ProblemRK4(fomObj,<sp/>decoder,<sp/>yRom,<sp/>yRef)</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md71">
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md78">
 <title>How to solve a default Galerkin problem?</title>
 <para>Once the target problem object is created, the reduced system can be integrated in time. Here we provide the most basic function to do so, which advances the system for a fixed number of steps. Synopsis:</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">rom.galerkin.advanceNSteps(problem,<sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>problem<sp/>object</highlight><highlight class="normal"></highlight></codeline>
@@ -58,11 +58,11 @@ where <formula id="33">$\hat{y}$</formula> is the reduced state, also called gen
 </programlisting></para>
 <para>Note that we are working on enriching the API to integrate in time. For example, we will soon support function class to advance the problem until a condition is met, or until a target time is reached.</para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md72">
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md79">
 <title>Want to see all the above pieces in action?</title>
 <para>Look at <ulink url="./md_pages_demos_demo1.html">this demo</ulink> that uses default Galerkin for a 1d PDE.</para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md73">
+<sect1 id="md_pages_tutorials_tutorial3_1autotoc_md80">
 <title>Some considerations</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
 <para><simplesect kind="par"><title></title><para>One might wonder how the above formulation can be efficient, given that the right-hand side of the reduced system scales with the FOM degrees of freedom. This is true: the reduced system obtained from a <emphasis>default</emphasis> problem reduces the spatial degrees of freedom, but is typically not efficient because at every evaluation of the RHS, it requires a large matrix vector product. Thus, a default Galerkin is typically used for exploratory analysis when computational efficiency is <bold>not</bold> a primary goal, e.g. to test the feasibility of ROMs for a target problem, or try different basis. When computational efficiency is critical, one needs to resort to hyper-reduction techniques to reduce the cost of the matrix-vector product. This is covered in subsequent tutorials. </para>

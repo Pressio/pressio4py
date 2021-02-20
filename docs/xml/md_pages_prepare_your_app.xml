@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title></title><para>This page describes how to setup the interface enabling pressio4py to communicate with your application. Note that this step only needs to be done once: the same interface class can then be used to run all the ROMs in pressio4py. By the end, it should be clear our design choice and how to setup this &quot;glue code&quot;.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md58">
+<sect1 id="md_pages_prepare_your_app_1autotoc_md65">
 <title>Is pressio4py applicable to your problem and application?</title>
 <para>Pressio targets any system expressible as a parameterized system of ordinary differential equations (ODEs) as <formula id="8">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula> where <formula id="9">$\boldsymbol{y}$</formula> is the state, <formula id="10">$\mu$</formula> are parameters, <formula id="11">$t$</formula> is time and <formula id="12">$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$</formula> is referred to as &quot;velocity&quot; (or RHS). If your problem can be expressed as the system of ODEs above, then you can use and experiment with any of the ROM algorithms implemented in pressio4py. Note that this is a <emphasis>practical</emphasis> assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that ROMs would work well for your problem. But this is why you should try using presio4py to see if ROMs can be useful for you!</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-success" /></para>
@@ -18,7 +18,7 @@
 </simplesect>
 </para>
 </sect1>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md59">
+<sect1 id="md_pages_prepare_your_app_1autotoc_md66">
 <title>What glue code do you need on your end to use pressio4py?</title>
 <para>pressio4py requires your application to expose the &quot;velocity&quot; <formula id="12">$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$</formula> and (optionally) the action of the Jacobian matrix <formula id="13">$\partial f/\partial y$</formula>. This design choice pivots on the generality of the formulation above. We remark that the <emphasis>same</emphasis> expressive model/API is being used/expected by other well-established Python libraries, e.g., <computeroutput>scipy.ode</computeroutput>.</para>
 <para>In practice, this can be done by writing an adapter class for your full-order model (FOM) that meets the API required by pressio4py as follows: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">FomAdapter:</highlight></codeline>
@@ -50,7 +50,7 @@
 </simplesect>
 </para>
 </sect1>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md60">
+<sect1 id="md_pages_prepare_your_app_1autotoc_md67">
 <title>Where is the adapter used?</title>
 <para>An instance of the adapter class is needed to construct a ROM problem. For the sake of the argument, let us say we are doing <ulink url="https://pressio.github.io/algos/galerkin/">Galerkin ROM</ulink> with explicit Runge-Kutta4 time stepping. A synopsis of the code, just highlighting the important parts to convey the message, would be: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>

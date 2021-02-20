@@ -42,6 +42,7 @@
                 <li><a href="md_pages_demos_demo3.html">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a></li>
                 <li><a href="md_pages_demos_demo4.html">1D adv-diff: POD Galerkin with collocation mask</a></li>
                 <li><a href="md_pages_demos_demo5.html">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a></li>
+                <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
           </ol>
@@ -64,12 +65,12 @@
         <h1>
           Building Pressio4py
         </h1>
-<aside class="m-block m-info"><h3>What does this page describe?</h3><p>This page describes the end-to-end building process for <code>pressio4py</code>. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.</p></aside><aside class="m-note m-default"><h4>We are working on supporting pip, stay tuned!</h4></aside><section id="autotoc_md44"><h2><a href="#autotoc_md44">Prerequisites</a></h2><ul><li>SSH keys setup with github (if you are working behind a firewall, set the proper proxies);</li><li>C++ compiler (with support for C++14 standard);</li><li>CMake &gt;= 3.11.0;</li><li>Bash &gt;= 3.2.57.</li><li>Python (&gt;=3.6), with NumPy, SciPy, Numba, Pytest and sklearn (needed to run some of the demos).</li></ul></section><section id="autotoc_md45"><h2><a href="#autotoc_md45">Pratical steps</a></h2><section id="autotoc_md46"><h3><a href="#autotoc_md46">1. Prep</a></h3><p>Create a working director where you want to clone all repos and do the builds, e,g.:</p><pre class="m-code"><span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span><span class="nv">$HOME</span>/myPressioTest
+<aside class="m-block m-info"><h3>What does this page describe?</h3><p>This page describes the end-to-end building process for <code>pressio4py</code>. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.</p></aside><aside class="m-note m-default"><h4>We are working on supporting pip, stay tuned!</h4></aside><section id="autotoc_md51"><h2><a href="#autotoc_md51">Prerequisites</a></h2><ul><li>SSH keys setup with github (if you are working behind a firewall, set the proper proxies);</li><li>C++ compiler (with support for C++14 standard);</li><li>CMake &gt;= 3.11.0;</li><li>Bash &gt;= 3.2.57.</li><li>Python (&gt;=3.6), with NumPy, SciPy, Numba, Pytest and sklearn (needed to run some of the demos).</li></ul></section><section id="autotoc_md52"><h2><a href="#autotoc_md52">Pratical steps</a></h2><section id="autotoc_md53"><h3><a href="#autotoc_md53">1. Prep</a></h3><p>Create a working director where you want to clone all repos and do the builds, e,g.:</p><pre class="m-code"><span class="nb">export</span> <span class="nv">WORKDIR</span><span class="o">=</span><span class="nv">$HOME</span>/myPressioTest
 mkdir -p <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources  <span class="c1"># creates workdir and subdir for all sources</span></pre><p>To make things easier, create environment variables for the compilers:</p><pre class="m-code"><span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span>&lt;path-to-your-C-compiler&gt;
-<span class="nb">export</span> <span class="nv">CXX</span><span class="o">=</span>&lt;path-to-your-CXX-compiler&gt;</pre></section><section id="autotoc_md47"><h3><a href="#autotoc_md47">2. Cloning</a></h3><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources
+<span class="nb">export</span> <span class="nv">CXX</span><span class="o">=</span>&lt;path-to-your-CXX-compiler&gt;</pre></section><section id="autotoc_md54"><h3><a href="#autotoc_md54">2. Cloning</a></h3><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources
 git clone git@github.com:Pressio/pressio.git
 git clone git@github.com:Pressio/pressio-builder.git
-git clone git@github.com:Pressio/pressio4py.git</pre><p>By default, the above commands will clone the <em>master</em> branch of each repo. This is because the master branches of the three repos are the stable ones, and compatible with one another. If you want specific versions, you can just checkout the tag you want. If you do so, make sure you checkout the same tag for all three repos.</p></section><section id="autotoc_md48"><h3><a href="#autotoc_md48">3. Install Dependencies</a></h3><p>Currently, pressio and pybind11 are the dependencies required by <code>pressio4py</code>. To get and install the TPLs, run the following:</p><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources/pressio-builder
+git clone git@github.com:Pressio/pressio4py.git</pre><p>By default, the above commands will clone the <em>master</em> branch of each repo. This is because the master branches of the three repos are the stable ones, and compatible with one another. If you want specific versions, you can just checkout the tag you want. If you do so, make sure you checkout the same tag for all three repos.</p></section><section id="autotoc_md55"><h3><a href="#autotoc_md55">3. Install Dependencies</a></h3><p>Currently, pressio and pybind11 are the dependencies required by <code>pressio4py</code>. To get and install the TPLs, run the following:</p><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources/pressio-builder
 
 <span class="c1"># first, get pybind11</span>
 bash ./main_tpls.sh -dryrun<span class="o">=</span>no -build-mode<span class="o">=</span>Debug <span class="se">\</span>
@@ -92,7 +93,7 @@ bash ./main_tpls.sh -dryrun<span class="o">=</span>no -build-mode<span class="o"
 └── sources
     ├── pressio
     ├── pressio-builder
-    └── pressio4py</pre></section><section id="autotoc_md49"><h3><a href="#autotoc_md49">4. Build pressio4py</a></h3><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>
+    └── pressio4py</pre></section><section id="autotoc_md56"><h3><a href="#autotoc_md56">4. Build pressio4py</a></h3><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>
 
 <span class="nv">bdirname</span><span class="o">=</span>pressio4py-build
 rm -rf <span class="si">${</span><span class="nv">bdirname</span><span class="si">}</span> <span class="o">&amp;&amp;</span> mkdir <span class="si">${</span><span class="nv">bdirname</span><span class="si">}</span> <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="si">${</span><span class="nv">bdirname</span><span class="si">}</span>
@@ -105,7 +106,7 @@ cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL<span class="o">=</span>TRUE <span class="se"
       <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/sources/pressio4py
 make -j4
 make install
-<span class="nb">cd</span> ..</pre><p>This should create the Python library inside <code>${WORKDIR}/pressio4py-install</code> which you can import in Python.</p></section><section id="autotoc_md50"><h3><a href="#autotoc_md50">5. Running the tests or demos</a></h3><p>To run all tests, after building:</p><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/pressio4py-build
+<span class="nb">cd</span> ..</pre><p>This should create the Python library inside <code>${WORKDIR}/pressio4py-install</code> which you can import in Python.</p></section><section id="autotoc_md57"><h3><a href="#autotoc_md57">5. Running the tests or demos</a></h3><p>To run all tests, after building:</p><pre class="m-code"><span class="nb">cd</span> <span class="si">${</span><span class="nv">WORKDIR</span><span class="si">}</span>/pressio4py-build
 pytest -s  <span class="c1">#-s flushes all output to terminal.</span></pre><p>Or you can find demos inside <code>${WORKDIR}/pressio4py-build/demos</code>.</p></section></section>
       </div>
     </div>

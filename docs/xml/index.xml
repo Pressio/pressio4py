@@ -10,6 +10,8 @@
   </compound>
   <compound refid="demo5_8md" kind="file"><name>demo5.md</name>
   </compound>
+  <compound refid="demo6_8md" kind="file"><name>demo6.md</name>
+  </compound>
   <compound refid="example1_8md" kind="file"><name>example1.md</name>
   </compound>
   <compound refid="build__and__install_8md" kind="file"><name>build_and_install.md</name>
@@ -35,6 +37,8 @@
   <compound refid="md_pages_demos_demo4" kind="page"><name>md_pages_demos_demo4</name>
   </compound>
   <compound refid="md_pages_demos_demo5" kind="page"><name>md_pages_demos_demo5</name>
+  </compound>
+  <compound refid="md_pages_demos_demo6" kind="page"><name>md_pages_demos_demo6</name>
   </compound>
   <compound refid="md_pages_examples_example1" kind="page"><name>md_pages_examples_example1</name>
   </compound>

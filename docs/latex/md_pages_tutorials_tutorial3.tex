@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 This tutorial shows how to create and solve a time-\/explicit {\itshape default} Galerkin problem.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial3_autotoc_md69}{}\doxysection{What is a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md69}
+\hypertarget{md_pages_tutorials_tutorial3_autotoc_md76}{}\doxysection{What is a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md76}
 pressio4py supports different variants of Galerkin, as we will show in subsequent tutorials. The \char`\"{}default\char`\"{} qualification in pressio4py refers to a formulation that does {\itshape not} use hyper-\/reduction. Suppose that your full-\/order model (F\+OM) is written as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]
 
 where $y$ is the F\+OM state and $f(...)$ is the F\+OM velocity. Both $y$ and $f$ are large, see figure below. 
@@ -13,7 +13,7 @@ where $y$ is the F\+OM state and $f(...)$ is the F\+OM velocity. Both $y$ and $f
 \begin{DoxyParagraph}{}
 pressio4py defines a {\itshape default Galerkin} problem as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{\phi}^T \mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 \end{DoxyParagraph}
-where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. Schematically, this system corresponds to the figure below. \hypertarget{md_pages_tutorials_tutorial3_autotoc_md70}{}\doxysection{How to create a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md70}
+where $\hat{y}$ is the reduced state, also called generalized coordinates, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, and $f(...)$ is the F\+OM velocity. Schematically, this system corresponds to the figure below. \hypertarget{md_pages_tutorials_tutorial3_autotoc_md77}{}\doxysection{How to create a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md77}
 To create a default Galerkin problem object, one needs\+:
 \begin{DoxyEnumerate}
 \item a F\+OM object satisfying the A\+PI described \href{file:///Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio4py/docs/html/md_pages_prepare_your_app.html}{\texttt{ here}}
@@ -38,7 +38,7 @@ To select a different time stepping scheme, one can change the last part of the 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = rom.galerkin.default.ProblemRK4(fomObj, decoder, yRom, yRef)}
 \end{DoxyCode}
-\hypertarget{md_pages_tutorials_tutorial3_autotoc_md71}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md71}
+\hypertarget{md_pages_tutorials_tutorial3_autotoc_md78}{}\doxysection{How to solve a default Galerkin problem?}\label{md_pages_tutorials_tutorial3_autotoc_md78}
 Once the target problem object is created, the reduced system can be integrated in time. Here we provide the most basic function to do so, which advances the system for a fixed number of steps. Synopsis\+:
 
 
@@ -65,8 +65,8 @@ The observer class must meee the following A\+PI\+:
 \end{DoxyCode}
 
 
-Note that we are working on enriching the A\+PI to integrate in time. For example, we will soon support function class to advance the problem until a condition is met, or until a target time is reached.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md72}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial3_autotoc_md72}
-Look at \href{./md_pages_demos_demo1.html}{\texttt{ this demo}} that uses default Galerkin for a 1d P\+DE.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md73}{}\doxysection{Some considerations}\label{md_pages_tutorials_tutorial3_autotoc_md73}
+Note that we are working on enriching the A\+PI to integrate in time. For example, we will soon support function class to advance the problem until a condition is met, or until a target time is reached.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md79}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial3_autotoc_md79}
+Look at \href{./md_pages_demos_demo1.html}{\texttt{ this demo}} that uses default Galerkin for a 1d P\+DE.\hypertarget{md_pages_tutorials_tutorial3_autotoc_md80}{}\doxysection{Some considerations}\label{md_pages_tutorials_tutorial3_autotoc_md80}
 
 
 \begin{DoxyParagraph}{}
