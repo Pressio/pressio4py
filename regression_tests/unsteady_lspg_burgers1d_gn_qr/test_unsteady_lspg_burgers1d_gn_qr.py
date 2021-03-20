@@ -109,7 +109,7 @@ def test_euler():
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.GaussNewtonQR(lspgProblem, yRom, qrS)
+  nlsO = solvers.createGaussNewtonQR(lspgProblem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
@@ -157,7 +157,7 @@ def test_bdf2():
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.GaussNewtonQR(lspgProblem, yRom, qrS)
+  nlsO = solvers.createGaussNewtonQR(lspgProblem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)

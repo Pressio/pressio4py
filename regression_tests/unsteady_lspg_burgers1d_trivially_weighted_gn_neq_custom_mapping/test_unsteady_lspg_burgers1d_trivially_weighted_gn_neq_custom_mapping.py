@@ -79,7 +79,7 @@ def test_euler():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.WeightedGaussNewton(lspgProblem, yRom, lsO, wOp)
+  nlsO = solvers.createWeightedGaussNewton(lspgProblem, yRom, lsO, wOp)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)

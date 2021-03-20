@@ -2,7 +2,7 @@
 //@HEADER
 // ************************************************************************
 //
-// fomreconstructor.hpp
+// logger.hpp
 //                     		  Pressio
 //                             Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
@@ -46,41 +46,38 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
-#define PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_LOGGER_HPP_
+#define PRESSIO4PY_PYBINDINGS_LOGGER_HPP_
 
 namespace pressio4py{
 
-template <typename decoder_types>
-void bindFomReconstructor(pybind11::module & m, std::string className)
+void bindLogger(pybind11::module & mParent)
 {
-  using state_types	   = typename decoder_types::states_t;
-  using rom_state_t	   = typename state_types::rom_state_t;
-  using fom_state_t	   = typename state_types::fom_state_t;
-  using fom_native_state_t = typename state_types::fom_native_state_t;
-  using decoder_t	   = typename decoder_types::decoder_t;
+  // make sure to redirect stdout/stderr streams to python stdout
+  pybind11::add_ostream_redirect(mParent, "ostream_redirect");
 
-  // fom reconstructor type
-  using fom_reconstructor_t =
-    pressio::rom::FomStateReconstructor<::pressio4py::scalar_t, fom_state_t, decoder_t>;
+  // create loger submodule
+  pybind11::module loggerModule = mParent.def_submodule("logger");
+  pybind11::enum_<pressio::logto>(loggerModule, "logto")
+    .value("terminal", pressio::logto::terminal)
+    .export_values();
 
-  // create actual class
-  pybind11::class_<fom_reconstructor_t> fomReconstructor(m, className.c_str());
-  // constructor
-  fomReconstructor.def(pybind11::init<const fom_state_t &, const decoder_t &>());
-  // constructor
-  fomReconstructor.def(pybind11::init<const fom_native_state_t &,const decoder_t &>());
+  pybind11::enum_<pressio::log::level>(loggerModule, "loglevel")
+    .value("trace",	pressio::log::level::trace)
+    .value("debug",	pressio::log::level::debug)
+    .value("info",	pressio::log::level::info)
+    .value("warn",	pressio::log::level::warn)
+    .value("err",	pressio::log::level::err)
+    .value("critical",	pressio::log::level::critical)
+    .value("off",	pressio::log::level::off)
+    .export_values();
 
-  // bind the evaluate method.
-  // Here we have to use the template rom_state_t because
-  // it allows the templated evaluate method of the fom reconstructor class
-  // to know the rank of the rom state since this
-  // should work for rank1 and rank2 rom states.
-  // NOTE, however, that calling "evaluate" from python requires
-  // one to pass a NATIVE numpy array.
-  fomReconstructor.def("evaluate",
-		       &fom_reconstructor_t::template evaluate<rom_state_t>);
+  // bind the initialization and setVerbosity functions
+  loggerModule.def("initialize",
+   		   &pressio::log::initialize);
+  loggerModule.def("setVerbosity",
+		   &pressio::log::setVerbosity<std::vector<::pressio::log::level>>);
 }
 
-}//end namespace pressio4py
+} //end namespace pressio4py
 #endif

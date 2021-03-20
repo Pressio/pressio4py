@@ -241,7 +241,7 @@ def test():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.createGaussNewton(lspgProblem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)

@@ -54,10 +54,14 @@ namespace pressio4py{ namespace solvers{
 void bindUpdatingEnums(pybind11::module & m)
 {
   pybind11::enum_<pressio::solvers::nonlinear::update>(m, "update")
-    .value("standard", pressio::solvers::nonlinear::update::standard)
-    .value("armijo",   pressio::solvers::nonlinear::update::armijo)
-    .value("LMSchedule1", pressio::solvers::nonlinear::update::LMSchedule1)
-    .value("LMSchedule2", pressio::solvers::nonlinear::update::LMSchedule2)
+    .value("standard",
+	   pressio::solvers::nonlinear::update::standard)
+    .value("armijo",
+	   pressio::solvers::nonlinear::update::armijo)
+    .value("LMSchedule1",
+	   pressio::solvers::nonlinear::update::LMSchedule1)
+    .value("LMSchedule2",
+	   pressio::solvers::nonlinear::update::LMSchedule2)
     .export_values();
 }
 
@@ -85,8 +89,10 @@ template <typename nonlinear_solver_t>
 void bindCommonSolverMethods(pybind11::class_<nonlinear_solver_t> & solverObj)
 {
   // methods to set and query num of iterations
-  solverObj.def("maxIterations",    &nonlinear_solver_t::maxIterations);
-  solverObj.def("setMaxIterations", &nonlinear_solver_t::setMaxIterations);
+  solverObj.def("maxIterations",
+		&nonlinear_solver_t::maxIterations);
+  solverObj.def("setMaxIterations",
+		&nonlinear_solver_t::setMaxIterations);
 
   // updating criterion
   solverObj.def("setUpdatingCriterion",
@@ -191,86 +197,99 @@ struct _have_rj_api_var<head>
 template<class head, class... tail>
 struct _have_rj_api_var<head, tail...>
 {
-  static constexpr auto value = _have_rj_api<head>::value and _have_rj_api_var<tail...>::value;
+  static constexpr auto value = _have_rj_api<head>::value
+    and _have_rj_api_var<tail...>::value;
 };
 //------------------------------------------------
 
+// helper tags
+struct UnweightedWls{};
 struct Unweighted{};
 struct Weighted{};
 struct Irwls{};
 struct NewtonRaphson{};
 
-template<class rom_problem_t, class nonlinear_solver_t>
-void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Unweighted)
+template<class nonlinear_solver_t, class rom_problem_t, class tagT>
+pressio::mpl::enable_if_t<std::is_same<tagT, UnweightedWls>::value, nonlinear_solver_t>
+createSolver(rom_problem_t & romProb,
+	     const typename rom_problem_t::wls_native_state_t & romState,
+	     pybind11::object pyobj) //linear solver for norm eq is a native python class
 {
-  nonLinSolver.def(pybind11::init<
-		   rom_problem_t &,
-		   const typename rom_problem_t::lspg_native_state_t &,
-		   pybind11::object //linear or qr solver
-		   >());
+  return nonlinear_solver_t(romProb, romState, pyobj);
 }
 
-template<typename rom_problem_t, class nonlinear_solver_t>
-void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Weighted)
+template<class nonlinear_solver_t, class rom_problem_t, class tagT>
+pressio::mpl::enable_if_t<std::is_same<tagT, Unweighted>::value, nonlinear_solver_t>
+createSolver(rom_problem_t & romProb,
+	     const typename rom_problem_t::lspg_native_state_t & romState,
+	     pybind11::object pyobj) //linear or QR solver is a native python class
 {
-  nonLinSolver.def(pybind11::init<
-		   rom_problem_t &,
-		   const typename rom_problem_t::lspg_native_state_t &,
-		   pybind11::object, //linear or qr solver
-		   pybind11::object // weighting operator
-		   >());
+  return nonlinear_solver_t(romProb, romState, pyobj);
 }
 
-template<typename rom_problem_t, class nonlinear_solver_t>
-void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, Irwls)
+
+template<class nonlinear_solver_t, class rom_problem_t, class tagT>
+pressio::mpl::enable_if_t<std::is_same<tagT, Weighted>::value, nonlinear_solver_t>
+createSolver(rom_problem_t & romProb,
+	     const typename rom_problem_t::lspg_native_state_t & romState,
+	     pybind11::object pyobj, // linear solver for norm eq is a native python class
+	     pybind11::object wO)    // weighting operator is a native python class
 {
-  nonLinSolver.def(pybind11::init<
-		   rom_problem_t &,
-		   const typename rom_problem_t::lspg_native_state_t &,
-		   pybind11::object, //linear or qr solver
-		   typename rom_problem_t::traits::scalar_t // value of p-norm
-		   >());
+  return nonlinear_solver_t(romProb, romState, pyobj, wO);
 }
 
-template<typename rom_problem_t, class nonlinear_solver_t>
-void bindConstructor(pybind11::class_<nonlinear_solver_t> & nonLinSolver, NewtonRaphson)
+template<class nonlinear_solver_t, class rom_problem_t, class tagT>
+pressio::mpl::enable_if_t<std::is_same<tagT, Irwls>::value, nonlinear_solver_t>
+createSolver(rom_problem_t & romProb,
+	     const typename rom_problem_t::lspg_native_state_t & romState,
+	     pybind11::object pyobj, // linear solver for norm eq is a native python class
+	     typename rom_problem_t::traits::scalar_t pNorm) // value of p-norm
 {
-  nonLinSolver.def(pybind11::init<
-		   rom_problem_t &,
-		   const typename rom_problem_t::galerkin_native_state_t &,
-		   pybind11::object //linear or qr solver
-		   >());
+  return nonlinear_solver_t(romProb, romState, pyobj, pNorm);
+}
+
+template<class nonlinear_solver_t, class rom_problem_t, class tagT>
+pressio::mpl::enable_if_t<std::is_same<tagT, NewtonRaphson>::value, nonlinear_solver_t>
+createSolver(rom_problem_t & romProb,
+	     const typename rom_problem_t::galerkin_native_state_t & romState,
+	     pybind11::object pyobj) //linear is a native python class
+{
+  return nonlinear_solver_t(romProb, romState, pyobj);
 }
 
 template<class ...>
-struct bindConstructorVar;
+struct bindCreateSolverVariadic;
 
-template<class T>
-struct bindConstructorVar<T>
+template<class problem_type>
+struct bindCreateSolverVariadic<problem_type>
 {
   template<class nonlinear_solver_t, typename tag>
-  static void bind(pybind11::class_<nonlinear_solver_t> & nonLinSolver, tag t){
-    bindConstructor<T, nonlinear_solver_t>(nonLinSolver, t);
+  static void bind(pybind11::module & m, const std::string & createFuncName)
+  {
+    m.def(createFuncName.c_str(),
+	  &pressio4py::solvers::createSolver<nonlinear_solver_t, problem_type, tag>);
   }
 };
 
 template<class head, class ... tail>
-struct bindConstructorVar<head, tail...>
+struct bindCreateSolverVariadic<head, tail...>
 {
   template<class nonlinear_solver_t, typename tag>
-  static void bind(pybind11::class_<nonlinear_solver_t> & nonLinSolver, tag t){
-    bindConstructor<head, nonlinear_solver_t>(nonLinSolver, t);
-    bindConstructorVar<tail...>::template bind(nonLinSolver,  t);
+  static void bind(pybind11::module & m, const std::string & name)
+  {
+    bindCreateSolverVariadic<head>::template bind<nonlinear_solver_t, tag>(m, name);
+    bindCreateSolverVariadic<tail...>::template bind<nonlinear_solver_t, tag>(m, name);
   }
 };
 
 //------------------------------------------------
-/*
-  GN or LM with normal equations
- */
+/*   GN or LM, R/J API with normal equations    */
+//------------------------------------------------
+template<bool do_gn, typename ...>
+struct LeastSquaresNormalEqResJacApiBinder;
 
 template<bool do_gn, typename linear_solver_wrapper_t, typename ...Problems>
-struct LeastSquaresNormalEqBinder
+struct LeastSquaresNormalEqResJacApiBinder<do_gn, linear_solver_wrapper_t, std::tuple<Problems...>>
 {
   static_assert(_have_rj_api_var<Problems...>::value, "");
 
@@ -293,22 +312,37 @@ struct LeastSquaresNormalEqBinder
   // pick gn or lm conditioned on the bool argument
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
-  static void bind(pybind11::module & m, std::string solverPythonName)
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    bindConstructorVar<Problems...>::template bind(nonLinSolver, Unweighted{});
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name = do_gn ? "createGaussNewton" : "createLevenbergMarquardt";
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, Unweighted>(m, name);
   }
 };
 
 //------------------------------------------------
-/*
-  QR-based GN
- */
+/*	GN, R/H API solved with QR		*/
+//------------------------------------------------
+template<bool do_gn, class ...>
+struct LeastSquaresQRBinder;
+
 template<bool do_gn, class qr_solver_t, class ...Problems>
-struct LeastSquaresQRBinder
+struct LeastSquaresQRBinder<
+  do_gn, qr_solver_t, std::tuple<Problems...>
+  >
 {
   static_assert(do_gn, "QR-based solver only supported for GN");
   static_assert(_have_rj_api_var<Problems...>::value, "");
@@ -325,27 +359,42 @@ struct LeastSquaresQRBinder
   using nonlinear_solver_t =
     pressio::solvers::nonlinear::impl::composeGaussNewtonQR_t<system_t, qr_solver_t>;
 
-  static void bind(pybind11::module & m, std::string solverPythonName)
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    bindConstructorVar<Problems...>::template bind(nonLinSolver, Unweighted{});
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name = do_gn ? "createGaussNewtonQR" : "createLevenbergMarquardtQR";
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, Unweighted>(m, name);
   }
 };
 
-//------------------------------------------------
-/*
-  weighted GN or LM with normal equations
- */
+//----------------------------------------------------
+/* weighted GN or LM, R/J API with normal equations */
+//----------------------------------------------------
+template<bool do_gn, class ...>
+struct WeightedLeastSquaresNormalEqBinder;
+
 template<
   bool do_gn,
   typename linear_solver_t,
   typename weigher_t,
   class ... Problems
   >
-struct WeightedLeastSquaresNormalEqBinder
+struct WeightedLeastSquaresNormalEqBinder<
+  do_gn, linear_solver_t, weigher_t, std::tuple<Problems...>
+  >
 {
   static_assert(_have_rj_api_var<Problems...>::value, "");
 
@@ -368,22 +417,37 @@ struct WeightedLeastSquaresNormalEqBinder
   // pick the final nonlin solver type is based on the do_gn
   using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
 
-  static void bind(pybind11::module & m, std::string solverPythonName)
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    bindConstructorVar<Problems...>::template bind(nonLinSolver, Weighted{});
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name =
+      do_gn ? "createWeightedGaussNewton" : "createWeightedLevenbergMarquardt";
+
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, Weighted>(m, name);
   }
 };
 
-//------------------------------------------------
-/*
-  IRWGN normal equations
- */
-template<bool do_gn, class linear_solver_t, class ...Problems>
-struct IrwLeastSquaresNormalEqBinder
+//----------------------------------------
+/*	IRWGN normal equations		*/
+//----------------------------------------
+template<class ...>
+struct IrwLeastSquaresNormalEqBinder;
+
+template<class linear_solver_t, class ...Problems>
+struct IrwLeastSquaresNormalEqBinder<linear_solver_t, std::tuple<Problems...>>
 {
   static_assert(_have_rj_api_var<Problems...>::value, "");
 
@@ -400,22 +464,35 @@ struct IrwLeastSquaresNormalEqBinder
   using w_t = typename composer_t::weighting_t;
   using nonlinear_solver_t = typename composer_t::type;
 
-  static void bind(pybind11::module & m, std::string solverPythonName)
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    bindConstructorVar<Problems...>::template bind(nonLinSolver, Irwls{});
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name = "createIrwGaussNewton";
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, Irwls>(m, name);
   }
 };
 
-//------------------------------------------------
-/*
-  newton-raphson (only used for Galerkin for now)
-*/
+//---------------------------------------------------
+/* newton-raphson (only used for Galerkin for now) */
+//---------------------------------------------------
+template<bool dummy, class ...>
+struct NewtonRaphsonBinder {};
+
 template<bool dummy, class linear_solver_t, class ...Problems>
-struct NewtonRaphsonBinder
+struct NewtonRaphsonBinder<dummy, linear_solver_t, std::tuple<Problems...>>
 {
   using head_problem_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
   using system_t = typename head_problem_t::stepper_t;
@@ -423,39 +500,97 @@ struct NewtonRaphsonBinder
   using nonlinear_solver_t =
     pressio::solvers::nonlinear::impl::composeNewtonRaphson_t<system_t, linear_solver_t>;
 
-  static void bind(pybind11::module & m, std::string solverPythonName)
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
   {
     pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
     bindTolerancesMethods(nonLinSolver);
     bindStoppingCriteria(nonLinSolver);
     bindCommonSolverMethods(nonLinSolver);
-    bindConstructorVar<Problems...>::template bind(nonLinSolver, NewtonRaphson{});
+
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name = "createNewtonRaphson";
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, NewtonRaphson>(m, name);
   }
 };
 
-//------------------------------------------------
-// helper metafunction for dealing with types in a tuple
-//------------------------------------------------
-template<template<bool, typename...> class T, bool, typename...>
-struct instantiate_from_tuple_pack { };
+//-------------------------------------------------
+/* GN or LM with normal equations, hess-grad api */
+//-------------------------------------------------
+template<bool do_gn, typename ...>
+struct LeastSquaresNormalEqHessGrapApiBinder;
 
-template<
-  template<bool, typename...> class T,
-  bool b, class T1, typename... Ts
+template<bool do_gn, typename linear_solver_wrapper_t, typename ...Problems>
+struct LeastSquaresNormalEqHessGrapApiBinder<
+  do_gn, linear_solver_wrapper_t, std::tuple<Problems...>
   >
-struct instantiate_from_tuple_pack<T, b, T1, std::tuple<Ts...>>
 {
-  using type = T<b, T1, Ts...>;
+  using system_t = typename std::tuple_element<0, std::tuple<Problems...>>::type;
+
+  // gauss-newton solver type
+  using gn_type = pressio::solvers::nonlinear::impl::composeGaussNewton_t
+    <system_t, linear_solver_wrapper_t>;
+
+  // lm solver type
+  using lm_type = pressio::solvers::nonlinear::impl::composeLevenbergMarquardt_t
+    <system_t, linear_solver_wrapper_t>;
+
+  // pick gn or lm conditioned on the bool argument
+  using nonlinear_solver_t = typename std::conditional<do_gn, gn_type, lm_type>::type;
+
+  static void bindClass(pybind11::module & m, const std::string & solverPythonName)
+  {
+    pybind11::class_<nonlinear_solver_t> nonLinSolver(m, solverPythonName.c_str());
+    bindTolerancesMethods(nonLinSolver);
+    bindStoppingCriteria(nonLinSolver);
+    bindCommonSolverMethods(nonLinSolver);
+
+    // Note we don't bind the constructor because from Python we use the create
+    // function (see below) to instantiate a solver object, we never
+    // use the class name directly. This is useful because it allows us
+    // to overcome the problem of needing unique class names in python
+  }
+
+  static void bindCreate(pybind11::module & m)
+  {
+    const std::string name = "createGaussNewton";
+    bindCreateSolverVariadic<Problems...>::template bind<
+      nonlinear_solver_t, UnweightedWls>(m, name);
+  }
 };
 
-template<
-  template<bool, typename...> class T,
-  bool b, class T1, class T2, typename... Ts
-  >
-struct instantiate_from_tuple_pack<T, b, T1, T2, std::tuple<Ts...>>
-{
-  using type = T<b, T1, T2, Ts...>;
-};
+
+// //------------------------------------------------
+// // helper metafunction for dealing with types in a tuple
+// //------------------------------------------------
+// template<template<bool, typename...> class T, bool, typename...>
+// struct instantiate_from_tuple_pack { };
+
+// template<
+//   template<bool, typename...> class T,
+//   bool b, class T1, typename... Ts
+//   >
+// struct instantiate_from_tuple_pack<T, b, T1, std::tuple<Ts...>>
+// {
+//   using type = T<b, T1, Ts...>;
+// };
+
+// template<
+//   template<bool, typename...> class T,
+//   bool b, class T1, class T2, typename... Ts
+//   >
+// struct instantiate_from_tuple_pack<T, b, T1, T2, std::tuple<Ts...>>
+// {
+//   using type = T<b, T1, T2, Ts...>;
+// };
 
 }}//end namespace
 #endif

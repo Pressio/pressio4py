@@ -76,7 +76,7 @@ def test_steady_lspg():
 
   # qr and non linear solver
   qrS = MyQRSolver()
-  nlsO = solvers.GaussNewtonQR(lspgProblem, yRom, qrS)
+  nlsO = solvers.createGaussNewtonQR(lspgProblem, yRom, qrS)
 
   nlsMaxIt = 1
   nlsO.setMaxIterations(nlsMaxIt)

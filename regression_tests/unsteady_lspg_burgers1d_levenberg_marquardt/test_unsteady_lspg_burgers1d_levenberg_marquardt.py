@@ -79,7 +79,7 @@ def test_euler():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.LevenbergMarquardt(lspgProblem, yRom, lsO)
+  nlsO = solvers.createLevenbergMarquardt(lspgProblem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
   nlsO.setMaxIterations(2)
 
@@ -94,3 +94,7 @@ def test_euler():
 
   for y1,y2 in zip(gold, yFomFinal):
     assert( np.abs(y1-y2) < 1e-10)
+
+
+if __name__ == "__main__":
+  test_euler()

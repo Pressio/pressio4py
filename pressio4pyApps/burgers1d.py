@@ -7,11 +7,9 @@ import time
 
 try:
   from numba import jit, njit
-  print("module 'numba' is installed")
   numbaOn = True
 except ModuleNotFoundError:
   numbaOn = False
-  print("module 'numba' not installed")
 
 if numbaOn:
   @njit(["void(float64[:], f8, float64[:], float64[:], f8, f8)"])

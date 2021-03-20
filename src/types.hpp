@@ -54,11 +54,19 @@
 
 namespace pressio4py{
 
+// scalar type used in pressio4py
 using scalar_t	= double;
+
+// aliases for native pybind11 arrays
 using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
 using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
 
-template<int rank, typename = void>
+// *** state types ***
+// struct for rom and fom state types templated
+// on the rank of the state, so we can have:
+// rank==1: state is a vector
+// rank==2: state is a matrix
+template<int state_rank, typename = void>
 struct StateTypes;
 
 template<>
@@ -70,53 +78,74 @@ struct StateTypes<1>
   using fom_state_t		   = pressio::containers::Tensor<1, fom_native_state_t>;
 };
 
-template<int rank>
-struct StateTypes<rank, pressio::mpl::enable_if_t<rank >= 2>>
+template<int state_rank>
+struct StateTypes<state_rank, pressio::mpl::enable_if_t<state_rank >= 2>>
 {
   using rom_native_state_t	   = py_f_arr;
-  using rom_state_t		   = pressio::containers::Tensor<rank, rom_native_state_t>;
+  using rom_state_t		   = pressio::containers::Tensor<state_rank, rom_native_state_t>;
   using fom_native_state_t	   = py_f_arr;
   using fom_invalid_native_state_t = py_c_arr;
-  using fom_state_t		   = pressio::containers::Tensor<rank, fom_native_state_t>;
+  using fom_state_t		   = pressio::containers::Tensor<state_rank, fom_native_state_t>;
 };
 }//end namespace pressio4py
 
 #include "./rom/wrappers/py_decoder.hpp"
 
+// *** decoder types ***
 namespace pressio4py{
-template<int state_rank, int decoder_j_rank>
+template<int state_rank, int rank_of_decoder_jacobian>
 struct DecoderTypes : StateTypes<state_rank>
 {
   static_assert
-  (decoder_j_rank >= 2, "The rank of the decoder's jacobian should always be >= 2");
+  (rank_of_decoder_jacobian >= 2, "The rank of the decoder's jacobian should always be >= 2");
 
   using states_t = StateTypes<state_rank>;
   using typename states_t::fom_state_t;
 
   using decoder_native_jac_wrong_layout_t = py_c_arr;
   using decoder_native_jac_t = py_f_arr;
-  using decoder_jac_t	     = pressio::containers::Tensor<decoder_j_rank, decoder_native_jac_t>;
+  using decoder_jac_t	     = pressio::containers::Tensor<rank_of_decoder_jacobian, decoder_native_jac_t>;
   using decoder_t	     = pressio4py::PyDecoder<scalar_t, decoder_jac_t, fom_state_t>;
 };
 
-template<int state_rank, int decoder_j_rank>
-struct GalerkinTypes : DecoderTypes<state_rank, decoder_j_rank>
+
+namespace impl{
+// *** impl galerkin types ***
+template<int state_rank, int rank_of_decoder_jacobian>
+struct GalerkinTypes : DecoderTypes<state_rank, rank_of_decoder_jacobian>
 {
-  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_jac_t;
+  using typename DecoderTypes<state_rank, rank_of_decoder_jacobian>::decoder_jac_t;
   using projector_t = pressio::rom::galerkin::impl::ArbitraryProjector<decoder_jac_t, void>;
 };
 
-namespace impl{
-template<int state_rank=1, int decoder_j_rank=2>
-struct LspgTypes : DecoderTypes<state_rank, decoder_j_rank>
+// *** impl lspg types ***
+template<int state_rank=1, int rank_of_decoder_jacobian=2>
+struct LspgTypes : DecoderTypes<state_rank, rank_of_decoder_jacobian>
 {
-  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_jac_t;
-  using typename DecoderTypes<state_rank, decoder_j_rank>::decoder_native_jac_t;
+  using typename DecoderTypes<state_rank, rank_of_decoder_jacobian>::decoder_jac_t;
+  using typename DecoderTypes<state_rank, rank_of_decoder_jacobian>::decoder_native_jac_t;
   using lsq_hessian_t = pressio::containers::Tensor<2, decoder_native_jac_t>;
 };
-}
 
+// *** impl wls types ***
+template<int state_rank=1, int rank_of_decoder_jacobian=2>
+struct WlsTypes : DecoderTypes<state_rank, rank_of_decoder_jacobian>
+{
+  using typename DecoderTypes<state_rank, rank_of_decoder_jacobian>::decoder_jac_t;
+  using typename DecoderTypes<state_rank, rank_of_decoder_jacobian>::decoder_native_jac_t;
+  using lsq_hessian_t = pressio::containers::Tensor<2, decoder_native_jac_t>;
+};
+}//end namespace impl
+
+// *** galerkin types ***
+// galerkin supports also rank>1 states and decoder
+template<int state_rank, int rank_of_decoder_jacobian>
+using GalerkinTypes = impl::GalerkinTypes<state_rank, rank_of_decoder_jacobian>;
+
+// *** lspg, wls types ***
+// for now only supports rank-1 state and rank-2 decoder
 using LspgTypes = impl::LspgTypes<1,2>;
+using WlsTypes = impl::WlsTypes<1,2>;
 
 }//end namespace pressio4py
 #endif

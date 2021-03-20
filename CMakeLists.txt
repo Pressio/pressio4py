@@ -72,8 +72,11 @@ pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
 target_compile_definitions(pressio4py PRIVATE VERSION_IN=${VERSION_INFO})
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  # 2 corresponds to info which is on for release
-  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=2)
+  # set min log level to info
+  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
+else()
+  # set min log level to 0
+  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
 endif()
 
 #=====================================================================

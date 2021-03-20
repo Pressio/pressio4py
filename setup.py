@@ -35,6 +35,7 @@ class CMakeBuild(build_ext):
     cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
 
     cfg = "Debug" if self.debug else "Release"
+    print("build mode = ", cfg)
 
     #------------------------
     # --- pressio ---
@@ -100,7 +101,7 @@ class CMakeBuild(build_ext):
 
 setup(
   name="pressio4py",
-  version="0.7.0",
+  version="0.8.0",
   author="Francesco Rizzi",
   author_email="fnrizzi@sandia.gov",
   description="pressio4py: projection-based model reduction for Python",

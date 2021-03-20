@@ -70,7 +70,7 @@ def test_euler():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.createGaussNewton(lspgProblem, yRom, lsO)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
@@ -97,3 +97,7 @@ def test_euler():
 
   for y1,y2 in zip(gold, yFomFinal):
     assert( np.abs(y1-y2) < 1e-10)
+
+
+if __name__ == "__main__":
+  test_euler()

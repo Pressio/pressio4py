@@ -52,7 +52,7 @@
 namespace pressio4py{ namespace rom{ namespace impl{
 
 /*
-  the problemid is used to choose the subcase:
+  problemid is used to choose the subcase:
   - default = 0
   - hyper-reduced = 1
   - masked = 2
@@ -75,7 +75,7 @@ struct GalerkinBinder
       ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>
     >::type;
 
-  // makser_t only used when problemid==2
+  // masker_t only used when problemid==2
   using masker_t = pressio4py::rom::MaskerWrapper<::pressio4py::scalar_t>;
 
   using galerkin_problem_t =
@@ -96,16 +96,13 @@ struct GalerkinBinder
       >::type
     >::type;
 
-  //using velocity_policy_t = typename galerkin_problem_t::velocity_policy_t;
-  //using galerkin_stepper_t = typename galerkin_problem_t::stepper_t;
-
   // constructor for default explicit galerkin
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
   {
     problem.def(pybind11::init<
-		pybind11::object,		//adapter object directly from Python
+		pybind11::object,		//native Python adapter class
 		decoder_t &,			//decoder
 		const rom_native_state_t &,	//native python rom state
 		const fom_native_state_t &>()); //native python fom reference state
@@ -117,7 +114,7 @@ struct GalerkinBinder
   bindProblemConstructor(pybind11::class_<T> & problem)
   {
     problem.def(pybind11::init<
-		pybind11::object,	     //adapter object directly from Python
+		pybind11::object,	     //native Python adapter class
 		decoder_t &,		     //decoder
 		const rom_native_state_t &,  //native python rom state
 		const fom_native_state_t &,  //native python fom reference state
@@ -131,7 +128,7 @@ struct GalerkinBinder
   bindProblemConstructor(pybind11::class_<T> & problem)
   {
     problem.def(pybind11::init<
-		pybind11::object,	     //adapter object directly from Python
+		pybind11::object,	     //native Python adapter class
 		decoder_t &,		     //decoder
 		const rom_native_state_t &,  //native python rom state
 		const fom_native_state_t &,  //native python fom reference state
@@ -142,28 +139,12 @@ struct GalerkinBinder
 
   static void bind(pybind11::module & m, const std::string appendToProblemName)
   {
-    // // stepper
-    // pybind11::class_<galerkin_stepper_t> galStepper(m, stepperName.c_str());
-    // galStepper.def(pybind11::init<
-    // 		   const rom_state_t &,
-    // 		   const sys_wrapper_t &,
-    // 		   const velocity_policy_t &>());
-
     const auto problemPythonName = "Problem"+appendToProblemName;
-
-    // problem
     pybind11::class_<galerkin_problem_t> problem(m, problemPythonName.c_str());
-
-    // bind constructor
     bindProblemConstructor(problem);
-
-    // bind the method to extract the fom state reconstructor
     problem.def("fomStateReconstructor",
 		&galerkin_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
-    // galProblem.def("stepper",
-    // 		   &galerkin_problem_t::stepperRef,
-    // 		   pybind11::return_value_policy::reference);
   }
 };
 
@@ -190,27 +171,34 @@ struct GalerkinBinderExplicit
 
   using tagE1 = pressio::ode::explicitmethods::Euler;
   using tagE2 = pressio::ode::explicitmethods::RungeKutta4;
+  using tagE3 = pressio::ode::explicitmethods::AdamsBashforth2;
   // default
   using de_euler_binder_t  = impl::GalerkinBinder<mytypes, tagE1, 0>;
   using de_euler_problem_t = typename de_euler_binder_t::galerkin_problem_t;
   using de_rk4_binder_t    = impl::GalerkinBinder<mytypes, tagE2, 0>;
   using de_rk4_problem_t   = typename de_rk4_binder_t::galerkin_problem_t;
+  using de_ab2_binder_t    = impl::GalerkinBinder<mytypes, tagE3, 0>;
+  using de_ab2_problem_t   = typename de_ab2_binder_t::galerkin_problem_t;
   // hyper-reduced velocity
   using hrv_euler_binder_t  = impl::GalerkinBinder<mytypes, tagE1, 1, projector_t>;
   using hrv_euler_problem_t = typename hrv_euler_binder_t::galerkin_problem_t;
   using hrv_rk4_binder_t    = impl::GalerkinBinder<mytypes, tagE2, 1, projector_t>;
   using hrv_rk4_problem_t   = typename hrv_rk4_binder_t::galerkin_problem_t;
+  using hrv_ab2_binder_t    = impl::GalerkinBinder<mytypes, tagE3, 1, projector_t>;
+  using hrv_ab2_problem_t   = typename hrv_ab2_binder_t::galerkin_problem_t;
   // masked
   using ma_euler_binder_t  = impl::GalerkinBinder<mytypes, tagE1, 2, projector_t>;
   using ma_euler_problem_t = typename ma_euler_binder_t::galerkin_problem_t;
   using ma_rk4_binder_t    = impl::GalerkinBinder<mytypes, tagE2, 2, projector_t>;
   using ma_rk4_problem_t   = typename ma_rk4_binder_t::galerkin_problem_t;
+  using ma_ab2_binder_t    = impl::GalerkinBinder<mytypes, tagE3, 2, projector_t>;
+  using ma_ab2_problem_t   = typename ma_ab2_binder_t::galerkin_problem_t;
 
   // tuple wiht all problems explicit in time
   using problem_types = std::tuple<
-    de_euler_problem_t, de_rk4_problem_t,
-    hrv_euler_problem_t, hrv_rk4_problem_t,
-    ma_euler_problem_t, ma_rk4_problem_t
+    de_euler_problem_t,  de_rk4_problem_t,  de_ab2_problem_t,
+    hrv_euler_problem_t, hrv_rk4_problem_t, hrv_ab2_problem_t,
+    ma_euler_problem_t,  ma_rk4_problem_t,  ma_ab2_problem_t
     >;
 
   static void bind(pybind11::module & m)
@@ -218,14 +206,17 @@ struct GalerkinBinderExplicit
     pybind11::module m1 = m.def_submodule("default");
     de_euler_binder_t::bind(m1, "ForwardEuler");
     de_rk4_binder_t::bind(m1, "RK4");
+    de_ab2_binder_t::bind(m1, "AB2");
 
     pybind11::module m2 = m.def_submodule("hyperreduced");
     hrv_euler_binder_t::bind(m2, "ForwardEuler");
     hrv_rk4_binder_t::bind(m2, "RK4");
+    hrv_ab2_binder_t::bind(m2, "AB2");
 
     pybind11::module m3 = m.def_submodule("masked");
     ma_euler_binder_t::bind(m3, "ForwardEuler");
     ma_rk4_binder_t::bind(m3, "RK4");
+    ma_ab2_binder_t::bind(m3, "AB2");
   }
 };
 

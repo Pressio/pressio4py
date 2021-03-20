@@ -54,7 +54,7 @@ def runLspg(fomObj, dt, nsteps, modes):
   problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
 
   # create the Gauss-Newton solver
-  nonLinSolver = solvers.GaussNewton(problem, romState, MyLinSolver())
+  nonLinSolver = solvers.createGaussNewton(problem, romState, MyLinSolver())
   # set tolerance and convergence criteria
   nlsTol, nlsMaxIt = 1e-6, 5
   nonLinSolver.setMaxIterations(nlsMaxIt)

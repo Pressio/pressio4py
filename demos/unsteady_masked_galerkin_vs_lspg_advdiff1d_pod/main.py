@@ -90,7 +90,7 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.NewtonRaphson(problem, romState, lsO)
+  nlsO = solvers.createNewtonRaphson(problem, romState, lsO)
   nlsO.setMaxIterations(15)
 
   # solve the problem
@@ -135,7 +135,7 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(problem, romState, lsO)
+  nlsO = solvers.createGaussNewton(problem, romState, lsO)
   nlsO.setMaxIterations(10)
 
   # solve the problem

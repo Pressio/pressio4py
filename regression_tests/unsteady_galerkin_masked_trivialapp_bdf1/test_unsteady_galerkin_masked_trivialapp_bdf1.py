@@ -145,7 +145,7 @@ def test():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.NewtonRaphson(galerkinProblem, yRom, lsO)
+  nlsO = solvers.createNewtonRaphson(galerkinProblem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.standard)
   nlsO.setMaxIterations(1)
   nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)

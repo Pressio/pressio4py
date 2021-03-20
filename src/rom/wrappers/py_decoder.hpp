@@ -174,6 +174,36 @@ public:
     return reinterpret_cast<uintptr_t>(jacobian_.data()->data());
   }
 
+
+  /*
+    specialize for:
+    - operand is a pressio span expression
+    - result is a rank-1 tensor wrapper
+    - jacobian is rank-2
+  */
+  template <class operand_t, class fom_state_to_compute_t, class _jacobian_t = jacobian_t>
+  pressio::mpl::enable_if_t<
+    pressio::containers::predicates::is_rank1_tensor_wrapper_pybind<fom_state_to_compute_t>::value and
+    _jacobian_t::traits::rank == 2
+    >
+  applyMapping(const pressio::containers::expressions::SpanExpr<operand_t> & operand,
+	       fom_state_to_compute_t & result) const
+  {
+    constexpr auto zero = ::pressio::utils::constants<scalar_type>::zero();
+    constexpr auto one  = ::pressio::utils::constants<scalar_type>::one();
+    if (kind_ == mappingKind::Linear)
+    {
+      ::pressio::ops::product(pressio::nontranspose(), one,
+			      jacobian_, operand, zero, result);
+    }
+    else if(kind_ == mappingKind::Custom){
+      throw std::runtime_error("If operand is an expression, custom mapping is not valid");
+    }
+    else
+      throw std::runtime_error("Invalid mapping kind enum");
+  }
+
+
   /*
     specialize for:
     - operand and result are rank-1 tensor wrappers

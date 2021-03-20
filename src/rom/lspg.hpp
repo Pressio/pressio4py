@@ -86,10 +86,6 @@ struct SteadyLSPGProblemBinder
       >::type
     >::type;
 
-  using lspg_system_t		= typename lspg_problem_t::system_t;
-  // using residual_policy_t	= typename lspg_problem_t::residual_policy_t;
-  // using jacobian_policy_t	= typename lspg_problem_t::jacobian_policy_t;
-
   // constructor for default lspg problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
@@ -117,25 +113,11 @@ struct SteadyLSPGProblemBinder
 
   static void bind(pybind11::module & m)
   {
-    // // concrete LSPG system binding (need this because inside python we extract it
-    // // from the problem object to pass to the solver)
-    // pybind11::class_<lspg_system_t> system(m, "System");
-    // system.def(pybind11::init<
-    // 	       sys_wrapper_t,
-    // 	       const residual_policy_t &,
-    // 	       const jacobian_policy_t &>());
-
-    // concrete LSPG problem
     pybind11::class_<lspg_problem_t> problem(m, "Problem");
-    // bind constructor
     bindProblemConstructor(problem);
-
     problem.def("fomStateReconstructor",
 		&lspg_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
-    // problem.def("system",
-    // 		&lspg_problem_t::systemRef,
-    // 		pybind11::return_value_policy::reference);
   }
 };
 
@@ -183,11 +165,6 @@ struct UnsteadyLSPGProblemBinder
       >::type
     >::type;
 
-  //using lspg_stepper_t	  = typename lspg_problem_t::stepper_t;
-  using aux_lspg_stepper_t= typename lspg_problem_t::aux_stepper_t;
-  // using residual_policy_t = typename lspg_problem_t::residual_policy_t;
-  // using jacobian_policy_t = typename lspg_problem_t::jacobian_policy_t;
-
   // constructor for default lspg problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
@@ -228,31 +205,12 @@ struct UnsteadyLSPGProblemBinder
 
   static void bind(pybind11::module & m, const std::string appendToProblemName)
   {
-    //const auto stepperPythonName = "Stepper"+appendToStepperName;
     const auto problemPythonName = "Problem"+appendToProblemName;
-
-    // // concrete LSPG stepper binding (need this because inside python we extract it
-    // // from the problem object to pass to the advancer
-    // pybind11::class_<lspg_stepper_t> stepper(m, stepperPythonName.c_str());
-    // stepper.def(pybind11::init<
-    // 		const rom_state_t &,
-    // 		const sys_wrapper_t &,
-    // 		const residual_policy_t &,
-    // 		const jacobian_policy_t &>());
-
-    // concrete LSPG problem binding
     pybind11::class_<lspg_problem_t> problem(m, problemPythonName.c_str());
-
-    // bind constructor
     bindProblemConstructor(problem);
-
-    // bind the method to extract the fom state reconstructor
     problem.def("fomStateReconstructor",
 		&lspg_problem_t::fomStateReconstructorCRef,
 		pybind11::return_value_policy::reference);
-    // problem.def("stepper",
-    // 		&lspg_problem_t::stepperRef,
-    // 		pybind11::return_value_policy::reference);
   }
 };
 
@@ -309,10 +267,18 @@ struct LSPGBinder
     hr_bdf1_problem_t, hr_bdf2_problem_t,
     ma_bdf1_problem_t, ma_bdf2_problem_t
     >;
-  using steady_problem_types = std::tuple<de_steady_problem_t, ma_steady_problem_t>;
-  using unsteady_problem_types = std::tuple<de_bdf1_problem_t, de_bdf2_problem_t,
-					    hr_bdf1_problem_t, hr_bdf2_problem_t,
-					    ma_bdf1_problem_t, ma_bdf2_problem_t>;
+
+  // tuple with just the steady problem types
+  using steady_problem_types = std::tuple<
+    de_steady_problem_t, ma_steady_problem_t
+    >;
+
+  // tuple with just the unsteady problem types
+  using unsteady_problem_types = std::tuple<
+    de_bdf1_problem_t, de_bdf2_problem_t,
+    hr_bdf1_problem_t, hr_bdf2_problem_t,
+    ma_bdf1_problem_t, ma_bdf2_problem_t
+    >;
 
   // binding method
   static void bind(pybind11::module & lspgModule)

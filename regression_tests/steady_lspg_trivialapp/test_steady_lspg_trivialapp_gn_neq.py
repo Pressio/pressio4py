@@ -70,7 +70,7 @@ def test_steady_lspg():
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.GaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.createGaussNewton(lspgProblem, yRom, lsO)
 
   nlsTol, nlsMaxIt = 1e-13, 3
   nlsO.setMaxIterations(nlsMaxIt)
