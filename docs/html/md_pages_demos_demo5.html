@@ -219,7 +219,7 @@
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">NewtonRaphson</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">createNewtonRaphson</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>
@@ -261,7 +261,7 @@
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">GaussNewton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">createGaussNewton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>

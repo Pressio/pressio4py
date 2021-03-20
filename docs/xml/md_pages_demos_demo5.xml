@@ -197,7 +197,7 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linear<sp/>and<sp/>non<sp/>linear<sp/>solver</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>lsO<sp/>=<sp/>MyLinSolver()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nlsO<sp/>=<sp/>solvers.NewtonRaphson(problem,<sp/>romState,<sp/>lsO)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO<sp/>=<sp/>solvers.createNewtonRaphson(problem,<sp/>romState,<sp/>lsO)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nlsO.setMaxIterations(15)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>the<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
@@ -244,7 +244,7 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>linear<sp/>and<sp/>non<sp/>linear<sp/>solver</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>lsO<sp/>=<sp/>MyLinSolver()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nlsO<sp/>=<sp/>solvers.GaussNewton(problem,<sp/>romState,<sp/>lsO)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO<sp/>=<sp/>solvers.createGaussNewton(problem,<sp/>romState,<sp/>lsO)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nlsO.setMaxIterations(10)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>the<sp/>problem</highlight><highlight class="normal"></highlight></codeline>

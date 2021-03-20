@@ -106,7 +106,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create the Gauss-\/Newton solver}}
-\DoxyCodeLine{  nonLinSolver = solvers.GaussNewton(problem, romState, MyLinSolver())}
+\DoxyCodeLine{  nonLinSolver = solvers.createGaussNewton(problem, romState, MyLinSolver())}
 \DoxyCodeLine{  \textcolor{comment}{\# set tolerance and convergence criteria}}
 \DoxyCodeLine{  nlsTol, nlsMaxIt = 1e-\/6, 5}
 \DoxyCodeLine{  nonLinSolver.setMaxIterations(nlsMaxIt)}

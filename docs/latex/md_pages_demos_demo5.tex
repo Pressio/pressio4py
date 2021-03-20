@@ -191,7 +191,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# linear and non linear solver}}
 \DoxyCodeLine{  lsO = MyLinSolver()}
-\DoxyCodeLine{  nlsO = solvers.NewtonRaphson(problem, romState, lsO)}
+\DoxyCodeLine{  nlsO = solvers.createNewtonRaphson(problem, romState, lsO)}
 \DoxyCodeLine{  nlsO.setMaxIterations(15)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# solve the problem}}
@@ -238,7 +238,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# linear and non linear solver}}
 \DoxyCodeLine{  lsO = MyLinSolver()}
-\DoxyCodeLine{  nlsO = solvers.GaussNewton(problem, romState, lsO)}
+\DoxyCodeLine{  nlsO = solvers.createGaussNewton(problem, romState, lsO)}
 \DoxyCodeLine{  nlsO.setMaxIterations(10)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# solve the problem}}

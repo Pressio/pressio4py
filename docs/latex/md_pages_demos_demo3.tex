@@ -121,7 +121,7 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, customDecoder, romState, fomReferenceState)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create the Gauss-\/Newton solver}}
-\DoxyCodeLine{  nonLinSolver = solvers.GaussNewton(problem, romState, MyLinSolver())}
+\DoxyCodeLine{  nonLinSolver = solvers.createGaussNewton(problem, romState, MyLinSolver())}
 \DoxyCodeLine{  \textcolor{comment}{\# set tolerance and convergence criteria}}
 \DoxyCodeLine{  nlsTol, nlsMaxIt = 1e-\/7, 10}
 \DoxyCodeLine{  nonLinSolver.setMaxIterations(nlsMaxIt)}

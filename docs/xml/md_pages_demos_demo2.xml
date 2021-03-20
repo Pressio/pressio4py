@@ -113,7 +113,7 @@
 <codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.default.ProblemEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>Gauss-Newton<sp/>solver</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.GaussNewton(problem,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.createGaussNewton(problem,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>tolerance<sp/>and<sp/>convergence<sp/>criteria</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nlsTol,<sp/>nlsMaxIt<sp/>=<sp/>1e-6,<sp/>5</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setMaxIterations(nlsMaxIt)</highlight></codeline>
