@@ -62,6 +62,7 @@
 #include "types.hpp"
 #include "./rom/wrappers/fom_steady_wrapper.hpp"
 #include "./rom/wrappers/fom_continuous_time_wrapper.hpp"
+#include "./rom/wrappers/fom_discrete_time_wrapper.hpp"
 #include "./rom/wrappers/lin_solver_wrapper.hpp"
 #include "./rom/wrappers/qr_solver_wrapper.hpp"
 #include "./rom/wrappers/ode_collector_wrapper.hpp"
@@ -128,6 +129,8 @@ PYBIND11_MODULE(MODNAME, mParent)
   using explicit_23_galerkinproblems = typename galerkin_23_explicit_binder_t::problem_types;
 
   // implicit (only supports rank-1 state and rank-2 decoder)
+  // this includes the implicit problems for continuous time api as well as
+  // the problems types for the discrete time api
   using galerkin_implicit_binder_t  = pressio4py::rom::GalerkinBinderImplicit<pressio4py::GalerkinTypes<1,2>>;
   galerkin_implicit_binder_t::bind(galerkinModule);
   using implicit_galerkinproblems = typename galerkin_implicit_binder_t::problem_types;
@@ -142,6 +145,7 @@ PYBIND11_MODULE(MODNAME, mParent)
     true, linear_solver_nr_t, implicit_galerkinproblems>;
   using newraph_solver_t = typename newraphbinder_t::nonlinear_solver_t;
   newraphbinder_t::bindClass(galerkinModule, "GalerkinNewtonRaphson");
+
 
   //---------------------
   //  lspg rom
