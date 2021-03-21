@@ -32,7 +32,7 @@ You can double check that everything worked fine by doing:
 Running Demos/Tutorials
 -----------------------
 
-After installing the library, you can check run the regression tests:
+After installing the library, you can run the regression tests:
 
 .. code-block:: bash
 
