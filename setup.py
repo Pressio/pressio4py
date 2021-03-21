@@ -22,7 +22,7 @@ def myname():
   return "pressio4py"
 
 def myversion():
-  return "0.8.0rc2"
+  return "0.8.0"
 
 def description():
   with open(os.path.join(topdir, 'DESCRIPTION.rst')) as f:
