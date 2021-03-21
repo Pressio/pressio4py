@@ -92,3 +92,7 @@ def test_steady_lspg():
   gold = [43.,43.,43.,43.,43.,43.]
   for y1,y2 in zip(gold, yFomFinal):
     assert(y1==y2)
+
+
+if __name__ == "__main__":
+  test_steady_lspg()

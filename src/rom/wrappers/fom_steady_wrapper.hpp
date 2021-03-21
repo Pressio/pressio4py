@@ -2,9 +2,9 @@
 //@HEADER
 // ************************************************************************
 //
-// fom_steady_wrappers.hpp
+// fom_steady_wrapper.hpp
 //                     		  Pressio
-//                             Copyright 2019
+//                         Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
 //
 // Under the terms of Contract DE-NA0003525 with NTESS, the

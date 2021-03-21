@@ -6,7 +6,7 @@ file_path = pathlib.Path(__file__).parent.absolute()
 
 from pressio4py import rom as rom
 from pressio4py import solvers as solvers
-from pressio4pyApps.burgers1d import Burgers1d
+from pressio4py.apps.burgers1d import Burgers1d
 
 #----------------------------
 class MyLinSolver:

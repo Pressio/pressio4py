@@ -2,9 +2,9 @@
 //@HEADER
 // ************************************************************************
 //
-// solve_problem_api_bind.hpp
+// lspg_solve_problem_api_bind.hpp
 //                     		  Pressio
-//                             Copyright 2019
+//                         Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
 //
 // Under the terms of Contract DE-NA0003525 with NTESS, the

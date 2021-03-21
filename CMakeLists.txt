@@ -1,10 +1,9 @@
 
-cmake_minimum_required(VERSION 3.11.0)
+cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 project(pressio4py CXX)
 
 # setting where other cmake commands are
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-
 # include commands for coloring prints
 include(colors)
 
@@ -36,12 +35,11 @@ endif()
 #----------------------------------------------------------------
 include_directories(${PRESSIO_INCLUDE_DIR})
 #find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
-add_subdirectory(pybind11)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
 
 #----------------------------------------------------------------
 # dir where all sources for pressio4py are
 set(PRESSIO4PY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-# dir where all python apps are
 set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pressio4pyApps)
 
 #----------------------------------------------------------------
@@ -66,22 +64,19 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 #----------------------------------------------------------------
-# command to create the pressio4py library
-pybind11_add_module(pressio4py ${PRESSIO4PY_SRC_DIR}/pressio4py.cc)
-# VERSION_INFO is defined by setup.py and passed into the C++ code
-target_compile_definitions(pressio4py PRIVATE VERSION_IN=${VERSION_INFO})
+set(modulename _p4pyimpl)
+pybind11_add_module(${modulename} ${PRESSIO4PY_SRC_DIR}/main_binder.cc)
+target_compile_definitions(${modulename} PRIVATE MODNAME=${modulename})
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
   # set min log level to info
-  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
+  target_compile_definitions(${modulename} PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=2)
 else()
   # set min log level to 0
-  target_compile_definitions(pressio4py PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
+  target_compile_definitions(${modulename} PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
 endif()
 
-#=====================================================================
-### display some info
-#=====================================================================
+### display some info ###
 message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} Pressio4Py config info: ${ColourReset}")
 message("${Yellow}----------------------------------${ColourReset}")
@@ -91,26 +86,9 @@ message("${Yellow} - p4py branch    = ${PFPY_BRANCH} ${ColourReset}")
 message("${Yellow} - p4py hash      = ${PFPY_HASH} ${ColourReset}")
 message("${Yellow} - Build dir      = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
 message("${Yellow} - prefix         = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
-#message("${Yellow} - Pressio include = ${PRESSIO_INCLUDE_DIR} ${ColourReset}")
 
-## need to process the apps directory ##
-message("")
-message("${Magenta}----------------------------------${ColourReset}")
-message("${Magenta} Processing apps for tests/demos ${ColourReset}")
-message("${Magenta}----------------------------------${ColourReset}")
-set(appsDestDir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/pressio4pyApps)
-file(MAKE_DIRECTORY ${appsDestDir})
-file(GLOB allApps "${PRESSIO4PY_APPS_DIR}/*.py")
-foreach(f ${allApps})
-  get_filename_component(fname ${f} NAME)
-  message("Copying : ${fname} to build dir")
-  configure_file(${f} ${appsDestDir} COPYONLY)
-endforeach()
-
-# add unit tests (we have to do this because unit tests
-# contain c++ code that is compiled too)
+# add unit tests
+# we have to do this because unit tests
+# contain c++ code that is compiled too
 add_subdirectory(unit_tests)
-
-message(${CMAKE_INSTALL_PREFIX})
-# install
-install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})
+#install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

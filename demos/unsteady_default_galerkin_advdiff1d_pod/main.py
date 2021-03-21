@@ -10,7 +10,7 @@ sys.path.append(str(file_path) + "/..")         # to access doFom
 
 from pressio4py import rom as rom, logger
 from pressio4py import solvers as solvers
-from pressio4pyApps.advection_diffusion1d import AdvDiff1d
+from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
 

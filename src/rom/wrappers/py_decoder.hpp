@@ -4,7 +4,7 @@
 //
 // py_decoder.hpp
 //                     		  Pressio
-//                             Copyright 2019
+//                         Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
 //
 // Under the terms of Contract DE-NA0003525 with NTESS, the

@@ -6,21 +6,14 @@ source bash_colors.sh
 
 # check cmd line args
 if [ "$#" -lt 2 ]; then
-  echo "usage: $0 <target-dir> <license-template-file> [extension]"
+  echo "usage: $0 <target-dir> <license-template-file>"
   exit 1
 fi
 
 # store
 targetdir=$1
 licensefile=$2
-
-if [ "$#" -gt 2 ];
-then
-  ext=$3
-  pattern="*.${ext}"
-else
-  pattern='*.hpp'
-fi
+pattern='*.hpp'
 
 echo ""
 echo "${fgyellow}Running on targetdir=$targetdir, license=$licensefile, extension=$pattern ${fgrst}"

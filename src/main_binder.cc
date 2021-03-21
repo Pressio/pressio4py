@@ -46,8 +46,8 @@
 //@HEADER
 */
 
-#ifndef PRESSIO4PY_PYBINDINGS_PRESSIO_FOUR_PY_HPP_
-#define PRESSIO4PY_PYBINDINGS_PRESSIO_FOUR_PY_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_MAIN_BINDER_HPP_
+#define PRESSIO4PY_PYBINDINGS_MAIN_BINDER_HPP_
 
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -80,14 +80,8 @@
 #include "./lspg_solve_problem_api_bind.hpp"
 #include "./wls_solve_problem_api_bind.hpp"
 
-#define PPSTRINGIFY(x) #x
-#define PPMACRO_STRINGIFY(x) PPSTRINGIFY(x)
-
-PYBIND11_MODULE(pressio4py, mParent)
+PYBIND11_MODULE(MODNAME, mParent)
 {
-  // add to the main module the version
-  mParent.attr("__version__") = PPMACRO_STRINGIFY(VERSION_IN);
-
   // bind logging functions
   pressio4py::bindLogger(mParent);
 
@@ -267,20 +261,24 @@ PYBIND11_MODULE(pressio4py, mParent)
   using rank3_collector_t = pressio4py::OdeCollectorWrapper<rom_rank3_state_t>;
 
   // *** GALERKIN explicit Rank-1 state, rank-2 decoder ***
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_12_galerkinproblems>::template bind<
-      rom_rank1_state_t, ::pressio4py::scalar_t, rank1_collector_t>(galerkinModule);
+  // without collector
   pressio4py::bindGalerkinExplicitProbs
     <explicit_12_galerkinproblems>::template bind<
       rom_rank1_state_t, ::pressio4py::scalar_t>(galerkinModule);
+  // with collector
+  pressio4py::bindGalerkinExplicitProbs
+    <explicit_12_galerkinproblems>::template bind<
+      rom_rank1_state_t, ::pressio4py::scalar_t, rank1_collector_t>(galerkinModule);
 
   // *** GALERKIN explicit Rank-2 state, rank-3 decoder ***
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_23_galerkinproblems>::template bind<
-      rom_rank2_state_t, ::pressio4py::scalar_t, rank2_collector_t>(galerkinModule);
+  // without collector
   pressio4py::bindGalerkinExplicitProbs
     <explicit_23_galerkinproblems>::template bind<
       rom_rank2_state_t, ::pressio4py::scalar_t>(galerkinModule);
+  // with collector
+  pressio4py::bindGalerkinExplicitProbs
+    <explicit_23_galerkinproblems>::template bind<
+      rom_rank2_state_t, ::pressio4py::scalar_t, rank2_collector_t>(galerkinModule);
 
   // GALERKIN implicit time stepping with collector object
   pressio4py::bindSingleSolverWithMultipleGalerkinProblems
@@ -309,5 +307,6 @@ PYBIND11_MODULE(pressio4py, mParent)
   pressio4py::bindWlsSystemsWithMultipleSolvers
     <wls_systems, wls_solvers>::template bind<
       pressio4py::WlsTypes::rom_state_t>(wlsModule);
+
 }
 #endif

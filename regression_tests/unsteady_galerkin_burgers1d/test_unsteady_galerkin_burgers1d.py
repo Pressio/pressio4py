@@ -5,7 +5,7 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 
 from pressio4py import rom as rom
-from pressio4pyApps.burgers1d import Burgers1d
+from pressio4py.apps.burgers1d import Burgers1d
 
 gold = np.array(
   [5.0081542681376, 5.016629490569,
