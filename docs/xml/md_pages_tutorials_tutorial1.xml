@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title></title><para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md69">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md70">
 <title>Context</title>
 <para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
 <para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two.</para>
@@ -22,7 +22,7 @@
 </listitem></orderedlist>
 </para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md70">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md71">
 <title>Rank-1 state</title>
 <para>The FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>, while the ROM state is stored as an array, <formula id="23">$y_{rom} \in R^p$</formula>, where <formula id="24">$p$</formula> is the number of modes, see the figure below. <image type="html" name="tut_f1.png" width="35%"></image>
 </para>
@@ -53,7 +53,7 @@
 </simplesect>
 </para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md71">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md72">
 <title>Rank-2 state</title>
 <para>Suppose now that an application includes <formula id="25">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate. This is frequently found when using explicit time integration.</para>
 <para>In such case, the FOM state can be represented as a tensor, <formula id="26">$y_{fom} \in R^{N,m}$</formula> and the ROM state is <formula id="27">$y_{rom} \in R^{p,m}$</formula>, where:<itemizedlist>

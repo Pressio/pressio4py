@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 This page describes how to setup the interface enabling pressio4py to communicate with your application. Note that this step only needs to be done once\+: the same interface class can then be used to run all the R\+O\+Ms in pressio4py. By the end, it should be clear our design choice and how to setup this \char`\"{}glue code\char`\"{}.
 \end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md65}{}\doxysection{Is pressio4py applicable to your problem and application?}\label{md_pages_prepare_your_app_autotoc_md65}
+\hypertarget{md_pages_prepare_your_app_autotoc_md66}{}\doxysection{Is pressio4py applicable to your problem and application?}\label{md_pages_prepare_your_app_autotoc_md66}
 Pressio targets any system expressible as a parameterized system of ordinary differential equations (O\+D\+Es) as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \] where $\boldsymbol{y}$ is the state, $\mu$ are parameters, $t$ is time and $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ is referred to as \char`\"{}velocity\char`\"{} (or R\+HS). If your problem can be expressed as the system of O\+D\+Es above, then you can use and experiment with any of the R\+OM algorithms implemented in pressio4py. Note that this is a {\itshape practical} assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that R\+O\+Ms would work well for your problem. But this is why you should try using presio4py to see if R\+O\+Ms can be useful for you!
 
 
@@ -11,7 +11,7 @@ Pressio targets any system expressible as a parameterized system of ordinary dif
 \begin{DoxyParagraph}{}
 This formulation is quite general and does not make any assumption on its origin\+: it may be derived from the spatial discretization (regardless of the discretization method) of a P\+DE problem, or from naturally discrete systems (e.\+g., molecular-\/dynamics problems).
 \end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md66}{}\doxysection{What glue code do you need on your end to use pressio4py?}\label{md_pages_prepare_your_app_autotoc_md66}
+\hypertarget{md_pages_prepare_your_app_autotoc_md67}{}\doxysection{What glue code do you need on your end to use pressio4py?}\label{md_pages_prepare_your_app_autotoc_md67}
 pressio4py requires your application to expose the \char`\"{}velocity\char`\"{} $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ and (optionally) the action of the Jacobian matrix $\partial f/\partial y$. This design choice pivots on the generality of the formulation above. We remark that the {\itshape same} expressive model/\+A\+PI is being used/expected by other well-\/established Python libraries, e.\+g., {\ttfamily scipy.\+ode}.
 
 In practice, this can be done by writing an adapter class for your full-\/order model (F\+OM) that meets the A\+PI required by pressio4py as follows\+: 
@@ -48,7 +48,7 @@ In simple words, the Fom\+Adapter class wraps/encapsulates your application, sto
 \begin{DoxyParagraph}{}
 The {\ttfamily apply\+Jacobian} method is needed when you do implicit time integration. For explicit time stepping you only need the velocity.
 \end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md67}{}\doxysection{Where is the adapter used?}\label{md_pages_prepare_your_app_autotoc_md67}
+\hypertarget{md_pages_prepare_your_app_autotoc_md68}{}\doxysection{Where is the adapter used?}\label{md_pages_prepare_your_app_autotoc_md68}
 An instance of the adapter class is needed to construct a R\+OM problem. For the sake of the argument, let us say we are doing \href{https://pressio.github.io/algos/galerkin/}{\texttt{ Galerkin R\+OM}} with explicit Runge-\/\+Kutta4 time stepping. A synopsis of the code, just highlighting the important parts to convey the message, would be\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}

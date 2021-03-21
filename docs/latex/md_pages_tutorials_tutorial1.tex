@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 The full tutorial can be found \href{https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py}{\texttt{ here}}.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial1_autotoc_md69}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md69}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md70}{}\doxysection{Context}\label{md_pages_tutorials_tutorial1_autotoc_md70}
 A key assumption of projection-\/based R\+O\+Ms relies on approximating a full-\/order model (F\+OM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
 
 where $y_{rom}$ is the reduced state, also called generalized coordinates, and $g$ is the mapping between the two.
@@ -16,7 +16,7 @@ Note that the above expressions are abtract, since they do not specify what kind
 \begin{DoxyEnumerate}
 \item the F\+OM and R\+OM states are {\itshape rank-\/1 tensors}
 \item the F\+OM and R\+OM states are {\itshape rank-\/2 tensors}
-\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md70}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md70}
+\end{DoxyEnumerate}\hypertarget{md_pages_tutorials_tutorial1_autotoc_md71}{}\doxysection{Rank-\/1 state}\label{md_pages_tutorials_tutorial1_autotoc_md71}
 The F\+OM state is stored as an array, $y_{fom} \in R^N$, where $N$ = {\bfseries{total number of degrees of freedom}}, while the R\+OM state is stored as an array, $y_{rom} \in R^p$, where $p$ is the number of modes, see the figure below. 
 
 In this case, even if the application possibly involves multiple fields (e.\+g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-\/volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-\/integration such that a large system needs to be solved.
@@ -51,7 +51,7 @@ The code snippet below demonstrates how to setup such linear mapping between ran
 \begin{DoxyParagraph}{Where can you use the linear decoder with a rank-\/1 state?}
 It can be employed for both Galerkin and L\+S\+PG as shown in subsequent tutorials and in the demos.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial1_autotoc_md71}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md71}
+\hypertarget{md_pages_tutorials_tutorial1_autotoc_md72}{}\doxysection{Rank-\/2 state}\label{md_pages_tutorials_tutorial1_autotoc_md72}
 Suppose now that an application includes $m$ fields, e.\+g., density, x-\/velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate. This is frequently found when using explicit time integration.
 
 In such case, the F\+OM state can be represented as a tensor, $y_{fom} \in R^{N,m}$ and the R\+OM state is $y_{rom} \in R^{p,m}$, where\+:

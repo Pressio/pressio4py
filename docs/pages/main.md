@@ -18,38 +18,30 @@ If this is a mistake, please go back to the [project website](https://pressio.gi
 export CXX=<path-to-your-C++-compiler>
 git clone --recursive git@github.com:Pressio/pressio4py.git # or https://github.com/Pressio/pressio4py.git
 pip install ./pressio4py
-```
 
-To make sure everything worked, run the
-[regression tests](https://github.com/Pressio/pressio4py/tree/master/regression_tests)
-as follows:
-```bash
+# you can then run the regression tests:
 cd pressio4py
 pytest -s
 ```
-If you get an import error it might be that the version of `pytest` you are
+Note that if you get an import error, it might be that
+the version of `pytest` you are
 using is not compatible with the `pip` command you used to install.
 Make sure you use Python commands from the **same** distribution.
 
 
-## Learn how to interface your app
+## Where to go from here?
 
-@m_class{m-block m-warning}
+### Learn how to interface your app
 
-@par
 To enable pressio4py to communicate with your app, you might
-have to prepare some glue code in the form of an adapter class.
-You can find the details [here](./md_pages_prepare_your_app.html).
-Note that this step only needs to be done once: the same interface
-class can then be used to run all the ROMs in pressio4py.
+have to prepare some glue code in the form of an adapter class
+as described [here](./md_pages_prepare_your_app.html).
+Note that this only needs to be done once: *the same interface
+class can then be used to run all the ROMs in pressio4py*.
 
-## Explore the tutorials and demos
-
-
+### Explore the tutorials and demos
 You can find descriptions of the demos [here](./md_pages_demos_demo1.html)
-and of the tutorials [here](./md_pages_tutorials_tutorial1.html)--- both in progress.
-
-To run the demos:
+and of the tutorials [here](./md_pages_tutorials_tutorial1.html)---we will progressively add more.
 ```bash
 cd pressio4py/demos
 python3 ./<demo-subdir-name>/main.py
