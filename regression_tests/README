@@ -22,7 +22,6 @@ in your main.py you need to do like this:
 
 
 --------------------------------------------------------------
-This is it! What happens then?
-When you configure, the cmakelist automatically globs over
-the directories and creates the tests, and uses the directory name
-and the main file to generate a test name that is unique.
+To run all tests, first install pressio4py and then do:
+cd pressio4py
+pytest 

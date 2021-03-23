@@ -56,6 +56,7 @@ namespace pressio4py{ namespace rom{ namespace impl{
 
   the problemid is used to choose the subcase:
   - default = 0
+  - hyp-red = 1
   - masked = 2
 */
 template <typename mytypes, int problemid>
@@ -71,6 +72,7 @@ struct SteadyLSPGProblemBinder
     ::pressio4py::scalar_t, fom_native_state_t,
     fom_native_state_t, decoder_native_jac_t>;
 
+  // only needed for problmeid==2
   using masker_wrapper_t = pressio4py::rom::MaskerWrapper<::pressio4py::scalar_t>;
 
   using lspg_problem_t =
@@ -79,14 +81,19 @@ struct SteadyLSPGProblemBinder
     pressio::rom::lspg::impl::composeDefaultProblem_t<
       sys_wrapper_t, decoder_t, rom_state_t>,
     typename std::conditional<
-      problemid==2,
-      pressio::rom::lspg::impl::composeMaskedProblem_t<
-	sys_wrapper_t, decoder_t, rom_state_t, masker_wrapper_t>,
-      void
+      problemid==1,
+      pressio::rom::lspg::impl::composeHyperReducedProblem_t<
+	sys_wrapper_t, decoder_t, rom_state_t>,
+      typename std::conditional<
+	problemid==2,
+	pressio::rom::lspg::impl::composeMaskedProblem_t<
+	  sys_wrapper_t, decoder_t, rom_state_t, masker_wrapper_t>,
+	void
+	>::type
       >::type
     >::type;
 
-  // constructor for default lspg problem
+  // constructor for default problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -98,7 +105,19 @@ struct SteadyLSPGProblemBinder
 		const fom_native_state_t>());
   }
 
-  // constructor for masked lspg problem
+  // constructor for hyper-reduced problem
+  template<typename T, int _problemid = problemid>
+  static typename std::enable_if<_problemid==1>::type
+  bindProblemConstructor(pybind11::class_<T> & problem)
+  {
+    problem.def(pybind11::init<
+		pybind11::object,
+		decoder_t &,
+		const rom_native_state_t &,
+		const fom_native_state_t &>());
+  }
+
+  // constructor for masked problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==2>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -165,7 +184,7 @@ struct UnsteadyLSPGProblemBinder
       >::type
     >::type;
 
-  // constructor for default lspg problem
+  // constructor for default problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -177,7 +196,7 @@ struct UnsteadyLSPGProblemBinder
 		const fom_native_state_t &>());
   }
 
-  // constructor for hyper-reduced lspg problem
+  // constructor for hyper-reduced problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==1>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -190,7 +209,7 @@ struct UnsteadyLSPGProblemBinder
 		pressio4py::py_f_arr>());
   }
 
-  // constructor for masked lspg problem
+  // constructor for masked problem
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==2>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -222,18 +241,20 @@ template <typename mytypes>
 struct LSPGBinder
 {
   //------------------
-  // steady default
+  // steady
   //------------------
+  // default
   using de_steady_binder_t  = impl::SteadyLSPGProblemBinder<mytypes, 0>;
   using de_steady_problem_t = typename de_steady_binder_t::lspg_problem_t;
-  //------------------
-  // steady masked
-  //------------------
+  // hypred
+  using hr_steady_binder_t  = impl::SteadyLSPGProblemBinder<mytypes, 1>;
+  using hr_steady_problem_t = typename hr_steady_binder_t::lspg_problem_t;
+  // masked
   using ma_steady_binder_t  = impl::SteadyLSPGProblemBinder<mytypes, 2>;
   using ma_steady_problem_t = typename ma_steady_binder_t::lspg_problem_t;
 
   //------------------
-  // unsteady: bdf1
+  // unsteady: BDF1
   //------------------
   using bdf1tag = pressio::ode::implicitmethods::Euler;
   // default
@@ -262,7 +283,7 @@ struct LSPGBinder
 
   // *** tuple with all problem types ***
   using problem_types = std::tuple<
-    de_steady_problem_t, ma_steady_problem_t,
+    de_steady_problem_t, hr_steady_problem_t, ma_steady_problem_t,
     de_bdf1_problem_t, de_bdf2_problem_t,
     hr_bdf1_problem_t, hr_bdf2_problem_t,
     ma_bdf1_problem_t, ma_bdf2_problem_t
@@ -270,7 +291,7 @@ struct LSPGBinder
 
   // tuple with just the steady problem types
   using steady_problem_types = std::tuple<
-    de_steady_problem_t, ma_steady_problem_t
+    de_steady_problem_t, hr_steady_problem_t, ma_steady_problem_t
     >;
 
   // tuple with just the unsteady problem types
@@ -290,9 +311,13 @@ struct LSPGBinder
       pybind11::module m1 = lspgSteadyModule.def_submodule("default");
       de_steady_binder_t::bind(m1);
 
+      // hyp-reduced
+      pybind11::module m2 = lspgSteadyModule.def_submodule("hyperreduced");
+      hr_steady_binder_t::bind(m2);
+
       // masked
-      pybind11::module m2 = lspgSteadyModule.def_submodule("masked");
-      ma_steady_binder_t::bind(m2);
+      pybind11::module m3 = lspgSteadyModule.def_submodule("masked");
+      ma_steady_binder_t::bind(m3);
     }
 
     // *** unsteady problem ***

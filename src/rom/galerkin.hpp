@@ -96,7 +96,7 @@ struct GalerkinBinder
       >::type
     >::type;
 
-  // constructor for default explicit galerkin
+  // constructor for default
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -108,7 +108,7 @@ struct GalerkinBinder
 		const fom_native_state_t &>()); //native python fom reference state
   }
 
-  // constructor for hyper-reduced velocity explicit galerkin
+  // constructor for hyper-reduced
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==1>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -122,7 +122,7 @@ struct GalerkinBinder
 		>());
   }
 
-  // constructor for masked velocity explicit galerkin
+  // constructor for masked
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==2>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -205,7 +205,7 @@ struct GalerkinBinderDiscreteTime
       >::type
     >::type;
 
-  // constructor for default problem
+  // constructor for default
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==0>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -217,7 +217,7 @@ struct GalerkinBinderDiscreteTime
 		const fom_native_state_t &>()); //native python fom reference state
   }
 
-  // constructor for hyper-reduced velocity explicit galerkin
+  // constructor for hyper-reduced
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==1>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
@@ -231,7 +231,7 @@ struct GalerkinBinderDiscreteTime
 		>());
   }
 
-  // constructor for masked velocity explicit galerkin
+  // constructor for masked
   template<typename T, int _problemid = problemid>
   static typename std::enable_if<_problemid==2>::type
   bindProblemConstructor(pybind11::class_<T> & problem)
