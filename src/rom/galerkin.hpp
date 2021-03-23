@@ -162,7 +162,8 @@ struct GalerkinBinderDiscreteTime
   using decoder_t	     = typename mytypes::decoder_t;
 
   using sys_wrapper_t = pressio4py::rom::FomWrapperDiscreteTime<
-    numStates, ::pressio4py::scalar_t, fom_native_state_t, decoder_native_jac_t>;
+    numStates, ::pressio4py::scalar_t, fom_native_state_t,
+    fom_native_state_t, decoder_native_jac_t>;
 
   using galerkin_problem_0_t =
     pressio::rom::galerkin::impl::composeDefaultProblemDiscTime_t<

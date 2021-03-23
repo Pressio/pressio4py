@@ -51,7 +51,26 @@
 
 namespace pressio4py{ namespace rom{ namespace impl{
 
-template <typename types, typename ode_tag, int problemid>
+template<bool cont_time_api>
+struct _fom_adapter;
+
+template<>
+struct _fom_adapter<true>
+{
+  // numstates ignored for cont-time api
+  template<int numStates, typename ...Args>
+  using type = pressio4py::rom::FomWrapperCTimeWithApplyJac<::pressio4py::scalar_t, Args...>;
+};
+
+template<>
+struct _fom_adapter<false>
+{
+  template<int numStates, typename ...Args>
+  using type = pressio4py::rom::FomWrapperDiscreteTime<numStates, ::pressio4py::scalar_t, Args...>;
+};
+
+
+template <bool cont_time_api, typename types, typename ode_tag, int problemid, int numStates=2>
 struct WLSProblemBinder
 {
   using rom_native_state_t   = typename types::rom_native_state_t;
@@ -61,9 +80,8 @@ struct WLSProblemBinder
   using decoder_native_jac_t = typename types::decoder_native_jac_t;
   using wls_hessian_t	     = typename types::lsq_hessian_t;
 
-  // this is the pressio4py adapter class
-  using fom_adapter_t = pressio4py::rom::FomWrapperCTimeWithApplyJac<
-    ::pressio4py::scalar_t, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
+  using fom_adapter_t = typename _fom_adapter<cont_time_api>::template type<
+    numStates, fom_native_state_t, fom_native_state_t, decoder_native_jac_t>;
 
   using hessian_mat_structure = pressio::matrixLowerTriangular;
   using precon_type	      = ::pressio::rom::wls::preconditioners::NoPreconditioner;
@@ -114,15 +132,27 @@ struct WLSBinder
 {
   using tag1 = pressio::ode::implicitmethods::Euler;
   using tag2 = pressio::ode::implicitmethods::BDF2;
+
+  // *** CONTINUOUS-TIME API ***
   // default problem
-  using de_bdf1_binder_t  = impl::WLSProblemBinder<types, tag1, 0>;
+  using de_bdf1_binder_t  = impl::WLSProblemBinder<true, types, tag1, 0>;
   using de_bdf1_system_t = typename de_bdf1_binder_t::wls_system_t;
-  using de_bdf2_binder_t  = impl::WLSProblemBinder<types, tag2, 0>;
+  using de_bdf2_binder_t  = impl::WLSProblemBinder<true, types, tag2, 0>;
   using de_bdf2_system_t = typename de_bdf2_binder_t::wls_system_t;
+
+  // *** DISCRETE-TIME API ***
+  // default problem
+  using de_dtapi_bdf1_binder_t  = impl::WLSProblemBinder<false, types, tag1, 0, 2>;
+  using de_dtapi_bdf1_system_t = typename de_dtapi_bdf1_binder_t::wls_system_t;
+  using de_dtapi_bdf2_binder_t = impl::WLSProblemBinder<false, types, tag2, 0, 3>;
+  using de_dtapi_bdf2_system_t = typename de_dtapi_bdf2_binder_t::wls_system_t;
 
   // *** tuple with all problem types ***
   using system_types = std::tuple<
-    de_bdf1_system_t, de_bdf2_system_t
+    de_bdf1_system_t,
+    de_bdf2_system_t,
+    de_dtapi_bdf1_system_t,
+    de_dtapi_bdf2_system_t
     >;
 
   // binding method
@@ -130,8 +160,10 @@ struct WLSBinder
   {
     // default
     pybind11::module m1 = mParent.def_submodule("default");
-    pybind11::module mBdf1 = m1.def_submodule("Bdf1"); de_bdf1_binder_t::bind(mBdf1);
-    pybind11::module mBdf2 = m1.def_submodule("Bdf2"); de_bdf2_binder_t::bind(mBdf2);
+    de_bdf1_binder_t::bind(m1, "BDF1");
+    de_bdf2_binder_t::bind(m1, "BDF2");
+    de_dtapi_bdf1_binder_t::bind(m1, "DiscreteTimeBDF1");
+    de_dtapi_bdf2_binder_t::bind(m1, "DiscreteTimeBDF2");
   }
 };
 

@@ -57,8 +57,8 @@ def test1():
   # WLS state
   wlsState = np.zeros(wlsSize)
 
-  wlsPolicy = rom.exp.wls.default.Bdf1.SequentialPolicy(romSize, numStepsInWindow, decoder, appObj, yRef)
-  wlsSystem = rom.exp.wls.default.Bdf1.Problem(decoder, wlsPolicy, yRef, yRef, wlsState)
+  wlsPolicy = rom.exp.wls.default.SequentialPolicyBDF1(romSize, numStepsInWindow, decoder, appObj, yRef)
+  wlsSystem = rom.exp.wls.default.ProblemBDF1(decoder, wlsPolicy, yRef, yRef, wlsState)
 
   nonLinSolver = solvers.createGaussNewton(wlsSystem, wlsState, MyLinSolver())
   nonLinSolver.setMaxIterations(2)

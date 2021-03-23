@@ -55,6 +55,7 @@ template<
   int numStatesNeeded,
   typename scalar_t,
   typename state_t,
+  typename residual_t,
   typename dense_matrix_t
   >
 class FomWrapperDiscreteTime
@@ -65,7 +66,7 @@ private:
 public:
   using scalar_type = scalar_t;
   using state_type = state_t;
-  using discrete_time_residual_type = state_type;
+  using discrete_time_residual_type = residual_t;
 
 public:
   explicit FomWrapperDiscreteTime(pybind11::object pyObj)
@@ -95,7 +96,7 @@ public:
 			    Args && ...args) const
   {
     discreteTimeResidualImpl(step, time, dt, R,
-			     std::forward<Args>(args)...);
+     			     std::forward<Args>(args)...);
   }
 
   template <typename step_t, typename ...Args>
@@ -112,7 +113,7 @@ public:
 
 private:
   template <typename step_t, int _numStatesNeeded = numStatesNeeded>
-  ::pressio::mpl::enable_if_t<_numStatesNeeded==2>
+  ::pressio::mpl::enable_if_t<_numStatesNeeded>=2>
   discreteTimeResidualImpl(const step_t & step,
 			   const scalar_type & time,
 			   const scalar_type & dt,
@@ -137,7 +138,7 @@ private:
   }
 
   template <typename step_t, int _numStatesNeeded = numStatesNeeded>
-  ::pressio::mpl::enable_if_t<_numStatesNeeded==2>
+  ::pressio::mpl::enable_if_t<_numStatesNeeded>=2>
   applyDiscreteTimeJacobianImpl(const step_t & step,
 				const scalar_type & time,
 				const scalar_type & dt,
@@ -148,7 +149,6 @@ private:
   {
     pyObj_.attr("applyDiscreteTimeJacobian")(step, time, dt, B, A, ynp1, yn);
   }
-
 
   template <typename step_t, int _numStatesNeeded = numStatesNeeded>
   ::pressio::mpl::enable_if_t<_numStatesNeeded==3>
