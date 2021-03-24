@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 This tutorial shows how to create and solve a time-\/explicit {\itshape masked} Galerkin problem.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial4_autotoc_md83}{}\doxysection{What is a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md83}
+\hypertarget{md_pages_tutorials_tutorial4_autotoc_md85}{}\doxysection{What is a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md85}
 In \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this previous tutorial}} we introduced the {\itshape default Galerkin problem} and explained that it is inefficient for large systems because, at every time step, one has to compute the F\+OM velocity and project it using the basis matrix, both of which scale with the F\+OM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.
 
 To overcome this obstacle, one can rely on hyper-\/reduction techniques\+: hyper-\/reduction aims at approximating the F\+OM nonlinear operators for a fraction of the computational cost. There are several hyper-\/reduction methods available (todo, cite).
@@ -20,7 +20,7 @@ pressio4py provides a variant of the Galerkin problem, called {\itshape masked G
 \begin{DoxyParagraph}{}
 This tutorial introduces the concept of the {\itshape mask} by showing how to construct a masked Galerkin problem using the most basic hyper-\/reduction technique, namely {\itshape collocation}.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial4_autotoc_md84}{}\doxysection{Masked Galerkin with collocation}\label{md_pages_tutorials_tutorial4_autotoc_md84}
+\hypertarget{md_pages_tutorials_tutorial4_autotoc_md86}{}\doxysection{Masked Galerkin with collocation}\label{md_pages_tutorials_tutorial4_autotoc_md86}
 In pressio4py, a {\itshape masked Galerkin} with collocation problem is defined as\+: \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{(A\phi)}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 
 where $\hat{y}$ is the reduced state, $y$ is the full-\/order model (F\+OM) state, $y_{ref}$ is a reference F\+OM state, $\phi$ is the orthonormal basis, $f(...)$ is the F\+OM velocity and $A$ is a sampling matrix that picks only target rows of $\phi$ and $f$. Note that the only difference with the Galerkin formulation presented in \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}} is the presence of the sampling operator $A$.
@@ -35,7 +35,7 @@ To define the sampling matrix there are various techniques (todo, add reference 
 \begin{DoxyParagraph}{}
 Note that to access the masking functionality you don\textquotesingle{}t need to change the F\+OM application. This is because the F\+OM always handles the full operators, and the masking is applied {\itshape after} the F\+OM computes the velocity. In other words, to access the masked Galerkin you can use the same F\+OM object you use for the default Galerkin problem discussed in \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this tutorial}}.
 \end{DoxyParagraph}
-\hypertarget{md_pages_tutorials_tutorial4_autotoc_md85}{}\doxysection{How to create a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md85}
+\hypertarget{md_pages_tutorials_tutorial4_autotoc_md87}{}\doxysection{How to create a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md87}
 In practice, a {\itshape masked} Galerkin problem needs the following main steps\+:
 
 
@@ -87,6 +87,6 @@ In practice, a {\itshape masked} Galerkin problem needs the following main steps
 
 \end{DoxyEnumerate}
 
-Note that as in the default case, the time-\/stepping scheme is part of the class name.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md86}{}\doxysection{How to solve a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md86}
-Solving the masked problem can be done using the same A\+PI for solving a default problem, see \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this}}.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md87}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial4_autotoc_md87}
+Note that as in the default case, the time-\/stepping scheme is part of the class name.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md88}{}\doxysection{How to solve a masked Galerkin problem?}\label{md_pages_tutorials_tutorial4_autotoc_md88}
+Solving the masked problem can be done using the same A\+PI for solving a default problem, see \href{./md_pages_tutorials_tutorial3.html}{\texttt{ this}}.\hypertarget{md_pages_tutorials_tutorial4_autotoc_md89}{}\doxysection{Want to see all the above pieces in action?}\label{md_pages_tutorials_tutorial4_autotoc_md89}
 Look at \href{./md_pages_demos_demo4.html}{\texttt{ this demo}} that shows a masked Galerkin for a 1d P\+DE. 

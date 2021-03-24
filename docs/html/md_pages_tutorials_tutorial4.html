@@ -23,10 +23,18 @@
       </div>
       <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
         <div class="m-row">
-          <ol class="m-col-t-6 m-col-m-none">
+          <ol class="m-col-t-12 m-col-m-none">
             <li><a href="md_pages_prepare_your_app.html">How to interface your app</a></li>
             <li>
-              <a href=>Tutorials</a>
+              <a>Synopsis</a>
+              <ol>
+                <li><a href="md_pages_synopsis_galerkin.html">Galerkin</a></li>
+                <li><a href="md_pages_synopsis_lspg.html">LSPG</a></li>
+                <li><a href="md_pages_synopsis_wls.html">WLS</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Tutorials</a>
               <ol>
                 <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
                 <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
@@ -35,7 +43,7 @@
               </ol>
             </li>
             <li>
-              <a href=>Demos</a>
+              <a>Demos</a>
               <ol>
                 <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
                 <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
@@ -46,9 +54,7 @@
               </ol>
             </li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
-            <li><a href="annotated.html">Classes</a></li>
-            <li><a href="namespaces.html">Namespaces</a></li>
+          <ol class="m-col-t-6 m-col-m-none" start="5">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -65,7 +71,7 @@
         <h1>
           Tutorial: Masked Galerkin with explicit time stepping
         </h1>
-<aside class="m-block m-info"><p>This tutorial shows how to create and solve a time-explicit <em>masked</em> Galerkin problem.</p></aside><section id="autotoc_md83"><h2><a href="#autotoc_md83">What is a masked Galerkin problem?</a></h2><p>In <a href="./md_pages_tutorials_tutorial3.html">this previous tutorial</a> we introduced the <em>default Galerkin problem</em> and explained that it is inefficient for large systems because, at every time step, one has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.</p><p>To overcome this obstacle, one can rely on hyper-reduction techniques: hyper-reduction aims at approximating the FOM nonlinear operators for a fraction of the computational cost. There are several hyper-reduction methods available (todo, cite).</p><p>A key aspect of hyper-reduction is that to get the most benefits out of it from a computational cost viewpoint, one has to implement it directly inside the FOM code. In practice, oversimplifying a bit, we can say that at its core, it involves enabling the FOM code to compute the FOM velocity at only a subset of the mesh. A few questions then arise: why should one risk investing the time in implementing such technique without assessing upfront whether it will work? how can one evaluate and compare different hyper-reduction techniques without modifying the FOM code?</p><aside class="m-block m-success"><p>pressio4py provides a variant of the Galerkin problem, called <em>masked Galerkin</em>, that allows one to test and compare the <em>accuracy</em> of various hyper-reduction techniques <strong>without</strong> having to change the FOM code.</p></aside><aside class="m-note m-default"><p>This tutorial introduces the concept of the <em>mask</em> by showing how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <em>collocation</em>.</p></aside></section><section id="autotoc_md84"><h2><a href="#autotoc_md84">Masked Galerkin with collocation</a></h2><p>In pressio4py, a <em>masked Galerkin</em> with collocation problem is defined as:</p><div class="m-math"><svg style="width: 18.244em; height: 2.242em;" viewBox="106.70125 -21.519514 175.140506 21.519522">
+<aside class="m-block m-info"><p>This tutorial shows how to create and solve a time-explicit <em>masked</em> Galerkin problem.</p></aside><section id="autotoc_md85"><h2><a href="#autotoc_md85">What is a masked Galerkin problem?</a></h2><p>In <a href="./md_pages_tutorials_tutorial3.html">this previous tutorial</a> we introduced the <em>default Galerkin problem</em> and explained that it is inefficient for large systems because, at every time step, one has to compute the FOM velocity and project it using the basis matrix, both of which scale with the FOM degrees of freedom. This implies that even if the reduced system to integrate in time is much smaller, the computational gains are practically zero becuase of the above bottleneck.</p><p>To overcome this obstacle, one can rely on hyper-reduction techniques: hyper-reduction aims at approximating the FOM nonlinear operators for a fraction of the computational cost. There are several hyper-reduction methods available (todo, cite).</p><p>A key aspect of hyper-reduction is that to get the most benefits out of it from a computational cost viewpoint, one has to implement it directly inside the FOM code. In practice, oversimplifying a bit, we can say that at its core, it involves enabling the FOM code to compute the FOM velocity at only a subset of the mesh. A few questions then arise: why should one risk investing the time in implementing such technique without assessing upfront whether it will work? how can one evaluate and compare different hyper-reduction techniques without modifying the FOM code?</p><aside class="m-block m-success"><p>pressio4py provides a variant of the Galerkin problem, called <em>masked Galerkin</em>, that allows one to test and compare the <em>accuracy</em> of various hyper-reduction techniques <strong>without</strong> having to change the FOM code.</p></aside><aside class="m-note m-default"><p>This tutorial introduces the concept of the <em>mask</em> by showing how to construct a masked Galerkin problem using the most basic hyper-reduction technique, namely <em>collocation</em>.</p></aside></section><section id="autotoc_md86"><h2><a href="#autotoc_md86">Masked Galerkin with collocation</a></h2><p>In pressio4py, a <em>masked Galerkin</em> with collocation problem is defined as:</p><div class="m-math"><svg style="width: 18.244em; height: 2.242em;" viewBox="106.70125 -21.519514 175.140506 21.519522">
 <title>
 \[ \dot{\hat{\mathbf{y}}}(t;\mathbf{\mu}) = \mathbf{(A\phi)}^T A\mathbf{f} \Big(\mathbf{y}_{ref}(\mathbf{\mu}) + \mathbf{\phi}\hat{\mathbf{y}} \Big) \]
 </title>
@@ -228,7 +234,7 @@ $A$
 <g id='eq10-page1'>
 <use x='0' y='0' xlink:href='#eq10-g0-65'/>
 </g>
-</svg>.</p><p>Schematically, the system above corresponds to the figure below.</p><img class="m-image" src="tut_f5.png" alt="Image" style="width: 65%;" /><aside class="m-note m-default"><p>To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc). The most basic one is just random sampling: given the set of indices of the full mesh, one simply randomly picks a subset of it.</p></aside><aside class="m-note m-default"><p>Note that to access the masking functionality you don&#x27;t need to change the FOM application. This is because the FOM always handles the full operators, and the masking is applied <em>after</em> the FOM computes the velocity. In other words, to access the masked Galerkin you can use the same FOM object you use for the default Galerkin problem discussed in <a href="./md_pages_tutorials_tutorial3.html">this tutorial</a>.</p></aside></section><section id="autotoc_md85"><h2><a href="#autotoc_md85">How to create a masked Galerkin problem?</a></h2><p>In practice, a <em>masked</em> Galerkin problem needs the following main steps:</p><ol><li><p>creating the decoder on the <strong>FULL</strong> mesh</p><pre class="m-code"><span class="c1"># e.g. let phi contain the POD modes on the full mesh</span>
+</svg>.</p><p>Schematically, the system above corresponds to the figure below.</p><img class="m-image" src="tut_f5.png" alt="Image" style="width: 65%;" /><aside class="m-note m-default"><p>To define the sampling matrix there are various techniques (todo, add reference to pressio-tools etc). The most basic one is just random sampling: given the set of indices of the full mesh, one simply randomly picks a subset of it.</p></aside><aside class="m-note m-default"><p>Note that to access the masking functionality you don&#x27;t need to change the FOM application. This is because the FOM always handles the full operators, and the masking is applied <em>after</em> the FOM computes the velocity. In other words, to access the masked Galerkin you can use the same FOM object you use for the default Galerkin problem discussed in <a href="./md_pages_tutorials_tutorial3.html">this tutorial</a>.</p></aside></section><section id="autotoc_md87"><h2><a href="#autotoc_md87">How to create a masked Galerkin problem?</a></h2><p>In practice, a <em>masked</em> Galerkin problem needs the following main steps:</p><ol><li><p>creating the decoder on the <strong>FULL</strong> mesh</p><pre class="m-code"><span class="c1"># e.g. let phi contain the POD modes on the full mesh</span>
 <span class="n">linearDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span></pre></li><li><p>selecting the row indices to use for the collocation</p><pre class="m-code"><span class="c1"># as anticipated above, there are various methods to select indices,</span>
 <span class="c1"># the most basic one is random sampling</span>
 <span class="n">collocationIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">56</span><span class="p">,</span> <span class="n">whatever</span><span class="p">])</span></pre></li><li><p>creating a &quot;projector operator&quot; that is responsible to project the FOM velocity. Basically, this projector knows how to compute the action of <svg class="m-math" style="width: 3.220em; height: 1.331em;" viewBox="0 -9.784673 30.914459 12.773465">
@@ -266,7 +272,7 @@ $(A\phi)^T$
                                                   <span class="n">romState</span><span class="p">,</span>
                                                   <span class="n">fomReferenceState</span><span class="p">,</span>
                                                   <span class="n">masker</span><span class="p">,</span>
-                                                  <span class="n">projector</span><span class="p">)</span></pre></li></ol><p>Note that as in the default case, the time-stepping scheme is part of the class name.</p></section><section id="autotoc_md86"><h2><a href="#autotoc_md86">How to solve a masked Galerkin problem?</a></h2><p>Solving the masked problem can be done using the same API for solving a default problem, see <a href="./md_pages_tutorials_tutorial3.html">this</a>.</p></section><section id="autotoc_md87"><h2><a href="#autotoc_md87">Want to see all the above pieces in action?</a></h2><p>Look at <a href="./md_pages_demos_demo4.html">this demo</a> that shows a masked Galerkin for a 1d PDE.</p></section>
+                                                  <span class="n">projector</span><span class="p">)</span></pre></li></ol><p>Note that as in the default case, the time-stepping scheme is part of the class name.</p></section><section id="autotoc_md88"><h2><a href="#autotoc_md88">How to solve a masked Galerkin problem?</a></h2><p>Solving the masked problem can be done using the same API for solving a default problem, see <a href="./md_pages_tutorials_tutorial3.html">this</a>.</p></section><section id="autotoc_md89"><h2><a href="#autotoc_md89">Want to see all the above pieces in action?</a></h2><p>Look at <a href="./md_pages_demos_demo4.html">this demo</a> that shows a masked Galerkin for a 1d PDE.</p></section>
       </div>
     </div>
   </div>

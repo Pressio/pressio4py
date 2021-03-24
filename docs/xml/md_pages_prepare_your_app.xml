@@ -2,29 +2,72 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
   <compounddef id="md_pages_prepare_your_app" kind="page">
     <compoundname>md_pages_prepare_your_app</compoundname>
-    <title>Learn how to interface your app</title>
+    <title>Adapter API</title>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title></title><para>This page describes how to setup the interface enabling pressio4py to communicate with your application. Note that this step only needs to be done once: the same interface class can then be used to run all the ROMs in pressio4py. By the end, it should be clear our design choice and how to setup this &quot;glue code&quot;.</para>
+<sect1 id="md_pages_prepare_your_app_1autotoc_md65">
+<title>What is it? Why and where is it needed?</title>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-frame m-warning" /></para>
+<para>An adapter class allows an application to expose data via an API conforming to Pressio requirements. This interface enables pressio4py to communicate with your application and vice versa. Note that this step only needs to be done once: the same interface class can then be used to run all the ROMs in pressio4py.</para>
+<para>In other words, the FOM adapter class wraps/encapsulates your application such that an instance of that class stores all the information defining your target problem, and exposes some functionalities needed to query some information.</para>
+<para>An instance of the adapter class is needed to construct a ROM problem. For the sake of the argument, let us say we are doing <ulink url="https://pressio.github.io/algos/galerkin/">Galerkin ROM</ulink> with explicit Runge-Kutta4 time stepping. A synopsis of its usage, just highlighting the important parts to convey the message, would be: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>fomObj<sp/>=<sp/>FomAdapter(</highlight><highlight class="comment">#pass<sp/>whatever<sp/>you<sp/>need<sp/>to<sp/>setup<sp/>the<sp/>problem)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>ROM<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>romProblem<sp/>=<sp/>rom.galerkin.default.ProblemRK4(fomObj,<sp/>...)</highlight></codeline>
+</programlisting></para>
+<para>You can view more examples in the <ulink url="./md_pages_demos_demo1.html">demos</ulink>.</para>
+<para>Below we discuss the API variants that an adapter class needs to meet to interface with pressio4py.</para>
+<para><linebreak/>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-success" /></para>
+<para><bold>CONTINUOUS-TIME API</bold></para>
+<para>This API is intended for any system expressible in <emphasis>time-continuous</emphasis> form as <formula id="14">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula> where <formula id="10">$y$</formula> is the full-order model (FOM) state, <formula id="11">$f$</formula> the FOM velocity, and <formula id="12">$t$</formula> is time.</para>
+<para>We envision two scenarios:<itemizedlist>
+<listitem><para>(A) you are only able (or want) to expose the right-hand-side (or velocity) of your FOM application</para>
+</listitem><listitem><para>(B) you expose the right-hand-side of your FOM application as well as the action of its Jacobian on some operand</para>
+</listitem></itemizedlist>
+</para>
+<sect2 id="md_pages_prepare_your_app_1autotoc_md66">
+<title>A: Exposes only the velocity</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">FomAdapter:</highlight></codeline>
+<codeline><highlight class="normal">def<sp/>__init__(self,<sp/>*args):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>initialize<sp/>as<sp/>you<sp/>want/needed<sp/>by<sp/>your<sp/>application</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>f(y,t,...)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>say<sp/>N<sp/>is<sp/>the<sp/>total<sp/>number<sp/>of<sp/>of<sp/>unknowns</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>velocity,<sp/>f(y,t;...),<sp/>for<sp/>a<sp/>given<sp/>state,<sp/>y,<sp/>and<sp/>time,<sp/>t</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>y,<sp/>t,<sp/>f):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>f[:]<sp/>=<sp/></highlight><highlight class="comment">#compute<sp/>velocity<sp/>as<sp/>needed</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Where can you use the AdapterA version of the continuous-time API?</title><para>This version of the adapter can (currently) only be used for doing Galerkin ROMs with explicit time stepping.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md66">
-<title>Is pressio4py applicable to your problem and application?</title>
-<para>Pressio targets any system expressible as a parameterized system of ordinary differential equations (ODEs) as <formula id="8">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula> where <formula id="9">$\boldsymbol{y}$</formula> is the state, <formula id="10">$\mu$</formula> are parameters, <formula id="11">$t$</formula> is time and <formula id="12">$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$</formula> is referred to as &quot;velocity&quot; (or RHS). If your problem can be expressed as the system of ODEs above, then you can use and experiment with any of the ROM algorithms implemented in pressio4py. Note that this is a <emphasis>practical</emphasis> assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that ROMs would work well for your problem. But this is why you should try using presio4py to see if ROMs can be useful for you!</para>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-success" /></para>
-<para><simplesect kind="par"><title></title><para>This formulation is quite general and does not make any assumption on its origin: it may be derived from the spatial discretization (regardless of the discretization method) of a PDE problem, or from naturally discrete systems (e.g., molecular-dynamics problems).</para>
-</simplesect>
-</para>
-</sect1>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md67">
-<title>What glue code do you need on your end to use pressio4py?</title>
-<para>pressio4py requires your application to expose the &quot;velocity&quot; <formula id="12">$\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$</formula> and (optionally) the action of the Jacobian matrix <formula id="13">$\partial f/\partial y$</formula>. This design choice pivots on the generality of the formulation above. We remark that the <emphasis>same</emphasis> expressive model/API is being used/expected by other well-established Python libraries, e.g., <computeroutput>scipy.ode</computeroutput>.</para>
-<para>In practice, this can be done by writing an adapter class for your full-order model (FOM) that meets the API required by pressio4py as follows: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">FomAdapter:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>*args):</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>initialize<sp/>as<sp/>you<sp/>want/needed<sp/>by<sp/>your<sp/>application</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+</sect2>
+<sect2 id="md_pages_prepare_your_app_1autotoc_md67">
+<title>B: Exposes velocity and the action of the Jacobian</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">FomAdapter:</highlight></codeline>
+<codeline><highlight class="normal">def<sp/>__init__(self,<sp/>*args):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>initialize<sp/>as<sp/>you<sp/>want/needed<sp/>by<sp/>your<sp/>application</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>f(y,t,...)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>say<sp/>N<sp/>is<sp/>the<sp/>total<sp/>number<sp/>of<sp/>of<sp/>unknowns</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>result<sp/>of<sp/>df/dy*B</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>B<sp/>is<sp/>typically<sp/>a<sp/>skinny<sp/>dense<sp/>matrix<sp/>(e.g.<sp/>POD<sp/>modes)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createApplyJacobianResult(self,<sp/>B):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((N,<sp/>B.shape[1]))</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>velocity,<sp/>f(y,t;...),<sp/>for<sp/>a<sp/>given<sp/>state,<sp/>y</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>y,<sp/>t,<sp/>f):</highlight></codeline>
@@ -34,33 +77,49 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>A=df/dy*B,<sp/>where<sp/>B<sp/>is<sp/>a<sp/>skinny<sp/>dense<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>Note<sp/>that<sp/>we<sp/>just<sp/>require<sp/>the<sp/>*action*<sp/>of<sp/>the<sp/>Jacobian.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyJacobian(self,<sp/>y,<sp/>B,<sp/>t,<sp/>A):</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>A[:,:]<sp/>=<sp/></highlight><highlight class="comment">#<sp/>compute<sp/>df/dy<sp/>*<sp/>B</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>f(y,t,...)</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity():</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)<sp/></highlight><highlight class="comment">#<sp/>say<sp/>N<sp/>is<sp/>the<sp/>total<sp/>number<sp/>of<sp/>of<sp/>unknowns</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>result<sp/>of<sp/>df/dy*B,<sp/>B<sp/>is<sp/>typically<sp/>a<sp/>skinny<sp/>dense<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createApplyJacobianResult(self,<sp/>B):</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros_like(B)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>A[:,:]<sp/>=<sp/></highlight><highlight class="comment">#<sp/>compute<sp/>A<sp/>=<sp/>df/dy<sp/>*<sp/>B<sp/>as<sp/>needed</highlight></codeline>
 </programlisting></para>
-<para>In simple words, the FomAdapter class wraps/encapsulates your application, stores all the information defining your problem and exposes some functionalities needed to query some information.</para>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
-<para><simplesect kind="par"><title></title><para>The <computeroutput>applyJacobian</computeroutput> method is needed when you do implicit time integration. For explicit time stepping you only need the velocity.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Where can you use the AdapterB version of the continuous-time API?</title><para>This version of the adapter can be used in the following case:<itemizedlist>
+<listitem><para>for Galerkin ROMs with explicit and implicit time stepping</para>
+</listitem><listitem><para>for LSPG</para>
+</listitem><listitem><para>for WLS Note that LSPG and WLS only make sense for implicit time integration.</para>
+</listitem></itemizedlist>
+</para>
+</simplesect>
+<linebreak/>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-success" /></para>
+<para><bold>DISCRETE-TIME API</bold></para>
+<para>This API is intended for any system expressible in a discrete-time form as <formula id="9">\[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]</formula> where <formula id="10">$y$</formula> is the full-order model (FOM) state, <formula id="15">$t_n$</formula> is the time at step <formula id="16">$n$</formula>, and <formula id="17">$dt_n$</formula> is the time-step size to use, and <formula id="13">$R$</formula> is the residual to compute.</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">FomAdapter:</highlight></codeline>
+<codeline><highlight class="normal">def<sp/>__init__(self,<sp/>*args):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>initialize<sp/>as<sp/>you<sp/>want/needed<sp/>by<sp/>your<sp/>application</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>R(...)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createDiscreteTimeResidual(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createApplyDiscreteTimeJacobianResult(self,<sp/>B):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((N,<sp/>B.shape[1]))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">discreteTimeResidual(self,<sp/>step,<sp/>time,<sp/>dt,<sp/>R,<sp/>ynp1,<sp/>yn,<sp/>ynm1<sp/>[,<sp/>ynm2]):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>R[:]<sp/>=<sp/></highlight><highlight class="comment">#<sp/>compute<sp/>discrete-time<sp/>residual</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyDiscreteTimeJacobian(self,<sp/>step,<sp/>time,<sp/>dt,<sp/>B,<sp/>A,<sp/>ynp1,<sp/>yn,<sp/>ynm1<sp/>[,<sp/>ynm2]):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>A[:,:]<sp/>=<sp/></highlight><highlight class="comment">#<sp/>compute<sp/>the<sp/>action<sp/>A<sp/>=<sp/>dR/dy_np1<sp/>B</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Where can you use the discrete-time API?</title><para>This version of the adapter can be <bold>only</bold> used for:<itemizedlist>
+<listitem><para>Galerkin with <emphasis>implicit</emphasis> time stepping</para>
+</listitem><listitem><para>LSPG</para>
+</listitem><listitem><para>WLS </para>
+</listitem></itemizedlist>
+</para>
 </simplesect>
 </para>
-</sect1>
-<sect1 id="md_pages_prepare_your_app_1autotoc_md68">
-<title>Where is the adapter used?</title>
-<para>An instance of the adapter class is needed to construct a ROM problem. For the sake of the argument, let us say we are doing <ulink url="https://pressio.github.io/algos/galerkin/">Galerkin ROM</ulink> with explicit Runge-Kutta4 time stepping. A synopsis of the code, just highlighting the important parts to convey the message, would be: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomObj<sp/>=<sp/>FomAdapter(</highlight><highlight class="comment">#pass<sp/>whatever<sp/>you<sp/>need<sp/>to<sp/>setupit)</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romProblem<sp/>=<sp/>rom.galerkin.default.ProblemRK4(fomObj,<sp/>...)</highlight></codeline>
-</programlisting></para>
-<para>For more examples, you can look at the <ulink url="./md_pages_demos_demo1.html">demos</ulink>. </para>
+</sect2>
 </sect1>
     </detaileddescription>
   </compounddef>

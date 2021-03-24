@@ -10,11 +10,11 @@
 <para><simplesect kind="par"><title></title><para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_linear_decoder/main.py">here</ulink>.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md70">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md72">
 <title>Context</title>
-<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="14">$y_{fom}$</formula>, as: <formula id="15">\[ y_{fom} = g(y_{rom}) \]</formula></para>
-<para>where <formula id="16">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="17">$g$</formula> is the mapping between the two.</para>
-<para>If <formula id="17">$g$</formula> is linear, then we can write: <formula id="18">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="19">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="20">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
+<para>A key assumption of projection-based ROMs relies on approximating a full-order model (FOM) state, <formula id="18">$y_{fom}$</formula>, as: <formula id="19">\[ y_{fom} = g(y_{rom}) \]</formula></para>
+<para>where <formula id="20">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, and <formula id="21">$g$</formula> is the mapping between the two.</para>
+<para>If <formula id="21">$g$</formula> is linear, then we can write: <formula id="22">\[ y_{fom} = \phi y_{rom} \]</formula> where <formula id="23">$\phi$</formula> is a matrix (for the time being assumed constant). The Jacobian of the mapping is: <formula id="24">\[ \frac{d y_{fom}}{d y_{rom}} = \phi. \]</formula></para>
 <para>A linear decoder in pressio4py represents this linear mapping.</para>
 <para>Note that the above expressions are abtract, since they do not specify what kind of data structures are used. pressio4py supports the following scenarios:<orderedlist>
 <listitem><para>the FOM and ROM states are <emphasis>rank-1 tensors</emphasis></para>
@@ -22,9 +22,9 @@
 </listitem></orderedlist>
 </para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md71">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md73">
 <title>Rank-1 state</title>
-<para>The FOM state is stored as an array, <formula id="21">$y_{fom} \in R^N$</formula>, where <formula id="22">$N$</formula> = <bold>total number of degrees of freedom</bold>, while the ROM state is stored as an array, <formula id="23">$y_{rom} \in R^p$</formula>, where <formula id="24">$p$</formula> is the number of modes, see the figure below. <image type="html" name="tut_f1.png" width="35%"></image>
+<para>The FOM state is stored as an array, <formula id="25">$y_{fom} \in R^N$</formula>, where <formula id="26">$N$</formula> = <bold>total number of degrees of freedom</bold>, while the ROM state is stored as an array, <formula id="27">$y_{rom} \in R^p$</formula>, where <formula id="28">$p$</formula> is the number of modes, see the figure below. <image type="html" name="tut_f1.png" width="35%"></image>
 </para>
 <para>In this case, even if the application possibly involves multiple fields (e.g., density, chemical species, etc), it stores all the spatial degrees of freedom in a single array. For example, in a finite-volume code, one stores contiguously all field values of a given cell, for all cells. This is common, for example, when the application needs to do implicit time-integration such that a large system needs to be solved.</para>
 <para>The code snippet below demonstrates how to setup such linear mapping between rank-1 states. <programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">rank1StateDecoder():</highlight></codeline>
@@ -53,13 +53,13 @@
 </simplesect>
 </para>
 </sect1>
-<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md72">
+<sect1 id="md_pages_tutorials_tutorial1_1autotoc_md74">
 <title>Rank-2 state</title>
-<para>Suppose now that an application includes <formula id="25">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate. This is frequently found when using explicit time integration.</para>
-<para>In such case, the FOM state can be represented as a tensor, <formula id="26">$y_{fom} \in R^{N,m}$</formula> and the ROM state is <formula id="27">$y_{rom} \in R^{p,m}$</formula>, where:<itemizedlist>
-<listitem><para><formula id="25">$m$</formula> = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.</para>
-</listitem><listitem><para><formula id="22">$N$</formula> = number of degrees of freedom of each field</para>
-</listitem><listitem><para><formula id="24">$p$</formula> = number of modes <image type="html" name="tut_f2.png" width="40%"></image>
+<para>Suppose now that an application includes <formula id="29">$m$</formula> fields, e.g., density, x-velocity, tracer concentration, etc, and rather than storing all degrees of freedom in a single array, one wants to keep them separate. This is frequently found when using explicit time integration.</para>
+<para>In such case, the FOM state can be represented as a tensor, <formula id="30">$y_{fom} \in R^{N,m}$</formula> and the ROM state is <formula id="31">$y_{rom} \in R^{p,m}$</formula>, where:<itemizedlist>
+<listitem><para><formula id="29">$m$</formula> = the total number of fields. E.g., density, x-velocity, tracer concentration, etc.</para>
+</listitem><listitem><para><formula id="26">$N$</formula> = number of degrees of freedom of each field</para>
+</listitem><listitem><para><formula id="28">$p$</formula> = number of modes <image type="html" name="tut_f2.png" width="40%"></image>
 </para>
 </listitem></itemizedlist>
 </para>

@@ -4,17 +4,16 @@
 *Leading-edge projection-based reduced order models (\proms) for
 dynamical systems in science and engineering.*
 
-You landed on the documentation of the pressio Python bindings library!
+This is the documentation of the Python bindings library,
+which is one component of the [Pressio project](https://pressio.github.io/).
 
-If this is a mistake, please go back to the [project website](https://pressio.github.io/).
-
-
-## Install pressio4py
+## Install
 
 @m_class{m-block m-warning}
 
 @par
 ```bash
+# the C++ compiler must support C++14
 export CXX=<path-to-your-C++-compiler>
 git clone --recursive git@github.com:Pressio/pressio4py.git # or https://github.com/Pressio/pressio4py.git
 pip install ./pressio4py
@@ -29,17 +28,42 @@ using is not compatible with the `pip` command you used to install.
 Make sure you use Python commands from the **same** distribution.
 
 
-## Where to go from here?
+## In a nutshell
 
-### Learn how to interface your app
+Pressio can be applied to any dynamical system expressible in
+a *continuous-time* form as
+@f[
+\frac{d \boldsymbol{y}}{dt} =
+\boldsymbol{f}(\boldsymbol{y},t; ...)
+@f]
+and/or in a *discrete-time* form
+@f[
+\boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0}
+@f]
 
-To enable pressio4py to communicate with your app, you might
-have to prepare some glue code in the form of an adapter class
-as described [here](./md_pages_prepare_your_app.html).
-Note that this only needs to be done once: *the same interface
-class can then be used to run all the ROMs in pressio4py*.
+Here, @f$y@f$ is the full-order model (FOM) state,
+@f$f@f$ the FOM velocity, @f$t@f$ is time, and @f$R@f$ is the residual.
 
-### Explore the tutorials and demos
+This formulation is quite general and does not make any assumption
+on its origin: it may be derived from the spatial
+discretization (regardless of the discretization method)
+of a PDE problem, or from naturally discrete systems.
+
+We leverage this expressive mathematical framework as a pivotal
+design choice to enable a minimal application programming interface (API)
+that is natural to dynamical systems: you choose the formulation
+more convenient to you, and interface your application to
+Pressio by creating a corresponding *adapter class* to expose
+the operators needed for the chosen formulation.
+In general, you don't need to support both: each one has advantages and disadvantages,
+and sometimes the choice is dictated directly by your native application (for example,
+in some cases it might be easier to directly expose the discrete-time residual).
+
+Read [this doc page](./md_pages_prepare_your_app.html)
+to learn more about the adapter classes and see code templates.
+
+
+## Explore the tutorials and demos
 You can find descriptions of the demos [here](./md_pages_demos_demo1.html)
 and of the tutorials [here](./md_pages_tutorials_tutorial1.html)---we will progressively add more.
 ```bash

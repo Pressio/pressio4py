@@ -1,0 +1,46 @@
+This page is in progress with more information to be added.
+
+
+
+C\+O\+N\+T\+I\+N\+U\+O\+U\+S-\/\+T\+I\+ME A\+PI
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# Default WLS}}
+\DoxyCodeLine{wlsPolicy = rom.exp.wls.default.SequentialPolicyBDF1(romSize, numStepsInWindow, decoder, appObj, yRef)}
+\DoxyCodeLine{wlsSystem = rom.exp.wls.default.ProblemBDF1(decoder, wlsPolicy, yFomInitCond, yRef, wlsState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{wlsPolicy = rom.exp.wls.default.SequentialPolicyBDF2(romSize, numStepsInWindow, decoder, appObj, yRef)}
+\DoxyCodeLine{wlsSystem = rom.exp.wls.default.ProblemBDF2(decoder, wlsPolicy, yFomInitCond, yRef, wlsState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# hyper-\/reduced}}
+\DoxyCodeLine{Implementation \textcolor{keywordflow}{in} progress.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# masked}}
+\DoxyCodeLine{Implementation \textcolor{keywordflow}{in} progress.}
+\end{DoxyCode}
+
+
+~\newline
+
+
+
+
+D\+I\+S\+C\+R\+E\+T\+E-\/\+T\+I\+ME A\+PI
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# default}}
+\DoxyCodeLine{wlsPolicy = rom.exp.wls.default.SequentialPolicyDiscreteTimeBDF1(romSize, numStepsInWindow, decoder, appObj, yRef)}
+\DoxyCodeLine{wlsSystem = rom.exp.wls.default.ProblemDiscreteTimeBDF1(decoder, wlsPolicy, yFomInitCond, yRef, wlsState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{wlsPolicy = rom.exp.wls.default.SequentialPolicyDiscreteTimeBDF2(romSize, numStepsInWindow, decoder, appObj, yRef)}
+\DoxyCodeLine{wlsSystem = rom.exp.wls.default.ProblemDiscreteTimeBDF2(decoder, wlsPolicy, yFomInitCond, yRef, wlsState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# hyper-\/reduced}}
+\DoxyCodeLine{Implementation \textcolor{keywordflow}{in} progress.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# masked}}
+\DoxyCodeLine{Implementation \textcolor{keywordflow}{in} progress.}
+\end{DoxyCode}
+ 

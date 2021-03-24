@@ -14,8 +14,17 @@ LINKS_NAVBAR1 = [
   ("<a href=\"md_pages_prepare_your_app.html\">How to interface your app</a>",
    []),
 
+  # synopsis
+  ("<a>Synopsis</a>",
+   [
+     ("<a href=\"md_pages_synopsis_galerkin.html\">Galerkin</a>", ),
+     ("<a href=\"md_pages_synopsis_lspg.html\">LSPG</a>", ),
+     ("<a href=\"md_pages_synopsis_wls.html\">WLS</a>", )
+   ]),
+
+
   # tutorials
-  ("<a href=>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
+  ("<a>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",
    [
      ("<a href=\"md_pages_tutorials_tutorial1.html\">Linear Decoder</a>", ),
      ("<a href=\"md_pages_tutorials_tutorial2.html\">Custom Decoder</a>", ),
@@ -24,7 +33,7 @@ LINKS_NAVBAR1 = [
    ]),
 
   # demos
-  ("<a href=>Demos</a>", #("<a href=\"md_pages_demos.html\">Demos</a>",
+  ("<a>Demos</a>", #("<a href=\"md_pages_demos.html\">Demos</a>",
    [
      ("<a href=\"md_pages_demos_demo1.html\">1D adv-diff: Galerkin with POD modes</a>", ),
      ("<a href=\"md_pages_demos_demo2.html\">1D adv-diff: LSPG with POD modes</a>", ),
@@ -51,8 +60,8 @@ LINKS_NAVBAR1 = [
 ]
 
 LINKS_NAVBAR2 = [
-  ('Classes', 'annotated', []),
-  ('Namespaces', 'namespaces', [])
+  #('Classes', 'annotated', []),
+  #('Namespaces', 'namespaces', [])
 ]
 
 PLUGINS = ['m.htmlsanity', 'm.math', 'm.code', 'm.components', 'm.dot', 'm.images']

@@ -20,6 +20,12 @@
   </compound>
   <compound refid="prepare__your__app_8md" kind="file"><name>prepare_your_app.md</name>
   </compound>
+  <compound refid="synopsis__galerkin_8md" kind="file"><name>synopsis_galerkin.md</name>
+  </compound>
+  <compound refid="synopsis__lspg_8md" kind="file"><name>synopsis_lspg.md</name>
+  </compound>
+  <compound refid="synopsis__wls_8md" kind="file"><name>synopsis_wls.md</name>
+  </compound>
   <compound refid="tutorial1_8md" kind="file"><name>tutorial1.md</name>
   </compound>
   <compound refid="tutorial2_8md" kind="file"><name>tutorial2.md</name>
@@ -45,6 +51,12 @@
   <compound refid="md_pages_getstarted_build_and_install" kind="page"><name>md_pages_getstarted_build_and_install</name>
   </compound>
   <compound refid="md_pages_prepare_your_app" kind="page"><name>md_pages_prepare_your_app</name>
+  </compound>
+  <compound refid="md_pages_synopsis_galerkin" kind="page"><name>md_pages_synopsis_galerkin</name>
+  </compound>
+  <compound refid="md_pages_synopsis_lspg" kind="page"><name>md_pages_synopsis_lspg</name>
+  </compound>
+  <compound refid="md_pages_synopsis_wls" kind="page"><name>md_pages_synopsis_wls</name>
   </compound>
   <compound refid="md_pages_tutorials_tutorial1" kind="page"><name>md_pages_tutorials_tutorial1</name>
   </compound>

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+  <compounddef id="md_pages_synopsis_wls" kind="page">
+    <compoundname>md_pages_synopsis_wls</compoundname>
+    <title>Synopsis for constructing WLS problems</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>This page is in progress with more information to be added.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-success" /></para>
+<para>CONTINUOUS-TIME API</para>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>Default<sp/>WLS</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">wlsPolicy<sp/>=<sp/>rom.exp.wls.default.SequentialPolicyBDF1(romSize,<sp/>numStepsInWindow,<sp/>decoder,<sp/>appObj,<sp/>yRef)</highlight></codeline>
+<codeline><highlight class="normal">wlsSystem<sp/>=<sp/>rom.exp.wls.default.ProblemBDF1(decoder,<sp/>wlsPolicy,<sp/>yFomInitCond,<sp/>yRef,<sp/>wlsState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">wlsPolicy<sp/>=<sp/>rom.exp.wls.default.SequentialPolicyBDF2(romSize,<sp/>numStepsInWindow,<sp/>decoder,<sp/>appObj,<sp/>yRef)</highlight></codeline>
+<codeline><highlight class="normal">wlsSystem<sp/>=<sp/>rom.exp.wls.default.ProblemBDF2(decoder,<sp/>wlsPolicy,<sp/>yFomInitCond,<sp/>yRef,<sp/>wlsState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>hyper-reduced</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Implementation<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>progress.</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>masked</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Implementation<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>progress.</highlight></codeline>
+</programlisting></para>
+<para><linebreak/>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-success" /></para>
+<para>DISCRETE-TIME API</para>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>default</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">wlsPolicy<sp/>=<sp/>rom.exp.wls.default.SequentialPolicyDiscreteTimeBDF1(romSize,<sp/>numStepsInWindow,<sp/>decoder,<sp/>appObj,<sp/>yRef)</highlight></codeline>
+<codeline><highlight class="normal">wlsSystem<sp/>=<sp/>rom.exp.wls.default.ProblemDiscreteTimeBDF1(decoder,<sp/>wlsPolicy,<sp/>yFomInitCond,<sp/>yRef,<sp/>wlsState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">wlsPolicy<sp/>=<sp/>rom.exp.wls.default.SequentialPolicyDiscreteTimeBDF2(romSize,<sp/>numStepsInWindow,<sp/>decoder,<sp/>appObj,<sp/>yRef)</highlight></codeline>
+<codeline><highlight class="normal">wlsSystem<sp/>=<sp/>rom.exp.wls.default.ProblemDiscreteTimeBDF2(decoder,<sp/>wlsPolicy,<sp/>yFomInitCond,<sp/>yRef,<sp/>wlsState)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>hyper-reduced</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Implementation<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>progress.</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>masked</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Implementation<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>progress.</highlight></codeline>
+</programlisting> </para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

@@ -1,25 +1,80 @@
+\hypertarget{md_pages_prepare_your_app_autotoc_md65}{}\doxysection{What is it? Why and where is it needed?}\label{md_pages_prepare_your_app_autotoc_md65}
 
 
-\begin{DoxyParagraph}{}
-This page describes how to setup the interface enabling pressio4py to communicate with your application. Note that this step only needs to be done once\+: the same interface class can then be used to run all the R\+O\+Ms in pressio4py. By the end, it should be clear our design choice and how to setup this \char`\"{}glue code\char`\"{}.
-\end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md66}{}\doxysection{Is pressio4py applicable to your problem and application?}\label{md_pages_prepare_your_app_autotoc_md66}
-Pressio targets any system expressible as a parameterized system of ordinary differential equations (O\+D\+Es) as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \] where $\boldsymbol{y}$ is the state, $\mu$ are parameters, $t$ is time and $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ is referred to as \char`\"{}velocity\char`\"{} (or R\+HS). If your problem can be expressed as the system of O\+D\+Es above, then you can use and experiment with any of the R\+OM algorithms implemented in pressio4py. Note that this is a {\itshape practical} assessment, in the sense that it only states what class of problems pressio4py targets. It does not guarantee that R\+O\+Ms would work well for your problem. But this is why you should try using presio4py to see if R\+O\+Ms can be useful for you!
+An adapter class allows an application to expose data via an A\+PI conforming to Pressio requirements. This interface enables pressio4py to communicate with your application and vice versa. Note that this step only needs to be done once\+: the same interface class can then be used to run all the R\+O\+Ms in pressio4py.
+
+In other words, the F\+OM adapter class wraps/encapsulates your application such that an instance of that class stores all the information defining your target problem, and exposes some functionalities needed to query some information.
+
+An instance of the adapter class is needed to construct a R\+OM problem. For the sake of the argument, let us say we are doing \href{https://pressio.github.io/algos/galerkin/}{\texttt{ Galerkin R\+OM}} with explicit Runge-\/\+Kutta4 time stepping. A synopsis of its usage, just highlighting the important parts to convey the message, would be\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  \textcolor{comment}{\# ...}}
+\DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
+\DoxyCodeLine{  fomObj = FomAdapter(\textcolor{comment}{\#pass whatever you need to setup the problem)}}
+\DoxyCodeLine{  \textcolor{comment}{\# ...}}
+\DoxyCodeLine{  \textcolor{comment}{\# create ROM problem}}
+\DoxyCodeLine{  romProblem = rom.galerkin.default.ProblemRK4(fomObj, ...)}
+\end{DoxyCode}
+
+
+You can view more examples in the \href{./md_pages_demos_demo1.html}{\texttt{ demos}}.
+
+Below we discuss the A\+PI variants that an adapter class needs to meet to interface with pressio4py.
+
+~\newline
 
 
 
-\begin{DoxyParagraph}{}
-This formulation is quite general and does not make any assumption on its origin\+: it may be derived from the spatial discretization (regardless of the discretization method) of a P\+DE problem, or from naturally discrete systems (e.\+g., molecular-\/dynamics problems).
-\end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md67}{}\doxysection{What glue code do you need on your end to use pressio4py?}\label{md_pages_prepare_your_app_autotoc_md67}
-pressio4py requires your application to expose the \char`\"{}velocity\char`\"{} $\boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu})$ and (optionally) the action of the Jacobian matrix $\partial f/\partial y$. This design choice pivots on the generality of the formulation above. We remark that the {\itshape same} expressive model/\+A\+PI is being used/expected by other well-\/established Python libraries, e.\+g., {\ttfamily scipy.\+ode}.
 
-In practice, this can be done by writing an adapter class for your full-\/order model (F\+OM) that meets the A\+PI required by pressio4py as follows\+: 
+{\bfseries{C\+O\+N\+T\+I\+N\+U\+O\+U\+S-\/\+T\+I\+ME A\+PI}}
+
+This A\+PI is intended for any system expressible in {\itshape time-\/continuous} form as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \] where $y$ is the full-\/order model (F\+OM) state, $f$ the F\+OM velocity, and $t$ is time.
+
+We envision two scenarios\+:
+\begin{DoxyItemize}
+\item (A) you are only able (or want) to expose the right-\/hand-\/side (or velocity) of your F\+OM application
+\item (B) you expose the right-\/hand-\/side of your F\+OM application as well as the action of its Jacobian on some operand
+\end{DoxyItemize}\hypertarget{md_pages_prepare_your_app_autotoc_md66}{}\doxysubsection{A\+: Exposes only the velocity}\label{md_pages_prepare_your_app_autotoc_md66}
+
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }FomAdapter:}
-\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, *args):}
-\DoxyCodeLine{    \textcolor{comment}{\# initialize as you want/needed by your application}}
-\DoxyCodeLine{    \textcolor{comment}{\# e.g. mesh, inputs, bc, commandline aguments, etc.}}
+\DoxyCodeLine{def \_\_init\_\_(self, *args):}
+\DoxyCodeLine{  \textcolor{comment}{\# initialize as you want/needed by your application}}
+\DoxyCodeLine{  \textcolor{comment}{\# e.g. mesh, inputs, bc, commandline aguments, etc.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
+\DoxyCodeLine{    \textcolor{comment}{\# say N is the total number of of unknowns}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(y,t;...), for a given state, y, and time, t}}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, y, t, f):}
+\DoxyCodeLine{    f[:] = \textcolor{comment}{\#compute velocity as needed}}
+\end{DoxyCode}
+
+
+
+
+\begin{DoxyParagraph}{Where can you use the AdapterA version of the continuous-\/time A\+PI?}
+This version of the adapter can (currently) only be used for doing Galerkin R\+O\+Ms with explicit time stepping.
+\end{DoxyParagraph}
+\hypertarget{md_pages_prepare_your_app_autotoc_md67}{}\doxysubsection{B\+: Exposes velocity and the action of the Jacobian}\label{md_pages_prepare_your_app_autotoc_md67}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }FomAdapter:}
+\DoxyCodeLine{def \_\_init\_\_(self, *args):}
+\DoxyCodeLine{  \textcolor{comment}{\# initialize as you want/needed by your application}}
+\DoxyCodeLine{  \textcolor{comment}{\# e.g. mesh, inputs, bc, commandline aguments, etc.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
+\DoxyCodeLine{    \textcolor{comment}{\# say N is the total number of of unknowns}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create result of df/dy*B}}
+\DoxyCodeLine{  \textcolor{comment}{\# B is typically a skinny dense matrix (e.g. POD modes)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, B):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((N, B.shape[1]))}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(y,t;...), for a given state, y}}
 \DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, y, t, f):}
@@ -29,36 +84,58 @@ In practice, this can be done by writing an adapter class for your full-\/order 
 \DoxyCodeLine{  \textcolor{comment}{\# compute A=df/dy*B, where B is a skinny dense matrix}}
 \DoxyCodeLine{  \textcolor{comment}{\# Note that we just require the *action* of the Jacobian.}}
 \DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, y, B, t, A):}
-\DoxyCodeLine{    A[:,:] = \textcolor{comment}{\# compute df/dy * B}}
-\DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
-\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
-\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N) \textcolor{comment}{\# say N is the total number of of unknowns}}
-\DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create result of df/dy*B, B is typically a skinny dense matrix}}
-\DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, B):}
-\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros\_like(B)}
+\DoxyCodeLine{    A[:,:] = \textcolor{comment}{\# compute A = df/dy * B as needed}}
 \end{DoxyCode}
 
 
-In simple words, the Fom\+Adapter class wraps/encapsulates your application, stores all the information defining your problem and exposes some functionalities needed to query some information.
 
 
-
-\begin{DoxyParagraph}{}
-The {\ttfamily apply\+Jacobian} method is needed when you do implicit time integration. For explicit time stepping you only need the velocity.
+\begin{DoxyParagraph}{Where can you use the AdapterB version of the continuous-\/time A\+PI?}
+This version of the adapter can be used in the following case\+:
+\begin{DoxyItemize}
+\item for Galerkin R\+O\+Ms with explicit and implicit time stepping
+\item for L\+S\+PG
+\item for W\+LS Note that L\+S\+PG and W\+LS only make sense for implicit time integration.
+\end{DoxyItemize}
 \end{DoxyParagraph}
-\hypertarget{md_pages_prepare_your_app_autotoc_md68}{}\doxysection{Where is the adapter used?}\label{md_pages_prepare_your_app_autotoc_md68}
-An instance of the adapter class is needed to construct a R\+OM problem. For the sake of the argument, let us say we are doing \href{https://pressio.github.io/algos/galerkin/}{\texttt{ Galerkin R\+OM}} with explicit Runge-\/\+Kutta4 time stepping. A synopsis of the code, just highlighting the important parts to convey the message, would be\+: 
+~\newline
+
+
+
+
+{\bfseries{D\+I\+S\+C\+R\+E\+T\+E-\/\+T\+I\+ME A\+PI}}
+
+This A\+PI is intended for any system expressible in a discrete-\/time form as \[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \] where $y$ is the full-\/order model (F\+OM) state, $t_n$ is the time at step $n$, and $dt_n$ is the time-\/step size to use, and $R$ is the residual to compute.
+
+
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  \textcolor{comment}{\# ...}}
-\DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
-\DoxyCodeLine{  fomObj = FomAdapter(\textcolor{comment}{\#pass whatever you need to setupit)}}
-\DoxyCodeLine{  \textcolor{comment}{\# ...}}
-\DoxyCodeLine{  \textcolor{comment}{\# create problem}}
-\DoxyCodeLine{  romProblem = rom.galerkin.default.ProblemRK4(fomObj, ...)}
+\DoxyCodeLine{\textcolor{keyword}{class }FomAdapter:}
+\DoxyCodeLine{def \_\_init\_\_(self, *args):}
+\DoxyCodeLine{  \textcolor{comment}{\# initialize as you want/needed by your application}}
+\DoxyCodeLine{  \textcolor{comment}{\# e.g. mesh, inputs, bc, commandline aguments, etc.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create R(...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createDiscreteTimeResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyDiscreteTimeJacobianResult(self, B):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((N, B.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }discreteTimeResidual(self, step, time, dt, R, ynp1, yn, ynm1 [, ynm2]):}
+\DoxyCodeLine{   R[:] = \textcolor{comment}{\# compute discrete-\/time residual}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyDiscreteTimeJacobian(self, step, time, dt, B, A, ynp1, yn, ynm1 [, ynm2]):}
+\DoxyCodeLine{   A[:,:] = \textcolor{comment}{\# compute the action A = dR/dy\_np1 B}}
 \end{DoxyCode}
 
 
-For more examples, you can look at the \href{./md_pages_demos_demo1.html}{\texttt{ demos}}. 
+
+
+\begin{DoxyParagraph}{Where can you use the discrete-\/time A\+PI?}
+This version of the adapter can be {\bfseries{only}} used for\+:
+\begin{DoxyItemize}
+\item Galerkin with {\itshape implicit} time stepping
+\item L\+S\+PG
+\item W\+LS 
+\end{DoxyItemize}
+\end{DoxyParagraph}
