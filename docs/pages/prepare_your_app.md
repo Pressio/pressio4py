@@ -74,7 +74,7 @@ def __init__(self, *args):
   # e.g. mesh, inputs, bc, commandline aguments, etc.
 
   # create f(y,t,...)
-  def createVelocity():
+  def createVelocity(self):
 	# say N is the total number of of unknowns
 	return np.zeros(N)
 
@@ -98,7 +98,7 @@ def __init__(self, *args):
   # e.g. mesh, inputs, bc, commandline aguments, etc.
 
   # create f(y,t,...)
-  def createVelocity():
+  def createVelocity(self):
 	# say N is the total number of of unknowns
 	return np.zeros(N)
 

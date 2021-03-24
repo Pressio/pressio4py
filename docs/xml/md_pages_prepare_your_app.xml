@@ -39,7 +39,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>f(y,t,...)</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>say<sp/>N<sp/>is<sp/>the<sp/>total<sp/>number<sp/>of<sp/>of<sp/>unknowns</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -60,7 +60,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>e.g.<sp/>mesh,<sp/>inputs,<sp/>bc,<sp/>commandline<sp/>aguments,<sp/>etc.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>f(y,t,...)</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>say<sp/>N<sp/>is<sp/>the<sp/>total<sp/>number<sp/>of<sp/>of<sp/>unknowns</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
