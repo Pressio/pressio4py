@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+  <compounddef id="md_pages_getstarted_build_and_install" kind="page">
+    <compoundname>md_pages_getstarted_build_and_install</compoundname>
+    <title>Building Pressio4py</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><simplesect kind="par"><title>What does this page describe?</title><para>This page describes the end-to-end building process for <computeroutput>pressio4py</computeroutput>. By the end, it should be clear how to clone pressio4py, get all dependencies , build pressio4py and use the library in Python.</para>
+</simplesect>
+ <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>We are working on supporting pip, stay tuned!</title><para></para>
+</simplesect>
+</para>
+<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md51">
+<title>Prerequisites</title>
+<para><itemizedlist>
+<listitem><para>SSH keys setup with github (if you are working behind a firewall, set the proper proxies);</para>
+</listitem><listitem><para>C++ compiler (with support for C++14 standard);</para>
+</listitem><listitem><para>CMake &gt;= 3.11.0;</para>
+</listitem><listitem><para>Bash &gt;= 3.2.57.</para>
+</listitem><listitem><para>Python (&gt;=3.6), with NumPy, SciPy, Numba, Pytest and sklearn (needed to run some of the demos).</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_getstarted_build_and_install_1autotoc_md52">
+<title>Pratical steps</title>
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md53">
+<title>1. Prep</title>
+<para>Create a working director where you want to clone all repos and do the builds, e,g.:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>WORKDIR=$HOME/myPressioTest</highlight></codeline>
+<codeline><highlight class="normal">mkdir<sp/>-p<sp/>${WORKDIR}/sources<sp/><sp/>#<sp/>creates<sp/>workdir<sp/>and<sp/>subdir<sp/>for<sp/>all<sp/>sources</highlight></codeline>
+</programlisting></para>
+<para>To make things easier, create environment variables for the compilers:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">export<sp/>CC=&lt;path-to-your-C-compiler&gt;</highlight></codeline>
+<codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-CXX-compiler&gt;</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md54">
+<title>2. Cloning</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/sources</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio.git</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio-builder.git</highlight></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>git@github.com:Pressio/pressio4py.git</highlight></codeline>
+</programlisting></para>
+<para>By default, the above commands will clone the <emphasis>master</emphasis> branch of each repo. This is because the master branches of the three repos are the stable ones, and compatible with one another. If you want specific versions, you can just checkout the tag you want. If you do so, make sure you checkout the same tag for all three repos.</para>
+</sect2>
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md55">
+<title>3. Install Dependencies</title>
+<para>Currently, pressio and pybind11 are the dependencies required by <computeroutput>pressio4py</computeroutput>. To get and install the TPLs, run the following:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/sources/pressio-builder</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>first,<sp/>get<sp/>pybind11</highlight></codeline>
+<codeline><highlight class="normal">bash<sp/>./main_tpls.sh<sp/>-dryrun=no<sp/>-build-mode=Debug<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>-target-dir=${WORKDIR}<sp/>-tpls=pybind11</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>second,<sp/>get<sp/>pressio</highlight></codeline>
+<codeline><highlight class="normal">./main_pressio.sh<sp/>-dryrun=no<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-pressio-src=${WORKDIR}/sources/pressio<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-target-dir=${WORKDIR}<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-cmake-generator-name=default_pybind<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-pybind11-path=${WORKDIR}/pybind11/install</highlight></codeline>
+</programlisting></para>
+<para>Inside <computeroutput>${WORKDIR}</computeroutput>, you should see the following structure: <programlisting filename=".txt"><codeline><highlight class="normal">➤<sp/>tree<sp/>-d<sp/>-L<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">.</highlight></codeline>
+<codeline><highlight class="normal">├──<sp/>pressio</highlight></codeline>
+<codeline><highlight class="normal">│  <sp/>├──<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">│  <sp/>└──<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">├──<sp/>pybind11</highlight></codeline>
+<codeline><highlight class="normal">│  <sp/>├──<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">│  <sp/>├──<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">│  <sp/>└──<sp/>pybind11</highlight></codeline>
+<codeline><highlight class="normal">└──<sp/>sources</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>├──<sp/>pressio</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>├──<sp/>pressio-builder</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>└──<sp/>pressio4py</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md56">
+<title>4. Build pressio4py</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">bdirname=pressio4py-build</highlight></codeline>
+<codeline><highlight class="normal">rm<sp/>-rf<sp/>${bdirname}<sp/>&amp;&amp;<sp/>mkdir<sp/>${bdirname}<sp/>&amp;&amp;<sp/>cd<sp/>${bdirname}</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>-DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_INSTALL_PREFIX=${WORKDIR}/pressio4py-install<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_CXX_COMPILER=${CXX}<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DCMAKE_BUILD_TYPE=Release<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DPRESSIO_INCLUDE_DIR=${WORKDIR}/pressio/install/include<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>-DPYBIND11_DIR=${WORKDIR}/pybind11/install<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>${WORKDIR}/sources/pressio4py</highlight></codeline>
+<codeline><highlight class="normal">make<sp/>-j4</highlight></codeline>
+<codeline><highlight class="normal">make<sp/>install</highlight></codeline>
+<codeline><highlight class="normal">cd<sp/>..</highlight></codeline>
+</programlisting></para>
+<para>This should create the Python library inside <computeroutput>${WORKDIR}/pressio4py-install</computeroutput> which you can import in Python.</para>
+</sect2>
+<sect2 id="md_pages_getstarted_build_and_install_1autotoc_md57">
+<title>5. Running the tests or demos</title>
+<para>To run all tests, after building: <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>${WORKDIR}/pressio4py-build</highlight></codeline>
+<codeline><highlight class="normal">pytest<sp/>-s<sp/><sp/>#-s<sp/>flushes<sp/>all<sp/>output<sp/>to<sp/>terminal.</highlight></codeline>
+</programlisting></para>
+<para>Or you can find demos inside <computeroutput>${WORKDIR}/pressio4py-build/demos</computeroutput>. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

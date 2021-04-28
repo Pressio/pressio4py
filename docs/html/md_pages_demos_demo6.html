@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>1D adv-diff: LSPG with nonlinear manifold projection via MLP | Pressio4Py</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">Pressio4Py</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li><a href="md_pages_prepare_your_app.html">How to interface your app</a></li>
+            <li>
+              <a>Synopsis</a>
+              <ol>
+                <li><a href="md_pages_synopsis_galerkin.html">Galerkin</a></li>
+                <li><a href="md_pages_synopsis_lspg.html">LSPG</a></li>
+                <li><a href="md_pages_synopsis_wls.html">WLS</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Tutorials</a>
+              <ol>
+                <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
+                <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
+                <li><a href="md_pages_tutorials_tutorial3.html">Default Galerkin explicit</a></li>
+                <li><a href="md_pages_tutorials_tutorial4.html">Masked Galerkin explicit</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Demos</a>
+              <ol>
+                <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
+                <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
+                <li><a href="md_pages_demos_demo3.html">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a></li>
+                <li><a href="md_pages_demos_demo4.html">1D adv-diff: POD Galerkin with collocation mask</a></li>
+                <li><a href="md_pages_demos_demo5.html">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a></li>
+                <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
+              </ol>
+            </li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="5">
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          1D adv-diff: LSPG with nonlinear manifold projection via MLP
+        </h1>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via a multilayer perceptron (MLP). This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/main.py">here</a>.</p></aside><section id="autotoc_md43"><h2><a href="#autotoc_md43">Overview</a></h2><p>This demo solves the same problem as the one <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>, but instead of using POD modes, we show here how to use a nonlinear manifold computed approximated by a neural network. Specifically, we use a MLP with 2 hidden layers of sizes 64 and 200.</p><aside class="m-block m-warning"><h3>Important:</h3><p>The MLP used in this demo is implemented in PyTorch, thus PyTorch must be installed prior to executing this demo. Look <a href="https://pytorch.org/get-started/locally/">here</a> for information on how to install PyTorch on your system.</p></aside></section><section id="autotoc_md44"><h2><a href="#autotoc_md44">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">,</span> <span class="s2">&quot;null&quot;</span><span class="p">)</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
+
+  <span class="c1"># create fom object</span>
+  <span class="n">fomObj</span> <span class="o">=</span> <span class="n">AdvDiff1d</span><span class="p">(</span><span class="n">nGrid</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">adv_coef</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+  <span class="c1"># the final time to integrate to</span>
+  <span class="n">finalTime</span> <span class="o">=</span> <span class="o">.</span><span class="mi">05</span>
+
+  <span class="c1">#--- 1. FOM ---#</span>
+  <span class="n">fomTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-5</span>
+  <span class="n">fomNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">fomTimeStepSize</span><span class="p">)</span>
+  <span class="n">sampleEvery</span>      <span class="o">=</span> <span class="mi">200</span>
+  <span class="p">[</span><span class="n">fomFinalState</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">]</span> <span class="o">=</span> <span class="n">doFom</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">fomTimeStepSize</span><span class="p">,</span> <span class="n">fomNumberOfSteps</span><span class="p">,</span> <span class="n">sampleEvery</span><span class="p">)</span>
+
+  <span class="c1">#--- 2. train a nonlinear mapping using PyTorch ---#</span>
+  <span class="c1"># here we use 3 modes, change this to try different modes</span>
+  <span class="n">myNonLinearMapper</span> <span class="o">=</span> <span class="n">trainMapping</span><span class="p">(</span><span class="n">snapshots</span><span class="p">,</span> <span class="n">romSize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+  <span class="c1">#--- 3. LSPG ROM ---#</span>
+  <span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">3e-4</span>
+  <span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span>
+  <span class="n">approximatedState</span> <span class="o">=</span> <span class="n">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span> <span class="n">romNumberOfSteps</span><span class="p">,</span> <span class="n">myNonLinearMapper</span><span class="p">)</span>
+
+  <span class="c1"># compute l2-error between fom and approximate state</span>
+  <span class="n">fomNorm</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="p">)</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedState</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span></pre><section id="autotoc_md45"><h3><a href="#autotoc_md45">1. Run FOM and collect snapshots</a></h3><p>This step is the same as described <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>,</p></section><section id="autotoc_md46"><h3><a href="#autotoc_md46">2. Setup and train the nonlinear mapper</a></h3><p>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a MLP-based representation in PyTorch, but one can use any other types of mapping and any other library (e.g., Tensorflow, keras). All of the PyTorch-specific code is encapsulated <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_PyTorch.py">here</a>. If you prefer Tensorflow/keras, an equivalent implementation is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_keras.py">here</a>.</p><p>The autoencoder is defined by</p><pre class="m-code"><span class="k">class</span> <span class="nc">myAutoencoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">myAutoencoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">myEncoder</span><span class="p">(</span><span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">myDecoder</span><span class="p">(</span><span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">code</span>
+
+  <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()):</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">min_lr</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+      <span class="n">total_train_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+      <span class="k">for</span> <span class="n">data</span><span class="p">,</span><span class="n">label</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">latent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">loss_size</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="n">loss_size</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+      <span class="n">total_train_loss</span> <span class="o">+=</span> <span class="n">loss_size</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+      <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">total_train_loss</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">myEncoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">myEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">fomSize</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">romSize</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">class</span> <span class="nc">myDecoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">myDecoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">romSize_</span> <span class="o">=</span> <span class="n">romSize</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fomSize_</span> <span class="o">=</span> <span class="n">fomSize</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">romSize</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">fomSize</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span></pre><p>and is created/trained using</p><pre class="m-code"><span class="k">def</span> <span class="nf">trainMapping</span><span class="p">(</span><span class="n">snapshots</span><span class="p">,</span> <span class="n">romSize</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">enable_restart</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+  <span class="n">fomSize</span> <span class="o">=</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">myAutoencoder</span><span class="p">(</span><span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">)</span>
+  <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-3</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">enable_restart</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;TrainingCheckpoint.tar&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading checkpoint&quot;</span><span class="p">)</span>
+      <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;TrainingCheckpoint.tar&#39;</span><span class="p">)</span>
+      <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;model_state_dict&#39;</span><span class="p">])</span>
+      <span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;optimizer_state_dict&#39;</span><span class="p">])</span>
+
+  <span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">snapshots</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+  <span class="n">loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">n_epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">enable_restart</span><span class="p">:</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span>
+                <span class="s1">&#39;model_state_dict&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                <span class="s1">&#39;optimizer_state_dict&#39;</span><span class="p">:</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+               <span class="p">},</span>
+               <span class="s1">&#39;TrainingCheckpoint.tar&#39;</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">MyMapper</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">decoder</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">encoder</span><span class="p">)</span></pre><p>This is all wrapped in a mapper class which conforms to the API required by Pressio</p><pre class="m-code"><span class="k">class</span> <span class="nc">MyMapper</span><span class="p">:</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoderObj</span><span class="p">,</span> <span class="n">encoderObj</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">decoder_</span> <span class="o">=</span> <span class="n">decoderObj</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">encoder_</span> <span class="o">=</span> <span class="n">encoderObj</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">numModes_</span> <span class="o">=</span> <span class="n">decoderObj</span><span class="o">.</span><span class="n">romSize_</span>
+    <span class="n">fomSize</span> <span class="o">=</span> <span class="n">decoderObj</span><span class="o">.</span><span class="n">fomSize_</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fomState0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fomSize</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">fomState1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fomSize</span><span class="p">)</span>
+    <span class="c1"># attention: the jacobian of the mapping must be column-major oder</span>
+    <span class="c1"># so that pressio can view it without deep copying it, this enables</span>
+    <span class="c1"># to keep only one jacobian object around and to call the update</span>
+    <span class="c1"># method below correctly</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">fomSize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numModes_</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span>
+
+  <span class="k">def</span> <span class="nf">applyMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
+    <span class="n">fomState</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder_</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">romState</span><span class="p">))</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">applyInverseMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomState</span><span class="p">):</span>
+    <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numModes_</span><span class="p">)</span>
+    <span class="n">romState</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder_</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">fomState</span><span class="p">))</span><span class="o">.</span><span class="n">detach</span><span class="p">()[:]</span>
+    <span class="k">return</span> <span class="n">romState</span>
+
+  <span class="k">def</span> <span class="nf">updateJacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">updateJacobianFD</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">updateJacobianFD</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">):</span>
+    <span class="c1"># finite difference to approximate jacobian of the mapping</span>
+    <span class="n">romStateLocal</span> <span class="o">=</span> <span class="n">romState</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romStateLocal</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fomState0</span><span class="p">)</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="mf">0.001</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numModes_</span><span class="p">):</span>
+        <span class="n">romStateLocal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romStateLocal</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fomState1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fomState1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">fomState0</span><span class="p">)</span> <span class="o">/</span> <span class="n">eps</span>
+        <span class="n">romStateLocal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">eps</span>
+
+  <span class="k">def</span> <span class="nf">updateJacobianExact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">romState</span><span class="p">):</span>
+    <span class="c1"># use pytorch autodifferentiation to compute jacobian of the mapping</span>
+    <span class="c1"># slower than finite difference currently</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoder_</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">romState</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span><span class="p">[:,:]</span> <span class="o">=</span> <span class="n">J</span><span class="o">.</span><span class="n">detach</span><span class="p">()[:,:]</span></pre><aside class="m-block m-warning"><h3>Important:</h3><p>when creating an arbitrary mapping (as in the class above), the jacobian matrix <strong>must</strong> be column-major oder so that pressio can reference it without deep copying it. This not only reduces the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.</p></aside></section><section id="autotoc_md47"><h3><a href="#autotoc_md47">3. Construct and run LSPG</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">customMapper</span><span class="p">):</span>
+  <span class="c1"># this is an auxiliary class that can be passed to solve</span>
+  <span class="c1"># LSPG to monitor the rom state.</span>
+  <span class="k">class</span> <span class="nc">RomStateObserver</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span> <span class="k">pass</span>
+
+  <span class="c1"># this linear solver is used at each gauss-newton iteration</span>
+  <span class="k">class</span> <span class="nc">MyLinSolver</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">pass</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+      <span class="n">lumat</span><span class="p">,</span> <span class="n">piv</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dgetrf</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">x</span><span class="p">[:],</span> <span class="n">info</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dgetrs</span><span class="p">(</span><span class="n">lumat</span><span class="p">,</span> <span class="n">piv</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+  <span class="c1">#----------------------------------------</span>
+  <span class="c1"># create a custom decoder using the mapper passed as argument</span>
+  <span class="n">customDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">customMapper</span><span class="p">,</span> <span class="s2">&quot;MyMapper&quot;</span><span class="p">)</span>
+
+  <span class="c1"># fom reference state: here it is zero</span>
+  <span class="n">fomReferenceState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fomObj</span><span class="o">.</span><span class="n">nGrid</span><span class="p">)</span>
+
+  <span class="c1"># create ROM state by projecting the fom initial condition</span>
+  <span class="n">fomInitialState</span> <span class="o">=</span> <span class="n">fomObj</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="n">romState</span> <span class="o">=</span> <span class="n">customMapper</span><span class="o">.</span><span class="n">applyInverseMapping</span><span class="p">(</span><span class="n">fomInitialState</span><span class="p">)</span>
+
+  <span class="c1"># create LSPG problem</span>
+  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">ProblemEuler</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">customDecoder</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">)</span>
+
+  <span class="c1"># create the Gauss-Newton solver</span>
+  <span class="n">nonLinSolver</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">createGaussNewton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">MyLinSolver</span><span class="p">())</span>
+  <span class="c1"># set tolerance and convergence criteria</span>
+  <span class="n">nlsTol</span><span class="p">,</span> <span class="n">nlsMaxIt</span> <span class="o">=</span> <span class="mf">1e-7</span><span class="p">,</span> <span class="mi">10</span>
+  <span class="n">nonLinSolver</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="n">nlsMaxIt</span><span class="p">)</span>
+  <span class="n">nonLinSolver</span><span class="o">.</span><span class="n">setStoppingCriterion</span><span class="p">(</span><span class="n">solvers</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">whenCorrectionAbsoluteNormBelowTolerance</span><span class="p">)</span>
+
+  <span class="c1"># create object to monitor the romState at every iteration</span>
+  <span class="n">myObs</span> <span class="o">=</span> <span class="n">RomStateObserver</span><span class="p">()</span>
+  <span class="c1"># solve problem</span>
+  <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">solveNSequentialMinimizations</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">myObs</span><span class="p">,</span> <span class="n">nonLinSolver</span><span class="p">)</span>
+
+  <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
+  <span class="c1"># get the reconstructor object: this allows to map romState to fomState</span>
+  <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
+  <span class="k">return</span> <span class="n">fomRecon</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md48"><h2><a href="#autotoc_md48">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo6.png" alt="Image" /></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.8.20 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

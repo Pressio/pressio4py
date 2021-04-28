@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+  <compounddef id="md_pages_tutorials_tutorial2" kind="page">
+    <compoundname>md_pages_tutorials_tutorial2</compoundname>
+    <title>Tutorial: Custom Decoder</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><simplesect kind="par"><title></title><para>This tutorial shows how to create a <emphasis>custom</emphasis> decoder in pressio4py.</para>
+</simplesect>
+</para>
+<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md76">
+<title>Context</title>
+<para>A custom decoder in pressio4py implements a general mapping: <formula id="19">\[ y_{fom} = g(y_{rom}) \]</formula> where <formula id="20">$y_{rom}$</formula> is the reduced state, also called generalized coordinates, <formula id="18">$y_{fom}$</formula> is the full-order model (FOM) state, and <formula id="21">$g$</formula> is the mapping between the two. The Jacobian of the mapping is: <formula id="32">\[ J_g = \frac{d g}{d y_{rom}}. \]</formula></para>
+<para>This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
+</sect1>
+<sect1 id="md_pages_tutorials_tutorial2_1autotoc_md77">
+<title>Code</title>
+<para>The full tutorial can be found <ulink url="https://github.com/Pressio/pressio4py/blob/master/tutorials/tut_custom_decoder/main.py">here</ulink></para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>rom<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>rom</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">CustomMapper:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>fomSize,<sp/>romSize):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>attention:<sp/>the<sp/>jacobian<sp/>of<sp/>the<sp/>mapping<sp/>must<sp/>be<sp/>column-major<sp/>oder</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>so<sp/>that<sp/>pressio<sp/>can<sp/>view<sp/>it<sp/>without<sp/>deep<sp/>copying<sp/>it,<sp/>this<sp/>enables</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>keep<sp/>only<sp/>one<sp/>jacobian<sp/>object<sp/>around<sp/>and<sp/>to<sp/>call<sp/>the<sp/>update</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>method<sp/>below<sp/>correctly</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>self.jacobian_<sp/>=<sp/>np.zeros((fomSize,romSize),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self):<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.jacobian_</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyMapping(self,<sp/>romState,<sp/>fomState):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#fomState[:]<sp/>=<sp/>whatever<sp/>is<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">updateJacobian(self,<sp/>romState):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>update<sp/>the<sp/>self.jacobian_[:,:]</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>mapper</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>myMapper<sp/>=<sp/>CustomMapper(10,3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>a<sp/>custom<sp/>decoder,<sp/>one<sp/>can<sp/>do</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>customDecoder<sp/>=<sp/>rom.Decoder(myMapper,<sp/></highlight><highlight class="stringliteral">&quot;MyMapper&quot;</highlight><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Where can you use a custom decoder?</title><para>Currently, a custom decoder can only be used for LSPG. See <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo3.html">this demo</ulink> for an example usage. </para>
+</simplesect>
+</para>
+</sect1>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

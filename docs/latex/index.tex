@@ -1,0 +1,41 @@
+\label{index_md_pages_main}%
+\Hypertarget{index_md_pages_main}%
+ {\itshape Leading-\/edge projection-\/based reduced order models (p\+R\+O\+Ms) for dynamical systems in science and engineering.}
+
+This is the documentation of the Python bindings library, which is one component of the \href{https://pressio.github.io/}{\texttt{ Pressio project}}.\hypertarget{index_autotoc_md59}{}\doxysection{Install}\label{index_autotoc_md59}
+
+
+\begin{DoxyParagraph}{}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# the C++ compiler must support C++14}
+\DoxyCodeLine{export CXX=<path-\/to-\/your-\/C++-\/compiler>}
+\DoxyCodeLine{git clone -\/-\/recursive git@github.com:Pressio/pressio4py.git \# or https://github.com/Pressio/pressio4py.git}
+\DoxyCodeLine{pip install ./pressio4py}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# you can then run the regression tests:}
+\DoxyCodeLine{cd pressio4py}
+\DoxyCodeLine{pytest -\/s}
+\end{DoxyCode}
+
+\end{DoxyParagraph}
+Note that if you get an import error, it might be that the version of {\ttfamily pytest} you are using is not compatible with the {\ttfamily pip} command you used to install. Make sure you use Python commands from the {\bfseries{same}} distribution.\hypertarget{index_autotoc_md60}{}\doxysection{In a nutshell}\label{index_autotoc_md60}
+Pressio can be applied to any dynamical system expressible in a {\itshape continuous-\/time} form as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \] and/or in a {\itshape discrete-\/time} form \[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]
+
+Here, $y$ is the full-\/order model (F\+OM) state, $f$ the F\+OM velocity, $t$ is time, and $R$ is the residual.
+
+This formulation is quite general and does not make any assumption on its origin\+: it may be derived from the spatial discretization (regardless of the discretization method) of a P\+DE problem, or from naturally discrete systems.
+
+We leverage this expressive mathematical framework as a pivotal design choice to enable a minimal application programming interface (A\+PI) that is natural to dynamical systems\+: you choose the formulation more convenient to you, and interface your application to Pressio by creating a corresponding {\itshape adapter class} to expose the operators needed for the chosen formulation. In general, you don\textquotesingle{}t need to support both\+: each one has advantages and disadvantages, and sometimes the choice is dictated directly by your native application (for example, in some cases it might be easier to directly expose the discrete-\/time residual).
+
+Read \href{./md_pages_prepare_your_app.html}{\texttt{ this doc page}} to learn more about the adapter classes and see code templates.\hypertarget{index_autotoc_md61}{}\doxysection{Explore the tutorials and demos}\label{index_autotoc_md61}
+You can find descriptions of the demos \href{./md_pages_demos_demo1.html}{\texttt{ here}} and of the tutorials \href{./md_pages_tutorials_tutorial1.html}{\texttt{ here}}---we will progressively add more. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd pressio4py/demos}
+\DoxyCodeLine{python3 ./<demo-\/subdir-\/name>/main.py}
+\end{DoxyCode}
+\hypertarget{index_autotoc_md62}{}\doxysection{License and Citation}\label{index_autotoc_md62}
+The full license is available \href{https://pressio.github.io/various/license/}{\texttt{ here}}.
+
+We are working on publishing this\+: you can find our ar\+Xiv preprint at\+: \href{https://arxiv.org/abs/2003.07798}{\texttt{ https\+://arxiv.\+org/abs/2003.\+07798}}\hypertarget{index_autotoc_md63}{}\doxysection{Questions?}\label{index_autotoc_md63}
+Find us on Slack\+: \href{https://pressioteam.slack.com}{\texttt{ https\+://pressioteam.\+slack.\+com}} or open an issue on \href{https://github.com/Pressio/pressio4py}{\texttt{ github}}. 
