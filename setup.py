@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 # Authors:
-# Francesco Rizzi  (fnrizzi@sandia.gov, francesco.rizzi@ng-analytics.com)
-# Eric Parish      (ejparis@sandia.gov)
-# Patrick Blonigan (pblonig@sandia.gov)
-# John Tencer      (jtencer@sandia.gov)
+# Francesco Rizzi       (fnrizzi@sandia.gov, francesco.rizzi@ng-analytics.com)
+# Eric Parish           (ejparis@sandia.gov)
+# Patrick Blonigan      (pblonig@sandia.gov)
+# Kamaljit Chowdhary    (kchowdh@sandia.gov)
+# John Tencer           (jtencer@sandia.gov)
 
 import os
 import sys
@@ -22,7 +23,7 @@ def myname():
   return "pressio4py"
 
 def myversion():
-  return "0.9.0-rc1"
+  return "0.10.0rc1"
 
 def description():
   with open(os.path.join(topdir, 'DESCRIPTION.rst')) as f:
