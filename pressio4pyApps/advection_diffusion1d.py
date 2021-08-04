@@ -16,7 +16,7 @@ import time
 def nonlindiff(u,x=None,dudx=None):
   pw = 4.
   k = x**pw
-  dkdx = pw*x
+  dkdx = pw*(x**(pw-1))
   return k,dkdx
 
 class AdvDiff1d():
