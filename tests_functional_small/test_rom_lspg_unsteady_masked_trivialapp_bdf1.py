@@ -1,9 +1,7 @@
 
 import numpy as np
 from scipy import linalg
-
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
+from pressio4py import solvers, ode, rom 
 
 np.set_printoptions(linewidth=140)
 
@@ -20,7 +18,7 @@ class MyMasker:
     else:
       return np.zeros((self.Nsmesh_, operand.shape[1]))
 
-  def applyMask(self, operand, time, result):
+  def __call__(self, operand, time, result):
     if (operand.ndim == 1):
       result[:] = np.take(operand, self.rows_)
     else:
@@ -73,8 +71,6 @@ class MyLinSolver:
 
 #----------------------------------------
 class OdeObserver:
-  def __init__(self): pass
-
   def __call__(self, timeStep, time, state):
     print(state)
     assert(state.shape[0]==3)
@@ -215,23 +211,24 @@ def test():
 
   decoder = rom.Decoder(phi)
   yRom    = np.zeros(romSize)
-  lspgProblem = rom.lspg.unsteady.masked.ProblemEuler(appObj,decoder,yRom,yRef,masker)
+  scheme = ode.stepscheme.BDF1
+  lspgProblem = rom.lspg.unsteady.MaskedProblem(scheme,appObj,decoder,yRom,yRef,masker)
+  stepper = lspgProblem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createGaussNewton(lspgProblem, yRom, lsO)
-  nlsO.setUpdatingCriterion(solvers.update.standard)
+  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
+  nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
-  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
+  nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, 0.,
-                                         0.2, 1, myObs, nlsO)
+  ode.advance_n_steps_and_observe(stepper, yRom, 0.,0.2, 1, myObs, nlsO)
 
   # yRom should be [1 1 1]
   fomRecon = lspgProblem.fomStateReconstructor()
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
 
   # the goldFomState = phi*[1 1 1]

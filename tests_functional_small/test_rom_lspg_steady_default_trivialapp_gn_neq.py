@@ -38,6 +38,12 @@ class MyLinSolver:
     x[:] = np.array([1.,2.,3.])
 
 #----------------------------
+class MyPrec:
+  def __call__(self, state, operand):
+    print(state.shape)
+    operand[:] *= 1.
+
+#----------------------------
 def test_steady_lspg():
   logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.debug])
@@ -82,11 +88,7 @@ def test_steady_lspg():
   for y1,y2 in zip(gold, yFomFinal):
     assert(y1==y2)
 
-#----------------------------
-class MyPrec:
-  def __call__(self, state, operand):
-    print(state.shape)
-    operand[:] *= 1.
+  logger.finalize()
 
 #----------------------------
 def test_steady_lspg_prec():

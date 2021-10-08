@@ -90,5 +90,5 @@ message("${Yellow} - prefix         = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
 # add unit tests
 # we have to do this because unit tests
 # contain c++ code that is compiled too
-add_subdirectory(unit_tests)
+add_subdirectory(tests_compiled)
 #install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

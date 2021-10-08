@@ -26,7 +26,8 @@
 </entry></row>
 <row>
 <entry thead="no"><para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-success">logger</mcss:span>   </para>
-</entry><entry thead="no"><para>(dis)enable pressio logging   </para>
+</entry><entry thead="no"><para><linebreak/>
+ (dis)enable pressio logging   </para>
 </entry><entry thead="no"><para><linebreak/>
 <ulink url="md_pages_components_logger.html">Doc Page</ulink>   </para>
 </entry><entry thead="no"><para><computeroutput>pressio4py.logger</computeroutput>    </para>

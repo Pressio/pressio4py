@@ -8,7 +8,7 @@ message("${Magenta}----------------------------------${ColourReset}")
 include_directories(${PRESSIO4PY_SRC_DIR})
 
 # create the unit tests subdir
-set(testdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/unit_tests)
+set(testdir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/tests_compiled)
 file(MAKE_DIRECTORY ${testdir})
 message("TESTDIR ${testdir}")
 

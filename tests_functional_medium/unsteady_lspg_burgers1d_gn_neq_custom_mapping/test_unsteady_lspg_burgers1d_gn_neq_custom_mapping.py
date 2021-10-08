@@ -4,15 +4,11 @@ from scipy import linalg
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
+from pressio4py import solvers, ode, rom
 from pressio4py.apps.burgers1d import Burgers1d
 
 #----------------------------
 class MyLinSolver:
-  def __init__(self): pass
-
-  # @staticmethod
   def solve(self, A,b,x):
     lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
     x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
@@ -39,8 +35,6 @@ class MyMapper:
 
 #----------------------------------------
 class OdeObserver:
-  def __init__(self): pass
-
   def __call__(self, timeStep, time, state):
     print(state)
     assert(state.shape[0]==11)
@@ -66,22 +60,24 @@ def test_euler():
   # LSPG state
   yRom = np.zeros(romSize)
 
-  lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
+  scheme = ode.stepscheme.BDF1
+  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
+  stepper = lspgProblem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createGaussNewton(lspgProblem, yRom, lsO)
+  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
-  nlsO.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
+  nlsO.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)
   nlsO.setCorrectionAbsoluteTolerance(nlsTol)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, t0, dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(stepper, yRom, t0, dt, Nsteps, myObs, nlsO)
 
   fomRecon = lspgProblem.fomStateReconstructor()
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   print(yFomFinal)
 
   gold = np.array([1.2392405345107, 1.0051378268469,
@@ -97,7 +93,3 @@ def test_euler():
 
   for y1,y2 in zip(gold, yFomFinal):
     assert( np.abs(y1-y2) < 1e-10)
-
-
-if __name__ == "__main__":
-  test_euler()

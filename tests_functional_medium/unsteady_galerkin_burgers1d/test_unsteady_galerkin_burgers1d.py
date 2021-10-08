@@ -4,7 +4,7 @@ from scipy import linalg
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 
-from pressio4py import rom as rom
+from pressio4py import ode, rom
 from pressio4py.apps.burgers1d import Burgers1d
 
 gold = np.array(
@@ -40,9 +40,7 @@ class OdeObserver:
     self.fomRec = fomRec
 
   def __call__(self, timeStep, time, state):
-    print(state)
-    fs = self.fomRec.evaluate(state)
-    print(fs.shape)
+    fs = self.fomRec(state)
     assert(fs.shape[0]==50)
 
 #----------------------------------------
@@ -66,16 +64,18 @@ def test_euler():
   # create rom state
   yRom = np.zeros(romSize)
   # create problem
-  galerkinProblem = rom.galerkin.default.ProblemForwardEuler(appObj, decoder, yRom, yRef)
+  scheme = ode.stepscheme.ForwardEuler
+  galerkinProblem = rom.galerkin.DefaultExplicitProblem(scheme, appObj, decoder, yRom, yRef)
+  stepper = galerkinProblem.stepper()
 
   fomRecon = galerkinProblem.fomStateReconstructor()
   # the observer is called to monitor evolution of rom_state and
   # uses the reconstructor object to reconstruct FOM state
   myObs = OdeObserver(fomRecon)
-  rom.galerkin.advanceNSteps(galerkinProblem, yRom, 0., dt, Nsteps, myObs)
+  ode.advance_n_steps_and_observe(stepper, yRom, 0., dt, Nsteps, myObs)
 
   # reconstruct full state at the end
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   print(yFomFinal)
 
   # check solution is right

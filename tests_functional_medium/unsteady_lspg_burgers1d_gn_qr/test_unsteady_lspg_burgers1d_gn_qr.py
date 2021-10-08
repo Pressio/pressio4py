@@ -4,9 +4,7 @@ from scipy import linalg
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
-from pressio4py import logger as logger
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.burgers1d import Burgers1d
 
 np.set_printoptions(linewidth=140)
@@ -75,8 +73,6 @@ class MyQRSolver:
 
 #----------------------------------------
 class OdeObserver:
-  def __init__(self): pass
-
   def __call__(self, timeStep, time, state):
     print(state)
     assert(state.shape[0]==11)
@@ -105,22 +101,23 @@ def test_euler():
   # LSPG state
   yRom = np.zeros(romSize)
   # lspg problem
-  lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder, yRom, yRef)
+  scheme = ode.stepscheme.BDF1
+  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
+  stepper = lspgProblem.stepper()
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.createGaussNewtonQR(lspgProblem, yRom, qrS)
-  nlsO.setUpdatingCriterion(solvers.update.standard)
+  nlsO = solvers.create_gauss_newton_qr(stepper, yRom, qrS)
+  nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
-  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
+  nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, t0,
-                                         dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
 
   fomRecon = lspgProblem.fomStateReconstructor()
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
   print(yFomFinal)
 
@@ -153,24 +150,27 @@ def test_bdf2():
   # LSPG state
   yRom = np.zeros(romSize)
   # lspg problem
-  lspgProblem = rom.lspg.unsteady.default.ProblemBDF2(appObj, decoder, yRom, yRef)
+  scheme = ode.stepscheme.BDF2
+  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
+  stepper = lspgProblem.stepper()
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.createGaussNewtonQR(lspgProblem, yRom, qrS)
-  nlsO.setUpdatingCriterion(solvers.update.standard)
+  nlsO = solvers.create_gauss_newton_qr(stepper, yRom, qrS)
+  nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
-  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
+  nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, t0,
-                                         dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
 
   fomRecon = lspgProblem.fomStateReconstructor()
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
   print(yFomFinal)
 
   for y1,y2 in zip(goldBdf2, yFomFinal):
     assert( np.abs(y1-y2) < 1e-10)
+
+  logger.finalize()

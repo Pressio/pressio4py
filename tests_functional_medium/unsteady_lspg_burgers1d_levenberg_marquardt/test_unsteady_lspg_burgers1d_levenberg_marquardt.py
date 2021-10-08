@@ -4,8 +4,7 @@ from scipy import linalg
 import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
+from pressio4py import solvers, ode, rom
 from pressio4py.apps.burgers1d import Burgers1d
 
 np.set_printoptions(linewidth=140)
@@ -35,8 +34,6 @@ gold = np.array([
 
 #----------------------------
 class MyLinSolver:
-  def __init__(self): pass
-
   def solve(self, A,b,x):
     lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
     # here we must use x[:] otherwise it won't overwrite x passed in
@@ -74,22 +71,22 @@ def test_euler():
   # LSPG state
   yRom = np.zeros(romSize)
 
-  lspgProblem = rom.lspg.unsteady.default.ProblemEuler(appObj, decoder,
-                                                       yRom, yRef)
+  scheme = ode.stepscheme.BDF1
+  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
+  stepper = lspgProblem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createLevenbergMarquardt(lspgProblem, yRom, lsO)
+  nlsO = solvers.create_levenberg_marquardt(stepper, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
   nlsO.setMaxIterations(2)
 
   # solve
   myObs = OdeObserver()
-  rom.lspg.solveNSequentialMinimizations(lspgProblem, yRom, t0,
-                                         dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
 
   fomRecon = lspgProblem.fomStateReconstructor()
-  yFomFinal = fomRecon.evaluate(yRom)
+  yFomFinal = fomRecon(yRom)
   print(yFomFinal)
 
   for y1,y2 in zip(gold, yFomFinal):

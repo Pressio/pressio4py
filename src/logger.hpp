@@ -79,7 +79,7 @@ void bindLogger(pybind11::module & mParent)
   loggerModule.def("initialize",
    		   &pressio::log::initialize2);
   loggerModule.def("finalize",
-   		   &pressio::log::finalize);
+   		   &pressio::log::finalize<void>);
 }
 
 } //end namespace pressio4py

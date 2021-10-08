@@ -1,9 +1,7 @@
 
 import numpy as np
 from scipy import linalg
-
-from pressio4py import rom as rom
-from pressio4py import solvers as solvers
+from pressio4py import solvers, ode, rom
 
 np.set_printoptions(linewidth=140)
 
@@ -19,7 +17,7 @@ class MyMasker:
     else:
       return np.zeros((self.sampleMeshSize_, operand.shape[1]))
 
-  def applyMask(self, operand, time, result):
+  def __call__(self, operand, time, result):
     result[:] = np.take(operand, self.rows_, axis=0)
 
 #--------------------------------------
@@ -68,7 +66,13 @@ class MyLinSolver:
                         [-0.4, -0.8, -0.2]))
       assert( np.allclose(A, hGold, atol=1e-12) )
 
-#----------------------------
+class MyProjector:
+  def __init__(self, phi):
+    self.phi_ = phi
+
+  def __call__(self, operand, time, result):
+    result[:] = np.dot(self.phi_.T, operand)
+
 def test():
   '''
   here we test a masked galerkin with bdf1
@@ -137,17 +141,20 @@ def test():
   # create phi on the "sample mesh"
   phiSM = np.take(phi, sampleMeshIndices, axis=0)
   # create projector (pass the phiSM)
-  projector = rom.galerkin.ArbitraryProjector(phiSM)
+  projector = MyProjector(phiSM)
   # create masker and galerkin problem
   masker = MyMasker(sampleMeshIndices)
-  galerkinProblem = rom.galerkin.masked.ProblemBackwardEuler(
-    appObj, decoder, yRom, yRef, masker, projector)
+
+  scheme = ode.stepscheme.BDF1
+  galerkinProblem = rom.galerkin.MaskedImplicitProblem(scheme, appObj, decoder, \
+    yRom, yRef, projector, masker)
+  stepper = galerkinProblem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createNewtonRaphson(galerkinProblem, yRom, lsO)
-  nlsO.setUpdatingCriterion(solvers.update.standard)
+  nlsO = solvers.create_newton_raphson(stepper, yRom, lsO)
+  nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(1)
-  nlsO.setStoppingCriterion(solvers.stop.afterMaxIters)
+  nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
-  rom.galerkin.advanceNSteps(galerkinProblem, yRom, 0., dt, Nsteps, nlsO)
+  ode.advance_n_steps(stepper, yRom, 0., dt, Nsteps, nlsO)
