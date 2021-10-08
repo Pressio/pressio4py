@@ -8,8 +8,7 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/..")         # to access doFom
 
-from pressio4py import rom as rom, logger
-from pressio4py import solvers as solvers
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
@@ -25,12 +24,10 @@ def runLspg(fomObj, dt, nsteps, modes):
   # this is an auxiliary class that can be passed to solve
   # LSPG to monitor the rom state.
   class RomStateObserver:
-    def __init__(self): pass
     def __call__(self, timeStep, time, state): pass
 
   # this linear solver is used at each gauss-newton iteration
   class MyLinSolver:
-    def __init__(self): pass
     def solve(self, A,b,x):
       lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
       x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)
@@ -51,24 +48,26 @@ def runLspg(fomObj, dt, nsteps, modes):
   romState = np.dot(modes.T, fomInitialState)
 
   # create LSPG problem
-  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, linearDecoder, romState, fomReferenceState)
+  scheme = ode.stepscheme.BDF1
+  problem = rom.lspg.unsteady.DefaultProblem(scheme, fomObj, linearDecoder, romState, fomReferenceState)
+  stepper = problem.stepper()
 
   # create the Gauss-Newton solver
-  nonLinSolver = solvers.createGaussNewton(problem, romState, MyLinSolver())
+  nonLinSolver = solvers.create_gauss_newton(stepper, romState, MyLinSolver())
   # set tolerance and convergence criteria
   nlsTol, nlsMaxIt = 1e-6, 5
   nonLinSolver.setMaxIterations(nlsMaxIt)
-  nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)
+  nonLinSolver.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solve problem
-  rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)
+  ode.advance_n_steps_and_observe(stepper, romState, 0., dt, nsteps, myObs, nonLinSolver)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # get the reconstructor object: this allows to map romState to fomState
   fomRecon = problem.fomStateReconstructor()
-  return fomRecon.evaluate(romState)
+  return fomRecon(romState)
 
 ######## MAIN ###########
 if __name__ == "__main__":

@@ -58,7 +58,7 @@
 </sect3>
 </sect1>
 <sect1 id="md_pages_components_rom_fom_apis_1autotoc_md49">
-<title>Continuous-time API: RHS Only</title>
+<title>Continuous-time API: RHS only</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
 <para><parblock><para>Intended for when your FOM application is expressed in <emphasis>time-continuous</emphasis> form as <formula id="18">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \]</formula> where <formula id="3">$y$</formula> is the full-order model (FOM) state, <formula id="4">$f$</formula> is what we call the FOM velocity (or RHS), and <formula id="5">$t$</formula> is time, and, for some reason, you can/want to only expose the right-hand-side (or velocity) of your FOM application.  <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span> finish. </para>
 </parblock></para>

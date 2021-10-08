@@ -4,7 +4,7 @@
 \todo: write more
 
 The pressio4py unsteady LSPG ROMs are designed such that
-using them involves three main steps:
+using them involves these main steps:
 
 ## 1. Create
 
@@ -32,9 +32,11 @@ class UnsteadyLSPGProblem
 };
 ```
 
-The stepper method returns a reference to an [implicit stepper](md_pages_components_ode_steppers_implicit.html).
-The `stepper` method is, practically, what you would use
-to retrieve the underlying stepper and use it to solve the problem.
+The stepper method returns a reference
+to an [implicit stepper](md_pages_components_ode_steppers_implicit.html) object
+that the problem creates and owns.
+The `stepper` method is what you use to retrieve the underlying
+stepper and solve the problem in time.
 Once you have the stepper, you can then use it as discussed
 in [implicit stepper page](md_pages_components_ode_steppers_implicit.html).
 
@@ -57,3 +59,10 @@ Extract the underlying stepper object and solve in time:
 stepper = problme.stepper()
 pressio4py.ode.advance_n_steps_and_observe(stepper, ...)
 ```
+
+@m_class{m-note m-warning}
+
+@parblock
+Remember that for LSPG, you are solving at each step a nonlinear least-squares problem.
+Therefore, the solver you need to use is a nonlinear least-squares solver, e.g, Gauss-Newton or Levernberg-Marquardt.
+@endparblock

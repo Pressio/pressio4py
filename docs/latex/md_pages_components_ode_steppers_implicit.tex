@@ -9,7 +9,7 @@ Pressio implicit steppers are applicable to any system written in {\itshape cont
 
 and/or in a {\itshape discrete-\/time} form \[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]
 
-Here, $y$ is the state, $f$ the velocity, $t$ is time, and $R$ is the residual.\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md36}{}\doxysection{Continuous-\/time API, Parameters and Requirements}\label{md_pages_components_ode_steppers_implicit_autotoc_md36}
+Here, $y$ is the state, $f$ the velocity, $t$ is time, and $R$ is the residual.\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md36}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_implicit_autotoc_md36}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{stepper = ode.create\_implicit\_stepper(scheme, state, system)}
@@ -19,8 +19,10 @@ Here, $y$ is the state, $f$ the velocity, $t$ is time, and $R$ is the residual.\
 
 
 \begin{DoxyItemize}
-\item {\ttfamily scheme}\+: enum value to set the desired stepping scheme.~\newline
- Currently, the choices are\+:
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme\+:
+\end{DoxyItemize}
 \end{DoxyItemize}
 
 \tabulinesep=1mm
@@ -41,9 +43,11 @@ Crank\+Nicolson   &Crank-\/\+Nicolson   &$R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h
 
 
 \begin{DoxyItemize}
-\item {\ttfamily state}\+: {\ttfamily numpy.\+array} storing your state
-\item {\ttfamily system}\+: object defining how to create an instance of the velocity $f$ and how to compute it.~\newline
- Must conform to the following API\+: 
+\item {\ttfamily state}\+: -\/{\ttfamily numpy.\+array} storing your state
+\item {\ttfamily system}\+:
+\begin{DoxyItemize}
+\item object defining how to create an instance of the velocity $f$ and how to compute it.
+\item Must conform to the following API\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MySys:}
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self):}
@@ -65,6 +69,7 @@ Crank\+Nicolson   &Crank-\/\+Nicolson   &$R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h
 
 \end{DoxyCode}
 
+\end{DoxyItemize}
 \end{DoxyItemize}
 
 

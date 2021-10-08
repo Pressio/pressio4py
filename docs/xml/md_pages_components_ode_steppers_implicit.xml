@@ -18,12 +18,14 @@
 <para>Here, <formula id="3">$y$</formula> is the state, <formula id="4">$f$</formula> the velocity, <formula id="5">$t$</formula> is time, and <formula id="7">$R$</formula> is the residual.</para>
 </sect1>
 <sect1 id="md_pages_components_ode_steppers_implicit_1autotoc_md36">
-<title>Continuous-time API, Parameters and Requirements</title>
+<title>API, Parameters and Requirements</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_implicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
 </programlisting></para>
 <para><itemizedlist>
-<listitem><para><computeroutput>scheme</computeroutput>: enum value to set the desired stepping scheme.<linebreak/>
- Currently, the choices are:</para>
+<listitem><para><computeroutput>scheme</computeroutput>:<itemizedlist>
+<listitem><para>value from the <computeroutput>ode.stepscheme</computeroutput> enum setting the desired stepping scheme:</para>
+</listitem></itemizedlist>
+</para>
 </listitem></itemizedlist>
 </para>
 <para><table rows="4" cols="3"><row>
@@ -49,9 +51,10 @@
 </table>
 </para>
 <para><itemizedlist>
-<listitem><para><computeroutput>state</computeroutput>: <computeroutput>numpy.array</computeroutput> storing your state</para>
-</listitem><listitem><para><computeroutput>system</computeroutput>: object defining how to create an instance of the velocity <formula id="4">$f$</formula> and how to compute it.<linebreak/>
- Must conform to the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MySys:</highlight></codeline>
+<listitem><para><computeroutput>state</computeroutput>: -<computeroutput>numpy.array</computeroutput> storing your state</para>
+</listitem><listitem><para><computeroutput>system</computeroutput>:<itemizedlist>
+<listitem><para>object defining how to create an instance of the velocity <formula id="4">$f$</formula> and how to compute it.</para>
+</listitem><listitem><para>Must conform to the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MySys:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -69,6 +72,8 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>J<sp/>as<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>make<sp/>sure<sp/>to<sp/>use<sp/>J[:]<sp/>to<sp/>overwrite<sp/>value</highlight></codeline>
 </programlisting></para>
+</listitem></itemizedlist>
+</para>
 </listitem></itemizedlist>
 </para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-warning" /></para>

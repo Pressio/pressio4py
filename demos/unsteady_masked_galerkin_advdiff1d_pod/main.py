@@ -9,8 +9,7 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/..") # to access doFom
 
-from pressio4py import rom as rom, logger
-from pressio4py import solvers as solvers
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
@@ -24,7 +23,7 @@ class MyMasker:
   def createApplyMaskResult(self, operand):
     return np.zeros(self.sampleMeshSize_)
 
-  def applyMask(self, operand, time, result):
+  def __call__(self, operand, time, result):
     result[:] = np.take(operand, self.rows_)
 
 #----------------------------------------
@@ -32,6 +31,14 @@ def computePodModes(snapshots):
   print("SVD on matrix: ", snapshots.shape)
   U,S,VT = np.linalg.svd(snapshots)
   return U
+
+#----------------------------------------
+class MyProjector:
+  def __init__(self, phi):
+    self.phi_ = phi
+
+  def __call__(self, operand, time, result):
+    result[:] = np.dot(self.phi_.T, operand)
 
 #----------------------------------------
 def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
@@ -63,25 +70,27 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # 2. create the projector
   # here, simply use "collocation" with the POD modes filtered on the "sample mesh"
   modesOnSampleMesh = np.take(modes, sampleMeshIndices, axis=0)
-  projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
+  projector = MyProjector(modesOnSampleMesh)
 
   # 3. create the masker object
   masker = MyMasker(sampleMeshIndices)
 
   # 4. create the masked galerkin problem with Euler forward
-  problem = rom.galerkin.masked.ProblemForwardEuler(fomObj, linearDecoder,
-                                                    romState, fomReferenceState,
-                                                    masker, projector)
+  scheme = ode.stepscheme.ForwardEuler
+  problem = rom.galerkin.MaskedExplicitProblem(scheme, fomObj, linearDecoder, \
+                                               romState, fomReferenceState, \
+                                               projector, masker)
+  stepper = problem.stepper()
 
   # solve problem
-  rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps)
+  ode.advance_n_steps(stepper, romState, 0., dt, nsteps)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",
   # this reconstruction uses the POD modes on the full mesh stored in the decoder
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
-  return fomRecon.evaluate(romState)
+  return fomRecon(romState)
 
 #------------------------
 ######## MAIN ###########

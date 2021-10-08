@@ -197,7 +197,7 @@ $R$
 <g id='eq6-page1'>
 <use x='0' y='0' xlink:href='#eq6-g0-82'/>
 </g>
-</svg> is the residual.</p></section><section id="autotoc_md36"><h2><a href="#autotoc_md36">Continuous-time API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">create_implicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>: enum value to set the desired stepping scheme.<br />Currently, the choices are:</li></ul><table class="m-table"><thead><tr><th>enum value</th><th>Method</th><th>Discrete Residual Formula</th></tr></thead><tbody><tr><td>BDF1</td><td>Backward Diff 1st order</td><td><svg class="m-math" style="width: 16.507em; height: 1.245em; vertical-align: -0.312em;" viewBox="0 -8.966376 158.46995 11.955168">
+</svg> is the residual.</p></section><section id="autotoc_md36"><h2><a href="#autotoc_md36">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">create_implicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme:</li></ul></li></ul><table class="m-table"><thead><tr><th>enum value</th><th>Method</th><th>Discrete Residual Formula</th></tr></thead><tbody><tr><td>BDF1</td><td>Backward Diff 1st order</td><td><svg class="m-math" style="width: 16.507em; height: 1.245em; vertical-align: -0.312em;" viewBox="0 -8.966376 158.46995 11.955168">
 <title>
 $R = y_{n+1}-y_{n}- hf(t_{n+1},y_{n+1})$
 </title>
@@ -364,7 +364,7 @@ $R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h \left( f(t_{n+1},y_{n+1}) + f(t_{n},y_{n
 <use x='224.108415' y='0' xlink:href='#eq9-g4-41'/>
 <use x='228.660741' y='0' xlink:href='#eq9-g4-41'/>
 </g>
-</svg></td></tr></tbody></table><ul><li><code>state</code>: <code>numpy.array</code> storing your state</li><li><p><code>system</code>: object defining how to create an instance of the velocity <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
+</svg></td></tr></tbody></table><ul><li><code>state</code>: -<code>numpy.array</code> storing your state</li><li><code>system</code>:<ul><li>object defining how to create an instance of the velocity <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
 <title>
 $f$
 </title>
@@ -374,7 +374,7 @@ $f$
 <g id='eq10-page1'>
 <use x='0' y='0' xlink:href='#eq10-g0-102'/>
 </g>
-</svg> and how to compute it.<br />Must conform to the following API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">MySys</span><span class="p">:</span>
+</svg> and how to compute it.</li><li><p>Must conform to the following API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">MySys</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">pass</span>
 
@@ -390,7 +390,7 @@ $f$
 
   <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateIn</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
       <span class="c1"># compute J as needed</span>
-      <span class="c1"># make sure to use J[:] to overwrite value</span></pre></li></ul><div class="m-note m-warning"><p>Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support <a href="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing by reference sparse types</a>. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense.</p></div><section id="autotoc_md37"><h3><a href="#autotoc_md37">Stepper object</a></h3><p>The returned stepper object exposes the following methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
+      <span class="c1"># make sure to use J[:] to overwrite value</span></pre></li></ul></li></ul><div class="m-note m-warning"><p>Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support <a href="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing by reference sparse types</a>. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense.</p></div><section id="autotoc_md37"><h3><a href="#autotoc_md37">Stepper object</a></h3><p>The returned stepper object exposes the following methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
 
   <span class="k">def</span> <span class="nf">order</span><span class="p">():</span>
     <span class="k">return</span> <span class="c1"># order of the step scheme of this stepper instantiation</span>

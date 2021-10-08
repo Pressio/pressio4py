@@ -7,7 +7,7 @@
     </briefdescription>
     <detaileddescription>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write this better</para>
-<para>The pressio4py steady LSPG ROMs are designed such that using them boils down to two main steps:</para>
+<para>The pressio4py steady LSPG ROMs are designed to involve two main steps:</para>
 <sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md95">
 <title>1. Create</title>
 <para>You instantiate a &quot;steady LSPG problem&quot;, e.g.:<linebreak/>
@@ -19,7 +19,8 @@
 </listitem><listitem><para>Masked: <ulink url="md_pages_components_rom_lspg_masked_steady.html">link</ulink></para>
 </listitem></itemizedlist>
 </para>
-<para>The <computeroutput>problem</computeroutput> class exposes the following interface:</para>
+<para>Refer to each problem page for details on each specific variant.</para>
+<para>The returned <computeroutput>problem</computeroutput> object is an instantiation of a class exposing the following interface:</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Problem</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">fomStateReconstructor()</highlight></codeline>
@@ -37,10 +38,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(state,<sp/>J)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>Jacobian<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">};</highlight></codeline>
-</programlisting><itemizedlist>
-<listitem><para>note how the API conforms to the one required by the nonlinear solvers</para>
-</listitem></itemizedlist>
-</para>
+</programlisting></para>
 </sect1>
 <sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md96">
 <title>2. Solve</title>
@@ -48,10 +46,10 @@
 <listitem><para>you use a nonlinear least-squares solvers to solve the problem <programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>pressio4py.solvers.create_gauss_newton(problem,<sp/>...)</highlight></codeline>
 <codeline><highlight class="normal">solver.solve(problem,<sp/>...)</highlight></codeline>
 </programlisting></para>
-</listitem><listitem><para>note that you don&apos;t have to use our solvers, you can also use your own. The <computeroutput>problem</computeroutput> exposes everything you need to solve.</para>
+</listitem><listitem><para>note, in fact, that the problem&apos;s API conforms to the one required by the nonlinear solvers</para>
+</listitem><listitem><para>for this solve stage, you don&apos;t have to use the pressio4py solvers. Once you have the problem object, you can also use your own nonlinear least-squares solver. As shown above, the <computeroutput>problem</computeroutput> exposes all the operators that you need to solve.</para>
 </listitem></itemizedlist>
 </para>
-<para>Refer to each problem page for details on each specific variant.</para>
 <para><linebreak/>
  <hruler/>
  <linebreak/>

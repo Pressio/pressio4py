@@ -92,7 +92,7 @@ ___
 <br/>
 
 
-# Continuous-time API: RHS Only
+# Continuous-time API: RHS only
 
 @m_class{m-note m-info}
 

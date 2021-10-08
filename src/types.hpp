@@ -98,5 +98,47 @@ using nonlin_ls_weigh_wrapper_t = ::pressio4py::NonLinLSWeightingWrapper;
 using ode_observer_wrapper_type  = ::pressio4py::OdeCollectorWrapper<void>;
 using ode_dt_setter_wrapper_type = ::pressio4py::OdeTimeStepSizeSetterWrapper<scalar_t>;
 
+
+template<class ScalarType, class StateType, class ResidualType, class JacobianType>
+class ResJacInterface{
+
+protected:
+  pybind11::object pyObj_;
+
+public:
+  using scalar_type       = ScalarType;
+  using state_type	  = StateType;
+  using residual_type	  = ResidualType;
+  using jacobian_type	  = JacobianType;
+
+public:
+  explicit ResJacInterface(pybind11::object pyObj)
+    : pyObj_(pyObj){}
+
+  ResJacInterface() = delete;
+  ~ResJacInterface() = default;
+  ResJacInterface(const ResJacInterface&) = default;
+  ResJacInterface & operator=(const ResJacInterface &) = default;
+  // note, we don't declare move constructors because pybind11::object
+  // gives troubles so just use copy
+
+public:
+  residual_type createResidual() const{
+    return pyObj_.attr("createResidual")();
+  }
+
+  jacobian_type createJacobian() const{
+    return pyObj_.attr("createJacobian")();
+  }
+
+  void residual(const state_type & state, residual_type & R) const{
+    pyObj_.attr("residual")(state, R);
+  }
+
+  void jacobian(const state_type & state, jacobian_type & jac) const{
+    pyObj_.attr("jacobian")(state, jac);
+  }
+};
+
 }//end namespace pressio4py
 #endif

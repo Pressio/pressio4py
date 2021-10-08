@@ -65,7 +65,7 @@
 <sect2 id="md_pages_components_rom_decoder_1autotoc_md43">
 <title>Example usage</title>
 <para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>create<sp/>the<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>attention:<sp/>we<sp/>declare<sp/>phi<sp/>to<sp/>be<sp/>column-major<sp/>for<sp/>these<sp/>reasons:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>attention:<sp/>phi<sp/>must<sp/>be<sp/>column-major<sp/>for<sp/>these<sp/>reasons:</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>1.<sp/>pressio4py<sp/>uses<sp/>blas<sp/>(wherever<sp/>possible)<sp/>to<sp/>operate<sp/>on<sp/>numpy<sp/>arrays,</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>so<sp/>a<sp/>column-major<sp/>layout<sp/>implies<sp/>seamless<sp/>compatiblity<sp/>with<sp/>blas</highlight><highlight class="normal"></highlight></codeline>
@@ -76,7 +76,7 @@
 <codeline><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">phi<sp/>=<sp/>np.ones((10,3),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>the<sp/>linear<sp/>decoder,<sp/>one<sp/>can<sp/>simply<sp/>do</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>the<sp/>linear<sp/>decoder,<sp/>you<sp/>simply<sp/>do</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">linearDecoder<sp/>=<sp/>rom.Decoder(phi)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>

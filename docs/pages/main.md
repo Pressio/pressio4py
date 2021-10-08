@@ -5,7 +5,7 @@
 @m_class{m-frame m-default}
 
 @parblock
-*Leading-edge reduced order models (ROMs) for dynamical systems in science and engineering.*
+*Advancing reduced order models (ROMs) for dynamical systems in science and engineering.*
 
 This is the documentation of the [Python library](https://github.com/Pressio/pressio4py), one component of the [Pressio ecosystem](https://pressio.github.io/).
 @endparblock
@@ -22,12 +22,12 @@ There is no single metric to rely on; it is always a tradeoff.
 We believe that there is a lot to explore in this field
 both in terms of new research directions as well as assessing
 robustness of current state-of-the-art methods.
-There is no better way than a Python framework to incentivize and
+There is no better way than an agile Python framework to incentivize and
 foster work to impact this field. Working towards this goal, pressio4py
-is our contribution to research novel fundamental ideas
+is our open source contribution to research novel fundamental ideas
 on model reduction as well as test state-of-the-art methods
-on problems of arbitrary complexity. Python is the perfect language
-to do so because it benefits from a large community of developers
+on problems of arbitrary complexity and from arbitrary disciplines.
+Python is the perfect language to do so because it benefits from a large community of developers
 and has become the de-facto choice for machine learning.
 This offers an ideal framework to explore and merge ideas from different fields.
 
@@ -42,11 +42,10 @@ This offers an ideal framework to explore and merge ideas from different fields.
 | @m_span{m-text m-success}rom@m_endspan               | <br/>general info <br/> decoder <br/> Galerkin<br/> least-squares Petrov-Galerkin (LSPG): steady<br/> least-squares Petrov-Galerkin (LSPG): unsteady<br/> Windowed least-squares (WLS)<br/> | <br/>[Doc Page](md_pages_components_rom_general.html) <br/>[Doc Page](md_pages_components_rom_decoder.html) <br/> [Doc Page](md_pages_components_rom_galerkin.html) <br/> [Doc Page](md_pages_components_rom_lspg_steady.html) <br/> [Doc Page](md_pages_components_rom_lspg_unsteady.html) <br/>  [Doc Page](md_pages_components_rom_wls.html) <br/> | `pressio4py.rom`                  |
 
 
-Note that we intentially keep pressio4py limited in scope for now.
-We don't provide bindings to all the functionalities
+Note that we intentionally keep pressio4py limited in scope for now.
+We don't provide bindings for all the functionalities
 in the [pressio C++ library](https://pressio.github.io/pressio/html/index.html)
-but only bind those for model reduction and the auxiliary ones.
-
+but only for the model reduction ones and those strictly auxiliary.
 
 
 ## Installation

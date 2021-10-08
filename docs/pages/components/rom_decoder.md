@@ -84,7 +84,7 @@ where @f$\phi@f$ is the Jacobian matrix (for the time being, assume it constant)
 ### Example usage
 ```py
 # create the matrix
-# attention: we declare phi to be column-major for these reasons:
+# attention: phi must be column-major for these reasons:
 #
 # 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,
 #    so a column-major layout implies seamless compatiblity with blas
@@ -95,7 +95,7 @@ where @f$\phi@f$ is the Jacobian matrix (for the time being, assume it constant)
 #
 phi = np.ones((10,3), order='F')
 
-# to create the linear decoder, one can simply do
+# to create the linear decoder, you simply do
 linearDecoder = rom.Decoder(phi)
 
 # linearDecoder exposes a method to evaluate the mapping

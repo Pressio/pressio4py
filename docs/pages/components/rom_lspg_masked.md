@@ -14,21 +14,33 @@ Import as: &emsp; &emsp; &emsp; `from pressio4py.rom import lspg`
 ## API, Parameters and Requirements
 
 ```py
-problem = lspg.unsteady.MaskedProblem(scheme, fom_adapter, decoder, \
+# continuous-time overloads
+problem = lspg.unsteady.MaskedProblem(scheme, fom_adapter, decoder, \              (1)
 								      rom_state, fom_ref_state, masker)
 
 problem = lspg.unsteady.PrecMaskedProblem(scheme, fom_adapter, decoder, \
-									      rom_state, fom_ref_state, \
+									      rom_state, fom_ref_state,     \          (2)
 										  masker, preconditioner)
+
+# discrete-time overloads
+problem = lspg.unsteady.DiscreteTimeProblemTwoStates(fom_adapter, decoder,    \	   (3)
+													 rom_state, fom_ref_state,\
+													 masker)
+
+problem = lspg.unsteady.DiscreteTimeProblemThreeStates(fom_adapter, decoder,    \
+													   rom_state, fom_ref_state,\  (4)
+													   masker)
 ```
 
 - `scheme`:
+  - only applicable to (1,2)
   - value from the `ode.stepscheme` enum setting the desired stepping scheme
   - requires an [implicit value](md_pages_components_ode_steppers_implicit.html)
 
 - `fom_adapter`:
-  - instance of your adapter class specifying the FOM problem. <br/>
-  - must be admissible to unsteady LSPG, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (1,2): must statisfy the continuous-time API for unsteady LSPG, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (3): must satisfy the discrete-time API with two states, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (4): must satisfy the discrete-time API with three states, see [API list](./md_pages_components_rom_fom_apis.html)
 
 - `decoder`:
   - decoder object
@@ -60,6 +72,7 @@ problem = lspg.unsteady.PrecMaskedProblem(scheme, fom_adapter, decoder, \
 	  # time is not used, but you can potentially
 	  result[:] = np.take(operand, self.sample_indices)
   ```
+  &nbsp;
 
 - `preconditioner`:
   - functor needed to precondition the ROM operators

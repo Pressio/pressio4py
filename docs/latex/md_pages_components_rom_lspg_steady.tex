@@ -1,6 +1,6 @@
 todo\+: write this better
 
-The pressio4py steady LSPG ROMs are designed such that using them boils down to two main steps\+:\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md95}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_steady_autotoc_md95}
+The pressio4py steady LSPG ROMs are designed to involve two main steps\+:\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md95}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_steady_autotoc_md95}
 You instantiate a \char`\"{}steady LSPG problem\char`\"{}, e.\+g.\+:~\newline
 
 
@@ -17,7 +17,9 @@ We currently support two variants\+:
 \item Masked\+: \href{md_pages_components_rom_lspg_masked_steady.html}{\texttt{ link}}
 \end{DoxyItemize}
 
-The {\ttfamily problem} class exposes the following interface\+:
+Refer to each problem page for details on each specific variant.
+
+The returned {\ttfamily problem} object is an instantiation of a class exposing the following interface\+:
 
 
 \begin{DoxyCode}{0}
@@ -40,10 +42,7 @@ The {\ttfamily problem} class exposes the following interface\+:
 \DoxyCodeLine{\};}
 
 \end{DoxyCode}
-
-\begin{DoxyItemize}
-\item note how the API conforms to the one required by the nonlinear solvers
-\end{DoxyItemize}\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md96}{}\doxysection{2. Solve}\label{md_pages_components_rom_lspg_steady_autotoc_md96}
+\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md96}{}\doxysection{2. Solve}\label{md_pages_components_rom_lspg_steady_autotoc_md96}
 
 \begin{DoxyItemize}
 \item you use a nonlinear least-\/squares solvers to solve the problem 
@@ -53,10 +52,9 @@ The {\ttfamily problem} class exposes the following interface\+:
 
 \end{DoxyCode}
 
-\item note that you don\textquotesingle{}t have to use our solvers, you can also use your own. The {\ttfamily problem} exposes everything you need to solve.
+\item note, in fact, that the problem\textquotesingle{}s API conforms to the one required by the nonlinear solvers
+\item for this solve stage, you don\textquotesingle{}t have to use the pressio4py solvers. Once you have the problem object, you can also use your own nonlinear least-\/squares solver. As shown above, the {\ttfamily problem} exposes all the operators that you need to solve.
 \end{DoxyItemize}
-
-Refer to each problem page for details on each specific variant.
 
 ~\newline
  \DoxyHorRuler{0}

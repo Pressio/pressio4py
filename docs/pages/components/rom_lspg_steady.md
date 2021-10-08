@@ -4,8 +4,7 @@
 \todo: write this better
 
 
-The pressio4py steady LSPG ROMs are designed such that
-using them boils down to two main steps:
+The pressio4py steady LSPG ROMs are designed to involve two main steps:
 
 ## 1. Create
 
@@ -19,8 +18,9 @@ We currently support two variants:
  - Basic Problem: [link](md_pages_components_rom_lspg_default_steady.html)
  - Masked: [link](md_pages_components_rom_lspg_masked_steady.html)
 
+Refer to each problem page for details on each specific variant.
 
-The `problem` class exposes the following interface:
+The returned `problem` object is an instantiation of a class exposing the following interface:
 
 ```py
 class Problem
@@ -41,8 +41,6 @@ class Problem
 	# evaluates the Jacobian for the given state
 };
 ```
-- note how the API conforms to the one required by the nonlinear solvers
-
 
 ## 2. Solve
 
@@ -51,11 +49,15 @@ class Problem
 solver = pressio4py.solvers.create_gauss_newton(problem, ...)
 solver.solve(problem, ...)
 ```
-- note that you don't have to use our solvers, you can also use your own.
-The `problem` exposes everything you need to solve.
+
+- note, in fact, that the problem's API conforms to the one required by the nonlinear solvers
+
+- for this solve stage, you don't have to use the pressio4py solvers.
+  Once you have the problem object, you can also use your own nonlinear least-squares solver.
+  As shown above, the `problem` exposes all the operators that you need to solve.
 
 
-Refer to each problem page for details on each specific variant.
+
 
 <br/>
 ___

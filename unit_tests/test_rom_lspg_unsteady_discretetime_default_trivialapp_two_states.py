@@ -82,7 +82,7 @@ def test():
 
   decoder = rom.Decoder(phi)
   yRom    = np.ones(romSize)
-  problem = rom.lspg.unsteady.ProblemTwoStates(appObj, decoder, yRom, yRef)
+  problem = rom.lspg.unsteady.DiscreteTimeProblemTwoStates(appObj, decoder, yRom, yRef)
   stepper = problem.stepper()
 
   lsO = MyLinSolver()

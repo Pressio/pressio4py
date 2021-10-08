@@ -14,20 +14,32 @@ Import as: &emsp; &emsp; &emsp; `from pressio4py.rom import lspg`
 ## API, Parameters and Requirements
 
 ```py
-problem = lspg.unsteady.DefaultProblem(scheme, fom_adapter, decoder, \
+# continuous-time overloads
+problem = lspg.unsteady.DefaultProblem(scheme, fom_adapter, decoder, \            (1)
 									   rom_state, fom_ref_state)
 
-problem = lspg.unsteady.PrecDefaultProblem(scheme, fom_adapter, decoder, \
-									   rom_state, fom_ref_state, preconditioner)
+problem = lspg.unsteady.PrecDefaultProblem(scheme, fom_adapter, decoder, \        (2)
+									       rom_state, fom_ref_state,     \
+										   preconditioner)
+
+# discrete-time overloads
+problem = lspg.unsteady.DiscreteTimeProblemTwoStates(fom_adapter, decoder,   \	  (3)
+													 rom_state, fom_ref_state)
+
+problem = lspg.unsteady.DiscreteTimeProblemThreeStates(fom_adapter, decoder, \	  (4)
+													   rom_state, fom_ref_state)
 ```
 
 - `scheme`:
+  - only applicable to (1,2)
   - value from the `ode.stepscheme` enum setting the desired stepping scheme
   - requires an [implicit value](md_pages_components_ode_steppers_implicit.html)
 
 - `fom_adapter`:
   - instance of your adapter class specifying the FOM problem. <br/>
-  - must be admissible to unsteady LSPG, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (1,2): must statisfy the continuous-time API for unsteady LSPG, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (3): must satisfy the discrete-time API with two states, see [API list](./md_pages_components_rom_fom_apis.html)
+  - for (4): must satisfy the discrete-time API with three states, see [API list](./md_pages_components_rom_fom_apis.html)
 
 - `decoder`:
   - decoder object

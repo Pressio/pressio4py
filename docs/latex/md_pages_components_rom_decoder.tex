@@ -62,7 +62,7 @@ where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hy
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# create the matrix}}
-\DoxyCodeLine{\textcolor{comment}{\# attention: we declare phi to be column-\/major for these reasons:}}
+\DoxyCodeLine{\textcolor{comment}{\# attention: phi must be column-\/major for these reasons:}}
 \DoxyCodeLine{\textcolor{comment}{\#}}
 \DoxyCodeLine{\textcolor{comment}{\# 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,}}
 \DoxyCodeLine{\textcolor{comment}{\#    so a column-\/major layout implies seamless compatiblity with blas}}
@@ -73,7 +73,7 @@ where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hy
 \DoxyCodeLine{\textcolor{comment}{\#}}
 \DoxyCodeLine{phi = np.ones((10,3), order=\textcolor{stringliteral}{'F'})}
 \DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{comment}{\# to create the linear decoder, one can simply do}}
+\DoxyCodeLine{\textcolor{comment}{\# to create the linear decoder, you simply do}}
 \DoxyCodeLine{linearDecoder = rom.Decoder(phi)}
 \DoxyCodeLine{}
 \DoxyCodeLine{\textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}

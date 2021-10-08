@@ -203,7 +203,7 @@ $\phi$
 <use x='0' y='0' xlink:href='#eq6-g0-30'/>
 </g>
 </svg> is the Jacobian matrix (for the time being, assume it constant).</p><section id="autotoc_md43"><h3><a href="#autotoc_md43">Example usage</a></h3><pre class="m-code"><span class="c1"># create the matrix</span>
-<span class="c1"># attention: we declare phi to be column-major for these reasons:</span>
+<span class="c1"># attention: phi must be column-major for these reasons:</span>
 <span class="c1">#</span>
 <span class="c1"># 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,</span>
 <span class="c1">#    so a column-major layout implies seamless compatiblity with blas</span>
@@ -214,7 +214,7 @@ $\phi$
 <span class="c1">#</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
 
-<span class="c1"># to create the linear decoder, one can simply do</span>
+<span class="c1"># to create the linear decoder, you simply do</span>
 <span class="n">linearDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
 
 <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>

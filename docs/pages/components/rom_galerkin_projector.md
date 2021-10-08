@@ -1,14 +1,14 @@
 
 # rom: Galerkin: projector
 
-The projector is needed for Galerkin to perform the projection of the
-FOM operators onto the reduced space.
-
 
 @m_class{m-note m-info}
 
 @parblock
-It is explicitly required from the user when doing [maked](md_pages_components_rom_galerkin_masked.html)
+The projector is needed for Galerkin to perform the projection of the
+FOM operators onto the reduced space.
+
+It is explicitly required from the user when doing [masked](md_pages_components_rom_galerkin_masked.html)
 or [hyper-reduced](md_pages_components_rom_galerkin_hypred.html) Galerkin.
 @endparblock
 
@@ -20,8 +20,7 @@ the scenes automatically using the decoder's jacobian.
 
 ## API
 
-When provided by the user, the projector operator must be
-provided in the form of a functor as follows:
+When provided by the user, the projector must be a functor as follows:
 
 ```py
 class Projector:
@@ -34,7 +33,7 @@ class Projector:
 
 Note that the operand is either a FOM velocity instance, or the decoder's Jacobian.
 In all cases, however, it is a `numpy.array`.
-You can put define the actual projection operation however you like.
+You can define the actual projection operation however you like.
 
 One thing to keep in mind is that, typically, the `operand` is either a masked
 operand (i.e., the result of masking a full FOM operand) if you are using

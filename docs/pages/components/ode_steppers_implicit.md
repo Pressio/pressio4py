@@ -32,14 +32,14 @@ and/or in a *discrete-time* form
 Here, @f$y@f$ is the state, @f$f@f$ the velocity, @f$t@f$ is time, and @f$R@f$ is the residual.
 
 
-## Continuous-time API, Parameters and Requirements
+## API, Parameters and Requirements
 
 @code{.py}
 stepper = ode.create_implicit_stepper(scheme, state, system)
 @endcode
 
-- `scheme`: enum value to set the desired stepping scheme.<br/>
-  Currently, the choices are:
+- `scheme`:
+  - value from the `ode.stepscheme` enum setting the desired stepping scheme:
 
   | enum value    | Method                  | Discrete Residual Formula                                                                          |
   |---------------|-------------------------|----------------------------------------------------------------------------------------------------|
@@ -47,10 +47,12 @@ stepper = ode.create_implicit_stepper(scheme, state, system)
   | BDF2          | Backward Diff 2nd order | @f$R = y_{n+1}-{\tfrac {4}{3}}y_{n}+{\tfrac {1}{3}}y_{n-1} - {\tfrac {2}{3}}hf(t_{n+1},y_{n+1})@f$ |
   | CrankNicolson | Crank-Nicolson          | @f$R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h \left( f(t_{n+1},y_{n+1}) + f(t_{n},y_{n}) \right)@f$    |
 
-- `state`: `numpy.array` storing your state
+- `state`:
+  -`numpy.array` storing your state
 
-- `system`: object defining how to create an instance of the velocity @f$f@f$ and how to compute it.<br/>
-  Must conform to the following API:
+- `system`:
+  - object defining how to create an instance of the velocity @f$f@f$ and how to compute it.
+  - Must conform to the following API:
   ```py
   class MySys:
 	def __init__(self):

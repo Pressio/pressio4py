@@ -16,7 +16,7 @@ import time
 def nonlindiff(u,x=None,dudx=None):
   pw = 4.
   k = x**pw
-  dkdx = pw*x
+  dkdx = pw*(x**(pw-1))
   return k,dkdx
 
 class AdvDiff1d():
@@ -109,6 +109,7 @@ class AdvDiff1d():
     a = self.adv_coef
     k, dkdx = self.kfun(u,x=x)
     J = np.dot(np.diag(k),(1./dx**2)*A) + \
-      (1./dx**2)*np.dot(2*np.diag(dkdx*np.dot(B,u)),B) + \
+      (1./dx)*dkdx*B + \
       - a*(1./dx)*B
+
     return J
