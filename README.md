@@ -26,6 +26,7 @@ This offers an ideal framework to explore and merge ideas from different fields.
 <br/>
 
 &emsp; &emsp; -> [EXPLORE THE DOCUMENTATION](https://pressio.github.io/pressio4py/html/index.html) <-
+&ensp;
 
 ## License and Citation
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
