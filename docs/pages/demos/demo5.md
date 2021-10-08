@@ -24,7 +24,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-153:215
+161:225
 ```
 
 ### 1. Run FOM and collect snapshots
@@ -38,35 +38,35 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-46:49
+43:46
 ```
 
 ### 3. Create the sampling indices
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-176:197
+184:201
 ```
 
 ### 4. The masker class
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-28:43
+25:40
 ```
 
 ### 5. Masked Galerkin ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-52:104
+57:111
 ```
 
 ### 6. Masked LSPG ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-107:149
+114:158
 ```
 
 ## Results

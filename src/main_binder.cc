@@ -49,268 +49,301 @@
 #ifndef PRESSIO4PY_PYBINDINGS_MAIN_BINDER_HPP_
 #define PRESSIO4PY_PYBINDINGS_MAIN_BINDER_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <pybind11/numpy.h>
-#include <pybind11/iostream.h>
-#include <pybind11/stl.h>
-
-// pressio include
-#include "pressio_rom.hpp"
-
-// local includes
 #include "types.hpp"
-#include "./rom/wrappers/fom_steady_wrapper.hpp"
-#include "./rom/wrappers/fom_continuous_time_wrapper.hpp"
-#include "./rom/wrappers/fom_discrete_time_wrapper.hpp"
-#include "./rom/wrappers/lin_solver_wrapper.hpp"
-#include "./rom/wrappers/qr_solver_wrapper.hpp"
-#include "./rom/wrappers/ode_collector_wrapper.hpp"
-#include "./rom/wrappers/nonlin_ls_weighting_wrapper.hpp"
-#include "./rom/wrappers/masker_wrapper.hpp"
+#include "pressio/ode_steppers_explicit.hpp"
+#include "pressio/ode_steppers_implicit.hpp"
+#include "pressio/ode_advancers.hpp"
+#include "pressio/rom_decoder.hpp"
+#include "pressio/rom_galerkin.hpp"
+#include "pressio/rom_lspg.hpp"
 
-#include "logger.hpp"
+#include "./hypred_updater.hpp"
+#include "./wrappers/ode_system_wrapper.hpp"
+#include "./wrappers/galerkin_projector_wrapper.hpp"
+#include "./wrappers/masker_wrapper.hpp"
+#include "./wrappers/nonlin_solver_wrapper.hpp"
+#include "./wrappers/ode_stepper_wrapper.hpp"
+#include "./wrappers/precond_wrapper.hpp"
+#include "./logger.hpp"
 #include "./rom/decoder.hpp"
 #include "./rom/fomreconstructor.hpp"
-#include "./rom/galerkin.hpp"
-#include "./rom/lspg.hpp"
-#include "./rom/wls.hpp"
-#include "./rom/nonlinear_solvers.hpp"
+#include "./nonlinear_solvers.hpp"
 
-#include "./galerkin_solve_problem_api_bind.hpp"
-#include "./lspg_solve_problem_api_bind.hpp"
-#include "./wls_solve_problem_api_bind.hpp"
+namespace pressio4py{
 
-PYBIND11_MODULE(MODNAME, mParent)
+template<class T, class StateType, class SystemType>
+T create_explicit_stepper(pressio::ode::StepScheme name,
+			  const StateType & state,
+			  pybind11::object o)
 {
-  // bind logging functions
-  pressio4py::bindLogger(mParent);
+  if (name == pressio::ode::StepScheme::ForwardEuler){
+    return T(pressio::ode::ForwardEuler(), state, SystemType(o));
+  }
 
-  //*****************
-  // bind ROM
-  //*****************
-  // the main rom module will work with the "standard" rank-1 state,
-  // and create submodules to include functionalities for the rank-2,3 states
-  pybind11::module romModule = mParent.def_submodule("rom");
-  pybind11::module r2m = romModule.def_submodule("rank2state");
-  pybind11::module r3m = romModule.def_submodule("rank3state");
+  else if (name == pressio::ode::StepScheme::RungeKutta4){
+    return T(pressio::ode::RungeKutta4(), state, SystemType(o));
+  }
 
-  // *** decoder ***
-  // <n,m>: n=state_rank, m=decoder_jacobian_rank
-  pressio4py::bindDecoder<pressio4py::DecoderTypes<1,2>>(romModule, "Decoder");
-  pressio4py::bindDecoder<pressio4py::DecoderTypes<2,2>>(r2m,	    "Decoder");
-  pressio4py::bindDecoder<pressio4py::DecoderTypes<2,3>>(r2m,	    "MultiFieldDecoder");
-  pressio4py::bindDecoder<pressio4py::DecoderTypes<3,3>>(r3m,	    "MultiFieldDecoder");
+  else if (name == pressio::ode::StepScheme::AdamsBashforth2){
+    return T(pressio::ode::AdamsBashforth2(), state, SystemType(o));
+  }
 
-  // *** fom reconstructor ***
-  pressio4py::bindFomReconstructor<pressio4py::DecoderTypes<1,2>>(romModule, "FomReconstructor");
-  pressio4py::bindFomReconstructor<pressio4py::DecoderTypes<2,2>>(r2m,       "FomReconstructor");
-  pressio4py::bindFomReconstructor<pressio4py::DecoderTypes<2,3>>(r2m,       "MultiFieldFomReconstructor");
-  pressio4py::bindFomReconstructor<pressio4py::DecoderTypes<3,3>>(r3m,       "MultiFieldFomReconstructor");
+  else if (name == pressio::ode::StepScheme::SSPRungeKutta3){
+    return T(pressio::ode::SSPRungeKutta3(), state, SystemType(o));
+  }
 
-  //--------------------------------
-  // galerkin rom
-  //--------------------------------
-  pybind11::module galerkinModule           = romModule.def_submodule("galerkin");
-  pybind11::module galerkinMultiFieldModule = galerkinModule.def_submodule("multifield");
+  else{
+    throw std::runtime_error("create_explicit_stepper: invalid StepScheme enum value");
+  }
+};
 
-  // projector
-  pressio4py::rom::bindProjector<pressio4py::GalerkinTypes<1,2>>(galerkinModule,"ArbitraryProjector");
-  pressio4py::rom::bindProjector<pressio4py::GalerkinTypes<2,3>>(galerkinMultiFieldModule, "ArbitraryProjector");
+template<class T, class StateType, class SystemType>
+T create_implicit_stepper(pressio::ode::StepScheme name,
+			  const StateType & state,
+			  pybind11::object o)
+{
 
-  // explicit: rank-1 state and rank-2 decoder
-  using galerkin_12_explicit_binder_t = pressio4py::rom::GalerkinBinderExplicit<pressio4py::GalerkinTypes<1,2>>;
-  galerkin_12_explicit_binder_t::bind(galerkinModule);
-  using explicit_12_galerkinproblems = typename galerkin_12_explicit_binder_t::problem_types;
+  if (name == pressio::ode::StepScheme::BDF1){
+    return T(pressio::ode::BDF1(), state, SystemType(o));
+  }
 
-  // explicit: rank-2 state and rank-3 decoder (i.e. multifield)
-  using galerkin_23_explicit_binder_t = pressio4py::rom::GalerkinBinderExplicit<pressio4py::GalerkinTypes<2,3>>;
-  galerkin_23_explicit_binder_t::bind(galerkinMultiFieldModule);
-  using explicit_23_galerkinproblems = typename galerkin_23_explicit_binder_t::problem_types;
+  else if (name == pressio::ode::StepScheme::BDF2){
+    return T(pressio::ode::BDF2(), state, SystemType(o));
+  }
 
-  // implicit (only supports rank-1 state and rank-2 decoder)
-  // this includes the implicit problems for continuous time api as well as
-  // the problems types for the discrete time api
-  using galerkin_implicit_binder_t  = pressio4py::rom::GalerkinBinderImplicit<pressio4py::GalerkinTypes<1,2>>;
-  galerkin_implicit_binder_t::bind(galerkinModule);
-  using implicit_galerkinproblems = typename galerkin_implicit_binder_t::problem_types;
+  else if (name == pressio::ode::StepScheme::CrankNicolson){
+    return T(pressio::ode::CrankNicolson(), state, SystemType(o));
+  }
 
-  // *** newton-raphson solver ***
-  using head_problem_t = typename std::tuple_element<0, implicit_galerkinproblems>::type;
-  // we should make sure that all problems have same jacobian_t
-  // but for implicit problems this should be true
-  using implicit_galerkin_jacobian_t = typename head_problem_t::galerkin_jacobian_t;
-  using linear_solver_nr_t = pressio4py::LinSolverWrapper<implicit_galerkin_jacobian_t>;
+  else{
+    throw std::runtime_error("create_implicit_stepper: invalid StepScheme enum value");
+  }
+};
+
+} //end namespace pressio4py
+
+#include "./advance_functions.hpp"
+#include "./galerkin.hpp"
+#include "./lspg_steady.hpp"
+#include "./lspg_unsteady.hpp"
+
+PYBIND11_MODULE(MODNAME, topLevelModule)
+{
+  // create all modules with correct hierarchy
+  pybind11::module solversModule      = topLevelModule.def_submodule("solvers");
+  pybind11::module odeModule	      = topLevelModule.def_submodule("ode");
+  pybind11::module romModule	      = topLevelModule.def_submodule("rom");
+  pybind11::module galerkinModule     = romModule.def_submodule("galerkin");
+  pybind11::module lspgModule         = romModule.def_submodule("lspg");
+  pybind11::module steadyLspgModule   = lspgModule.def_submodule("steady");
+  pybind11::module unsteadyLspgModule = lspgModule.def_submodule("unsteady");
+
+  pressio4py::bindLogger(topLevelModule);
+
+  // =========================
+  // NONLINEAR SOLVERS
+  // =========================
+  pressio4py::solvers::bindUpdatingEnums(solversModule);
+  pressio4py::solvers::bindStoppingEnums(solversModule);
+
+  using rj_system_type = pressio4py::ResJacInterface<
+    pressio4py::scalar_t, pressio4py::py_f_arr, pressio4py::py_f_arr, pressio4py::py_f_arr>;
+
   using newraphbinder_t = pressio4py::solvers::NewtonRaphsonBinder<
-    true, linear_solver_nr_t, implicit_galerkinproblems>;
+    pressio4py::linear_solver_wrapper_t, rj_system_type>;
   using newraph_solver_t = typename newraphbinder_t::nonlinear_solver_t;
-  newraphbinder_t::bindClass(galerkinModule, "GalerkinNewtonRaphson");
+  newraphbinder_t::bindClassAndMethods(solversModule);
 
+  using gnbinder_t = pressio4py::solvers::GNNormalEqResJacApiBinder<
+    pressio4py::linear_solver_wrapper_t, rj_system_type>;
+  using gn_neq_solver_t = typename gnbinder_t::nonlinear_solver_t;
+  gnbinder_t::bindClassAndMethods(solversModule);
 
-  //---------------------
-  //  lspg rom
-  //---------------------
-  pybind11::module lspgModule	= romModule.def_submodule("lspg");
-  using lspg_binder_t		= pressio4py::rom::LSPGBinder<pressio4py::LspgTypes>;
-  lspg_binder_t::bind(lspgModule);
-  using lspgproblems		= typename lspg_binder_t::problem_types;
-  using steady_lspgproblems	= typename lspg_binder_t::steady_problem_types;
-  using unsteady_lspgproblems	= typename lspg_binder_t::unsteady_problem_types;
+  using wgnbinder_t = pressio4py::solvers::WeighGNNormalEqResJacApiBinder<
+    pressio4py::linear_solver_wrapper_t, rj_system_type, pressio4py::nonlin_ls_weigh_wrapper_t>;
+  using wgn_neq_solver_t = typename wgnbinder_t::nonlinear_solver_t;
+  wgnbinder_t::bindClassAndMethods(solversModule);
 
-  // *** nonlin least squares solvers for LSPG ***
-  using hessian_t	= typename pressio4py::LspgTypes::lsq_hessian_t;
-  using jac_t           = typename pressio4py::LspgTypes::decoder_jac_t;
-  using linear_solver_t = pressio4py::LinSolverWrapper<hessian_t>;
-  using qr_solver_t     = pressio4py::QrSolverWrapper<jac_t>;
-  using nlls_weigher_t  = pressio4py::NonLinLSWeightingWrapper;
+  using gnqrbinder_t = pressio4py::solvers::GNQRResJacApiBinder<
+    pressio4py::qr_solver_wrapper_t, rj_system_type>;
+  using gn_qr_solver_t = typename gnqrbinder_t::nonlinear_solver_t;
+  gnqrbinder_t::bindClassAndMethods(solversModule);
 
-  // *** GN RJ-API with normal equations ***
-  using gnbinder_t = pressio4py::solvers::LeastSquaresNormalEqResJacApiBinder<
-    true, linear_solver_t, lspgproblems>;
-  using gn_solver_t = typename gnbinder_t::nonlinear_solver_t;
-  gnbinder_t::bindClass(lspgModule, "LspgGaussNewton");
+  using lmbinder_t = pressio4py::solvers::LMNormalEqResJacApiBinder<
+    pressio4py::linear_solver_wrapper_t, rj_system_type>;
+  using lm_neq_solver_t = typename lmbinder_t::nonlinear_solver_t;
+  lmbinder_t::bindClassAndMethods(solversModule);
 
-  // *** LM RJ-API with normal equations ***
-  using lmbinder_t = pressio4py::solvers::LeastSquaresNormalEqResJacApiBinder<
-    false, linear_solver_t, lspgproblems>;
-  using lm_solver_t = typename lmbinder_t::nonlinear_solver_t;
-  lmbinder_t::bindClass(lspgModule, "LspgLevenbergMarquardt");
+  using wlmbinder_t = pressio4py::solvers::WeighLMNormalEqResJacApiBinder<
+    pressio4py::linear_solver_wrapper_t, rj_system_type, pressio4py::nonlin_ls_weigh_wrapper_t>;
+  using wlm_neq_solver_t = typename wlmbinder_t::nonlinear_solver_t;
+  wlmbinder_t::bindClassAndMethods(solversModule);
 
-  // *** GN RJ-API with QR ***
-  using gnbinder_qr_t = pressio4py::solvers::LeastSquaresQRBinder<
-    true, qr_solver_t, lspgproblems>;
-  using gn_qr_solver_t = typename gnbinder_qr_t::nonlinear_solver_t;
-  gnbinder_qr_t::bindClass(lspgModule, "LspgGaussNewtonQR");
+  // =========================
+  // ODE
+  // =========================
+  pybind11::enum_<pressio::ode::StepScheme>(odeModule, "stepscheme")
+    .value("ForwardEuler",      pressio::ode::StepScheme::ForwardEuler)
+    .value("RungeKutta4",	pressio::ode::StepScheme::RungeKutta4)
+    .value("AdamsBashforth2",	pressio::ode::StepScheme::AdamsBashforth2)
+    .value("SSPRungeKutta3",	pressio::ode::StepScheme::SSPRungeKutta3)
+    .value("BDF1",		pressio::ode::StepScheme::BDF1)
+    .value("BDF2",		pressio::ode::StepScheme::BDF2)
+    .value("CrankNicolson",	pressio::ode::StepScheme::CrankNicolson)
+    .value("ImplicitArbitrary",	pressio::ode::StepScheme::ImplicitArbitrary)
+    .export_values();
 
-  // *** weighted GN RJ-API with normal equations ***
-  using wgnbinder_t = pressio4py::solvers::WeightedLeastSquaresNormalEqBinder<
-    true, linear_solver_t,  nlls_weigher_t, lspgproblems>;
-  using w_gn_solver_t = typename wgnbinder_t::nonlinear_solver_t;
-  wgnbinder_t::bindClass(lspgModule, "LspgWeightedGaussNewton");
+  // explicit
+  using ode_explicit_system_wrapper = pressio4py::OdeSystemExplicitWrapper<
+    pressio4py::scalar_t, pressio4py::py_f_arr, pressio4py::py_f_arr>;
+  using ode_explicit_stepper = pressio::ode::impl::ExplicitStepper<
+    pressio4py::scalar_t, pressio4py::py_f_arr, ode_explicit_system_wrapper, pressio4py::py_f_arr>;
 
-  // *** IRW GN RJ-API with normal equations ***
-  using irwgnbinder_t = pressio4py::solvers::IrwLeastSquaresNormalEqBinder<
-    linear_solver_t,  lspgproblems>;
-  using irwgn_solver_t = typename irwgnbinder_t::nonlinear_solver_t;
-  irwgnbinder_t::bindClass(lspgModule, "LspgIrwGaussNewton");
+  pybind11::class_<ode_explicit_stepper> odeExpStep(odeModule, "ExplicitStepper");
+  odeExpStep.def("order", &ode_explicit_stepper::order);
+  odeExpStep.def("__call__",
+		 [](ode_explicit_stepper & stepper,
+		    pressio4py::py_f_arr & state,
+		    pressio4py::scalar_t time,
+		    pressio4py::scalar_t dt,
+		    int32_t step)
+		 {
+		   stepper(state, time, dt, step);
+		 }, pybind11::is_operator());
 
-  // create tuple with all LSPG least-squares solver types
-  using lspg_solvers = std::tuple<
-    gn_solver_t, irwgn_solver_t, w_gn_solver_t,
-    gn_qr_solver_t, lm_solver_t>;
+  odeModule.def("create_explicit_stepper",
+		&pressio4py::create_explicit_stepper<
+		ode_explicit_stepper, pressio4py::py_f_arr, ode_explicit_system_wrapper>,
+		pybind11::return_value_policy::take_ownership);
 
-  //----------------------------------------------------
-  //  wls rom (still experimental)
-  //----------------------------------------------------
-  pybind11::module expModule	= romModule.def_submodule("exp");
-  pybind11::module wlsModule	= expModule.def_submodule("wls");
-  using wls_binder_t = pressio4py::rom::WLSBinder<pressio4py::WlsTypes>;
-  wls_binder_t::bind(wlsModule);
-  using wls_systems = typename wls_binder_t::system_types;
+  pressio4py::BindAdvanceFunctions<std::tuple<ode_explicit_stepper>>::fixedStepSize(odeModule);
+  pressio4py::BindAdvanceFunctions<std::tuple<ode_explicit_stepper>>::template arbitraryStepSize<
+    pressio4py::ode_dt_setter_wrapper_type>(odeModule);
 
-  using wlshessian_t	= typename pressio4py::WlsTypes::lsq_hessian_t;
-  using wlslinear_solver_t = pressio4py::LinSolverWrapper<wlshessian_t>;
+  // implicit cont-time
+  using ode_implicit_system_conttime_wrapper = pressio4py::OdeSystemImplicitContTimeWrapper<
+    pressio4py::scalar_t, pressio4py::py_f_arr, pressio4py::py_f_arr, pressio4py::py_f_arr>;
+  using ode_implicit_stepper = pressio::ode::impl::ImplicitCompose<
+    ode_implicit_system_conttime_wrapper, pressio4py::py_f_arr>::type;
 
-  // *** GN ***
-  using wlsgnbinder_t = pressio4py::solvers::LeastSquaresNormalEqHessGrapApiBinder<
-    true, wlslinear_solver_t, wls_systems>;
-  using wlsgn_solver_t = typename wlsgnbinder_t::nonlinear_solver_t;
-  wlsgnbinder_t::bindClass(wlsModule, "WlsGaussNewton");
+  pybind11::class_<ode_implicit_stepper> odeImpStep(odeModule, "ImplicitStepper");
+  odeImpStep.def("order", &ode_implicit_stepper::order);
+  odeImpStep.def("createResidual",
+		 &ode_implicit_stepper::createResidual,
+		 pybind11::return_value_policy::take_ownership);
+  odeImpStep.def("createJacobian",
+		 &ode_implicit_stepper::createJacobian,
+		 pybind11::return_value_policy::take_ownership);
+  odeImpStep.def("residual", &ode_implicit_stepper::residual);
+  odeImpStep.def("jacobian", &ode_implicit_stepper::jacobian);
 
-  // *** LM ***
-  using wlslmbinder_t = pressio4py::solvers::LeastSquaresNormalEqHessGrapApiBinder<
-    false, wlslinear_solver_t, wls_systems>;
-  using wlslm_solver_t = typename wlslmbinder_t::nonlinear_solver_t;
-  wlslmbinder_t::bindClass(wlsModule, "WlsLevenbergMarquardt");
+  odeImpStep.def("__call__",
+		 [](ode_implicit_stepper & stepper,
+		    ::pressio4py::py_f_arr & state,
+		    ::pressio4py::scalar_t time,
+		    ::pressio4py::scalar_t dt,
+		    int32_t step,
+		    newraph_solver_t & solver
+		    )
+		 {
+		   stepper(state, time, dt, step, solver);
+		 }, pybind11::is_operator());
 
-  // create tuple with all Wls solvers types
-  using wls_solvers = std::tuple<
-    wlsgn_solver_t, wlslm_solver_t>;
+  odeImpStep.def("__call__",
+		  [](ode_implicit_stepper & stepper,
+		     ::pressio4py::py_f_arr & state,
+		     ::pressio4py::scalar_t time,
+		     ::pressio4py::scalar_t dt,
+		     int32_t step,
+		     pybind11::object pysolver
+		     )
+		  {
+		    pressio4py::UserDefinedNonLinSolverWrapper nlsw(pysolver);
+		    stepper(state, time, dt, step, nlsw);
+		  }, pybind11::is_operator());
 
-  //******************
-  // solvers module
-  //*****************
-  pybind11::module mSolver = mParent.def_submodule("solvers");
-  pressio4py::solvers::bindUpdatingEnums(mSolver);
-  pressio4py::solvers::bindStoppingEnums(mSolver);
+  odeModule.def("create_implicit_stepper",
+		&pressio4py::create_implicit_stepper<
+		ode_implicit_stepper, pressio4py::py_f_arr, ode_implicit_system_conttime_wrapper>,
+		pybind11::return_value_policy::take_ownership);
 
-  // contains createFunctions to instantiate solver objects
-  // specified above for Galerkin, lspg, etc
-  gnbinder_t::bindCreate(mSolver);
-  lmbinder_t::bindCreate(mSolver);
-  gnbinder_qr_t::bindCreate(mSolver);
-  wgnbinder_t::bindCreate(mSolver);
-  irwgnbinder_t::bindCreate(mSolver);
-  wlsgnbinder_t::bindCreate(mSolver);
-  wlslmbinder_t::bindCreate(mSolver);
-  newraphbinder_t::bindCreate(mSolver);
+  // // bind constructor specialization of Newt-Raph solver
+  // newraphbinder_t::bindCreate<ode_implicit_stepper>(solversModule);
 
-  //---------------------------------------------------------------------
-  //---------------------------------------------------------------------
-  // expose api to solve galerkin, lspg and wls problems
-  //
-  // one way to do this would be to write explicitly the binding
-  // code for solving all problems with all possible solver
-  // combinations, but this is not practical.
-  // use metaprogramming to simplify the binding code generation.
-  //---------------------------------------------------------------------
-  //---------------------------------------------------------------------
-  using rom_rank1_state_t  = typename pressio4py::StateTypes<1>::rom_state_t;
-  using rom_rank2_state_t  = typename pressio4py::StateTypes<2>::rom_state_t;
-  using rom_rank3_state_t  = typename pressio4py::StateTypes<3>::rom_state_t;
+  pressio4py::BindAdvanceFunctions<
+    std::tuple<ode_implicit_stepper>>::template fixedStepSize<newraph_solver_t>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    std::tuple<ode_implicit_stepper>>::template arbitraryStepSize<
+      pressio4py::ode_dt_setter_wrapper_type, newraph_solver_t>(odeModule);
 
-  // collector used to monitor the rom state
-  using rank1_collector_t = pressio4py::OdeCollectorWrapper<rom_rank1_state_t>;
-  using rank2_collector_t = pressio4py::OdeCollectorWrapper<rom_rank2_state_t>;
-  using rank3_collector_t = pressio4py::OdeCollectorWrapper<rom_rank3_state_t>;
+  pressio4py::BindAdvanceFunctions<
+    std::tuple<ode_implicit_stepper>>::template fixedStepSizeUserSolver<
+      pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    std::tuple<ode_implicit_stepper>>::template arbitraryStepSizeUserSolver<
+      pressio4py::ode_dt_setter_wrapper_type, pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
 
-  // *** GALERKIN explicit Rank-1 state, rank-2 decoder ***
-  // without collector
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_12_galerkinproblems>::template bind<
-      rom_rank1_state_t, ::pressio4py::scalar_t>(galerkinModule);
-  // with collector
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_12_galerkinproblems>::template bind<
-      rom_rank1_state_t, ::pressio4py::scalar_t, rank1_collector_t>(galerkinModule);
+  // =========================
+  // bind ROM
+  // =========================
+  pressio4py::rom::bindDecoder(romModule);
+  pressio4py::rom::bindFomReconstructor(romModule);
 
-  // *** GALERKIN explicit Rank-2 state, rank-3 decoder ***
-  // without collector
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_23_galerkinproblems>::template bind<
-      rom_rank2_state_t, ::pressio4py::scalar_t>(galerkinModule);
-  // with collector
-  pressio4py::bindGalerkinExplicitProbs
-    <explicit_23_galerkinproblems>::template bind<
-      rom_rank2_state_t, ::pressio4py::scalar_t, rank2_collector_t>(galerkinModule);
+  // *** galerkin ***
+  using galerkin_binder = pressio4py::GalerkinBinder;
+  using galerkin_explicit_steppers = typename galerkin_binder::explicit_stepper_types;
+  using galerkin_implicit_steppers = typename galerkin_binder::implicit_stepper_types;
+  galerkin_binder::bindProblems(galerkinModule);
+  galerkin_binder::bindExplicitSteppers(galerkinModule);
+  // we need the solver type for the stepper's call operator
+  galerkin_binder::bindImplicitSteppers<pressio4py::UserDefinedNonLinSolverWrapper,
+					newraph_solver_t>(galerkinModule);
 
-  // GALERKIN implicit time stepping with collector object
-  pressio4py::bindSingleSolverWithMultipleGalerkinProblems
-    <newraph_solver_t, implicit_galerkinproblems>::template bind<
-      rom_rank1_state_t, ::pressio4py::scalar_t, rank1_collector_t>(galerkinModule);
+  pressio4py::BindAdvanceFunctions<galerkin_explicit_steppers>::fixedStepSize(odeModule);
+  pressio4py::BindAdvanceFunctions<galerkin_explicit_steppers>::template arbitraryStepSize<
+    pressio4py::ode_dt_setter_wrapper_type>(odeModule);
 
-  // implicit time stepping without collector object
-  pressio4py::bindSingleSolverWithMultipleGalerkinProblems
-    <newraph_solver_t, implicit_galerkinproblems>::template bind<
-      rom_rank1_state_t, ::pressio4py::scalar_t>(galerkinModule);
+  // // for implicit galerkin, we need the solver
+  // pressio4py::solvers::BindCreateHelperForTuple<
+  //   newraphbinder_t, galerkin_implicit_steppers>::bindCreate(solversModule);
 
-  // *** lspg ***
-  pressio4py::bindLspgProbsWithMultipleSolvers
-    <steady_lspgproblems, lspg_solvers>::template bind<
-      rom_rank1_state_t>(lspgModule);
-  // unsteady with collector object
-  pressio4py::bindLspgProbsWithMultipleSolvers
-    <unsteady_lspgproblems, lspg_solvers>::template bind<
-      rom_rank1_state_t, rank1_collector_t>(lspgModule);
-  // unsteady without collector object
-  pressio4py::bindLspgProbsWithMultipleSolvers
-    <unsteady_lspgproblems, lspg_solvers>::template bind<
-      rom_rank1_state_t>(lspgModule);
+  pressio4py::BindAdvanceFunctions<
+    galerkin_implicit_steppers>::template fixedStepSize<newraph_solver_t>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    galerkin_implicit_steppers>::template arbitraryStepSize<
+      pressio4py::ode_dt_setter_wrapper_type, newraph_solver_t>(odeModule);
 
-  // *** wls ***
-  pressio4py::bindWlsSystemsWithMultipleSolvers
-    <wls_systems, wls_solvers>::template bind<
-      pressio4py::WlsTypes::rom_state_t>(wlsModule);
+  pressio4py::BindAdvanceFunctions<
+    galerkin_implicit_steppers>::template fixedStepSizeUserSolver<
+      pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    galerkin_implicit_steppers>::template arbitraryStepSizeUserSolver<
+      pressio4py::ode_dt_setter_wrapper_type, pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
 
+  // *** steady lspg ***
+  using steady_lspg_binder = pressio4py::SteadyLSPGBinder;
+  using steady_lspg_steppers = typename steady_lspg_binder::system_types;
+  steady_lspg_binder::bindProblems(steadyLspgModule);
+
+  // *** unsteady lspg ***
+  using unsteady_lspg_binder = pressio4py::UnsteadyLSPGBinder;
+  using unsteady_lspg_steppers = typename unsteady_lspg_binder::stepper_types;
+  unsteady_lspg_binder::bindProblems(unsteadyLspgModule);
+  unsteady_lspg_binder::bindSteppers<pressio4py::UserDefinedNonLinSolverWrapper,
+  				     newraph_solver_t>(unsteadyLspgModule);
+
+  pressio4py::BindAdvanceFunctions<
+    unsteady_lspg_steppers>::template fixedStepSizeUserSolver<
+      pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    unsteady_lspg_steppers>::template arbitraryStepSizeUserSolver<
+      pressio4py::ode_dt_setter_wrapper_type, pressio4py::UserDefinedNonLinSolverWrapper>(odeModule);
+
+  pressio4py::BindAdvanceFunctions<
+    unsteady_lspg_steppers>::template fixedStepSize<gn_neq_solver_t>(odeModule);
+  pressio4py::BindAdvanceFunctions<
+    unsteady_lspg_steppers>::template arbitraryStepSize<
+      pressio4py::ode_dt_setter_wrapper_type, gn_neq_solver_t>(odeModule);
 }
+
 #endif

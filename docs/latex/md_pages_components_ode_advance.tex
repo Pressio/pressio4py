@@ -1,0 +1,79 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+ode}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_advance_autotoc_md26}{}\doxysection{API}\label{md_pages_components_ode_advance_autotoc_md26}
+
+
+Overload set for advancing for fixed number of steps 
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{advance\_n\_steps(stepper, state, start\_time, \(\backslash\)}
+\DoxyCodeLine{                time\_step\_size, num\_steps);                         (1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{advance\_n\_steps(stepper, state, start\_time, \(\backslash\)}
+\DoxyCodeLine{                time\_step\_setter, num\_steps);                       (2)}
+\DoxyCodeLine{}
+\DoxyCodeLine{advance\_n\_steps\_and\_observe(stepper, state, start\_time, \(\backslash\)}
+\DoxyCodeLine{                            time\_step\_size, num\_steps, observer);   (3)}
+\DoxyCodeLine{}
+\DoxyCodeLine{advance\_n\_steps\_and\_observe(stepper, state, start\_time, \(\backslash\)}
+\DoxyCodeLine{                            time\_step\_setter, num\_steps, observer); (4)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item (1,2)\+: overloads for advancing for a fixed number of steps
+\item (3,4)\+: overloads for advancing for a fixed number of steps accepting also an \char`\"{}observer\char`\"{} to monitor the evolution of the state at each step (more on this below)
+\end{DoxyItemize}\hypertarget{md_pages_components_ode_advance_autotoc_md27}{}\doxysection{Parameters and Requirements}\label{md_pages_components_ode_advance_autotoc_md27}
+
+\begin{DoxyItemize}
+\item {\ttfamily stepper}\+: the steppable object, see e.\+g.\+:
+\begin{DoxyItemize}
+\item \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit steppers}}
+\item stepper extracted from a \href{md_pages_components_rom_galerkin_default.html}{\texttt{ Galerkin ROM problem}}
+\item stepper extracted from a \href{md_pages_components_rom_lspg_default.html}{\texttt{ LSPG ROM problem}}
+\end{DoxyItemize}
+\item {\ttfamily state}\+: must be a {\ttfamily numpy.\+array}
+\item {\ttfamily start\+\_\+time}\+: self-\/explanatory
+\item {\ttfamily num\+\_\+steps}\+: self-\/explanatory
+\item {\ttfamily time\+\_\+step\+\_\+size}\+:
+\begin{DoxyItemize}
+\item size of the time step to use at each step (fixed)
+\item applicable only to overloads (1,2)
+\end{DoxyItemize}
+\item {\ttfamily time\+\_\+step\+\_\+setter}\+:
+\begin{DoxyItemize}
+\item applicable only to overloads (3,4)
+\item a functor responsible for setting the time step size to use at a given step 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }MyStepSizeSetter:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, step, time):}
+\DoxyCodeLine{    \textcolor{comment}{\# set time step and return}}
+\DoxyCodeLine{    dt = 1.5}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} dt}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\item {\ttfamily observer}\+:
+\begin{DoxyItemize}
+\item functor that you use to \char`\"{}observe\char`\"{} the state during the time integration. This is useful for collecting snapshots of the state, or necessary data/metrics/statistics.~\newline
+
+\item Must expose at least the call operator as follows\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }MyObs:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, step, time, state):}
+\DoxyCodeLine{    \textcolor{comment}{\# do something with state}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+
+
+By design, the steps are enumerated as follows\+: {\ttfamily 1,2,3...,num\+\_\+steps}. Therefore, step 1 is the step that starts at {\ttfamily t\+\_\+0 = start\+\_\+time} and ends at {\ttfamily t\+\_\+1 = start\+\_\+time + dt\+\_\+1}, step 2 is the step that starts at {\ttfamily t\+\_\+1} and ends at {\ttfamily t\+\_\+2 = t\+\_\+1 + dt\+\_\+2}. Here, {\ttfamily dt\+\_\+n} indicates the time step size to use for the {\ttfamily n}-\/th step. 

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_nonlinsolvers_lm" kind="page">
+    <compoundname>md_pages_components_nonlinsolvers_lm</compoundname>
+    <title>Nonlinear Solvers: Levenberg-Marquardt</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.solvers</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import solvers</computeroutput> </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+<sect1 id="md_pages_components_nonlinsolvers_lm_1autotoc_md18">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_levenberg_marquardt(problem,<sp/>state,<sp/>linear_solver)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_weighted_levenberg_marquardt(problem,<sp/>state,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>linear_solver,<sp/>weigh_functor)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>problem</computeroutput>:<itemizedlist>
+<listitem><para>instance of your problem meeting the <ulink url="md_pages_components_nonlinsolvers_general.html">residual/jacobian API</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>:<itemizedlist>
+<listitem><para>rank-1 <computeroutput>numpy.array</computeroutput> storing initial condition</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>linear_solver</computeroutput>:<itemizedlist>
+<listitem><para>an object that is used to solve the linear problem stemming from the normal equations</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">LinearSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,<sp/>b,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Here<sp/>you<sp/>need<sp/>to<sp/>solve<sp/>Ax<sp/>=<sp/>b.</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Remember<sp/>that<sp/>you<sp/>need<sp/>to<sp/>properly<sp/>overwrite<sp/>x</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&apos;&apos;&apos;</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>weigh_functor</computeroutput>:<itemizedlist>
+<listitem><para>applicable only to overload 2</para>
+</listitem><listitem><para>callable that is called to apply weighting to operators at each nonlinear iteration</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">WeighingFunctor</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>apply<sp/>your<sp/>weighting<sp/>to<sp/>operand<sp/>and<sp/>store<sp/>into<sp/>result</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>remember<sp/>to<sp/>properly<sp/>overwrite<sp/>result</highlight></codeline>
+</programlisting> </para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/nonlinsolvers_lm.md"/>
+  </compounddef>
+</doxygen>

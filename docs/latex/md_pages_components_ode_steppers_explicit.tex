@@ -1,0 +1,118 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+ode}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md29}{}\doxysection{Overview}\label{md_pages_components_ode_steppers_explicit_autotoc_md29}
+Applicable to systems of the form\+: \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]
+
+where $y$ is the state, $f$ is the RHS (also called velocity below), $t$ is time.~\newline
+ Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a \char`\"{}stepper\char`\"{} is an abstraction that represents the \char`\"{}how\char`\"{} to take a step.\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md30}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_explicit_autotoc_md30}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{stepper = ode.create\_explicit\_stepper(scheme, state, system)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value of the {\ttfamily ode.\+stepscheme} enum to set the desired stepping scheme.~\newline
+ Current choices\+: {\ttfamily Forward\+Euler}, {\ttfamily Runge\+Kutta4}, {\ttfamily Adams\+Bashforth2}, {\ttfamily SSPRunge\+Kutta3}.
+\end{DoxyItemize}
+\item {\ttfamily state}\+:
+\begin{DoxyItemize}
+\item {\ttfamily numpy.\+array} storing your state
+\end{DoxyItemize}
+\item {\ttfamily system}\+:
+\begin{DoxyItemize}
+\item object defining how to create an instance of the velocity $f$ and how to compute it.~\newline
+
+\item Must expose at least the following methods\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }MySys:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(...)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, stateIn, time, f):}
+\DoxyCodeLine{    \textcolor{comment}{\# compute f as needed}}
+\DoxyCodeLine{    \textcolor{comment}{\# f[:] = ...}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md31}{}\doxysection{Stepper class API}\label{md_pages_components_ode_steppers_explicit_autotoc_md31}
+Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Stepper:}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }order():}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# order of the step scheme of this stepper instantiation}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(state, current\_time, dt, step\_number)}
+
+\end{DoxyCode}
+
+
+When invoked, the call operator triggers the stepper to execute one step. Having access to the call operator, you can perform you own advancement in time. Alternatively, note that the {\ttfamily stepper} object satisfies the \char`\"{}steppable\char`\"{} concept discussed \href{md_pages_components_ode_advance.html}{\texttt{ here}}, so you can pass it to the \href{md_pages_components_ode_advance.html}{\texttt{ \char`\"{}advance\char`\"{} functions}} to step in time, see below for an example.
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md32}{}\doxysection{Example usage 1}\label{md_pages_components_ode_steppers_explicit_autotoc_md32}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import numpy as np}
+\DoxyCodeLine{from pressio4py import ode}
+\DoxyCodeLine{}
+\DoxyCodeLine{class MyOdeSystem:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(5)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, stateIn, time, R):}
+\DoxyCodeLine{    R[:] = 3.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{state   = np.ones(5)}
+\DoxyCodeLine{system  = MyOdeSystem()}
+\DoxyCodeLine{scheme  = ode.stepscheme.ForwardEuler}
+\DoxyCodeLine{stepper = ode.create\_explicit\_stepper(scheme, state, system)}
+\DoxyCodeLine{print(\textcolor{stringliteral}{"{}before doing one step: "{}}, state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# set time, step size, and step number}}
+\DoxyCodeLine{t, dt, step\_number=0., 2., 1}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# invoking the call operator makes the stepper take one step.}}
+\DoxyCodeLine{\textcolor{comment}{\# You can use it to do your own stepping if needed.}}
+\DoxyCodeLine{stepper(state, t, dt, step\_number)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# after the step, the state changes}}
+\DoxyCodeLine{print(\textcolor{stringliteral}{"{}after doing one step: "{}}, state)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md33}{}\doxysection{Example usage 2}\label{md_pages_components_ode_steppers_explicit_autotoc_md33}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} ode}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }MyOdeSystem:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(5)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, stateIn, time, R):}
+\DoxyCodeLine{    R[:] = 3.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{state   = np.ones(5)}
+\DoxyCodeLine{system  = MyOdeSystem()}
+\DoxyCodeLine{scheme  = ode.stepscheme.ForwardEuler}
+\DoxyCodeLine{stepper = ode.create\_explicit\_stepper(scheme, state, system)}
+\DoxyCodeLine{}
+\DoxyCodeLine{t0, dt, num\_steps = 0., 1.2, 5}
+\DoxyCodeLine{\textcolor{comment}{\# here we use our own advance functions}}
+\DoxyCodeLine{ode.advance\_n\_steps(stepper, state, t0, dt, num\_steps)}
+
+\end{DoxyCode}
+ 

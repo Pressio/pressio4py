@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_rom_lspg_general" kind="page">
+    <compoundname>md_pages_components_rom_lspg_general</compoundname>
+    <title>rom: Unsteady LSPG: General Info</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write more</para>
+<para>The pressio4py unsteady LSPG ROMs are designed such that using them involves three main steps:</para>
+<sect1 id="md_pages_components_rom_lspg_general_1autotoc_md84">
+<title>1. Create</title>
+<para>You create an instance of a &quot;LSPG problem&quot;, e.g.: <linebreak/>
+</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>pressio4py.rom.lspg.unsteady.DefaultExplicitProblem(args)</highlight></codeline>
+</programlisting></para>
+<para>We currently support three variants:</para>
+<para><itemizedlist>
+<listitem><para>Default: <ulink url="md_pages_components_rom_lspg_default.html">link</ulink></para>
+</listitem><listitem><para>Hyper-reduced: <ulink url="md_pages_components_rom_lspg_hypred.html">link</ulink></para>
+</listitem><listitem><para>Masked: <ulink url="md_pages_components_rom_lspg_masked.html">link</ulink></para>
+</listitem></itemizedlist>
+</para>
+<para>All variants return a problem object that meets the following interface:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">UnsteadyLSPGProblem</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">stepper()</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>fomStateReconstructor()</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+</programlisting></para>
+<para>The stepper method returns a reference to an <ulink url="md_pages_components_ode_steppers_implicit.html">implicit stepper</ulink>. The <computeroutput>stepper</computeroutput> method is, practically, what you would use to retrieve the underlying stepper and use it to solve the problem. Once you have the stepper, you can then use it as discussed in <ulink url="md_pages_components_ode_steppers_implicit.html">implicit stepper page</ulink>.</para>
+<para>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem contains a stepper object inside: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don&apos;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</para>
+</sect1>
+<sect1 id="md_pages_components_rom_lspg_general_1autotoc_md85">
+<title>2. Reference the stepper and solve in time</title>
+<para>Extract the underlying stepper object and solve in time:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>problme.stepper()</highlight></codeline>
+<codeline><highlight class="normal">pressio4py.ode.advance_n_steps_and_observe(stepper,<sp/>...)</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/rom_lspg_general.md"/>
+  </compounddef>
+</doxygen>

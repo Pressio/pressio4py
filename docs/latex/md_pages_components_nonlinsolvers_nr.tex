@@ -1,0 +1,88 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+solvers}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import solvers} \hypertarget{md_pages_components_nonlinsolvers_nr_autotoc_md20}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_nonlinsolvers_nr_autotoc_md20}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = solvers.create\_newton\_raphson(problem, state, linear\_solver)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily problem}\+:
+\begin{DoxyItemize}
+\item instance of your problem meeting the \href{md_pages_components_nonlinsolvers_general.html}{\texttt{ residual/jacobian API}}
+\end{DoxyItemize}
+\item {\ttfamily state}\+:
+\begin{DoxyItemize}
+\item rank-\/1 {\ttfamily numpy.\+array} holding initial condition
+\end{DoxyItemize}
+\item {\ttfamily linear\+\_\+solver}\+:
+\begin{DoxyItemize}
+\item an object that is used to solve the \char`\"{}inner\char`\"{} linear problem for each nonlinear iteration
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }LinearSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A, b, x):}
+\DoxyCodeLine{    \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Here you need to solve Ax = b.}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Remember that you need to properly overwrite x}}
+\DoxyCodeLine{\textcolor{stringliteral}{    '''}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_nonlinsolvers_nr_autotoc_md21}{}\doxysection{Example usage}\label{md_pages_components_nonlinsolvers_nr_autotoc_md21}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{from} scipy \textcolor{keyword}{import} linalg}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} logger, solvers, ode}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }MyProblem:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(2)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((2,2))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(self, x, R):}
+\DoxyCodeLine{    R[0] =  x[0]*x[0]*x[0] + x[1] -\/ 1.0}
+\DoxyCodeLine{    R[1] = -\/x[0] + x[1]*x[1]*x[1] + 1.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self, x, J):}
+\DoxyCodeLine{    J[0, 0] = 3.0*x[0]*x[0]}
+\DoxyCodeLine{    J[0, 1] =  1.0}
+\DoxyCodeLine{    J[1, 0] = -\/1.0}
+\DoxyCodeLine{    J[1, 1] = 3.0*x[1]*x[1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }MyLinSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A,b,x):}
+\DoxyCodeLine{    \textcolor{comment}{\# note that here using lapack is an overkill,}}
+\DoxyCodeLine{    \textcolor{comment}{\# since we can just solve this 2x2 system analyticall.}}
+\DoxyCodeLine{    \textcolor{comment}{\# but we do this for demonstration purposes}}
+\DoxyCodeLine{    lumat, piv, info = linalg.lapack.dgetrf(A, overwrite\_a=\textcolor{keyword}{False})}
+\DoxyCodeLine{    x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{'\_\_main\_\_'}:}
+\DoxyCodeLine{   logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{   logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
+\DoxyCodeLine{   state   = np.array([0.001, 0.0001])}
+\DoxyCodeLine{   problem = MyProblem()}
+\DoxyCodeLine{   lin\_s   = MyLinSolver()}
+\DoxyCodeLine{   solver  = solvers.create\_newton\_raphson(problem, state, lin\_s)}
+\DoxyCodeLine{   solver.setMaxIterations(10)}
+\DoxyCodeLine{   solver.solve(problem, state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{   \textcolor{comment}{\# the true solution is [1., 0.]}}
+\DoxyCodeLine{   \textcolor{comment}{\# so state should be close to that}}
+\DoxyCodeLine{   print(state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{   logger.finalize()}
+
+\end{DoxyCode}
+ 

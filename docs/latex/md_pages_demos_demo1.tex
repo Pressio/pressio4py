@@ -1,22 +1,22 @@
 
 
 \begin{DoxyParagraph}{}
-This page describes a demo for a reproductive Galerkin R\+OM applied to a 1D advection-\/diffusion problem using P\+OD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and code. More complex cases will be shown in other demos. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
+This page describes a demo for a reproductive Galerkin ROM applied to a 1D advection-\/diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and code. More complex cases will be shown in other demos. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_galerkin_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo1_autotoc_md1}{}\doxysection{Overview}\label{md_pages_demos_demo1_autotoc_md1}
-We cover these three typical steps needed for a R\+OM\+:
+\hypertarget{md_pages_demos_demo1_autotoc_md102}{}\doxysection{Overview}\label{md_pages_demos_demo1_autotoc_md102}
+We cover these three typical steps needed for a ROM\+:
 \begin{DoxyEnumerate}
-\item generate of snapshots using the full-\/order model (F\+OM)
-\item compute the basis\+: here we demonstrate the use of P\+OD modes
-\item execute the R\+OM\+: here we leverage the G\+A\+L\+E\+R\+K\+IN R\+OM to demonstrate a {\itshape reproductive} test, i.\+e., we run the R\+OM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different demo.
-\end{DoxyEnumerate}\hypertarget{md_pages_demos_demo1_autotoc_md2}{}\doxysection{F\+O\+M Equations}\label{md_pages_demos_demo1_autotoc_md2}
+\item generate of snapshots using the full-\/order model (FOM)
+\item compute the basis\+: here we demonstrate the use of POD modes
+\item execute the ROM\+: here we leverage the GALERKIN ROM to demonstrate a {\itshape reproductive} test, i.\+e., we run the ROM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different demo.
+\end{DoxyEnumerate}\hypertarget{md_pages_demos_demo1_autotoc_md103}{}\doxysection{FOM Equations}\label{md_pages_demos_demo1_autotoc_md103}
 The governing equations for this problem are\+:
 
-\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the F\+OM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo1_autotoc_md3}{}\doxysection{Main function}\label{md_pages_demos_demo1_autotoc_md3}
+\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the FOM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo1_autotoc_md104}{}\doxysection{Main function}\label{md_pages_demos_demo1_autotoc_md104}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{if \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  logger.initialize(logger.logto.terminal, \textcolor{stringliteral}{"{}null"{}})}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
 \DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
@@ -50,8 +50,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{    fomNorm = linalg.norm(fomFinalState)}
 \DoxyCodeLine{    err = linalg.norm(fomFinalState-\/currentSolution)}
 \DoxyCodeLine{    print(\textcolor{stringliteral}{"{}With \{\} modes, final relative l2 error: \{\}"{}}.format(romSize, err/fomNorm))}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md4}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo1_autotoc_md4}
+\hypertarget{md_pages_demos_demo1_autotoc_md105}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo1_autotoc_md105}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -67,51 +68,53 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{      U.append(u)}
 \DoxyCodeLine{  Usolns = np.array(U)}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md5}{}\doxysubsection{2. Compute P\+O\+D modes}\label{md_pages_demos_demo1_autotoc_md5}
+\hypertarget{md_pages_demos_demo1_autotoc_md106}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo1_autotoc_md106}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
-\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}SVD on matrix: "{}}, snapshots.shape)}
-\DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
-\DoxyCodeLine{  \textcolor{keywordflow}{return} U}
+\DoxyCodeLine{print(\textcolor{stringliteral}{"{}SVD on matrix: "{}}, snapshots.shape)}
+\DoxyCodeLine{U,S,VT = np.linalg.svd(snapshots)}
+\DoxyCodeLine{\textcolor{keywordflow}{return} U}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md6}{}\doxysubsection{3. Construct and run R\+OM}\label{md_pages_demos_demo1_autotoc_md6}
+\hypertarget{md_pages_demos_demo1_autotoc_md107}{}\doxysubsection{3. Construct and run ROM}\label{md_pages_demos_demo1_autotoc_md107}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keyword}{def }runGalerkin(fomObj, dt, nsteps, modes):}
-\DoxyCodeLine{  \textcolor{comment}{\# auxiliary class to use in the solve below}}
-\DoxyCodeLine{  \textcolor{comment}{\# to monitor the rom state during time stepping}}
-\DoxyCodeLine{  \textcolor{keyword}{class }RomStateObserver:}
-\DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
-\DoxyCodeLine{    \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, state): \textcolor{keyword}{pass}}
+\DoxyCodeLine{\textcolor{comment}{\# auxiliary class to use in the solve below}}
+\DoxyCodeLine{\textcolor{comment}{\# to monitor the rom state during time stepping}}
+\DoxyCodeLine{\textcolor{keyword}{class }RomStateObserver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, state): \textcolor{keyword}{pass}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# find out number of modes wanted}}
-\DoxyCodeLine{  romSize = modes.shape[1]}
+\DoxyCodeLine{\textcolor{comment}{\# find out number of modes wanted}}
+\DoxyCodeLine{romSize = modes.shape[1]}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create a linear decoder, passing only the desired number of modes}}
-\DoxyCodeLine{  \textcolor{comment}{\# this will make a deep copy of the modes}}
-\DoxyCodeLine{  linearDecoder = rom.Decoder(modes)}
+\DoxyCodeLine{\textcolor{comment}{\# create a linear decoder, passing only the desired number of modes}}
+\DoxyCodeLine{\textcolor{comment}{\# this will make a deep copy of the modes}}
+\DoxyCodeLine{linearDecoder = rom.Decoder(modes)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# fom reference state: here it is zero}}
-\DoxyCodeLine{  fomReferenceState = np.zeros(fomObj.nGrid)}
+\DoxyCodeLine{\textcolor{comment}{\# fom reference state: here it is zero}}
+\DoxyCodeLine{fomReferenceState = np.zeros(fomObj.nGrid)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create ROM state by projecting the fom initial condition}}
-\DoxyCodeLine{  fomInitialState = fomObj.u0.copy()}
-\DoxyCodeLine{  romState = np.dot(modes.T, fomInitialState)}
+\DoxyCodeLine{\textcolor{comment}{\# create ROM state by projecting the fom initial condition}}
+\DoxyCodeLine{fomInitialState = fomObj.u0.copy()}
+\DoxyCodeLine{romState = np.dot(modes.T, fomInitialState)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create problem}}
-\DoxyCodeLine{  problem = rom.galerkin.default.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState)}
+\DoxyCodeLine{\textcolor{comment}{\# create problem}}
+\DoxyCodeLine{scheme = ode.stepscheme.ForwardEuler}
+\DoxyCodeLine{problem = rom.galerkin.DefaultExplicitProblem(scheme, fomObj, linearDecoder, romState, fomReferenceState)}
+\DoxyCodeLine{stepper = problem.stepper()}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
-\DoxyCodeLine{  myObs = RomStateObserver()}
-\DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
-\DoxyCodeLine{  rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)}
+\DoxyCodeLine{\textcolor{comment}{\# create object to monitor the romState at every iteration}}
+\DoxyCodeLine{myObs = RomStateObserver()}
+\DoxyCodeLine{\textcolor{comment}{\# solve problem}}
+\DoxyCodeLine{ode.advance\_n\_steps\_and\_observe(stepper, romState, 0., dt, nsteps, myObs)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
-\DoxyCodeLine{  \textcolor{comment}{\# get the reconstructor object: this allows to map romState to fomState}}
-\DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
-\DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
+\DoxyCodeLine{\textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
+\DoxyCodeLine{\textcolor{comment}{\# get the reconstructor object: this allows to map romState to fomState}}
+\DoxyCodeLine{fomRecon = problem.fomStateReconstructor()}
+\DoxyCodeLine{\textcolor{keywordflow}{return} fomRecon(romState)}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo1_autotoc_md7}{}\doxysection{Results}\label{md_pages_demos_demo1_autotoc_md7}
-If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few P\+OD modes.  
+\hypertarget{md_pages_demos_demo1_autotoc_md108}{}\doxysection{Results}\label{md_pages_demos_demo1_autotoc_md108}
+If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few POD modes.  

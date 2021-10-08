@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_ode_steppers_implicit" kind="page">
+    <compoundname>md_pages_components_ode_steppers_implicit</compoundname>
+    <title>ode: implicit steppers</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.ode</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import ode</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_ode_steppers_implicit_1autotoc_md35">
+<title>Overview</title>
+<para>Provides functionalities to create steppers for implicit methods. Recall that implicit methods update the state of a system by solving a system of equations involving both the current and next state. An implicit stepper is an object that knows how to do one such <emphasis>implicit</emphasis> step.</para>
+<para>Pressio implicit steppers are applicable to any system written in <emphasis>continuous-time</emphasis> form: <formula id="2">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]</formula></para>
+<para>and/or in a <emphasis>discrete-time</emphasis> form <formula id="6">\[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]</formula></para>
+<para>Here, <formula id="3">$y$</formula> is the state, <formula id="4">$f$</formula> the velocity, <formula id="5">$t$</formula> is time, and <formula id="7">$R$</formula> is the residual.</para>
+</sect1>
+<sect1 id="md_pages_components_ode_steppers_implicit_1autotoc_md36">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_implicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>scheme</computeroutput>:<itemizedlist>
+<listitem><para>value from the <computeroutput>ode.stepscheme</computeroutput> enum setting the desired stepping scheme:</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para><table rows="4" cols="3"><row>
+<entry thead="yes"><para>enum value   </para>
+</entry><entry thead="yes"><para>Method   </para>
+</entry><entry thead="yes"><para>Discrete Residual Formula    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>BDF1   </para>
+</entry><entry thead="no"><para>Backward Diff 1st order   </para>
+</entry><entry thead="no"><para><formula id="8">$R = y_{n+1}-y_{n}- hf(t_{n+1},y_{n+1})$</formula>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>BDF2   </para>
+</entry><entry thead="no"><para>Backward Diff 2nd order   </para>
+</entry><entry thead="no"><para><formula id="9">$R = y_{n+1}-{\tfrac {4}{3}}y_{n}+{\tfrac {1}{3}}y_{n-1} - {\tfrac {2}{3}}hf(t_{n+1},y_{n+1})$</formula>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>CrankNicolson   </para>
+</entry><entry thead="no"><para>Crank-Nicolson   </para>
+</entry><entry thead="no"><para><formula id="10">$R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h \left( f(t_{n+1},y_{n+1}) + f(t_{n},y_{n}) \right)$</formula>   </para>
+</entry></row>
+</table>
+</para>
+<para><itemizedlist>
+<listitem><para><computeroutput>state</computeroutput>: -<computeroutput>numpy.array</computeroutput> storing your state</para>
+</listitem><listitem><para><computeroutput>system</computeroutput>:<itemizedlist>
+<listitem><para>object defining how to create an instance of the velocity <formula id="4">$f$</formula> and how to compute it.</para>
+</listitem><listitem><para>Must conform to the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MySys:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>stateIn,<sp/>time,<sp/>f):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>f<sp/>as<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>f[:]<sp/>=<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((...))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self,<sp/>stateIn,<sp/>time,<sp/>J):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>J<sp/>as<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>make<sp/>sure<sp/>to<sp/>use<sp/>J[:]<sp/>to<sp/>overwrite<sp/>value</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-warning" /></para>
+<para><parblock><para>Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support <ulink url="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing by reference sparse types</ulink>. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense. </para>
+</parblock></para>
+<sect2 id="md_pages_components_ode_steppers_implicit_1autotoc_md37">
+<title>Stepper object</title>
+<para>The returned stepper object exposes the following methods:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Stepper:</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">order():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>order<sp/>of<sp/>the<sp/>step<sp/>scheme<sp/>of<sp/>this<sp/>stepper<sp/>instantiation</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>current_time,<sp/>dt,<sp/>step_number,<sp/>solver)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>createResidual()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>a<sp/>residual<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/></highlight><highlight class="comment">#<sp/>a<sp/>Jacobian<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>residual(state,<sp/>R)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(state,<sp/>J)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_pages_components_ode_steppers_implicit_1autotoc_md38">
+<title>What to do after a stepper is created?</title>
+<para>Any stepper created using the functions above is guaranteed to satisfy the &quot;steppable&quot; concept discussed <ulink url="/Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio/docs/html/md_pages_components_ode_advance.html">here</ulink>. Therefore, once you create a stepper, you can use the <ulink url="md_pages_components_ode_advance.html">advancers</ulink> to step forward or you can use your own.<linebreak/>
+ An example is below:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">todo</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/ode_steppers_implicit.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_ode_steppers_explicit" kind="page">
+    <compoundname>md_pages_components_ode_steppers_explicit</compoundname>
+    <title>ode: explicit steppers</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.ode</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import ode</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md29">
+<title>Overview</title>
+<para>Applicable to systems of the form: <formula id="2">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]</formula></para>
+<para>where <formula id="3">$y$</formula> is the state, <formula id="4">$f$</formula> is the RHS (also called velocity below), <formula id="5">$t$</formula> is time.<linebreak/>
+ Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a &quot;stepper&quot; is an abstraction that represents the &quot;how&quot; to take a step.</para>
+</sect1>
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md30">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".cpp"><codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_explicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>scheme</computeroutput>:<itemizedlist>
+<listitem><para>value of the <computeroutput>ode.stepscheme</computeroutput> enum to set the desired stepping scheme.<linebreak/>
+ Current choices: <computeroutput>ForwardEuler</computeroutput>, <computeroutput>RungeKutta4</computeroutput>, <computeroutput>AdamsBashforth2</computeroutput>, <computeroutput>SSPRungeKutta3</computeroutput>.</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>:<itemizedlist>
+<listitem><para><computeroutput>numpy.array</computeroutput> storing your state</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>system</computeroutput>:<itemizedlist>
+<listitem><para>object defining how to create an instance of the velocity <formula id="4">$f$</formula> and how to compute it.<linebreak/>
+</para>
+</listitem><listitem><para>Must expose at least the following methods: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MySys:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>stateIn,<sp/>time,<sp/>f):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>f<sp/>as<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>f[:]<sp/>=<sp/>...</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md31">
+<title>Stepper class API</title>
+<para>Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Stepper:</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">order():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>order<sp/>of<sp/>the<sp/>step<sp/>scheme<sp/>of<sp/>this<sp/>stepper<sp/>instantiation</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>current_time,<sp/>dt,<sp/>step_number)</highlight></codeline>
+</programlisting></para>
+<para>When invoked, the call operator triggers the stepper to execute one step. Having access to the call operator, you can perform you own advancement in time. Alternatively, note that the <computeroutput>stepper</computeroutput> object satisfies the &quot;steppable&quot; concept discussed <ulink url="md_pages_components_ode_advance.html">here</ulink>, so you can pass it to the <ulink url="md_pages_components_ode_advance.html">&quot;advance&quot; functions</ulink> to step in time, see below for an example.</para>
+<para><linebreak/>
+ <hruler/>
+ <linebreak/>
+</para>
+</sect1>
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md32">
+<title>Example usage 1</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">import<sp/>numpy<sp/>as<sp/>np</highlight></codeline>
+<codeline><highlight class="normal">from<sp/>pressio4py<sp/>import<sp/>ode</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">class<sp/>MyOdeSystem:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(5)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>stateIn,<sp/>time,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[:]<sp/>=<sp/>3.0</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">state<sp/><sp/><sp/>=<sp/>np.ones(5)</highlight></codeline>
+<codeline><highlight class="normal">system<sp/><sp/>=<sp/>MyOdeSystem()</highlight></codeline>
+<codeline><highlight class="normal">scheme<sp/><sp/>=<sp/>ode.stepscheme.ForwardEuler</highlight></codeline>
+<codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_explicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
+<codeline><highlight class="normal">print(</highlight><highlight class="stringliteral">&quot;before<sp/>doing<sp/>one<sp/>step:<sp/>&quot;</highlight><highlight class="normal">,<sp/>state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>set<sp/>time,<sp/>step<sp/>size,<sp/>and<sp/>step<sp/>number</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">t,<sp/>dt,<sp/>step_number=0.,<sp/>2.,<sp/>1</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>invoking<sp/>the<sp/>call<sp/>operator<sp/>makes<sp/>the<sp/>stepper<sp/>take<sp/>one<sp/>step.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>You<sp/>can<sp/>use<sp/>it<sp/>to<sp/>do<sp/>your<sp/>own<sp/>stepping<sp/>if<sp/>needed.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">stepper(state,<sp/>t,<sp/>dt,<sp/>step_number)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>after<sp/>the<sp/>step,<sp/>the<sp/>state<sp/>changes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">print(</highlight><highlight class="stringliteral">&quot;after<sp/>doing<sp/>one<sp/>step:<sp/>&quot;</highlight><highlight class="normal">,<sp/>state)</highlight></codeline>
+</programlisting></para>
+</sect1>
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md33">
+<title>Example usage 2</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>ode</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyOdeSystem:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createVelocity(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(5)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">velocity(self,<sp/>stateIn,<sp/>time,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[:]<sp/>=<sp/>3.0</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">state<sp/><sp/><sp/>=<sp/>np.ones(5)</highlight></codeline>
+<codeline><highlight class="normal">system<sp/><sp/>=<sp/>MyOdeSystem()</highlight></codeline>
+<codeline><highlight class="normal">scheme<sp/><sp/>=<sp/>ode.stepscheme.ForwardEuler</highlight></codeline>
+<codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_explicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">t0,<sp/>dt,<sp/>num_steps<sp/>=<sp/>0.,<sp/>1.2,<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>here<sp/>we<sp/>use<sp/>our<sp/>own<sp/>advance<sp/>functions</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">ode.advance_n_steps(stepper,<sp/>state,<sp/>t0,<sp/>dt,<sp/>num_steps)</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/ode_steppers_explicit.md"/>
+  </compounddef>
+</doxygen>

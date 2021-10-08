@@ -1,0 +1,91 @@
+
+
+
+
+A key assumption of projection-\/based ROMs is to approximate the full-\/order model (FOM) state, $y_{fom}$, as\+: \[ y_{fom} = g(y_{rom}) \]
+
+where $y_{rom}$ is the reduced state (or generalized coordinates), and $g$ is the decoder (or mapping). 
+
+~\newline
+\hypertarget{md_pages_components_rom_decoder_autotoc_md40}{}\doxysection{Custom Decoder}\label{md_pages_components_rom_decoder_autotoc_md40}
+A custom decoder in pressio4py implements the general mapping above.
+
+This allows one to use an arbitrary function to map the ROM state to the FOM state.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }CustomMapper:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, fomSize, romSize):}
+\DoxyCodeLine{    \textcolor{comment}{\# attention: the jacobian of the mapping must be column-\/major oder}}
+\DoxyCodeLine{    \textcolor{comment}{\# so that pressio can view it without deep copying it, this enables}}
+\DoxyCodeLine{    \textcolor{comment}{\# to keep only one jacobian object around and to call the update}}
+\DoxyCodeLine{    \textcolor{comment}{\# method below correctly}}
+\DoxyCodeLine{    self.jacobian\_ = np.zeros((fomSize,romSize), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self): \textcolor{keywordflow}{return} self.jacobian\_}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyMapping(self, romState, fomState):}
+\DoxyCodeLine{    \textcolor{comment}{\#fomState[:] = whatever is needed}}
+\DoxyCodeLine{    \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }updateJacobian(self, romState):}
+\DoxyCodeLine{    \textcolor{comment}{\# update the self.jacobian\_[:,:]}}
+\DoxyCodeLine{    \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# create the mapper}}
+\DoxyCodeLine{myMapper = CustomMapper(10,3)}
+\DoxyCodeLine{\textcolor{comment}{\# to create a custom decoder, one can do}}
+\DoxyCodeLine{customDecoder = rom.Decoder(myMapper, \textcolor{stringliteral}{"{}MyMapper"{}})}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md41}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md41}
+
+\begin{DoxyItemize}
+\item {\ttfamily rom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}
+\item {\ttfamily fom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}
+\item {\ttfamily jacobian\+\_\+type}\enskip{} \+: rank-\/2 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+
+
+
+Note\+: there is no explicit constraint on what the mapping is, it can be anything.
+
+As long as the decoder (or mapper) class implements the concept, it is admissible. 
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_decoder_autotoc_md42}{}\doxysection{Linear Decoder}\label{md_pages_components_rom_decoder_autotoc_md42}
+A linear decoder is a mapping of the form\+: \[ y_{fom} = \phi y_{rom} \]
+
+where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hypertarget{md_pages_components_rom_decoder_autotoc_md43}{}\doxysubsection{Example usage}\label{md_pages_components_rom_decoder_autotoc_md43}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# create the matrix}}
+\DoxyCodeLine{\textcolor{comment}{\# attention: phi must be column-\/major for these reasons:}}
+\DoxyCodeLine{\textcolor{comment}{\#}}
+\DoxyCodeLine{\textcolor{comment}{\# 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,}}
+\DoxyCodeLine{\textcolor{comment}{\#    so a column-\/major layout implies seamless compatiblity with blas}}
+\DoxyCodeLine{\textcolor{comment}{\#}}
+\DoxyCodeLine{\textcolor{comment}{\# 2. when using column-\/major layout, pressio4py references the}}
+\DoxyCodeLine{\textcolor{comment}{\#    matrix phi without doing a deep copy, which saves memory}}
+\DoxyCodeLine{\textcolor{comment}{\#    since a single jacobian matrix is alive.}}
+\DoxyCodeLine{\textcolor{comment}{\#}}
+\DoxyCodeLine{phi = np.ones((10,3), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# to create the linear decoder, you simply do}}
+\DoxyCodeLine{linearDecoder = rom.Decoder(phi)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# linearDecoder exposes a method to evaluate the mapping}}
+\DoxyCodeLine{fomState, romState = np.zeros(10), np.ones(3)}
+\DoxyCodeLine{linearDecoder.applyMapping(romState, fomState)}
+\DoxyCodeLine{print(fomState)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md44}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md44}
+
+\begin{DoxyItemize}
+\item {\ttfamily rom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}
+\item {\ttfamily fom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}
+\item {\ttfamily jacobian\+\_\+type}\enskip{} \+: rank-\/2 {\ttfamily numpy.\+array} 
+\end{DoxyItemize}

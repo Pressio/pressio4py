@@ -1,21 +1,21 @@
 
 
 \begin{DoxyParagraph}{}
-This page describes a demo for a reproductive L\+S\+PG R\+OM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via a multilayer perceptron (M\+LP). This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/main.py}{\texttt{ here}}.
+This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via a multilayer perceptron (MLP). This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/main.py}{\texttt{ here}}.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo6_autotoc_md43}{}\doxysection{Overview}\label{md_pages_demos_demo6_autotoc_md43}
-This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}}, but instead of using P\+OD modes, we show here how to use a nonlinear manifold computed approximated by a neural network. Specifically, we use a M\+LP with 2 hidden layers of sizes 64 and 200.
+\hypertarget{md_pages_demos_demo6_autotoc_md144}{}\doxysection{Overview}\label{md_pages_demos_demo6_autotoc_md144}
+This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}}, but instead of using POD modes, we show here how to use a nonlinear manifold computed approximated by a neural network. Specifically, we use a MLP with 2 hidden layers of sizes 64 and 200.
 
 
 
 \begin{DoxyParagraph}{Important\+:}
-The M\+LP used in this demo is implemented in Py\+Torch, thus Py\+Torch must be installed prior to executing this demo. Look \href{https://pytorch.org/get-started/locally/}{\texttt{ here}} for information on how to install Py\+Torch on your system.
+The MLP used in this demo is implemented in Py\+Torch, thus Py\+Torch must be installed prior to executing this demo. Look \href{https://pytorch.org/get-started/locally/}{\texttt{ here}} for information on how to install Py\+Torch on your system.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo6_autotoc_md44}{}\doxysection{Main function}\label{md_pages_demos_demo6_autotoc_md44}
+\hypertarget{md_pages_demos_demo6_autotoc_md145}{}\doxysection{Main function}\label{md_pages_demos_demo6_autotoc_md145}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  logger.initialize(logger.logto.terminal, \textcolor{stringliteral}{"{}null"{}})}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
 \DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
@@ -43,10 +43,13 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
 \DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
 \DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  logger.finalize()}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo6_autotoc_md45}{}\doxysubsection{1. Run F\+O\+M and collect snapshots}\label{md_pages_demos_demo6_autotoc_md45}
-This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo6_autotoc_md46}{}\doxysubsection{2. Setup and train the nonlinear mapper}\label{md_pages_demos_demo6_autotoc_md46}
-It is important to note that while the mapper class below has the A\+PI required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a M\+L\+P-\/based representation in Py\+Torch, but one can use any other types of mapping and any other library (e.\+g., Tensorflow, keras). All of the Py\+Torch-\/specific code is encapsulated \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_PyTorch.py}{\texttt{ here}}. If you prefer Tensorflow/keras, an equivalent implementation is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_keras.py}{\texttt{ here}}.
+\hypertarget{md_pages_demos_demo6_autotoc_md146}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo6_autotoc_md146}
+This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo6_autotoc_md147}{}\doxysubsection{2. Setup and train the nonlinear mapper}\label{md_pages_demos_demo6_autotoc_md147}
+It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a MLP-\/based representation in Py\+Torch, but one can use any other types of mapping and any other library (e.\+g., Tensorflow, keras). All of the Py\+Torch-\/specific code is encapsulated \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_PyTorch.py}{\texttt{ here}}. If you prefer Tensorflow/keras, an equivalent implementation is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_keras.py}{\texttt{ here}}.
 
 The autoencoder is defined by 
 \begin{DoxyCode}{0}
@@ -106,6 +109,7 @@ The autoencoder is defined by
 \DoxyCodeLine{    x = F.elu(x)}
 \DoxyCodeLine{    x = self.fc3(x)}
 \DoxyCodeLine{    \textcolor{keywordflow}{return} x}
+
 \end{DoxyCode}
 
 
@@ -135,10 +139,11 @@ and is created/trained using
 \DoxyCodeLine{               \textcolor{stringliteral}{'TrainingCheckpoint.tar'})}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} MyMapper(model.decoder, model.encoder) }
+
 \end{DoxyCode}
 
 
-This is all wrapped in a mapper class which conforms to the A\+PI required by Pressio 
+This is all wrapped in a mapper class which conforms to the API required by Pressio 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMapper:}
 \DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, decoderObj, encoderObj):}
@@ -184,6 +189,7 @@ This is all wrapped in a mapper class which conforms to the A\+PI required by Pr
 \DoxyCodeLine{    \textcolor{comment}{\# slower than finite difference currently}}
 \DoxyCodeLine{    J = torch.autograd.functional.jacobian(self.decoder\_, torch.Tensor(romState))}
 \DoxyCodeLine{    self.jacobian\_[:,:] = J.detach()[:,:]}
+
 \end{DoxyCode}
 
 
@@ -192,19 +198,17 @@ This is all wrapped in a mapper class which conforms to the A\+PI required by Pr
 \begin{DoxyParagraph}{Important\+:}
 when creating an arbitrary mapping (as in the class above), the jacobian matrix {\bfseries{must}} be column-\/major oder so that pressio can reference it without deep copying it. This not only reduces the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo6_autotoc_md47}{}\doxysubsection{3. Construct and run L\+S\+PG}\label{md_pages_demos_demo6_autotoc_md47}
+\hypertarget{md_pages_demos_demo6_autotoc_md148}{}\doxysubsection{3. Construct and run LSPG}\label{md_pages_demos_demo6_autotoc_md148}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, customMapper):}
 \DoxyCodeLine{  \textcolor{comment}{\# this is an auxiliary class that can be passed to solve}}
 \DoxyCodeLine{  \textcolor{comment}{\# LSPG to monitor the rom state.}}
 \DoxyCodeLine{  \textcolor{keyword}{class }RomStateObserver:}
-\DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
 \DoxyCodeLine{    \textcolor{keyword}{def }\_\_call\_\_(self, timeStep, time, state): \textcolor{keyword}{pass}}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# this linear solver is used at each gauss-\/newton iteration}}
 \DoxyCodeLine{  \textcolor{keyword}{class }MyLinSolver:}
-\DoxyCodeLine{    \textcolor{keyword}{def }\_\_init\_\_(self): \textcolor{keyword}{pass}}
 \DoxyCodeLine{    \textcolor{keyword}{def }solve(self, A,b,x):}
 \DoxyCodeLine{      lumat, piv, info = linalg.lapack.dgetrf(A, overwrite\_a=\textcolor{keyword}{True})}
 \DoxyCodeLine{      x[:], info = linalg.lapack.dgetrs(lumat, piv, b, 0, 0)}
@@ -221,24 +225,27 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  romState = customMapper.applyInverseMapping(fomInitialState)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create LSPG problem}}
-\DoxyCodeLine{  problem = rom.lspg.unsteady.default.ProblemEuler(fomObj, customDecoder, romState, fomReferenceState)}
+\DoxyCodeLine{  scheme = ode.stepscheme.BDF1}
+\DoxyCodeLine{  problem = rom.lspg.unsteady.DefaultProblem(scheme, fomObj, customDecoder, romState, fomReferenceState)}
+\DoxyCodeLine{  stepper = problem.stepper()}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create the Gauss-\/Newton solver}}
-\DoxyCodeLine{  nonLinSolver = solvers.createGaussNewton(problem, romState, MyLinSolver())}
+\DoxyCodeLine{  nonLinSolver = solvers.create\_gauss\_newton(stepper, romState, MyLinSolver())}
 \DoxyCodeLine{  \textcolor{comment}{\# set tolerance and convergence criteria}}
 \DoxyCodeLine{  nlsTol, nlsMaxIt = 1e-\/7, 10}
 \DoxyCodeLine{  nonLinSolver.setMaxIterations(nlsMaxIt)}
-\DoxyCodeLine{  nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)}
+\DoxyCodeLine{  nonLinSolver.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
 \DoxyCodeLine{  myObs = RomStateObserver()}
 \DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
-\DoxyCodeLine{  rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)}
+\DoxyCodeLine{  ode.advance\_n\_steps\_and\_observe(stepper, romState, 0., dt, nsteps, myObs, nonLinSolver)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
 \DoxyCodeLine{  \textcolor{comment}{\# get the reconstructor object: this allows to map romState to fomState}}
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
-\DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon.evaluate(romState)}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon(romState)}
+
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo6_autotoc_md48}{}\doxysection{Results}\label{md_pages_demos_demo6_autotoc_md48}
+\hypertarget{md_pages_demos_demo6_autotoc_md149}{}\doxysection{Results}\label{md_pages_demos_demo6_autotoc_md149}
 If everything works fine, the following plot shows the result.  

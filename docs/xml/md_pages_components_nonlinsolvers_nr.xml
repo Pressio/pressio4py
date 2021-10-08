@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_nonlinsolvers_nr" kind="page">
+    <compoundname>md_pages_components_nonlinsolvers_nr</compoundname>
+    <title>Nonlinear Solvers: Newton-Raphson</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.solvers</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import solvers</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_nonlinsolvers_nr_1autotoc_md20">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_newton_raphson(problem,<sp/>state,<sp/>linear_solver)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>problem</computeroutput>:<itemizedlist>
+<listitem><para>instance of your problem meeting the <ulink url="md_pages_components_nonlinsolvers_general.html">residual/jacobian API</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>:<itemizedlist>
+<listitem><para>rank-1 <computeroutput>numpy.array</computeroutput> holding initial condition</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>linear_solver</computeroutput>:<itemizedlist>
+<listitem><para>an object that is used to solve the &quot;inner&quot; linear problem for each nonlinear iteration</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">LinearSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,<sp/>b,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Here<sp/>you<sp/>need<sp/>to<sp/>solve<sp/>Ax<sp/>=<sp/>b.</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Remember<sp/>that<sp/>you<sp/>need<sp/>to<sp/>properly<sp/>overwrite<sp/>x</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&apos;&apos;&apos;</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_components_nonlinsolvers_nr_1autotoc_md21">
+<title>Example usage</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>scipy<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>linalg</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>logger,<sp/>solvers,<sp/>ode</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyProblem:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createResidual(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(2)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((2,2))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residual(self,<sp/>x,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[0]<sp/>=<sp/><sp/>x[0]*x[0]*x[0]<sp/>+<sp/>x[1]<sp/>-<sp/>1.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[1]<sp/>=<sp/>-x[0]<sp/>+<sp/>x[1]*x[1]*x[1]<sp/>+<sp/>1.0</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self,<sp/>x,<sp/>J):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,<sp/>0]<sp/>=<sp/>3.0*x[0]*x[0]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,<sp/>1]<sp/>=<sp/><sp/>1.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,<sp/>0]<sp/>=<sp/>-1.0</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,<sp/>1]<sp/>=<sp/>3.0*x[1]*x[1]</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,b,x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>note<sp/>that<sp/>here<sp/>using<sp/>lapack<sp/>is<sp/>an<sp/>overkill,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>since<sp/>we<sp/>can<sp/>just<sp/>solve<sp/>this<sp/>2x2<sp/>system<sp/>analyticall.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>but<sp/>we<sp/>do<sp/>this<sp/>for<sp/>demonstration<sp/>purposes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>lumat,<sp/>piv,<sp/>info<sp/>=<sp/>linalg.lapack.dgetrf(A,<sp/>overwrite_a=</highlight><highlight class="keyword">False</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x[:],<sp/>info<sp/>=<sp/>linalg.lapack.dgetrs(lumat,<sp/>piv,<sp/>b,<sp/>0,<sp/>0)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&apos;__main__&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>state<sp/><sp/><sp/>=<sp/>np.array([0.001,<sp/>0.0001])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>problem<sp/>=<sp/>MyProblem()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>lin_s<sp/><sp/><sp/>=<sp/>MyLinSolver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>solver<sp/><sp/>=<sp/>solvers.create_newton_raphson(problem,<sp/>state,<sp/>lin_s)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>solver.setMaxIterations(10)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>solver.solve(problem,<sp/>state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>true<sp/>solution<sp/>is<sp/>[1.,<sp/>0.]</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>so<sp/>state<sp/>should<sp/>be<sp/>close<sp/>to<sp/>that</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>logger.finalize()</highlight></codeline>
+</programlisting> </para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/nonlinsolvers_nr.md"/>
+  </compounddef>
+</doxygen>

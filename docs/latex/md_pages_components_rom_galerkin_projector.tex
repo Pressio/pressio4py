@@ -1,0 +1,26 @@
+
+
+The projector is needed for Galerkin to perform the projection of the FOM operators onto the reduced space.
+
+It is explicitly required from the user when doing \href{md_pages_components_rom_galerkin_masked.html}{\texttt{ masked}} or \href{md_pages_components_rom_galerkin_hypred.html}{\texttt{ hyper-\/reduced}} Galerkin. 
+
+For a \href{md_pages_components_rom_galerkin_default.html}{\texttt{ default}} problem, you don\textquotesingle{}t need to pass it because the projector is constructed behind the scenes automatically using the decoder\textquotesingle{}s jacobian.
+
+todo\+: explain more, talk about pressio-\/tools.\hypertarget{md_pages_components_rom_galerkin_projector_autotoc_md76}{}\doxysection{API}\label{md_pages_components_rom_galerkin_projector_autotoc_md76}
+When provided by the user, the projector must be a functor as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Projector:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, ...):}
+\DoxyCodeLine{    \textcolor{comment}{\# as needed}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, time, result):}
+\DoxyCodeLine{    \textcolor{comment}{\# project operand and store in result}}
+
+\end{DoxyCode}
+
+
+Note that the operand is either a FOM velocity instance, or the decoder\textquotesingle{}s Jacobian. In all cases, however, it is a {\ttfamily numpy.\+array}. You can define the actual projection operation however you like.
+
+One thing to keep in mind is that, typically, the {\ttfamily operand} is either a masked operand (i.\+e., the result of masking a full FOM operand) if you are using a masked problem, or it is a hyper-\/reduced object if you are using a hyper-\/reduced Galerkin problem. 

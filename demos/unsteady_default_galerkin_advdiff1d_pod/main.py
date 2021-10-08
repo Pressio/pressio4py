@@ -8,8 +8,7 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/..")         # to access doFom
 
-from pressio4py import rom as rom, logger
-from pressio4py import solvers as solvers
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
@@ -25,7 +24,6 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   # auxiliary class to use in the solve below
   # to monitor the rom state during time stepping
   class RomStateObserver:
-    def __init__(self): pass
     def __call__(self, timeStep, time, state): pass
 
   # find out number of modes wanted
@@ -43,21 +41,23 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   romState = np.dot(modes.T, fomInitialState)
 
   # create problem
-  problem = rom.galerkin.default.ProblemForwardEuler(fomObj, linearDecoder, romState, fomReferenceState)
+  scheme = ode.stepscheme.ForwardEuler
+  problem = rom.galerkin.DefaultExplicitProblem(scheme, fomObj, linearDecoder, romState, fomReferenceState)
+  stepper = problem.stepper()
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solve problem
-  rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, myObs)
+  ode.advance_n_steps_and_observe(stepper, romState, 0., dt, nsteps, myObs)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # get the reconstructor object: this allows to map romState to fomState
   fomRecon = problem.fomStateReconstructor()
-  return fomRecon.evaluate(romState)
+  return fomRecon(romState)
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
+  logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.info])
 
   # create fom object
@@ -91,6 +91,8 @@ if __name__ == "__main__":
     fomNorm = linalg.norm(fomFinalState)
     err = linalg.norm(fomFinalState-currentSolution)
     print("With {} modes, final relative l2 error: {}".format(romSize, err/fomNorm))
+
+  logger.finalize()
 
   #--- plot ---#
   ax = plt.gca()
