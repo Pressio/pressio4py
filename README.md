@@ -2,7 +2,7 @@
 # Overview
 
 Pressio is an open-source computational framework aimed at advancing
-the field of reduced-order models (pROMs) for dynamical systems in science and engineering.
+the field of reduced-order models (ROMs) for dynamical systems in science and engineering.
 
 Model reduction is a broad and very active field.
 Many methods exist, but there is no such thing as "one method to rule them all".
@@ -25,9 +25,7 @@ This offers an ideal framework to explore and merge ideas from different fields.
 
 <br/>
 
-[EXPLORE THE DOCUMENTATION](https://pressio.github.io/pressio4py/html/index.html).
-
-<br/>
+&emsp; &emsp; -> [EXPLORE THE DOCUMENTATION](https://pressio.github.io/pressio4py/html/index.html) <-
 
 ## License and Citation
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
