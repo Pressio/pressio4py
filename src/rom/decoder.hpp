@@ -49,48 +49,58 @@
 #ifndef PRESSIO4PY_PYBINDINGS_DECODER_HPP_
 #define PRESSIO4PY_PYBINDINGS_DECODER_HPP_
 
-namespace pressio4py{
+namespace pressio4py{ namespace rom{
 
-template <typename types>
-void bindDecoder(pybind11::module & m, std::string className)
+void bindDecoder(pybind11::module & m)
 {
-  using rom_native_state_t   = typename types::rom_native_state_t;
-  using fom_native_state_t   = typename types::fom_native_state_t;
-  using decoder_native_jac_t = typename types::decoder_native_jac_t;
-  using decoder_t	     = typename types::decoder_t;
-  using decoder_native_jac_wrong_layout_t = typename types::decoder_native_jac_wrong_layout_t;
+  const std::string className = "Decoder";
 
+  // using rom_state_t   = typename types::rom_state_t;
+  // using fom_state_t   = typename types::fom_state_t;
+  // using decoder_t     = typename types::decoder_t;
+  // using decoder_jac_t = typename types::decoder_jac_t;
+  // using decoder_jac_wrong_layout_t = typename types::decoder_jac_wrong_layout_t;
+
+  // create the class
   pybind11::class_<decoder_t> decoderPy(m, className.c_str());
 
-  /* for decoder we bind three constructors:
-     1. for the linear case, we pass the native array with
+  /* -------------------------
+     bind constructors:
+     -------------------------
+
+     For decoder, we bind 3 constructors:
+
+     1. linear case: constructor accepting the array with
 	correct layout that matches the one inside the decoder class.
 	This works fine and is supposed to be correct.
 
-     2. for the linear case, we pass the native array with
-	the WRONG layout such that is called, this throws a runtime error on purpose.
+     2. linear case: constructor accepting the array with
+	the WRONG layout such that is called,
+	this throws a runtime error on purpose.
 
-     3. the custom case, where the user can pass a custom object.
-   */
+     3. custom case: the user passes a custom object.
+  */
 
   // 1. pass the jacobian with correct layout
-  decoderPy.def(pybind11::init<decoder_native_jac_t>());
+  decoderPy.def(pybind11::init<typename decoder_t::jacobian_type>());
 
   // 2. pass the jacobian with the wrong layout
   //    note that this constructor is only added so that if the user
   //    tries to call this, it gets a runtime error.
-  decoderPy.def(pybind11::init<decoder_native_jac_wrong_layout_t>());
+  decoderPy.def(pybind11::init<typename decoder_t::wrong_layout_jacobian_type>());
 
   // 3.: user passes a python object, this yields an arbitrary mapper
   decoderPy.def(pybind11::init<pybind11::object, std::string>());
 
+  /* -------------------------
+     bind methods:
+     ------------------------- */
   // bind method to get address of the jacobian stored inside decoder
   decoderPy.def("jacobianAddress", &decoder_t::jacobianAddress);
 
   // method for applying the mapping
-  decoderPy.def
-    ("applyMapping",
-     &decoder_t::template applyMapping<rom_native_state_t, fom_native_state_t>);
+  decoderPy.def("applyMapping",
+		&decoder_t::template applyMapping<py_f_arr>);
 
   // // when we have rank-3 states, we need to make sure the fom_native_state_t
   // // has the right layout such that it can be viewed from the c++ side and
@@ -101,5 +111,5 @@ void bindDecoder(pybind11::module & m, std::string className)
   // maybeBindApplyMappingForWrongLayout<types>(m);
 }
 
-}//end namespace pressio4py
+}}//end namespace pressio4py
 #endif

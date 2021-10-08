@@ -1,0 +1,193 @@
+
+
+{\itshape The FOM adapter is the layer standardizing how pressio queries operators from an application.}
+
+It is one of the most important features and a pivotal design in pressio. 
+
+
+
+\begin{DoxyParagraph}{Minimally intrusive, you only need to expose information you already have}
+Preparing an adapter should only involve {\itshape exposing} some operators in your application. Pressio does NOT require you to provide information that you don\textquotesingle{}t already have. In fact, pressio needs to access {\itshape standard} information/operators that your application already assembles in some form or another. In some cases, these operators might not be fully exposed yet, so all we need is for you to make them accessible. As such, writing an adapter is, in most cases, relatively simple. Note, also, that writing an adapter for {\itshape your} application only involves operating within {\itshape your} application domain, using your data structures and whatever functionalities your application supports. Therefore, this adapter {\itshape lives within your application space}. 
+\end{DoxyParagraph}
+
+
+
+
+\begin{DoxyParagraph}{Different adapters for different needs}
+Depending on what problem you are trying to solve, we haved designed different adapter concepts/\+APIs, e.\+g. steady, unsteady, exposing only partial information, etc, that fit different scenarios. Note that not all adapters can be used for all ROM methods we support. See below for all the details. 
+\end{DoxyParagraph}
+
+
+~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md46}{}\doxysection{Steady API}\label{md_pages_components_rom_fom_apis_autotoc_md46}
+
+
+Intended for when your FOM application is expressed as \[ \boldsymbol{R}(\boldsymbol{y}; \boldsymbol{\mu}) = 0 \] where $y$ is your FOM state, and $R$ is the residual todo finish. \hypertarget{md_pages_components_rom_fom_apis_autotoc_md47}{}\doxysubsubsection{Synopsis}\label{md_pages_components_rom_fom_apis_autotoc_md47}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }SteadyAdapter:}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(...)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, operand):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros\_like(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(self, stateIn, R):}
+\DoxyCodeLine{    \textcolor{comment}{\# compute residual}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, stateIn, operand, C):}
+\DoxyCodeLine{    \textcolor{comment}{\# compute apply Jacobian}}
+\DoxyCodeLine{    \textcolor{comment}{\# for example:}}
+\DoxyCodeLine{    \textcolor{comment}{\#   J = self.jacobian(stateIn)}}
+\DoxyCodeLine{    \textcolor{comment}{\#   C[:]  = J.dot(operand)}}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md48}{}\doxysubsubsection{Notes}\label{md_pages_components_rom_fom_apis_autotoc_md48}
+
+
+The steady adapter can ONLY be used for doing steady LSPG ROMs. 
+
+See the following examples\+: \textbackslash{}toadd
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md49}{}\doxysection{Continuous-\/time API\+: RHS only}\label{md_pages_components_rom_fom_apis_autotoc_md49}
+
+
+Intended for when your FOM application is expressed in {\itshape time-\/continuous} form as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; \boldsymbol{\mu}), \quad \boldsymbol{y}(0;\boldsymbol{\mu}) = \boldsymbol{y}(\boldsymbol{\mu}), \] where $y$ is the full-\/order model (FOM) state, $f$ is what we call the FOM velocity (or RHS), and $t$ is time, and, for some reason, you can/want to only expose the right-\/hand-\/side (or velocity) of your FOM application. todo finish. \hypertarget{md_pages_components_rom_fom_apis_autotoc_md50}{}\doxysubsubsection{Synopsis}\label{md_pages_components_rom_fom_apis_autotoc_md50}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }ContTimeFomAdapterVelocityOnly:}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
+\DoxyCodeLine{    \textcolor{comment}{\# say N is the total number of of unknowns}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(y,t;...), for a given state, y, and time, t}}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, y, t, f):}
+\DoxyCodeLine{    f[:] = \textcolor{comment}{\#compute velocity as needed}}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md51}{}\doxysubsubsection{Notes}\label{md_pages_components_rom_fom_apis_autotoc_md51}
+
+
+This adapter can ONLY be used for doing Galerkin ROMs with explicit time stepping. 
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md52}{}\doxysection{Continuous-\/time API\+: RHS and Jacobian action}\label{md_pages_components_rom_fom_apis_autotoc_md52}
+
+
+This API is intended for any system expressible in {\itshape time-\/continuous} form as above, but you expose both the right-\/hand-\/side of your FOM application as well as the action of the velocity\textquotesingle{}s Jacobian on some operand (more on this later). \hypertarget{md_pages_components_rom_fom_apis_autotoc_md53}{}\doxysubsubsection{Synopsis}\label{md_pages_components_rom_fom_apis_autotoc_md53}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }ContTimeFomAdapterWithApplyJacobian}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create f(y,t,...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createVelocity():}
+\DoxyCodeLine{    \textcolor{comment}{\# say N is the total number of of unknowns}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create result of df/dy*B}}
+\DoxyCodeLine{  \textcolor{comment}{\# B is typically a skinny dense matrix (e.g. POD modes)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, B):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((N, B.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# compute velocity, f(y,t;...), for a given state, y}}
+\DoxyCodeLine{  \textcolor{keyword}{def }velocity(self, y, t, f):}
+\DoxyCodeLine{    f[:] = \textcolor{comment}{\#compute velocity as needed}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# given current state y(t):}}
+\DoxyCodeLine{  \textcolor{comment}{\# compute A=df/dy*B, where B is a skinny dense matrix}}
+\DoxyCodeLine{  \textcolor{comment}{\# Note that we just require the *action* of the Jacobian.}}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, y, B, t, A):}
+\DoxyCodeLine{    A[:,:] = \textcolor{comment}{\# compute A = df/dy * B as needed}}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md54}{}\doxysubsubsection{Notes}\label{md_pages_components_rom_fom_apis_autotoc_md54}
+
+
+
+\begin{DoxyItemize}
+\item Can be used for doing Galerkin ROMs with explicit and implicit time stepping
+\item Can be used for LSPG and WLS (note that LSPG and WLS only make sense for implicit time integration). 
+\end{DoxyItemize}
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md55}{}\doxysection{Discrete-\/time API}\label{md_pages_components_rom_fom_apis_autotoc_md55}
+
+
+This API is intended for any system expressible in a discrete-\/time form as \[ \boldsymbol{R}(\boldsymbol{y_{n+1}}, \boldsymbol{y_{n}}, \boldsymbol{y_{n-1}}, ..., t_{n+1}, dt_{n+1}; ...) = \boldsymbol{0} \] where $y$ is the full-\/order model (FOM) state, $t$ is time, and $R$ is the residual. todo finish. \hypertarget{md_pages_components_rom_fom_apis_autotoc_md56}{}\doxysubsubsection{Synopsis}\label{md_pages_components_rom_fom_apis_autotoc_md56}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }DiscreteTimeFomAdapter}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create R(...)}}
+\DoxyCodeLine{  \textcolor{keyword}{def }createDiscreteTimeResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(...)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyDiscreteTimeJacobianResult(self, B):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((..., B.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }discreteTimeResidual(self, step, time, dt, R, y\_np1, y\_n, y\_nm1 [, y\_nm2]):}
+\DoxyCodeLine{   R[:] = \textcolor{comment}{\# compute discrete-\/time residual}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyDiscreteTimeJacobian(self, step, time, dt, B, A, y\_np1, y\_n, y\_nm1 [, y\_nm2]):}
+\DoxyCodeLine{   A[:,:] = \textcolor{comment}{\# compute the action A = dR/dy\_np1 B}}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md57}{}\doxysubsubsection{Notes}\label{md_pages_components_rom_fom_apis_autotoc_md57}
+
+
+
+\begin{DoxyItemize}
+\item For doing Galerkin {\itshape implicit} time stepping.
+\item For doing LSPG and WLS. 
+\end{DoxyItemize}
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md58}{}\doxysection{What can you use where?}\label{md_pages_components_rom_fom_apis_autotoc_md58}
+As anticipated, not all adapters can be used for all supported ROM methods. The following table illustrates which APIs are admissible for each method.
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{5}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Steady API   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Continuous Time API ~\newline
+ (RHS only)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Continuous Time API ~\newline
+ (RHS, Jacobian action)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Discrete Time API    }\\\cline{1-5}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Steady API   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Continuous Time API ~\newline
+ (RHS only)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Continuous Time API ~\newline
+ (RHS, Jacobian action)   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Discrete Time API    }\\\cline{1-5}
+\endhead
+Galerkin Explicit Stepping   &NA   &supported   &supported   &NA    \\\cline{1-5}
+Galerkin Implicit Stepping   &NA   &NA   &supported   &supported    \\\cline{1-5}
+LSPG Unsteady   &NA   &NA   &supported   &supported    \\\cline{1-5}
+LSPG Steady   &supported   &NA   &NA   &NA    \\\cline{1-5}
+WLS Explicit Stepping   &NA   &supported   &supported   &NA    \\\cline{1-5}
+WLS Implicit Stepping   &NA   &NA   &supported   &supported   \\\cline{1-5}
+\end{longtabu}
+
+
+Note\+: for LSPG there is no distinction between explicit and implicit because LSPG only makes sense for implicit time stepping. Actually, it can be shown that explicit LSPG is equivalent to explicit Galerkin.
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_fom_apis_autotoc_md59}{}\doxysection{Frequently Asked Questions}\label{md_pages_components_rom_fom_apis_autotoc_md59}
+
+
+\begin{DoxyParagraph}{1. Should I prefer the continuous-\/time or discrete-\/time API?}
+In general, we suggest users to always prefer the continuous-\/time API because it is more general. However, there are situations where the discrete-\/time API is more useful or even necessary. 
+\end{DoxyParagraph}

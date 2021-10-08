@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_logger" kind="page">
+    <compoundname>md_pages_components_logger</compoundname>
+    <title>logger</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.logger</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import logger</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_logger_1autotoc_md1">
+<title>Overview</title>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-warning" /></para>
+<para><parblock><para>By default, for performance reasons, the logger is disabled, so pressio4py will not output anything. </para>
+</parblock></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>To enable logging, you need to do two things:<orderedlist>
+<listitem><para>initialize the logger and (if needed) change the verbosity level</para>
+</listitem><listitem><para>finalize the logger </para>
+</listitem></orderedlist>
+</para>
+</parblock></para>
+</sect1>
+<sect1 id="md_pages_components_logger_1autotoc_md2">
+<title>Usage</title>
+<para>The following snippet provides the main idea:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>logger</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&apos;__main__&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>your<sp/>code</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_pages_components_logger_1autotoc_md3">
+<title>Levels</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">loglevel.trace</highlight></codeline>
+<codeline><highlight class="normal">loglevel.debug</highlight></codeline>
+<codeline><highlight class="normal">loglevel.info</highlight></codeline>
+<codeline><highlight class="normal">loglevel.warn</highlight></codeline>
+<codeline><highlight class="normal">loglevel.error</highlight></codeline>
+<codeline><highlight class="normal">loglevel.critical</highlight></codeline>
+<codeline><highlight class="normal">loglevel.off</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><simplesect kind="par"><title>Keep in mind:</title><para>The log statements issued for a specific level will be printed <emphasis>only if</emphasis> <computeroutput>PRESSIO_LOG_ACTIVE_MIN_LEVEL</computeroutput> is smaller or equal than that level. If the logger is disabled, the macros are expanded to a no-op. So it does not cost you anything to place log statements in your code, because in production mode you can just compile to no-op. </para>
+</simplesect>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/logger.md"/>
+  </compounddef>
+</doxygen>

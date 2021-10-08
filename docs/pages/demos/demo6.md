@@ -24,22 +24,12 @@ Specifically, we use a MLP with 2 hidden layers of sizes 64 and 200.
 The MLP used in this demo is implemented in PyTorch, thus PyTorch must be installed prior to executing this demo.
 Look [here](https://pytorch.org/get-started/locally/) for information on how to install PyTorch on your system.
 
-
-<!-- ## Imports -->
-<!-- The imports needed are: -->
-<!-- ```py -->
-<!-- from adv_diff1d import *					# the fom class -->
-<!-- from adv_diff_1d_fom import doFom			# the function to collect fom data -->
-<!-- from pressio4py import rom as rom -->
-<!-- from pressio4py import solvers as solvers -->
-<!-- ``` -->
-
 ## Main function
 The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_mlp/main.py
-66:94
+65:95
 ```
 
 ### 1. Run FOM and collect snapshots
@@ -89,7 +79,7 @@ around but also it is fundamental for the update method below correctly.
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_mlp/main.py
-20:63
+19:62
 ```
 
 ## Results

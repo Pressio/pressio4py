@@ -1,0 +1,75 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+galerkin}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_default_autotoc_md64}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_default_autotoc_md64}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = galerkin.DefaultExplicitProblem(scheme, fom\_adapter, decoder, \(\backslash\)   (1)}
+\DoxyCodeLine{                                          rom\_state, fom\_ref\_state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = galerkin.DefaultImplicitProblem(scheme, fom\_adapter, decoder, \(\backslash\)   (2)}
+\DoxyCodeLine{                                          rom\_state, fom\_ref\_state)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme
+\item (1) requires \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit value}}
+\item (2) requires \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit value}}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item instance of your adapter class specifying the FOM problem. ~\newline
+
+\item must satisfy one of the APIs suitable for Galerkin, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+~\newline
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md65}{}\doxysection{Example usage}\label{md_pages_components_rom_galerkin_default_autotoc_md65}
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md66}{}\doxysubsection{Explicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md66}
+An example usage for explicit stepper is as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# assuming: decoder, adapter, rom\_state, fom\_ref\_state are defined}}
+\DoxyCodeLine{}
+\DoxyCodeLine{scheme = ode.stepscheme.ForwardEuler}
+\DoxyCodeLine{problem = rom.galerkin.DefaultExplicitProblem(scheme, adapter, decoder, rom\_state, fom\_ref\_state)}
+\DoxyCodeLine{stepper = problem.stepper()}
+\DoxyCodeLine{dt = 1.}
+\DoxyCodeLine{num\_steps = 2}
+\DoxyCodeLine{observer = MyObserver()}
+\DoxyCodeLine{ode.advance\_n\_steps\_and\_observe(stepper, rom\_state, 0., dt, num\_steps, observer)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md67}{}\doxysubsection{Implicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md67}
+An example usage for implicit stepper is as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{scheme = ode.stepscheme.BDF1}
+\DoxyCodeLine{problem = rom.galerkin.DefaultImplicitProblem(scheme, adapter, decoder, rom\_state, fom\_ref\_state)}
+\DoxyCodeLine{stepper = problem.stepper()}
+
+\end{DoxyCode}
+ 

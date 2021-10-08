@@ -1,0 +1,241 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_nonlinsolvers_general" kind="page">
+    <compoundname>md_pages_components_nonlinsolvers_general</compoundname>
+    <title>Nonlinear Solvers - General Info</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.solvers</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import solvers</computeroutput> </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-primary" /></para>
+<para><parblock><para>At a high level, a nonlinear solver can be seen as a process that repeatedly <emphasis>updates</emphasis> a given <emphasis>state</emphasis> until a certain <emphasis>stopping</emphasis> criterion is met. This forms the basis of our design approach, and if you keep this in mind, the details below will (hopefully) be very clear and intuitive. </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+<sect1 id="md_pages_components_nonlinsolvers_general_1autotoc_md5">
+<title>Step by step guide</title>
+<para>Using the pressio4py nonlinear solvers involves four main steps:</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
+<para><parblock><para><orderedlist>
+<listitem><para>define your problem in the form of a class with a specific API</para>
+</listitem><listitem><para>instantiate a nonlinear problem object</para>
+</listitem><listitem><para>set/change (if needed) the convergence and updating criteria</para>
+</listitem><listitem><para>invoke the <computeroutput>solve</computeroutput> operation </para>
+</listitem></orderedlist>
+</para>
+</parblock></para>
+<sect2 id="md_pages_components_nonlinsolvers_general_1autotoc_md6">
+<title>1. Your problem class</title>
+<para>The problem is the object <emphasis>defining your math system to solve</emphasis>, and is what you need to implement and provide to pressio4py to compute the needed operators to operate on. The problem must be an instance of a class meeting what we call the &quot;residual-jacobian&quot; API:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Problem:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createResidual():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>return<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>rank-1<sp/>residual</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>return<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>rank-2<sp/>jacobian</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residual(state,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>given<sp/>current<sp/>state,<sp/>compute<sp/>residual,<sp/>R</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(state,<sp/>J):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>given<sp/>current<sp/>state,<sp/>compute<sp/>jacobian,<sp/>J</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-warning" /></para>
+<para><parblock><para>Currently, we only support dense Jacobians. This is because pybind11 does not yet support <ulink url="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing sparse types by reference</ulink>. Note, however, that this is not critical for the main purpose of this library because ROMs are inherently dense. </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+</sect2>
+<sect2 id="md_pages_components_nonlinsolvers_general_1autotoc_md7">
+<title>2. Instantiating a solver</title>
+<para>We currently support the following methods:</para>
+<para><table rows="4" cols="3"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>Doc   </para>
+</entry><entry thead="yes"><para>Purpose:    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Newton-Raphson   </para>
+</entry><entry thead="no"><para><ulink url="./md_pages_components_nonlinsolvers_nr.html">Link</ulink>   </para>
+</entry><entry thead="no"><para>Systems of nonlinear equations (see e.g. <ulink url="https://link.springer.com/content/pdf/bbm%3A978-3-319-69407-8%2F1.pdf">link</ulink>, <ulink url="https://www.cmu.edu/math/undergrad/suami/pdfs/2014_newton_method.pdf">link</ulink> )    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gauss-Newton   </para>
+</entry><entry thead="no"><para><ulink url="./md_pages_components_nonlinsolvers_gn.html">Link</ulink>   </para>
+</entry><entry thead="no"><para>Nonlinear least-squares problem (see <ulink url="https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm">link</ulink> )    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Levenberg–Marquardt   </para>
+</entry><entry thead="no"><para><ulink url="./md_pages_components_nonlinsolvers_lm.html">Link</ulink>   </para>
+</entry><entry thead="no"><para>Nonlinear least-squares problem (see <ulink url="https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm">link</ulink> )   </para>
+</entry></row>
+</table>
+</para>
+<para>To instantiate a solver, you can use specific factory functions as follows:</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_newton_raphson(problem,<sp/>state,<sp/>...);</highlight></codeline>
+<codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_gauss_newton(problem,<sp/>state,<sp/>...);</highlight></codeline>
+<codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_levenber_marquardt(problem,<sp/>state,<sp/>...);</highlight></codeline>
+</programlisting></para>
+<para>Note that the first and second arguments are your problem object and the state. These are needed at construction because presssio4py uses them to initialize all data structures needed. Please refer to each method&apos;s documentation for the details on the other arguments to pass.</para>
+<para><linebreak/>
+</para>
+</sect2>
+<sect2 id="md_pages_components_nonlinsolvers_general_1autotoc_md8">
+<title>3. Setting convergence and updating criteria</title>
+<para>The solver class exposes the following methods:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Solver:</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>stopping<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setStoppingCriterion(value)<sp/></highlight><highlight class="comment">#<sp/>choose<sp/>value<sp/>is<sp/>from<sp/>the<sp/>&apos;stop&apos;<sp/>enum</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>query<sp/>stopping<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>stoppingCriterion():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>the<sp/>stored<sp/>stopping<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>update<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setUpdatingCriterion(value)<sp/></highlight><highlight class="comment">#<sp/>choose<sp/>value<sp/>is<sp/>from<sp/>the<sp/>&apos;update&apos;<sp/>enum</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>query<sp/>update<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>updatingCriterion():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>the<sp/>stored<sp/>update<sp/>criterion</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>max<sp/>number<sp/>of<sp/>iterations</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setMaxIterations(integer)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>query<sp/>max<sp/>number<sp/>of<sp/>iterations</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>maxIterations():</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>the<sp/>current<sp/>max<sp/>num<sp/>of<sp/>iterations</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>used<sp/>to<sp/>set<sp/>a<sp/>single<sp/>tol<sp/>for<sp/>all</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>finer-grained<sp/>methods<sp/>for<sp/>setting<sp/>tolerances</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>setCorrectionAbsoluteTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setCorrectionRelativeTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>setResidualAbsoluteTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setResidualRelativeTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>setGradientAbsoluteTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">setGradientRelativeTolerance(float)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>querying<sp/>tolerances</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>correctionAbsoluteTolerance():<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">correctionRelativeTolerance():<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def</highlight><highlight class="normal"><sp/>residualAbsoluteTolerance()<sp/><sp/>:<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residualRelativeTolerance()<sp/><sp/>:<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def</highlight><highlight class="normal"><sp/>gradientAbsoluteTolerance()<sp/><sp/>:<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">gradientRelativeTolerance()<sp/><sp/>:<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+</programlisting></para>
+<para>The convergence criterion and associated tolerance are used to decide why and when the solver needs to terminate. We currently support these termination criteria:</para>
+<para><table rows="8" cols="3"><row>
+<entry thead="yes"><para>Enum value   </para>
+</entry><entry thead="yes"><para>Description   </para>
+</entry><entry thead="yes"><para>Currently supported for:    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.AfterMaxIters</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenCorrectionAbsoluteNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenCorrectionRelativeNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenResidualAbsoluteNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenResidualRelativeNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenGradientAbsoluteNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>least-squares solvers    </para>
+</entry></row>
+<row>
+<entry thead="no"><para><computeroutput>stop.WhenGradientRelativeNormBelowTolerance</computeroutput>   </para>
+</entry><entry thead="no"><para>self-explanatory   </para>
+</entry><entry thead="no"><para>least-squares solvers   </para>
+</entry></row>
+</table>
+</para>
+<para>The update stage represents the <emphasis>how</emphasis> the current correction term is combined with state to update the latter. We currently support the following:</para>
+<para><table rows="5" cols="4"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>Enum value   </para>
+</entry><entry thead="yes"><para>Description   </para>
+</entry><entry thead="yes"><para>Currently supported for:    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Default   </para>
+</entry><entry thead="no"><para><computeroutput>update.Standard</computeroutput>   </para>
+</entry><entry thead="no"><para><formula id="0">$x_{n+1} = x_{n} + \lambda_{n}$</formula>   </para>
+</entry><entry thead="no"><para>all algorithms    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Armijo   </para>
+</entry><entry thead="no"><para><computeroutput>update.Armijo</computeroutput>   </para>
+</entry><entry thead="no"><para>todo   </para>
+</entry><entry thead="no"><para>Gauss-Newton    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>LM-schedule1   </para>
+</entry><entry thead="no"><para><computeroutput>update.LMSchedule1</computeroutput>   </para>
+</entry><entry thead="no"><para>todo   </para>
+</entry><entry thead="no"><para>Levenberg–Marquardt    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>LM-schedule2   </para>
+</entry><entry thead="no"><para><computeroutput>update.LMSchedule2</computeroutput>   </para>
+</entry><entry thead="no"><para>todo   </para>
+</entry><entry thead="no"><para>Levenberg–Marquardt   </para>
+</entry></row>
+</table>
+</para>
+<para>where <formula id="1">$\lambda_{n}$</formula> is the correction computed at the n-th iteration of the solver.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><simplesect kind="par"><title>By default, a nonlinear solver uses:</title><para><itemizedlist>
+<listitem><para>update: <computeroutput>update.Standard</computeroutput>;</para>
+</listitem><listitem><para>stopping: <computeroutput>stop.WhenCorrectionAbsoluteNormBelowTolerance</computeroutput>;</para>
+</listitem><listitem><para>max number of iterations = 100</para>
+</listitem><listitem><para>tolerance = 0.000001 (for everything) </para>
+</listitem></itemizedlist>
+</para>
+</simplesect>
+</para>
+<para><linebreak/>
+</para>
+</sect2>
+<sect2 id="md_pages_components_nonlinsolvers_general_1autotoc_md9">
+<title>4. Invoking the solve</title>
+<para>This is best explained via a simple snippet:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>solvers</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>assuming<sp/>problem<sp/>is<sp/>already<sp/>defined</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">state<sp/>=<sp/>np.array(<sp/></highlight><highlight class="comment">#<sp/>whatever<sp/>initial<sp/>condition<sp/>)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_gauss_newton(problem,<sp/>state,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">solver.solve(problem,<sp/>state)</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/nonlinsolvers_general.md"/>
+  </compounddef>
+</doxygen>

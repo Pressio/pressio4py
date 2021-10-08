@@ -1,0 +1,95 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+lspg.\+unsteady}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_masked_autotoc_md89}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_lspg_masked_autotoc_md89}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# continuous-\/time overloads}}
+\DoxyCodeLine{problem = lspg.unsteady.MaskedProblem(scheme, fom\_adapter, decoder, \(\backslash\)              (1)}
+\DoxyCodeLine{                                      rom\_state, fom\_ref\_state, masker)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = lspg.unsteady.PrecMaskedProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
+\DoxyCodeLine{                                          rom\_state, fom\_ref\_state,     \(\backslash\)          (2)}
+\DoxyCodeLine{                                          masker, preconditioner)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# discrete-\/time overloads}}
+\DoxyCodeLine{problem = lspg.unsteady.DiscreteTimeProblemTwoStates(fom\_adapter, decoder,    \(\backslash\)    (3)}
+\DoxyCodeLine{                                                     rom\_state, fom\_ref\_state,\(\backslash\)}
+\DoxyCodeLine{                                                     masker)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = lspg.unsteady.DiscreteTimeProblemThreeStates(fom\_adapter, decoder,    \(\backslash\)}
+\DoxyCodeLine{                                                       rom\_state, fom\_ref\_state,\(\backslash\)  (4)}
+\DoxyCodeLine{                                                       masker)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item only applicable to (1,2)
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme
+\item requires an \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit value}}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item for (1,2)\+: must statisfy the continuous-\/time API for unsteady LSPG, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\item for (3)\+: must satisfy the discrete-\/time API with two states, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\item for (4)\+: must satisfy the discrete-\/time API with three states, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily masker}\+:
+\begin{DoxyItemize}
+\item an functor responsible of \char`\"{}masking\char`\"{} the FOM operators
+\item must be a functor with a specific API, see details below 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Masker:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, sample\_indices):}
+\DoxyCodeLine{    self.sample\_indices = sample\_indices}
+\DoxyCodeLine{  self.N = len(self.sample\_indices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyMaskResult(self, operand):}
+\DoxyCodeLine{      \textcolor{keywordflow}{if} (operand.ndim == 1):}
+\DoxyCodeLine{        \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{      \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{        \textcolor{keywordflow}{return} np.zeros((N, , operand.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, time, result):}
+\DoxyCodeLine{    \textcolor{comment}{\# time is not used, but you can potentially}}
+\DoxyCodeLine{    result[:] = np.take(operand, self.sample\_indices)}
+
+\end{DoxyCode}
+ ~
+\end{DoxyItemize}
+\item {\ttfamily preconditioner}\+:
+\begin{DoxyItemize}
+\item functor needed to precondition the ROM operators
+\item must be a functor with a specific API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Prec:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, fom\_state, time, operand):}
+\DoxyCodeLine{    \textcolor{comment}{\# given the current FOM state,}}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your preconditioner to the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# Ensure that you overwrite the data in the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# As an example, a trivial preconditioner that does nothing:}}
+\DoxyCodeLine{    \textcolor{comment}{\# operand[:] *= 1.}}
+
+\end{DoxyCode}
+ 
+\end{DoxyItemize}
+\end{DoxyItemize}

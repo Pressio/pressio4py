@@ -49,38 +49,24 @@
 #ifndef PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
 #define PRESSIO4PY_PYBINDINGS_FOM_RECONSTRUCTOR_HPP_
 
-namespace pressio4py{
+namespace pressio4py{ namespace rom{
 
-template <typename decoder_types>
-void bindFomReconstructor(pybind11::module & m, std::string className)
+void bindFomReconstructor(pybind11::module & m)
 {
-  using state_types	   = typename decoder_types::states_t;
-  using rom_state_t	   = typename state_types::rom_state_t;
-  using fom_state_t	   = typename state_types::fom_state_t;
-  using fom_native_state_t = typename state_types::fom_native_state_t;
-  using decoder_t	   = typename decoder_types::decoder_t;
+  const std::string className = "FomReconstructor";
 
   // fom reconstructor type
-  using fom_reconstructor_t =
-    pressio::rom::FomStateReconstructor<::pressio4py::scalar_t, fom_state_t, decoder_t>;
+  using fom_reconstructor_t = pressio::rom::FomStateReconstructor<decoder_t>;
 
   // create actual class
   pybind11::class_<fom_reconstructor_t> fomReconstructor(m, className.c_str());
-  // constructor
-  fomReconstructor.def(pybind11::init<const fom_state_t &, const decoder_t &>());
-  // constructor
-  fomReconstructor.def(pybind11::init<const fom_native_state_t &,const decoder_t &>());
+  // constructor accepts a nominal state and the decoder
+  fomReconstructor.def(pybind11::init<const py_f_arr &, const decoder_t &>());
 
   // bind the evaluate method.
-  // Here we have to use the template rom_state_t because
-  // it allows the templated evaluate method of the fom reconstructor class
-  // to know the rank of the rom state since this
-  // should work for rank1 and rank2 rom states.
-  // NOTE, however, that calling "evaluate" from python requires
-  // one to pass a NATIVE numpy array.
-  fomReconstructor.def("evaluate",
-		       &fom_reconstructor_t::template evaluate<rom_state_t>);
+  fomReconstructor.def("__call__",
+		       &fom_reconstructor_t::template evaluate<py_f_arr>);
 }
 
-}//end namespace pressio4py
+}}//end namespace
 #endif

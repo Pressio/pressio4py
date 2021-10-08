@@ -1,0 +1,131 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+lspg.\+steady}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_default_steady_autotoc_md81}{}\doxysection{API}\label{md_pages_components_rom_lspg_default_steady_autotoc_md81}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = lspg.steady.Problem(fom\_adapter, decoder, \(\backslash\)               (1)}
+\DoxyCodeLine{                              rom\_state, fom\_ref\_state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = lspg.steady.PrecProblem(fom\_adapter, decoder, rom\_state,  (2)}
+\DoxyCodeLine{                                  fom\_ref\_state, preconditioner)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_lspg_default_steady_autotoc_md82}{}\doxysubsection{Parameters and Requirements}\label{md_pages_components_rom_lspg_default_steady_autotoc_md82}
+
+\begin{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item instance of your adapter class specifying the FOM problem. ~\newline
+
+\item must satisfy the \href{./md_pages_components_rom_fom_apis.html}{\texttt{ steady API}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily preconditioner}\+:
+\begin{DoxyItemize}
+\item an functor needed to precondition the ROM operators
+\item must be a functor with a specific API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Prec:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, fom\_state, operand):}
+\DoxyCodeLine{    \textcolor{comment}{\# given the current FOM state,}}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your preconditioner to the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# Ensure that you overwrite the data in the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# As an example, a trivial preconditioner that does nothing:}}
+\DoxyCodeLine{    \textcolor{comment}{\# operand[:] *= 1.}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_rom_lspg_default_steady_autotoc_md83}{}\doxysection{Example code}\label{md_pages_components_rom_lspg_default_steady_autotoc_md83}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{from} scipy \textcolor{keyword}{import} linalg}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} logger, solvers, rom}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py.rom \textcolor{keyword}{import} lspg}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# ===============================}}
+\DoxyCodeLine{\textcolor{keyword}{class }MySteadyAdapter:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, N):}
+\DoxyCodeLine{    assert(N==6)}
+\DoxyCodeLine{    self.N\_ = N}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(self.N\_)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyJacobianResult(self, operand):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros\_like(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(self, stateIn, R):}
+\DoxyCodeLine{    R[:] = 1.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyJacobian(self, stateIn, operand, C):}
+\DoxyCodeLine{    J = self.jacobian(stateIn)}
+\DoxyCodeLine{    C[:]  = J.dot(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self, stateIn):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.identity(self.N\_)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# ===============================}}
+\DoxyCodeLine{\textcolor{keyword}{class }MyLinSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A,b,x):}
+\DoxyCodeLine{    \textcolor{comment}{\# solve Ax = b}}
+\DoxyCodeLine{    \textcolor{comment}{\# here we should solve the system,}}
+\DoxyCodeLine{    \textcolor{comment}{\# but for demonstration let's fix the solution}}
+\DoxyCodeLine{    x[:] = np.array([1.,2.,3.])}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# ===============================}}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.debug])}
+\DoxyCodeLine{}
+\DoxyCodeLine{  np.random.seed(334346892)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  N = 6}
+\DoxyCodeLine{  appObj = MySteadyAdapter(N)}
+\DoxyCodeLine{  yRef = np.ones(N)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  romSize = 3}
+\DoxyCodeLine{  phi = np.ones((meshSize, romSize), order=\textcolor{stringliteral}{'F'})}
+\DoxyCodeLine{  phi[:,0] = 1}
+\DoxyCodeLine{  phi[:,1] = 2}
+\DoxyCodeLine{  phi[:,2] = 3}
+\DoxyCodeLine{  decoder = rom.Decoder(phi)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  yRom    = np.zeros(romSize)}
+\DoxyCodeLine{  problem = lspg.steady.Problem(appObj, decoder, yRom, yRef)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# linear and non linear solver}}
+\DoxyCodeLine{  lsO  = MyLinSolver()}
+\DoxyCodeLine{  nlsO = solvers.create\_gauss\_newton(problem, yRom, lsO)}
+\DoxyCodeLine{  nlsO.solve(problem, yRom)}
+\DoxyCodeLine{  print(yRom)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
+\DoxyCodeLine{  yFomFinal = fomRecon(yRom)}
+\DoxyCodeLine{  print(yFomFinal)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  logger.finalize()}
+
+\end{DoxyCode}
+ 

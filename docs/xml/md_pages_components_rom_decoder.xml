@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_rom_decoder" kind="page">
+    <compoundname>md_pages_components_rom_decoder</compoundname>
+    <title>rom: Decoder</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para></para>
+<para>A key assumption of projection-based ROMs is to approximate the full-order model (FOM) state, <formula id="11">$y_{fom}$</formula>, as: <formula id="12">\[ y_{fom} = g(y_{rom}) \]</formula></para>
+<para>where <formula id="13">$y_{rom}$</formula> is the reduced state (or generalized coordinates), and <formula id="14">$g$</formula> is the decoder (or mapping). </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+<sect1 id="md_pages_components_rom_decoder_1autotoc_md40">
+<title>Custom Decoder</title>
+<para>A custom decoder in pressio4py implements the general mapping above.</para>
+<para>This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">CustomMapper:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>fomSize,<sp/>romSize):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>attention:<sp/>the<sp/>jacobian<sp/>of<sp/>the<sp/>mapping<sp/>must<sp/>be<sp/>column-major<sp/>oder</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>so<sp/>that<sp/>pressio<sp/>can<sp/>view<sp/>it<sp/>without<sp/>deep<sp/>copying<sp/>it,<sp/>this<sp/>enables</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>keep<sp/>only<sp/>one<sp/>jacobian<sp/>object<sp/>around<sp/>and<sp/>to<sp/>call<sp/>the<sp/>update</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>method<sp/>below<sp/>correctly</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.jacobian_<sp/>=<sp/>np.zeros((fomSize,romSize),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self):<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>self.jacobian_</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyMapping(self,<sp/>romState,<sp/>fomState):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#fomState[:]<sp/>=<sp/>whatever<sp/>is<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">updateJacobian(self,<sp/>romState):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>update<sp/>the<sp/>self.jacobian_[:,:]</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">pass</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>mapper</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">myMapper<sp/>=<sp/>CustomMapper(10,3)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>a<sp/>custom<sp/>decoder,<sp/>one<sp/>can<sp/>do</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">customDecoder<sp/>=<sp/>rom.Decoder(myMapper,<sp/></highlight><highlight class="stringliteral">&quot;MyMapper&quot;</highlight><highlight class="normal">)</highlight></codeline>
+</programlisting></para>
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md41">
+<title>Requirements</title>
+<para><itemizedlist>
+<listitem><para><computeroutput>rom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem><listitem><para><computeroutput>fom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem><listitem><para><computeroutput>jacobian_type</computeroutput><ensp/> : rank-2 <computeroutput>numpy.array</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>Note: there is no explicit constraint on what the mapping is, it can be anything.</para>
+<para>As long as the decoder (or mapper) class implements the concept, it is admissible. </para>
+</parblock></para>
+<para><linebreak/>
+ <hruler/>
+ <linebreak/>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_pages_components_rom_decoder_1autotoc_md42">
+<title>Linear Decoder</title>
+<para>A linear decoder is a mapping of the form: <formula id="15">\[ y_{fom} = \phi y_{rom} \]</formula></para>
+<para>where <formula id="16">$\phi$</formula> is the Jacobian matrix (for the time being, assume it constant).</para>
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md43">
+<title>Example usage</title>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>create<sp/>the<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>attention:<sp/>phi<sp/>must<sp/>be<sp/>column-major<sp/>for<sp/>these<sp/>reasons:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>1.<sp/>pressio4py<sp/>uses<sp/>blas<sp/>(wherever<sp/>possible)<sp/>to<sp/>operate<sp/>on<sp/>numpy<sp/>arrays,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>so<sp/>a<sp/>column-major<sp/>layout<sp/>implies<sp/>seamless<sp/>compatiblity<sp/>with<sp/>blas</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>2.<sp/>when<sp/>using<sp/>column-major<sp/>layout,<sp/>pressio4py<sp/>references<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>matrix<sp/>phi<sp/>without<sp/>doing<sp/>a<sp/>deep<sp/>copy,<sp/>which<sp/>saves<sp/>memory</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/><sp/><sp/><sp/>since<sp/>a<sp/>single<sp/>jacobian<sp/>matrix<sp/>is<sp/>alive.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">phi<sp/>=<sp/>np.ones((10,3),<sp/>order=</highlight><highlight class="stringliteral">&apos;F&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>the<sp/>linear<sp/>decoder,<sp/>you<sp/>simply<sp/>do</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">linearDecoder<sp/>=<sp/>rom.Decoder(phi)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>linearDecoder<sp/>exposes<sp/>a<sp/>method<sp/>to<sp/>evaluate<sp/>the<sp/>mapping</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">fomState,<sp/>romState<sp/>=<sp/>np.zeros(10),<sp/>np.ones(3)</highlight></codeline>
+<codeline><highlight class="normal">linearDecoder.applyMapping(romState,<sp/>fomState)</highlight></codeline>
+<codeline><highlight class="normal">print(fomState)</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md44">
+<title>Requirements</title>
+<para><itemizedlist>
+<listitem><para><computeroutput>rom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem><listitem><para><computeroutput>fom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem><listitem><para><computeroutput>jacobian_type</computeroutput><ensp/> : rank-2 <computeroutput>numpy.array</computeroutput> </para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/rom_decoder.md"/>
+  </compounddef>
+</doxygen>

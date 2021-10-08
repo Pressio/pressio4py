@@ -24,26 +24,39 @@
       <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
-            <li><a href="md_pages_prepare_your_app.html">How to interface your app</a></li>
             <li>
-              <a>Synopsis</a>
+              <a>Documentation</a>
               <ol>
-                <li><a href="md_pages_synopsis_galerkin.html">Galerkin</a></li>
-                <li><a href="md_pages_synopsis_lspg.html">LSPG</a></li>
-                <li><a href="md_pages_synopsis_wls.html">WLS</a></li>
+                <li><a href="md_pages_components_logger.html">logger</a></li>
+                <li><a> nonlinear solvers: </a></li>
+                <li><a href="md_pages_components_nonlinsolvers_general.html"> &emsp; - general info</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_nr.html"> &emsp; - Newton-Raphson</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_gn.html"> &emsp; - Gauss-Newton</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_lm.html"> &emsp; - Levenberg-Marquardt</a></li>
+                <li><a> ode: </a></li>
+                <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
+                <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
+                <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+                <li><a> rom: </a></li>
+                <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
+                <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
+                <li><a href="md_pages_components_rom_galerkin.html"> &emsp; - Galerkin </a></li>
+                <li><a href="md_pages_components_rom_galerkin_projector.html"> &emsp; &emsp; - projector </a></li>
+                <li><a href="md_pages_components_rom_galerkin_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_steady.html"> &emsp; - LSPG: steady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default_steady.html"> &emsp; &emsp; - basic problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked_steady.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_unsteady.html"> &emsp; - LSPG: unsteady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
             <li>
-              <a>Tutorials</a>
-              <ol>
-                <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial3.html">Default Galerkin explicit</a></li>
-                <li><a href="md_pages_tutorials_tutorial4.html">Masked Galerkin explicit</a></li>
-              </ol>
-            </li>
-            <li>
-              <a>Demos</a>
+              <a>Full Demos</a>
               <ol>
                 <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
                 <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
@@ -53,8 +66,9 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="4">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -70,22 +84,38 @@
       <div class="m-col-l-10 m-push-l-1">
         <h1>Pages</h1>
         <ul class="m-doc">
+          <li><a href="md_pages_components_logger.html" class="m-doc">logger</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_nonlinsolvers_general.html" class="m-doc">Nonlinear Solvers - General Info</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_nonlinsolvers_gn.html" class="m-doc">Nonlinear Solvers: Gauss-Newton</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_nonlinsolvers_lm.html" class="m-doc">Nonlinear Solvers: Levenberg-Marquardt</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_nonlinsolvers_nr.html" class="m-doc">Nonlinear Solvers: Newton-Raphson</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_nonlinsolvers_system_api.html" class="m-doc">Nonlinear Solvers - Problem APIs</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_ode_advance.html" class="m-doc">ode advancers</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_ode_steppers_explicit.html" class="m-doc">ode: explicit steppers</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_ode_steppers_implicit.html" class="m-doc">ode: implicit steppers</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_decoder.html" class="m-doc">rom: Decoder</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_fom_apis.html" class="m-doc">Full-order model (FOM) adapter API</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_galerkin.html" class="m-doc">rom: Galerkin: General Info</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_galerkin_default.html" class="m-doc">rom: Galerkin: default problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_galerkin_hypred.html" class="m-doc">rom: Galerkin: hyperreduced problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_galerkin_masked.html" class="m-doc">rom: Galerkin: masked problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_galerkin_projector.html" class="m-doc">rom: Galerkin: projector</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_general.html" class="m-doc">rom: general info</a> <span class="m-doc"><span></span></span></li>
+          <li><a href="md_pages_components_rom_lspg_default.html" class="m-doc">rom: LSPG: unsteady default problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_default_steady.html" class="m-doc">rom: LSPG: steady problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_hypred.html" class="m-doc">rom: LSPG: unsteady hyper-reduced problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_masked.html" class="m-doc">rom: LSPG: unsteady masked problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_masked_steady.html" class="m-doc">rom: LSPG: steady masked problem</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_steady.html" class="m-doc">rom: Steady LSPG</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_lspg_unsteady.html" class="m-doc">rom: Unsteady LSPG: General Info</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_components_rom_wls.html" class="m-doc">rom: WLS</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo1.html" class="m-doc">1D adv-diff: Galerkin with POD modes</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo2.html" class="m-doc">1D adv-diff: LSPG with POD modes</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo3.html" class="m-doc">1D adv-diff: LSPG with nonlinear manifold projection via kPCA</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo4.html" class="m-doc">1D adv-diff: POD Galerkin with collocation masking</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo5.html" class="m-doc">1D adv-diff: Comparing Masked POD Galerkin against masked POD LSPG</a> <span class="m-doc"></span></li>
           <li><a href="md_pages_demos_demo6.html" class="m-doc">1D adv-diff: LSPG with nonlinear manifold projection via MLP</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_examples_example1.html" class="m-doc">Example 1</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_getstarted_build_and_install.html" class="m-doc">Building Pressio4py</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_prepare_your_app.html" class="m-doc">Adapter API</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_synopsis_galerkin.html" class="m-doc">Synopsis for constructing a Galerkin problem</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_synopsis_lspg.html" class="m-doc">Synopsis for constructing LSPG problems</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_synopsis_wls.html" class="m-doc">Synopsis for constructing WLS problems</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_tutorials_tutorial1.html" class="m-doc">Tutorial: Linear Decoder</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_tutorials_tutorial2.html" class="m-doc">Tutorial: Custom Decoder</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_tutorials_tutorial3.html" class="m-doc">Tutorial: Default Galerkin with explicit time stepping</a> <span class="m-doc"></span></li>
-          <li><a href="md_pages_tutorials_tutorial4.html" class="m-doc">Tutorial: Masked Galerkin with explicit time stepping</a> <span class="m-doc"></span></li>
+          <li><a href="md_pages_introduction.html" class="m-doc">Introduction</a> <span class="m-doc"></span></li>
         </ul>
         <script>
         function toggle(e) {
@@ -147,7 +177,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.8.20 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

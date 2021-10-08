@@ -1,0 +1,116 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+lspg.\+unsteady}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md85}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_lspg_hypred_autotoc_md85}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = lspg.unsteady.HypredProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
+\DoxyCodeLine{                                      rom\_state, fom\_ref\_state, \(\backslash\)}
+\DoxyCodeLine{                                      sampleToStencilIndexing)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = lspg.unsteady.PrecHypredProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
+\DoxyCodeLine{                                          rom\_state, fom\_ref\_state, \(\backslash\)}
+\DoxyCodeLine{                                          sampleToStencilIndexing, preconditioner)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme
+\item requires an \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit value}}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item instance of your adapter class specifying the FOM problem. ~\newline
+
+\item must be admissible to unsteady LSPG, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily stencil\+To\+Sample\+Indexing}\+:
+\begin{DoxyItemize}
+\item an object that knows the mapping from sample to stancil operators
+\item can be constructed as\+: ~\newline
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mapper = rom.lspg.unsteady.StencilToSampleIndexing(list\_of\_ints)}
+
+\end{DoxyCode}
+ ~
+\item see section below for more details
+\end{DoxyItemize}
+\item {\ttfamily preconditioner}\+:
+\begin{DoxyItemize}
+\item functor needed to precondition the ROM operators
+\item must be a functor with a specific API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Prec:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, fom\_state, time, operand):}
+\DoxyCodeLine{    \textcolor{comment}{\# given the current FOM state,}}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your preconditioner to the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# Ensure that you overwrite the data in the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# As an example, a trivial preconditioner that does nothing:}}
+\DoxyCodeLine{    \textcolor{comment}{\# operand[:] *= 1.}}
+
+\end{DoxyCode}
+ ~\newline
+
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md86}{}\doxysection{Stencil to sample indexing}\label{md_pages_components_rom_lspg_hypred_autotoc_md86}
+When working with a hyper-\/reduced problem, pressio4py has to manipulate objects that have different sizes/distributions. For such problem, in fact, some operators are naturally defined on the what we refer to as \char`\"{}sample mesh\char`\"{} while some are defined on what we call the \char`\"{}stencil mesh\char`\"{}.
+
+As explained \href{https://pressio.github.io/algos/hyper/}{\texttt{ here}}, recall that\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{sample mesh}}\+: a disjoint collection of elements where the velocity (or residual) operator is computed.
+\item {\bfseries{stencil mesh}}\+: the set of all nodes or elements needed to compute the velocity or residual on the sample mesh.
+\item Typically, the sample mesh is a subset of the stencil mesh.
+\end{DoxyEnumerate}
+
+
+
+The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh. \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md87}{}\doxysubsection{Explain it to me better!}\label{md_pages_components_rom_lspg_hypred_autotoc_md87}
+Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, {\itshape it does not matter what problem we are solving}, only what we just said. Now, suppose that you want to try hyper-\/reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read \href{https://pressio.github.io/algos/hyper/}{\texttt{ this page}} for some information about how to select sample mesh cells), and let\textquotesingle{}s say it looks like this\+: 
+
+The stencil mesh is the set of {\itshape all} cells shown, while the sample mesh is the {\itshape subset} color-\/coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-\/hand-\/side $f$ on the yellow cells, for a given FOM state $y$ on the stencil mesh.
+
+For this example, you then would do this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# ...}}
+\DoxyCodeLine{mylist = [1,4,9,14,18,24,25,31,37,40,47,50,53,62,65,70]}
+\DoxyCodeLine{indexing = rom.lspg.unsteady.StencilToSampleIndexing(mylist)}
+\DoxyCodeLine{scheme = ode.stepscheme.BDF1}
+\DoxyCodeLine{lspgProblem = rom.lspg.unsteady.HypredProblem(..., indexing)}
+\DoxyCodeLine{\textcolor{comment}{\# ...}}
+
+\end{DoxyCode}
+
+
+
+
+\begin{DoxyParagraph}{Note that\+:}
+
+\begin{DoxyItemize}
+\item how you enumerate the cells does not matter. You are free to do whatever you want, as long as your adapter object is consistent with the chosen enumeration scheme and handles things accordingly.
+\item This indexing notion seamlessly extends to 1D and 3D problems. 
+\end{DoxyItemize}
+\end{DoxyParagraph}

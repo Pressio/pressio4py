@@ -1,0 +1,52 @@
+todo\+: write more
+
+The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps\+:\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md98}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_unsteady_autotoc_md98}
+You create an instance of a \char`\"{}\+LSPG problem\char`\"{}, e.\+g.\+: ~\newline
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = pressio4py.rom.lspg.unsteady.DefaultProblem(args)}
+
+\end{DoxyCode}
+
+
+We currently support three variants\+:
+
+
+\begin{DoxyItemize}
+\item Default\+: \href{md_pages_components_rom_lspg_default.html}{\texttt{ link}}
+\item Hyper-\/reduced\+: \href{md_pages_components_rom_lspg_hypred.html}{\texttt{ link}}
+\item Masked\+: \href{md_pages_components_rom_lspg_masked.html}{\texttt{ link}}
+\end{DoxyItemize}
+
+All variants return a problem object that meets the following interface\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }UnsteadyLSPGProblem}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }stepper()}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def fomStateReconstructor()}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+The stepper method returns a reference to an \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper}} object that the problem creates and owns. The {\ttfamily stepper} method is what you use to retrieve the underlying stepper and solve the problem in time. Once you have the stepper, you can then use it as discussed in \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper page}}.
+
+What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-\/level, an unsteady LSPG problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md99}{}\doxysection{2. Reference the stepper and solve in time}\label{md_pages_components_rom_lspg_unsteady_autotoc_md99}
+Extract the underlying stepper object and solve in time\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{stepper = problme.stepper()}
+\DoxyCodeLine{pressio4py.ode.advance\_n\_steps\_and\_observe(stepper, ...)}
+
+\end{DoxyCode}
+
+
+
+
+Remember that for LSPG, you are solving at each step a nonlinear least-\/squares problem. Therefore, the solver you need to use is a nonlinear least-\/squares solver, e.\+g, Gauss-\/\+Newton or Levernberg-\/\+Marquardt. 

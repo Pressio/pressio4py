@@ -1,0 +1,83 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+galerkin}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md72}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_masked_autotoc_md72}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = galerkin.MaskedExplicitProblem(scheme, fom\_adapter, decoder,}
+\DoxyCodeLine{                                         rom\_state, fom\_ref\_state, \(\backslash\)      (1)}
+\DoxyCodeLine{                                         projector, masker)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = galerkin.MaskedImplicitProblem(scheme, fom\_adapter, decoder,}
+\DoxyCodeLine{                                         rom\_state, fom\_ref\_state, \(\backslash\)      (2)}
+\DoxyCodeLine{                                         projector, masker)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme
+\item (1) requires \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit value}}
+\item (2) requires \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit value}}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item instance of your adapter class specifying the FOM problem. ~\newline
+
+\item must satisfy one of the APIs suitable for Galerkin, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily projector}\+:
+\begin{DoxyItemize}
+\item performs the projection of the FOM operators onto the reduced space
+\item must meet \href{md_pages_components_rom_galerkin_projector.html}{\texttt{ this specific API}}
+\end{DoxyItemize}
+\item {\ttfamily masker}\+:
+\begin{DoxyItemize}
+\item an functor responsible of \char`\"{}masking\char`\"{} the FOM operators
+\item must be a functor with a specific API, see details below
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md73}{}\doxysubsection{Masker}\label{md_pages_components_rom_galerkin_masked_autotoc_md73}
+todo\+: explain what it is
+
+The masker must meet the following API\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Masker:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, sample\_indices):}
+\DoxyCodeLine{    self.sample\_indices = sample\_indices}
+\DoxyCodeLine{    self.N = len(self.sample\_indices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyMaskResult(self, operand):}
+\DoxyCodeLine{      \textcolor{keywordflow}{if} (operand.ndim == 1):}
+\DoxyCodeLine{        \textcolor{keywordflow}{return} np.zeros(N)}
+\DoxyCodeLine{      \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{        \textcolor{keywordflow}{return} np.zeros((N, , operand.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, time, result):}
+\DoxyCodeLine{    \textcolor{comment}{\# time is not used, but you can potentially}}
+\DoxyCodeLine{    result[:] = np.take(operand, self.sample\_indices)}
+
+\end{DoxyCode}
+
+
+where {\ttfamily sample\+\_\+indices} is a {\ttfamily numpy.\+array} holding the set of the row indices to sample.\hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md74}{}\doxysection{Example usage}\label{md_pages_components_rom_galerkin_masked_autotoc_md74}
+todo link tutorials 

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="md_pages_demos_demo2" kind="page">
     <compoundname>md_pages_demos_demo2</compoundname>
     <title>1D adv-diff: LSPG with POD modes</title>
@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title></title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</ulink></para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo2_1autotoc_md9">
+<sect1 id="md_pages_demos_demo2_1autotoc_md110">
 <title>Overview</title>
 <para>We cover these three typical steps needed for a ROM:<orderedlist>
 <listitem><para>generate of snapshots using the full-order model (FOM)</para>
@@ -20,10 +20,10 @@
 </para>
 <para>The governing equations for this problem are the same as those in <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html">here</ulink>,</para>
 </sect1>
-<sect1 id="md_pages_demos_demo2_1autotoc_md10">
+<sect1 id="md_pages_demos_demo2_1autotoc_md111">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal,<sp/></highlight><highlight class="stringliteral">&quot;null&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
@@ -52,8 +52,10 @@
 <codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_demos_demo2_1autotoc_md11">
+<sect2 id="md_pages_demos_demo2_1autotoc_md112">
 <title>1. Run FOM and collect snapshots</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
@@ -70,7 +72,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo2_1autotoc_md12">
+<sect2 id="md_pages_demos_demo2_1autotoc_md113">
 <title>2. Compute POD modes</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
@@ -78,18 +80,16 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo2_1autotoc_md13">
+<sect2 id="md_pages_demos_demo2_1autotoc_md114">
 <title>3. Construct and run ROM</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runLspg(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>an<sp/>auxiliary<sp/>class<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>solve</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>LSPG<sp/>to<sp/>monitor<sp/>the<sp/>rom<sp/>state.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RomStateObserver:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>state):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>linear<sp/>solver<sp/>is<sp/>used<sp/>at<sp/>each<sp/>gauss-newton<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,b,x):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>lumat,<sp/>piv,<sp/>info<sp/>=<sp/>linalg.lapack.dgetrf(A,<sp/>overwrite_a=</highlight><highlight class="keyword">True</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>x[:],<sp/>info<sp/>=<sp/>linalg.lapack.dgetrs(lumat,<sp/>piv,<sp/>b,<sp/>0,<sp/>0)</highlight></codeline>
@@ -110,32 +110,35 @@
 <codeline><highlight class="normal"><sp/><sp/>romState<sp/>=<sp/>np.dot(modes.T,<sp/>fomInitialState)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>LSPG<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.default.ProblemEuler(fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>scheme<sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.DefaultProblem(scheme,<sp/>fomObj,<sp/>linearDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stepper<sp/>=<sp/>problem.stepper()</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>Gauss-Newton<sp/>solver</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.createGaussNewton(problem,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.create_gauss_newton(stepper,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>tolerance<sp/>and<sp/>convergence<sp/>criteria</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nlsTol,<sp/>nlsMaxIt<sp/>=<sp/>1e-6,<sp/>5</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setMaxIterations(nlsMaxIt)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>object<sp/>to<sp/>monitor<sp/>the<sp/>romState<sp/>at<sp/>every<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>myObs<sp/>=<sp/>RomStateObserver()</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>rom.lspg.solveNSequentialMinimizations(problem,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs,<sp/>nonLinSolver)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps_and_observe(stepper,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs,<sp/>nonLinSolver)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>after<sp/>we<sp/>are<sp/>done,<sp/>use<sp/>the<sp/>reconstructor<sp/>object<sp/>to<sp/>reconstruct<sp/>the<sp/>fom<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>get<sp/>the<sp/>reconstructor<sp/>object:<sp/>this<sp/>allows<sp/>to<sp/>map<sp/>romState<sp/>to<sp/>fomState</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomRecon<sp/>=<sp/>problem.fomStateReconstructor()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon.evaluate(romState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon(romState)</highlight></codeline>
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo2_1autotoc_md14">
+<sect1 id="md_pages_demos_demo2_1autotoc_md115">
 <title>Results</title>
 <para>If everything works fine, the following plot shows the result. <image type="html" name="demo2.png"></image>
  </para>
 </sect1>
     </detaileddescription>
+    <location file="pages/demos/demo2.md"/>
   </compounddef>
 </doxygen>

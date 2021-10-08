@@ -111,4 +111,5 @@ class AdvDiff1d():
     J = np.dot(np.diag(k),(1./dx**2)*A) + \
       (1./dx)*dkdx*B + \
       - a*(1./dx)*B
+
     return J

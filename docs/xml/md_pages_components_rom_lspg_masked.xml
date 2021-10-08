@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_rom_lspg_masked" kind="page">
+    <compoundname>md_pages_components_rom_lspg_masked</compoundname>
+    <title>rom: LSPG: unsteady masked problem</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.lspg.unsteady</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import lspg</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_rom_lspg_masked_1autotoc_md89">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>continuous-time<sp/>overloads</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.MaskedProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>masker)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.PrecMaskedProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>masker,<sp/>preconditioner)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>discrete-time<sp/>overloads</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.DiscreteTimeProblemTwoStates(fom_adapter,<sp/>decoder,<sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>masker)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.DiscreteTimeProblemThreeStates(fom_adapter,<sp/>decoder,<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,\<sp/><sp/>(4)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>masker)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>scheme</computeroutput>:<itemizedlist>
+<listitem><para>only applicable to (1,2)</para>
+</listitem><listitem><para>value from the <computeroutput>ode.stepscheme</computeroutput> enum setting the desired stepping scheme</para>
+</listitem><listitem><para>requires an <ulink url="md_pages_components_ode_steppers_implicit.html">implicit value</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>fom_adapter</computeroutput>:<itemizedlist>
+<listitem><para>for (1,2): must statisfy the continuous-time API for unsteady LSPG, see <ulink url="./md_pages_components_rom_fom_apis.html">API list</ulink></para>
+</listitem><listitem><para>for (3): must satisfy the discrete-time API with two states, see <ulink url="./md_pages_components_rom_fom_apis.html">API list</ulink></para>
+</listitem><listitem><para>for (4): must satisfy the discrete-time API with three states, see <ulink url="./md_pages_components_rom_fom_apis.html">API list</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>decoder</computeroutput>:<itemizedlist>
+<listitem><para>decoder object</para>
+</listitem><listitem><para>must satify the requirements listed <ulink url="md_pages_components_rom_decoder.html">here</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>rom_state</computeroutput>:<itemizedlist>
+<listitem><para>currently, must be a rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>fom_ref_state</computeroutput>:<itemizedlist>
+<listitem><para>your FOM reference state that is used when reconstructing the FOM state</para>
+</listitem><listitem><para>must be a rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>masker</computeroutput>:<itemizedlist>
+<listitem><para>an functor responsible of &quot;masking&quot; the FOM operators</para>
+</listitem><listitem><para>must be a functor with a specific API, see details below <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Masker:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>sample_indices):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.sample_indices<sp/>=<sp/>sample_indices</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>self.N<sp/>=<sp/>len(self.sample_indices)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createApplyMaskResult(self,<sp/>operand):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(operand.ndim<sp/>==<sp/>1):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(N)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((N,<sp/>,<sp/>operand.shape[1]))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>operand,<sp/>time,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>time<sp/>is<sp/>not<sp/>used,<sp/>but<sp/>you<sp/>can<sp/>potentially</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>np.take(operand,<sp/>self.sample_indices)</highlight></codeline>
+</programlisting> <nonbreakablespace/></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>preconditioner</computeroutput>:<itemizedlist>
+<listitem><para>functor needed to precondition the ROM operators</para>
+</listitem><listitem><para>must be a functor with a specific API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Prec:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>fom_state,<sp/>time,<sp/>operand):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>given<sp/>the<sp/>current<sp/>FOM<sp/>state,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>apply<sp/>your<sp/>preconditioner<sp/>to<sp/>the<sp/>operand.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Ensure<sp/>that<sp/>you<sp/>overwrite<sp/>the<sp/>data<sp/>in<sp/>the<sp/>operand.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>As<sp/>an<sp/>example,<sp/>a<sp/>trivial<sp/>preconditioner<sp/>that<sp/>does<sp/>nothing:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>operand[:]<sp/>*=<sp/>1.</highlight></codeline>
+</programlisting> </para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/rom_lspg_masked.md"/>
+  </compounddef>
+</doxygen>

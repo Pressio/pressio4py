@@ -24,26 +24,39 @@
       <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
-            <li><a href="md_pages_prepare_your_app.html">How to interface your app</a></li>
             <li>
-              <a>Synopsis</a>
+              <a>Documentation</a>
               <ol>
-                <li><a href="md_pages_synopsis_galerkin.html">Galerkin</a></li>
-                <li><a href="md_pages_synopsis_lspg.html">LSPG</a></li>
-                <li><a href="md_pages_synopsis_wls.html">WLS</a></li>
+                <li><a href="md_pages_components_logger.html">logger</a></li>
+                <li><a> nonlinear solvers: </a></li>
+                <li><a href="md_pages_components_nonlinsolvers_general.html"> &emsp; - general info</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_nr.html"> &emsp; - Newton-Raphson</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_gn.html"> &emsp; - Gauss-Newton</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_lm.html"> &emsp; - Levenberg-Marquardt</a></li>
+                <li><a> ode: </a></li>
+                <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
+                <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
+                <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+                <li><a> rom: </a></li>
+                <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
+                <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
+                <li><a href="md_pages_components_rom_galerkin.html"> &emsp; - Galerkin </a></li>
+                <li><a href="md_pages_components_rom_galerkin_projector.html"> &emsp; &emsp; - projector </a></li>
+                <li><a href="md_pages_components_rom_galerkin_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_steady.html"> &emsp; - LSPG: steady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default_steady.html"> &emsp; &emsp; - basic problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked_steady.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_unsteady.html"> &emsp; - LSPG: unsteady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
             <li>
-              <a>Tutorials</a>
-              <ol>
-                <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial3.html">Default Galerkin explicit</a></li>
-                <li><a href="md_pages_tutorials_tutorial4.html">Masked Galerkin explicit</a></li>
-              </ol>
-            </li>
-            <li>
-              <a>Demos</a>
+              <a>Full Demos</a>
               <ol>
                 <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
                 <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
@@ -53,8 +66,9 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="4">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -71,8 +85,8 @@
         <h1>
           1D adv-diff: Comparing Masked POD Galerkin against masked POD LSPG
         </h1>
-<aside class="m-block m-info"><p>This page describes a demo for a reproductive &quot;masked&quot; Galerkin and LSPG ROMs applied to a 1D advection-diffusion problem using POD modes as basis. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py">here.</a></p></aside><aside class="m-note m-default"><h4>We are currently working on this page, it will be updated with more explanations.</h4></aside><section id="autotoc_md33"><h2><a href="#autotoc_md33">Overview</a></h2><p>This is a follow up to the previous demo <a href="./md_pages_demos_demo4.html">here</a> We compare here maskdd Galerkin and masked LSPG.</p></section><section id="autotoc_md34"><h2><a href="#autotoc_md34">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-  <span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">,</span> <span class="s2">&quot;null&quot;</span><span class="p">)</span>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive &quot;masked&quot; Galerkin and LSPG ROMs applied to a 1D advection-diffusion problem using POD modes as basis. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py">here.</a></p></aside><aside class="m-note m-default"><h4>We are currently working on this page, it will be updated with more explanations.</h4></aside><section id="autotoc_md134"><h2><a href="#autotoc_md134">Overview</a></h2><p>This is a follow up to the previous demo <a href="./md_pages_demos_demo4.html">here</a> We compare here maskdd Galerkin and masked LSPG.</p></section><section id="autotoc_md135"><h2><a href="#autotoc_md135">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
   <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
 
   <span class="c1"># total number of grid points</span>
@@ -133,7 +147,9 @@
   <span class="n">err1</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateGal</span><span class="p">)</span>
   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Galerkin: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err1</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
   <span class="n">err2</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateLspg</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LSPG: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err2</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span></pre><section id="autotoc_md35"><h3><a href="#autotoc_md35">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LSPG: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err2</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
+
+  <span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md136"><h3><a href="#autotoc_md136">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
   <span class="n">u</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
   <span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
   <span class="n">f</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">createVelocity</span><span class="p">()</span>
@@ -145,10 +161,10 @@
     <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">saveFreq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
       <span class="n">U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
   <span class="n">Usolns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md36"><h3><a href="#autotoc_md36">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md137"><h3><a href="#autotoc_md137">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
   <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md37"><h3><a href="#autotoc_md37">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
+  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md138"><h3><a href="#autotoc_md138">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
 <span class="c1"># effect of hyper-reduction. To create a mask ROM problem,</span>
 <span class="c1"># we need to select and provide to pressio a set of indices</span>
 <span class="c1"># identifying a subset of the grid points in the full mesh.</span>
@@ -165,11 +181,7 @@
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
 <span class="c1"># sort for convenience, not necessarily needed</span>
-<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
-
-<span class="n">romSize</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of modes to use</span>
-<span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-4</span>
-<span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span></pre></section><section id="autotoc_md38"><h3><a href="#autotoc_md38">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span></pre></section><section id="autotoc_md139"><h3><a href="#autotoc_md139">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span> <span class="o">=</span> <span class="n">indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampleMeshSize_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
@@ -180,11 +192,11 @@
     <span class="k">else</span><span class="p">:</span>
       <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sampleMeshSize_</span><span class="p">,</span> <span class="n">operand</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-  <span class="k">def</span> <span class="nf">applyMask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operand</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operand</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
       <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-      <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></pre></section><section id="autotoc_md39"><h3><a href="#autotoc_md39">5. Masked Galerkin ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
+      <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></pre></section><section id="autotoc_md140"><h3><a href="#autotoc_md140">5. Masked Galerkin ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
   <span class="c1"># find out number of modes wanted</span>
   <span class="n">romSize</span> <span class="o">=</span> <span class="n">modes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -213,30 +225,32 @@
   <span class="c1"># 2. create the projector</span>
   <span class="c1"># here, simply use &quot;collocation&quot; with the POD modes filtered on the &quot;sample mesh&quot;</span>
   <span class="n">modesOnSampleMesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-  <span class="n">projector</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">ArbitraryProjector</span><span class="p">(</span><span class="n">modesOnSampleMesh</span><span class="p">)</span>
+  <span class="n">projector</span> <span class="o">=</span> <span class="n">MyProjector</span><span class="p">(</span><span class="n">modesOnSampleMesh</span><span class="p">)</span>
 
   <span class="c1"># 3. create the masker object</span>
   <span class="n">masker</span> <span class="o">=</span> <span class="n">MyMasker</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
 
   <span class="c1"># 4. create the masked galerkin problem with Euler forward</span>
-  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">masked</span><span class="o">.</span><span class="n">ProblemBackwardEuler</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span>
-                                                     <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span>
-                                                     <span class="n">masker</span><span class="p">,</span> <span class="n">projector</span><span class="p">)</span>
+  <span class="n">scheme</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">stepscheme</span><span class="o">.</span><span class="n">BDF1</span>
+  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">MaskedImplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span> \
+                                               <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span> \
+                                               <span class="n">projector</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span>
+  <span class="n">stepper</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">createNewtonRaphson</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_newton_raphson</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>
-  <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">advanceNSteps</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
+  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
 
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># NOTE: even though the Galerkin problem was run on the &quot;masked mesh points&quot;,</span>
   <span class="c1"># this reconstruction uses the POD modes on the full mesh stored in the decoder</span>
   <span class="c1"># so we can effectively obtain an approximation of the full solution</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section><section id="autotoc_md40"><h3><a href="#autotoc_md40">6. Masked LSPG ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section><section id="autotoc_md141"><h3><a href="#autotoc_md141">6. Masked LSPG ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
   <span class="c1"># find out number of modes wanted</span>
   <span class="n">romSize</span> <span class="o">=</span> <span class="n">modes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -261,24 +275,26 @@
   <span class="n">masker</span> <span class="o">=</span> <span class="n">MyMasker</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
 
   <span class="c1"># 3. create the masked galerkin problem with Euler forward</span>
-  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">masked</span><span class="o">.</span><span class="n">ProblemEuler</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span>
-                                                  <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span>
-                                                  <span class="n">masker</span><span class="p">)</span>
+  <span class="n">scheme</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">stepscheme</span><span class="o">.</span><span class="n">BDF1</span>
+  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">MaskedProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span>\
+                                            <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span>\
+                                            <span class="n">masker</span><span class="p">)</span>
+  <span class="n">stepper</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">createGaussNewton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>
-  <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">solveNSequentialMinimizations</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
+  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
 
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># NOTE: even though the Galerkin problem was run on the &quot;masked mesh points&quot;,</span>
   <span class="c1"># this reconstruction uses the POD modes on the full mesh stored in the decoder</span>
   <span class="c1"># so we can effectively obtain an approximation of the full solution</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section></section><section id="autotoc_md41"><h2><a href="#autotoc_md41">Results</a></h2><p>If everything works fine, the following plots shows the result. We first plot the result reconstructed <em>only on the sample mesh</em>. This can easily be done using the bases collocated on the sample mesh indices.</p><img class="m-image" src="demo5_f1.png" alt="Image" /><p>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate.</p><img class="m-image" src="demo5_f2.png" alt="Image" /><aside class="m-block m-warning"><h3>Warning</h3><p>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos.</p></aside></section>
+  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section></section><section id="autotoc_md142"><h2><a href="#autotoc_md142">Results</a></h2><p>If everything works fine, the following plots shows the result. We first plot the result reconstructed <em>only on the sample mesh</em>. This can easily be done using the bases collocated on the sample mesh indices.</p><img class="m-image" src="demo5_f1.png" alt="Image" /><p>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate.</p><img class="m-image" src="demo5_f2.png" alt="Image" /><aside class="m-block m-warning"><h3>Warning</h3><p>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos.</p></aside></section>
       </div>
     </div>
   </div>
@@ -323,7 +339,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.8.20 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

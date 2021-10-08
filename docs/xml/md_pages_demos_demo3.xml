@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="md_pages_demos_demo3" kind="page">
     <compoundname>md_pages_demos_demo3</compoundname>
     <title>1D adv-diff: LSPG with nonlinear manifold projection via kPCA</title>
@@ -10,14 +10,14 @@
 <para><simplesect kind="par"><title></title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</ulink></para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo3_1autotoc_md16">
+<sect1 id="md_pages_demos_demo3_1autotoc_md117">
 <title>Overview</title>
 <para>This demo solves the same problem as the one <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.</para>
 </sect1>
-<sect1 id="md_pages_demos_demo3_1autotoc_md17">
+<sect1 id="md_pages_demos_demo3_1autotoc_md118">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal,<sp/></highlight><highlight class="stringliteral">&quot;null&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
@@ -45,12 +45,14 @@
 <codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_demos_demo3_1autotoc_md18">
+<sect2 id="md_pages_demos_demo3_1autotoc_md119">
 <title>1. Run FOM and collect snapshots</title>
 <para>This step is the same as described <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>,</para>
 </sect2>
-<sect2 id="md_pages_demos_demo3_1autotoc_md19">
+<sect2 id="md_pages_demos_demo3_1autotoc_md120">
 <title>2. Setup and train the nonlinear kPCA mapper</title>
 <para>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods. <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMapperKPCA:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>snapshots,<sp/>numModes):</highlight></codeline>
@@ -97,18 +99,16 @@
 </simplesect>
 </para>
 </sect2>
-<sect2 id="md_pages_demos_demo3_1autotoc_md20">
+<sect2 id="md_pages_demos_demo3_1autotoc_md121">
 <title>3. Construct and run LSPG</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runLspg(fomObj,<sp/>dt,<sp/>nsteps,<sp/>customMapper):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>an<sp/>auxiliary<sp/>class<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>solve</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>LSPG<sp/>to<sp/>monitor<sp/>the<sp/>rom<sp/>state.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RomStateObserver:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>timeStep,<sp/>time,<sp/>state):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>linear<sp/>solver<sp/>is<sp/>used<sp/>at<sp/>each<sp/>gauss-newton<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self):<sp/></highlight><highlight class="keyword">pass</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,b,x):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>lumat,<sp/>piv,<sp/>info<sp/>=<sp/>linalg.lapack.dgetrf(A,<sp/>overwrite_a=</highlight><highlight class="keyword">True</highlight><highlight class="normal">)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>x[:],<sp/>info<sp/>=<sp/>linalg.lapack.dgetrs(lumat,<sp/>piv,<sp/>b,<sp/>0,<sp/>0)</highlight></codeline>
@@ -126,31 +126,35 @@
 <codeline><highlight class="normal"><sp/><sp/>customMapper.applyInverseMapping(romState,<sp/>fomInitialState)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>LSPG<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.default.ProblemEuler(fomObj,<sp/>customDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>scheme<sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.lspg.unsteady.DefaultProblem(scheme,<sp/>fomObj,<sp/>customDecoder,<sp/>romState,<sp/>fomReferenceState)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>stepper<sp/>=<sp/>problem.stepper()</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>the<sp/>Gauss-Newton<sp/>solver</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.createGaussNewton(problem,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nonLinSolver<sp/>=<sp/>solvers.create_gauss_newton(stepper,<sp/>romState,<sp/>MyLinSolver())</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>tolerance<sp/>and<sp/>convergence<sp/>criteria</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nlsTol,<sp/>nlsMaxIt<sp/>=<sp/>1e-7,<sp/>10</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setMaxIterations(nlsMaxIt)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setStoppingCriterion(solvers.stop.whenCorrectionAbsoluteNormBelowTolerance)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nonLinSolver.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>object<sp/>to<sp/>monitor<sp/>the<sp/>romState<sp/>at<sp/>every<sp/>iteration</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>myObs<sp/>=<sp/>RomStateObserver()</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>rom.lspg.solveNSequentialMinimizations(problem,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs,<sp/>nonLinSolver)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps_and_observe(stepper,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps,<sp/>myObs,<sp/>nonLinSolver)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>after<sp/>we<sp/>are<sp/>done,<sp/>use<sp/>the<sp/>reconstructor<sp/>object<sp/>to<sp/>reconstruct<sp/>the<sp/>fom<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>get<sp/>the<sp/>reconstructor<sp/>object:<sp/>this<sp/>allows<sp/>to<sp/>map<sp/>romState<sp/>to<sp/>fomState</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>fomRecon<sp/>=<sp/>problem.fomStateReconstructor()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fomRecon(romState)</highlight></codeline>
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo3_1autotoc_md21">
+<sect1 id="md_pages_demos_demo3_1autotoc_md122">
 <title>Results</title>
 <para>If everything works fine, the following plot shows the result. <image type="html" name="demo3.png"></image>
  </para>
 </sect1>
     </detaileddescription>
+    <location file="pages/demos/demo3.md"/>
   </compounddef>
 </doxygen>

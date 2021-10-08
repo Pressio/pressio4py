@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_ode_advance" kind="page">
+    <compoundname>md_pages_components_ode_advance</compoundname>
+    <title>ode advancers</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.ode</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import ode</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_ode_advance_1autotoc_md26">
+<title>API</title>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>Overload set for advancing for fixed number of steps </para>
+</parblock></para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">advance_n_steps(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/>num_steps);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">advance_n_steps(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">advance_n_steps_and_observe(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/>num_steps,<sp/>observer);<sp/><sp/><sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">advance_n_steps_and_observe(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps,<sp/>observer);<sp/>(4)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para>(1,2): overloads for advancing for a fixed number of steps</para>
+</listitem><listitem><para>(3,4): overloads for advancing for a fixed number of steps accepting also an &quot;observer&quot; to monitor the evolution of the state at each step (more on this below)</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_components_ode_advance_1autotoc_md27">
+<title>Parameters and Requirements</title>
+<para><itemizedlist>
+<listitem><para><computeroutput>stepper</computeroutput>: the steppable object, see e.g.:<itemizedlist>
+<listitem><para><ulink url="md_pages_components_ode_steppers_explicit.html">explicit steppers</ulink></para>
+</listitem><listitem><para>stepper extracted from a <ulink url="md_pages_components_rom_galerkin_default.html">Galerkin ROM problem</ulink></para>
+</listitem><listitem><para>stepper extracted from a <ulink url="md_pages_components_rom_lspg_default.html">LSPG ROM problem</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>: must be a <computeroutput>numpy.array</computeroutput></para>
+</listitem><listitem><para><computeroutput>start_time</computeroutput>: self-explanatory</para>
+</listitem><listitem><para><computeroutput>num_steps</computeroutput>: self-explanatory</para>
+</listitem><listitem><para><computeroutput>time_step_size</computeroutput>:<itemizedlist>
+<listitem><para>size of the time step to use at each step (fixed)</para>
+</listitem><listitem><para>applicable only to overloads (1,2)</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>time_step_setter</computeroutput>:<itemizedlist>
+<listitem><para>applicable only to overloads (3,4)</para>
+</listitem><listitem><para>a functor responsible for setting the time step size to use at a given step <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyStepSizeSetter:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>step,<sp/>time):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>set<sp/>time<sp/>step<sp/>and<sp/>return</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>dt<sp/>=<sp/>1.5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>dt</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>observer</computeroutput>:<itemizedlist>
+<listitem><para>functor that you use to &quot;observe&quot; the state during the time integration. This is useful for collecting snapshots of the state, or necessary data/metrics/statistics.<linebreak/>
+</para>
+</listitem><listitem><para>Must expose at least the call operator as follows: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyObs:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>step,<sp/>time,<sp/>state):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>do<sp/>something<sp/>with<sp/>state</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>By design, the steps are enumerated as follows: <computeroutput>1,2,3...,num_steps</computeroutput>. Therefore, step 1 is the step that starts at <computeroutput>t_0 = start_time</computeroutput> and ends at <computeroutput>t_1 = start_time + dt_1</computeroutput>, step 2 is the step that starts at <computeroutput>t_1</computeroutput> and ends at <computeroutput>t_2 = t_1 + dt_2</computeroutput>. Here, <computeroutput>dt_n</computeroutput> indicates the time step size to use for the <computeroutput>n</computeroutput>-th step. </para>
+</parblock></para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/ode_advance.md"/>
+  </compounddef>
+</doxygen>

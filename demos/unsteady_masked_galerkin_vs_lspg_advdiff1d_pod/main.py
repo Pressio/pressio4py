@@ -9,16 +9,13 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/..")         # to access doFom
 
-from pressio4py import rom as rom, logger
-from pressio4py import solvers as solvers
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
 
 #----------------------------
 class MyLinSolver:
-  def __init__(self):
-    pass
   def solve(self, A,b,x):
     lumat, piv, info = linalg.lapack.dgetrf(A, overwrite_a=True)
     # here we must use x[:] otherwise it won't overwrite x passed in
@@ -36,7 +33,7 @@ class MyMasker:
     else:
       return np.zeros((self.sampleMeshSize_, operand.shape[1]))
 
-  def applyMask(self, operand, time, result):
+  def __call__(self, operand, time, result):
     if (operand.ndim == 1):
       result[:] = np.take(operand, self.rows_)
     else:
@@ -47,6 +44,14 @@ def computePodModes(snapshots):
   print("SVD on matrix: ", snapshots.shape)
   U,S,VT = np.linalg.svd(snapshots)
   return U
+
+#----------------------------------------
+class MyProjector:
+  def __init__(self, phi):
+    self.phi_ = phi
+
+  def __call__(self, operand, time, result):
+    result[:] = np.dot(self.phi_.T, operand)
 
 #----------------------------------------
 def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
@@ -78,30 +83,32 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   # 2. create the projector
   # here, simply use "collocation" with the POD modes filtered on the "sample mesh"
   modesOnSampleMesh = np.take(modes, sampleMeshIndices, axis=0)
-  projector = rom.galerkin.ArbitraryProjector(modesOnSampleMesh)
+  projector = MyProjector(modesOnSampleMesh)
 
   # 3. create the masker object
   masker = MyMasker(sampleMeshIndices)
 
   # 4. create the masked galerkin problem with Euler forward
-  problem = rom.galerkin.masked.ProblemBackwardEuler(fomObj, linearDecoder,
-                                                     romState, fomReferenceState,
-                                                     masker, projector)
+  scheme = ode.stepscheme.BDF1
+  problem = rom.galerkin.MaskedImplicitProblem(scheme, fomObj, linearDecoder, \
+                                               romState, fomReferenceState, \
+                                               projector, masker)
+  stepper = problem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createNewtonRaphson(problem, romState, lsO)
+  nlsO = solvers.create_newton_raphson(stepper, romState, lsO)
   nlsO.setMaxIterations(15)
 
   # solve the problem
-  rom.galerkin.advanceNSteps(problem, romState, 0., dt, nsteps, nlsO)
+  ode.advance_n_steps(stepper, romState, 0., dt, nsteps, nlsO)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",
   # this reconstruction uses the POD modes on the full mesh stored in the decoder
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
-  return [fomRecon.evaluate(romState), romState]
+  return [fomRecon(romState), romState]
 
 #----------------------------------------
 def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
@@ -129,29 +136,30 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
   masker = MyMasker(sampleMeshIndices)
 
   # 3. create the masked galerkin problem with Euler forward
-  problem = rom.lspg.unsteady.masked.ProblemEuler(fomObj, linearDecoder,
-                                                  romState, fomReferenceState,
-                                                  masker)
+  scheme = ode.stepscheme.BDF1
+  problem = rom.lspg.unsteady.MaskedProblem(scheme, fomObj, linearDecoder,\
+                                            romState, fomReferenceState,\
+                                            masker)
+  stepper = problem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.createGaussNewton(problem, romState, lsO)
+  nlsO = solvers.create_gauss_newton(stepper, romState, lsO)
   nlsO.setMaxIterations(10)
 
   # solve the problem
-  rom.lspg.solveNSequentialMinimizations(problem, romState, 0., dt, nsteps, nlsO)
+  ode.advance_n_steps(stepper, romState, 0., dt, nsteps, nlsO)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",
   # this reconstruction uses the POD modes on the full mesh stored in the decoder
   # so we can effectively obtain an approximation of the full solution
   fomRecon = problem.fomStateReconstructor()
-  return [fomRecon.evaluate(romState), romState]
-
+  return [fomRecon(romState), romState]
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
+  logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.info])
 
   # total number of grid points
@@ -214,6 +222,7 @@ if __name__ == "__main__":
   err2 = linalg.norm(fomFinalState-approximatedStateLspg)
   print("LSPG: final state relative l2 error: {}".format(err2/fomNorm))
 
+  logger.finalize()
 
   #----------------------------------------------#
   #--- plot solutions on sample and full mesh ---#

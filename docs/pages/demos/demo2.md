@@ -30,7 +30,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-74:103
+73:104
 ```
 
 ### 1. Run FOM and collect snapshots
@@ -44,14 +44,14 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-18:21
+17:21
 ```
 
 ### 3. Construct and run ROM
 ```py
 @codesnippet
 ../../../demos/unsteady_default_lspg_advdiff1d_pod/main.py
-24:71
+23:71
 ```
 
 ## Results
