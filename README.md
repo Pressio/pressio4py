@@ -22,11 +22,8 @@ language to do so because it benefits from a large community of developers
 and has become the de-facto choice for machine learning.
 This offers an ideal framework to explore and merge ideas from different fields.
 
-
 <br/>
-
--> [EXPLORE THE DOCUMENTATION](https://pressio.github.io/pressio4py/html/index.html) <-
-
+<button name="button" onclick="https://pressio.github.io/pressio4py/html/index.html" style="font-size: larger; color: black; background-color: #96FF33; border: 3pt">EXPLORE THE DOCUMENTATION</button>
 
 ## License and Citation
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
