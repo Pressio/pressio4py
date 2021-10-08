@@ -57,7 +57,7 @@ def runGalerkin(fomObj, dt, nsteps, modes):
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
+  logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.info])
 
   # create fom object

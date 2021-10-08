@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>1D adv-diff: LSPG with POD modes | Pressio4Py</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">Pressio4Py</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-12 m-col-m-none">
+            <li>
+              <a>Documentation</a>
+              <ol>
+                <li><a href="md_pages_components_logger.html">logger</a></li>
+                <li><a> nonlinear solvers: </a></li>
+                <li><a href="md_pages_components_nonlinsolvers_general.html"> &emsp; - general info</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_nr.html"> &emsp; - Newton-Raphson</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_gn.html"> &emsp; - Gauss-Newton</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_lm.html"> &emsp; - Levenberg-Marquardt</a></li>
+                <li><a> ode: </a></li>
+                <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
+                <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
+                <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+                <li><a> rom: </a></li>
+                <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
+                <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
+                <li><a href="md_pages_components_rom_galerkin.html"> &emsp; - Galerkin </a></li>
+                <li><a href="md_pages_components_rom_galerkin_projector.html"> &emsp; &emsp; - projector </a></li>
+                <li><a href="md_pages_components_rom_galerkin_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_steady.html"> &emsp; - LSPG: steady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default_steady.html"> &emsp; &emsp; - basic problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked_steady.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_unsteady.html"> &emsp; - LSPG: unsteady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Full Demos</a>
+              <ol>
+                <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
+                <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
+                <li><a href="md_pages_demos_demo3.html">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a></li>
+                <li><a href="md_pages_demos_demo4.html">1D adv-diff: POD Galerkin with collocation mask</a></li>
+                <li><a href="md_pages_demos_demo5.html">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a></li>
+                <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
+              </ol>
+            </li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="4">
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          1D adv-diff: LSPG with POD modes
+        </h1>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</a></p></aside><section id="autotoc_md110"><h2><a href="#autotoc_md110">Overview</a></h2><p>We cover these three typical steps needed for a ROM:</p><ol><li>generate of snapshots using the full-order model (FOM)</li><li>compute the basis: here we demonstrate the use of POD modes</li><li>execute the ROM: here we leverage the LSPG ROM to demonstrate a <em>reproductive</em> test, i.e., we run the ROM using the same physical coefficients, b.c., etc. A predictive run is demonstrated in a different tutorial.</li></ol><p>The governing equations for this problem are the same as those in <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html">here</a>,</p></section><section id="autotoc_md111"><h2><a href="#autotoc_md111">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
+
+  <span class="c1"># create fom object</span>
+  <span class="n">fomObj</span> <span class="o">=</span> <span class="n">AdvDiff1d</span><span class="p">(</span><span class="n">nGrid</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">adv_coef</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+  <span class="c1"># the final time to integrate to</span>
+  <span class="n">finalTime</span> <span class="o">=</span> <span class="o">.</span><span class="mi">05</span>
+
+  <span class="c1">#--- 1. FOM ---#</span>
+  <span class="n">fomTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-5</span>
+  <span class="n">fomNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">fomTimeStepSize</span><span class="p">)</span>
+  <span class="n">sampleEvery</span>      <span class="o">=</span> <span class="mi">200</span>
+  <span class="p">[</span><span class="n">fomFinalState</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">]</span> <span class="o">=</span> <span class="n">doFom</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">fomTimeStepSize</span><span class="p">,</span> <span class="n">fomNumberOfSteps</span><span class="p">,</span> <span class="n">sampleEvery</span><span class="p">)</span>
+
+  <span class="c1">#--- 2. POD ---#</span>
+  <span class="n">modes</span> <span class="o">=</span> <span class="n">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+
+  <span class="c1">#--- 3. LSPG ROM ---#</span>
+  <span class="n">romSize</span> <span class="o">=</span> <span class="mi">4</span>
+  <span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">3e-4</span>
+  <span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span>
+  <span class="c1"># we pass only romSize modes</span>
+  <span class="n">approximatedState</span> <span class="o">=</span> <span class="n">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span> <span class="n">romNumberOfSteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">[:,:</span><span class="n">romSize</span><span class="p">])</span>
+
+  <span class="c1"># compute l2-error between fom and approximate state</span>
+  <span class="n">fomNorm</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="p">)</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedState</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
+
+  <span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md112"><h3><a href="#autotoc_md112">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
+  <span class="n">u</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">createVelocity</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nsteps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># query rhs of discretized system</span>
+    <span class="n">fom</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="c1"># simple Euler forward</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="n">f</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">saveFreq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+  <span class="n">Usolns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md113"><h3><a href="#autotoc_md113">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+  <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md114"><h3><a href="#autotoc_md114">3. Construct and run ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">):</span>
+  <span class="c1"># this is an auxiliary class that can be passed to solve</span>
+  <span class="c1"># LSPG to monitor the rom state.</span>
+  <span class="k">class</span> <span class="nc">RomStateObserver</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeStep</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span> <span class="k">pass</span>
+
+  <span class="c1"># this linear solver is used at each gauss-newton iteration</span>
+  <span class="k">class</span> <span class="nc">MyLinSolver</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+      <span class="n">lumat</span><span class="p">,</span> <span class="n">piv</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dgetrf</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">x</span><span class="p">[:],</span> <span class="n">info</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lapack</span><span class="o">.</span><span class="n">dgetrs</span><span class="p">(</span><span class="n">lumat</span><span class="p">,</span> <span class="n">piv</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+  <span class="c1">#----------------------------------------</span>
+  <span class="c1"># find out number of modes wanted</span>
+  <span class="n">romSize</span> <span class="o">=</span> <span class="n">modes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+  <span class="c1"># create a linear decoder, passing only the desired number of modes</span>
+  <span class="c1"># this will make a deep copy of the modes</span>
+  <span class="n">linearDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span>
+
+  <span class="c1"># fom reference state: here it is zero</span>
+  <span class="n">fomReferenceState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fomObj</span><span class="o">.</span><span class="n">nGrid</span><span class="p">)</span>
+
+  <span class="c1"># create ROM state by projecting the fom initial condition</span>
+  <span class="n">fomInitialState</span> <span class="o">=</span> <span class="n">fomObj</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">modes</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">fomInitialState</span><span class="p">)</span>
+
+  <span class="c1"># create LSPG problem</span>
+  <span class="n">scheme</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">stepscheme</span><span class="o">.</span><span class="n">BDF1</span>
+  <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">DefaultProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">)</span>
+  <span class="n">stepper</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
+
+  <span class="c1"># create the Gauss-Newton solver</span>
+  <span class="n">nonLinSolver</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">MyLinSolver</span><span class="p">())</span>
+  <span class="c1"># set tolerance and convergence criteria</span>
+  <span class="n">nlsTol</span><span class="p">,</span> <span class="n">nlsMaxIt</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mi">5</span>
+  <span class="n">nonLinSolver</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="n">nlsMaxIt</span><span class="p">)</span>
+  <span class="n">nonLinSolver</span><span class="o">.</span><span class="n">setStoppingCriterion</span><span class="p">(</span><span class="n">solvers</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">WhenCorrectionAbsoluteNormBelowTolerance</span><span class="p">)</span>
+
+  <span class="c1"># create object to monitor the romState at every iteration</span>
+  <span class="n">myObs</span> <span class="o">=</span> <span class="n">RomStateObserver</span><span class="p">()</span>
+  <span class="c1"># solve problem</span>
+  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps_and_observe</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">myObs</span><span class="p">,</span> <span class="n">nonLinSolver</span><span class="p">)</span>
+
+  <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
+  <span class="c1"># get the reconstructor object: this allows to map romState to fomState</span>
+  <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
+  <span class="k">return</span> <span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md115"><h2><a href="#autotoc_md115">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo2.png" alt="Image" /></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

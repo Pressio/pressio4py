@@ -92,11 +92,9 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   fomRecon = problem.fomStateReconstructor()
   return fomRecon(romState)
 
-#------------------------
 ######## MAIN ###########
-#------------------------
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
+  logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.info])
 
   # total number of grid points
@@ -148,6 +146,8 @@ if __name__ == "__main__":
   fomNorm = linalg.norm(fomFinalState)
   err = linalg.norm(fomFinalState-approximatedState)
   print("Final state relative l2 error: {}".format(err/fomNorm))
+
+  logger.finalize()
 
   #--- plot ---#
   ax = plt.gca()

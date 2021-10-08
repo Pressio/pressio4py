@@ -3,6 +3,7 @@
   <compounddef id="dir_208d2690607c4e3d3fabfa1d18673d36" kind="dir">
     <compoundname>pages</compoundname>
     <innerdir refid="dir_4af40c8677da60eb4c6f7c14f8103d72">pages/components</innerdir>
+    <innerdir refid="dir_e3e5033bce933e9613999c4991aa42b8">pages/demos</innerdir>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

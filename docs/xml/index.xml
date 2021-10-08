@@ -50,6 +50,18 @@
   </compound>
   <compound refid="rom__wls_8md" kind="file"><name>rom_wls.md</name>
   </compound>
+  <compound refid="demo1_8md" kind="file"><name>demo1.md</name>
+  </compound>
+  <compound refid="demo2_8md" kind="file"><name>demo2.md</name>
+  </compound>
+  <compound refid="demo3_8md" kind="file"><name>demo3.md</name>
+  </compound>
+  <compound refid="demo4_8md" kind="file"><name>demo4.md</name>
+  </compound>
+  <compound refid="demo5_8md" kind="file"><name>demo5.md</name>
+  </compound>
+  <compound refid="demo6_8md" kind="file"><name>demo6.md</name>
+  </compound>
   <compound refid="introduction_8md" kind="file"><name>introduction.md</name>
   </compound>
   <compound refid="main_8md" kind="file"><name>main.md</name>
@@ -104,9 +116,23 @@
   </compound>
   <compound refid="md_pages_components_rom_wls" kind="page"><name>md_pages_components_rom_wls</name>
   </compound>
+  <compound refid="md_pages_demos_demo1" kind="page"><name>md_pages_demos_demo1</name>
+  </compound>
+  <compound refid="md_pages_demos_demo2" kind="page"><name>md_pages_demos_demo2</name>
+  </compound>
+  <compound refid="md_pages_demos_demo3" kind="page"><name>md_pages_demos_demo3</name>
+  </compound>
+  <compound refid="md_pages_demos_demo4" kind="page"><name>md_pages_demos_demo4</name>
+  </compound>
+  <compound refid="md_pages_demos_demo5" kind="page"><name>md_pages_demos_demo5</name>
+  </compound>
+  <compound refid="md_pages_demos_demo6" kind="page"><name>md_pages_demos_demo6</name>
+  </compound>
   <compound refid="md_pages_introduction" kind="page"><name>md_pages_introduction</name>
   </compound>
   <compound refid="dir_4af40c8677da60eb4c6f7c14f8103d72" kind="dir"><name>pages/components</name>
+  </compound>
+  <compound refid="dir_e3e5033bce933e9613999c4991aa42b8" kind="dir"><name>pages/demos</name>
   </compound>
   <compound refid="dir_208d2690607c4e3d3fabfa1d18673d36" kind="dir"><name>pages</name>
   </compound>

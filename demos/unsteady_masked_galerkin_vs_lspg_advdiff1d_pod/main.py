@@ -159,7 +159,7 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
 
 ######## MAIN ###########
 if __name__ == "__main__":
-  logger.initialize(logger.logto.terminal, "null")
+  logger.initialize(logger.logto.terminal)
   logger.setVerbosity([logger.loglevel.info])
 
   # total number of grid points

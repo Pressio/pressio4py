@@ -1,0 +1,272 @@
+
+
+\begin{DoxyParagraph}{}
+This page describes a demo for a reproductive \char`\"{}masked\char`\"{} Galerkin and LSPG ROMs applied to a 1D advection-\/diffusion problem using POD modes as basis. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py}{\texttt{ here.}}
+\end{DoxyParagraph}
+
+
+\begin{DoxyParagraph}{We are currently working on this page, it will be updated with more explanations.}
+
+\end{DoxyParagraph}
+\hypertarget{md_pages_demos_demo5_autotoc_md134}{}\doxysection{Overview}\label{md_pages_demos_demo5_autotoc_md134}
+This is a follow up to the previous demo \href{./md_pages_demos_demo4.html}{\texttt{ here}} We compare here maskdd Galerkin and masked LSPG.\hypertarget{md_pages_demos_demo5_autotoc_md135}{}\doxysection{Main function}\label{md_pages_demos_demo5_autotoc_md135}
+The main function of the demo is the following\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# total number of grid points}}
+\DoxyCodeLine{  meshSize = 200}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
+\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=meshSize, adv\_coef=1.0)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# the final time to integrate to}}
+\DoxyCodeLine{  finalTime = .05}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 1. FOM -\/-\/-\/\#}}
+\DoxyCodeLine{  fomTimeStepSize  = 1e-\/5}
+\DoxyCodeLine{  fomNumberOfSteps = int(finalTime/fomTimeStepSize)}
+\DoxyCodeLine{  sampleEvery      = 100}
+\DoxyCodeLine{  [fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 2. POD -\/-\/-\/\#}}
+\DoxyCodeLine{  modes = computePodModes(snapshots)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 3. MASKED GALERKIN and LSPG ROM -\/-\/-\/\#}}
+\DoxyCodeLine{  \textcolor{comment}{\# a masked problem is supposed to make it easier to emulate the}}
+\DoxyCodeLine{  \textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
+\DoxyCodeLine{  \textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
+\DoxyCodeLine{  \textcolor{comment}{\# identifying a subset of the grid points in the full mesh.}}
+\DoxyCodeLine{  \textcolor{comment}{\# This is a simple way to mimic hyper-\/reduction}}
+\DoxyCodeLine{  \textcolor{comment}{\# without changing the FOM problem. In fact, the fom still}}
+\DoxyCodeLine{  \textcolor{comment}{\# computes the full operators but we have an additional step}}
+\DoxyCodeLine{  \textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
+\DoxyCodeLine{  \textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
+\DoxyCodeLine{  \textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
+\DoxyCodeLine{  \textcolor{comment}{\# and 20 randomly selected grid points inside the domain.}}
+\DoxyCodeLine{  \textcolor{comment}{\# So effectively we use 1/10 of the full mesh.}}
+\DoxyCodeLine{  random.seed(22123)}
+\DoxyCodeLine{  sampleMeshSize = 20}
+\DoxyCodeLine{  sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
+\DoxyCodeLine{  sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
+\DoxyCodeLine{  \textcolor{comment}{\# sort for convenience, not necessarily needed}}
+\DoxyCodeLine{  sampleMeshIndices = np.sort(sampleMeshIndices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  romSize = 5  \textcolor{comment}{\# number of modes to use}}
+\DoxyCodeLine{  romTimeStepSize  = 1e-\/4}
+\DoxyCodeLine{  romNumberOfSteps = int(finalTime/romTimeStepSize)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# run the masked galerkin problem}}
+\DoxyCodeLine{  [approximatedStateGal, romGal] = runMaskedGalerkin(fomObj, romTimeStepSize,}
+\DoxyCodeLine{                                                     romNumberOfSteps,}
+\DoxyCodeLine{                                                     modes[:,:romSize],}
+\DoxyCodeLine{                                                     sampleMeshIndices)}
+\DoxyCodeLine{  \textcolor{comment}{\# run the masked galerkin problem}}
+\DoxyCodeLine{  [approximatedStateLspg, romLspg] = runMaskedLspg(fomObj, romTimeStepSize,}
+\DoxyCodeLine{                                                   romNumberOfSteps,}
+\DoxyCodeLine{                                                   modes[:,:romSize],}
+\DoxyCodeLine{                                                   sampleMeshIndices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
+\DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
+\DoxyCodeLine{  err1 = linalg.norm(fomFinalState-\/approximatedStateGal)}
+\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Galerkin: final state relative l2 error: \{\}"{}}.format(err1/fomNorm))}
+\DoxyCodeLine{  err2 = linalg.norm(fomFinalState-\/approximatedStateLspg)}
+\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}LSPG: final state relative l2 error: \{\}"{}}.format(err2/fomNorm))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  logger.finalize()}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md136}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo5_autotoc_md136}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
+\DoxyCodeLine{  u = fom.u0.copy()}
+\DoxyCodeLine{  U = [u]}
+\DoxyCodeLine{  f = fom.createVelocity()}
+\DoxyCodeLine{  \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(1,nsteps+1):}
+\DoxyCodeLine{    \textcolor{comment}{\# query rhs of discretized system}}
+\DoxyCodeLine{    fom.velocity(u, i*dt, f)}
+\DoxyCodeLine{    \textcolor{comment}{\# simple Euler forward}}
+\DoxyCodeLine{    u = u + dt*f}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} i \% saveFreq == 0:}
+\DoxyCodeLine{      U.append(u)}
+\DoxyCodeLine{  Usolns = np.array(U)}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md137}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo5_autotoc_md137}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
+\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}SVD on matrix: "{}}, snapshots.shape)}
+\DoxyCodeLine{  U,S,VT = np.linalg.svd(snapshots)}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} U}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md138}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo5_autotoc_md138}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{\# a masked problem is supposed to make it easier to emulate the}}
+\DoxyCodeLine{\textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
+\DoxyCodeLine{\textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
+\DoxyCodeLine{\textcolor{comment}{\# identifying a subset of the grid points in the full mesh.}}
+\DoxyCodeLine{\textcolor{comment}{\# This is a simple way to mimic hyper-\/reduction}}
+\DoxyCodeLine{\textcolor{comment}{\# without changing the FOM problem. In fact, the fom still}}
+\DoxyCodeLine{\textcolor{comment}{\# computes the full operators but we have an additional step}}
+\DoxyCodeLine{\textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
+\DoxyCodeLine{\textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
+\DoxyCodeLine{\textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
+\DoxyCodeLine{\textcolor{comment}{\# and 20 randomly selected grid points inside the domain.}}
+\DoxyCodeLine{\textcolor{comment}{\# So effectively we use 1/10 of the full mesh.}}
+\DoxyCodeLine{random.seed(22123)}
+\DoxyCodeLine{sampleMeshSize = 20}
+\DoxyCodeLine{sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
+\DoxyCodeLine{sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
+\DoxyCodeLine{\textcolor{comment}{\# sort for convenience, not necessarily needed}}
+\DoxyCodeLine{sampleMeshIndices = np.sort(sampleMeshIndices)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md139}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo5_autotoc_md139}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_init\_\_(self, indices):}
+\DoxyCodeLine{    self.rows\_ = indices}
+\DoxyCodeLine{    self.sampleMeshSize\_ = len(indices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createApplyMaskResult(self, operand):}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (operand.ndim == 1):}
+\DoxyCodeLine{      \textcolor{keywordflow}{return} np.zeros(self.sampleMeshSize\_)}
+\DoxyCodeLine{    \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{      \textcolor{keywordflow}{return} np.zeros((self.sampleMeshSize\_, operand.shape[1]))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, time, result):}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (operand.ndim == 1):}
+\DoxyCodeLine{      result[:] = np.take(operand, self.rows\_)}
+\DoxyCodeLine{    \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{      result[:] = np.take(operand, self.rows\_, axis=0)}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md140}{}\doxysubsection{5. Masked Galerkin ROM}\label{md_pages_demos_demo5_autotoc_md140}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{def }runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):}
+\DoxyCodeLine{  \textcolor{comment}{\# find out number of modes wanted}}
+\DoxyCodeLine{  romSize = modes.shape[1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# fom reference state: here it is zero}}
+\DoxyCodeLine{  fomReferenceState = np.zeros(fomObj.nGrid)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create ROM state by projecting the fom initial condition}}
+\DoxyCodeLine{  fomInitialState = fomObj.u0.copy()}
+\DoxyCodeLine{  romState = np.dot(modes.T, fomInitialState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{  creating a masked Galerkin problem involves these steps:}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (1) creating the decoder on the FULL mesh}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (2) create a "{}projector operator"{} by filtering the rows}}
+\DoxyCodeLine{\textcolor{stringliteral}{      of the POD modes only on the sample mesh (aka mask) indices.}}
+\DoxyCodeLine{\textcolor{stringliteral}{      The projector is responsible to project the FOM velocity.}}
+\DoxyCodeLine{\textcolor{stringliteral}{      Note that one can use other matrices for the projector}}
+\DoxyCodeLine{\textcolor{stringliteral}{      but that will be shown in other demos.}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (3) create a masker object responsible to mask the FOM operators.}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (4) create the masked Galerkin problem}}
+\DoxyCodeLine{\textcolor{stringliteral}{  '''}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 1. create a linear decoder}}
+\DoxyCodeLine{  linearDecoder = rom.Decoder(modes)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 2. create the projector}}
+\DoxyCodeLine{  \textcolor{comment}{\# here, simply use "{}collocation"{} with the POD modes filtered on the "{}sample mesh"{}}}
+\DoxyCodeLine{  modesOnSampleMesh = np.take(modes, sampleMeshIndices, axis=0)}
+\DoxyCodeLine{  projector = MyProjector(modesOnSampleMesh)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 3. create the masker object}}
+\DoxyCodeLine{  masker = MyMasker(sampleMeshIndices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 4. create the masked galerkin problem with Euler forward}}
+\DoxyCodeLine{  scheme = ode.stepscheme.BDF1}
+\DoxyCodeLine{  problem = rom.galerkin.MaskedImplicitProblem(scheme, fomObj, linearDecoder, \(\backslash\)}
+\DoxyCodeLine{                                               romState, fomReferenceState, \(\backslash\)}
+\DoxyCodeLine{                                               projector, masker)}
+\DoxyCodeLine{  stepper = problem.stepper()}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# linear and non linear solver}}
+\DoxyCodeLine{  lsO = MyLinSolver()}
+\DoxyCodeLine{  nlsO = solvers.create\_newton\_raphson(stepper, romState, lsO)}
+\DoxyCodeLine{  nlsO.setMaxIterations(15)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# solve the problem}}
+\DoxyCodeLine{  ode.advance\_n\_steps(stepper, romState, 0., dt, nsteps, nlsO)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
+\DoxyCodeLine{  \textcolor{comment}{\# NOTE: even though the Galerkin problem was run on the "{}masked mesh points"{},}}
+\DoxyCodeLine{  \textcolor{comment}{\# this reconstruction uses the POD modes on the full mesh stored in the decoder}}
+\DoxyCodeLine{  \textcolor{comment}{\# so we can effectively obtain an approximation of the full solution}}
+\DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} [fomRecon(romState), romState]}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md141}{}\doxysubsection{6. Masked LSPG ROM}\label{md_pages_demos_demo5_autotoc_md141}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{def }runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):}
+\DoxyCodeLine{  \textcolor{comment}{\# find out number of modes wanted}}
+\DoxyCodeLine{  romSize = modes.shape[1]}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# fom reference state: here it is zero}}
+\DoxyCodeLine{  fomReferenceState = np.zeros(fomObj.nGrid)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# create ROM state by projecting the fom initial condition}}
+\DoxyCodeLine{  fomInitialState = fomObj.u0.copy()}
+\DoxyCodeLine{  romState = np.dot(modes.T, fomInitialState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{  creating a masked LSPG problem involves these steps:}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (1) creating the decoder on the FULL mesh}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (2) create a masker object responsible to mask the FOM operators}}
+\DoxyCodeLine{\textcolor{stringliteral}{  (3) create the masked LSPG problem}}
+\DoxyCodeLine{\textcolor{stringliteral}{  '''}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 1. create a linear decoder}}
+\DoxyCodeLine{  linearDecoder = rom.Decoder(modes)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 2. create the masker object}}
+\DoxyCodeLine{  masker = MyMasker(sampleMeshIndices)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# 3. create the masked galerkin problem with Euler forward}}
+\DoxyCodeLine{  scheme = ode.stepscheme.BDF1}
+\DoxyCodeLine{  problem = rom.lspg.unsteady.MaskedProblem(scheme, fomObj, linearDecoder,\(\backslash\)}
+\DoxyCodeLine{                                            romState, fomReferenceState,\(\backslash\)}
+\DoxyCodeLine{                                            masker)}
+\DoxyCodeLine{  stepper = problem.stepper()}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# linear and non linear solver}}
+\DoxyCodeLine{  lsO = MyLinSolver()}
+\DoxyCodeLine{  nlsO = solvers.create\_gauss\_newton(stepper, romState, lsO)}
+\DoxyCodeLine{  nlsO.setMaxIterations(10)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# solve the problem}}
+\DoxyCodeLine{  ode.advance\_n\_steps(stepper, romState, 0., dt, nsteps, nlsO)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
+\DoxyCodeLine{  \textcolor{comment}{\# NOTE: even though the Galerkin problem was run on the "{}masked mesh points"{},}}
+\DoxyCodeLine{  \textcolor{comment}{\# this reconstruction uses the POD modes on the full mesh stored in the decoder}}
+\DoxyCodeLine{  \textcolor{comment}{\# so we can effectively obtain an approximation of the full solution}}
+\DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} [fomRecon(romState), romState]}
+
+\end{DoxyCode}
+\hypertarget{md_pages_demos_demo5_autotoc_md142}{}\doxysection{Results}\label{md_pages_demos_demo5_autotoc_md142}
+If everything works fine, the following plots shows the result. We first plot the result reconstructed {\itshape only on the sample mesh}. This can easily be done using the bases collocated on the sample mesh indices. 
+
+We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10\% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate. 
+
+
+
+\begin{DoxyParagraph}{Warning}
+Note that using the mask to mimic hyper-\/reduction is only helpful to assess the accuracy but not the computational performance. This is because the \char`\"{}masked\char`\"{} problem still requires the FOM to compute the full kernels. Hyper-\/reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos. 
+\end{DoxyParagraph}
