@@ -1,0 +1,58 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+solvers}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import solvers} 
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_lm_autotoc_md18}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_nonlinsolvers_lm_autotoc_md18}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = solvers.create\_levenberg\_marquardt(problem, state, linear\_solver)         (1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{solver = solvers.create\_weighted\_levenberg\_marquardt(problem, state, \(\backslash\)             (2)}
+\DoxyCodeLine{                                                     linear\_solver, weigh\_functor)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily problem}\+:
+\begin{DoxyItemize}
+\item instance of your problem meeting the \href{md_pages_components_nonlinsolvers_general.html}{\texttt{ residual/jacobian API}}
+\end{DoxyItemize}
+\item {\ttfamily state}\+:
+\begin{DoxyItemize}
+\item rank-\/1 {\ttfamily numpy.\+array} storing initial condition
+\end{DoxyItemize}
+\item {\ttfamily linear\+\_\+solver}\+:
+\begin{DoxyItemize}
+\item an object that is used to solve the linear problem stemming from the normal equations
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }LinearSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A, b, x):}
+\DoxyCodeLine{    \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Here you need to solve Ax = b.}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Remember that you need to properly overwrite x}}
+\DoxyCodeLine{\textcolor{stringliteral}{    '''}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\item {\ttfamily weigh\+\_\+functor}\+:
+\begin{DoxyItemize}
+\item applicable only to overload 2
+\item callable that is called to apply weighting to operators at each nonlinear iteration
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }WeighingFunctor}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, result):}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your weighting to operand and store into result}}
+\DoxyCodeLine{    \textcolor{comment}{\# remember to properly overwrite result}}
+
+\end{DoxyCode}
+ 
+\end{DoxyItemize}
+\end{DoxyItemize}

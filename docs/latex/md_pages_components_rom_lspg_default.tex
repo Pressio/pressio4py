@@ -1,0 +1,60 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+rom.\+lspg.\+unsteady}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_default_autotoc_md79}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_lspg_default_autotoc_md79}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = lspg.unsteady.DefaultProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
+\DoxyCodeLine{                                       rom\_state, fom\_ref\_state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{problem = lspg.unsteady.PrecDefaultProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
+\DoxyCodeLine{                                       rom\_state, fom\_ref\_state, preconditioner)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily scheme}\+:
+\begin{DoxyItemize}
+\item value from the {\ttfamily ode.\+stepscheme} enum setting the desired stepping scheme
+\item requires an \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit value}}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+adapter}\+:
+\begin{DoxyItemize}
+\item instance of your adapter class specifying the FOM problem. ~\newline
+
+\item must be admissible to unsteady LSPG, see \href{./md_pages_components_rom_fom_apis.html}{\texttt{ API list}}
+\end{DoxyItemize}
+\item {\ttfamily decoder}\+:
+\begin{DoxyItemize}
+\item decoder object
+\item must satify the requirements listed \href{md_pages_components_rom_decoder.html}{\texttt{ here}}
+\end{DoxyItemize}
+\item {\ttfamily rom\+\_\+state}\+:
+\begin{DoxyItemize}
+\item currently, must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily fom\+\_\+ref\+\_\+state}\+:
+\begin{DoxyItemize}
+\item your FOM reference state that is used when reconstructing the FOM state
+\item must be a rank-\/1 {\ttfamily numpy.\+array}
+\end{DoxyItemize}
+\item {\ttfamily preconditioner}\+:
+\begin{DoxyItemize}
+\item functor needed to precondition the ROM operators
+\item must be a functor with a specific API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Prec:}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, fom\_state, time, operand):}
+\DoxyCodeLine{    \textcolor{comment}{\# given the current FOM state,}}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your preconditioner to the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# Ensure that you overwrite the data in the operand.}}
+\DoxyCodeLine{    \textcolor{comment}{\# As an example, a trivial preconditioner that does nothing:}}
+\DoxyCodeLine{    \textcolor{comment}{\# operand[:] *= 1.}}
+
+\end{DoxyCode}
+ 
+\end{DoxyItemize}
+\end{DoxyItemize}

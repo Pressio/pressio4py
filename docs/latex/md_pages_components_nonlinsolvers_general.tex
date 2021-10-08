@@ -1,0 +1,208 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+solvers}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import solvers} 
+
+~\newline
+
+
+
+
+At a high level, a nonlinear solver can be seen as a process that repeatedly {\itshape updates} a given {\itshape state} until a certain {\itshape stopping} criterion is met. This forms the basis of our design approach, and if you keep this in mind, the details below will (hopefully) be very clear and intuitive. 
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_general_autotoc_md5}{}\doxysection{Step by step guide}\label{md_pages_components_nonlinsolvers_general_autotoc_md5}
+Using the pressio4py nonlinear solvers involves four main steps\+:
+
+
+
+
+\begin{DoxyEnumerate}
+\item define your problem in the form of a class with a specific API
+\item instantiate a nonlinear problem object
+\item set/change (if needed) the convergence and updating criteria
+\item invoke the {\ttfamily solve} operation 
+\end{DoxyEnumerate}\hypertarget{md_pages_components_nonlinsolvers_general_autotoc_md6}{}\doxysubsection{1. Your problem class}\label{md_pages_components_nonlinsolvers_general_autotoc_md6}
+The problem is the object {\itshape defining your math system to solve}, and is what you need to implement and provide to pressio4py to compute the needed operators to operate on. The problem must be an instance of a class meeting what we call the \char`\"{}residual-\/jacobian\char`\"{} API\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Problem:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual():}
+\DoxyCodeLine{    \textcolor{comment}{\# return a copy of the rank-\/1 residual}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(...)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian():}
+\DoxyCodeLine{    \textcolor{comment}{\# return a copy of the rank-\/2 jacobian}}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(...)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(state, R):}
+\DoxyCodeLine{    \textcolor{comment}{\# given current state, compute residual, R}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(state, J):}
+\DoxyCodeLine{    \textcolor{comment}{\# given current state, compute jacobian, J}}
+
+\end{DoxyCode}
+
+
+
+
+Currently, we only support dense Jacobians. This is because pybind11 does not yet support \href{https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html}{\texttt{ passing sparse types by reference}}. Note, however, that this is not critical for the main purpose of this library because ROMs are inherently dense. 
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_general_autotoc_md7}{}\doxysubsection{2. Instantiating a solver}\label{md_pages_components_nonlinsolvers_general_autotoc_md7}
+We currently support the following methods\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Doc   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Purpose\+:    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Doc   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Purpose\+:    }\\\cline{1-3}
+\endhead
+Newton-\/\+Raphson   &\href{./md_pages_components_nonlinsolvers_nr.html}{\texttt{ Link}}   &Systems of nonlinear equations (see e.\+g. \href{https://link.springer.com/content/pdf/bbm\%3A978-3-319-69407-8\%2F1.pdf}{\texttt{ link}}, \href{https://www.cmu.edu/math/undergrad/suami/pdfs/2014_newton_method.pdf}{\texttt{ link}} )    \\\cline{1-3}
+Gauss-\/\+Newton   &\href{./md_pages_components_nonlinsolvers_gn.html}{\texttt{ Link}}   &Nonlinear least-\/squares problem (see \href{https://en.wikipedia.org/wiki/Gauss\%E2\%80\%93Newton_algorithm}{\texttt{ link}} )    \\\cline{1-3}
+Levenberg–\+Marquardt   &\href{./md_pages_components_nonlinsolvers_lm.html}{\texttt{ Link}}   &Nonlinear least-\/squares problem (see \href{https://en.wikipedia.org/wiki/Levenberg\%E2\%80\%93Marquardt_algorithm}{\texttt{ link}} )   \\\cline{1-3}
+\end{longtabu}
+
+
+To instantiate a solver, you can use specific factory functions as follows\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = solvers.create\_newton\_raphson(problem, state, ...);}
+\DoxyCodeLine{solver = solvers.create\_gauss\_newton(problem, state, ...);}
+\DoxyCodeLine{solver = solvers.create\_levenber\_marquardt(problem, state, ...);}
+
+\end{DoxyCode}
+
+
+Note that the first and second arguments are your problem object and the state. These are needed at construction because presssio4py uses them to initialize all data structures needed. Please refer to each method\textquotesingle{}s documentation for the details on the other arguments to pass.
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_general_autotoc_md8}{}\doxysubsection{3. Setting convergence and updating criteria}\label{md_pages_components_nonlinsolvers_general_autotoc_md8}
+The solver class exposes the following methods\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Solver:}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# set stopping criterion}}
+\DoxyCodeLine{  \textcolor{keyword}{def }setStoppingCriterion(value) \textcolor{comment}{\# choose value is from the 'stop' enum}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# query stopping criterion}}
+\DoxyCodeLine{  def stoppingCriterion():}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# the stored stopping criterion}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# set update criterion}}
+\DoxyCodeLine{  \textcolor{keyword}{def }setUpdatingCriterion(value) \textcolor{comment}{\# choose value is from the 'update' enum}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# query update criterion}}
+\DoxyCodeLine{  def updatingCriterion():}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# the stored update criterion}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# set max number of iterations}}
+\DoxyCodeLine{  \textcolor{keyword}{def }setMaxIterations(integer)}
+\DoxyCodeLine{  \textcolor{comment}{\# query max number of iterations}}
+\DoxyCodeLine{  def maxIterations():}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# the current max num of iterations}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# this is used to set a single tol for all}}
+\DoxyCodeLine{  \textcolor{keyword}{def }setTolerance(float)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# finer-\/grained methods for setting tolerances}}
+\DoxyCodeLine{  def setCorrectionAbsoluteTolerance(float)}
+\DoxyCodeLine{  \textcolor{keyword}{def }setCorrectionRelativeTolerance(float)}
+\DoxyCodeLine{  def setResidualAbsoluteTolerance(float)}
+\DoxyCodeLine{  \textcolor{keyword}{def }setResidualRelativeTolerance(float)}
+\DoxyCodeLine{  def setGradientAbsoluteTolerance(float)}
+\DoxyCodeLine{  \textcolor{keyword}{def }setGradientRelativeTolerance(float)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# querying tolerances}}
+\DoxyCodeLine{  def correctionAbsoluteTolerance(): \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{  \textcolor{keyword}{def }correctionRelativeTolerance(): \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{  \textcolor{keyword}{def} residualAbsoluteTolerance()  : \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{  \textcolor{keyword}{def }residualRelativeTolerance()  : \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{  \textcolor{keyword}{def} gradientAbsoluteTolerance()  : \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{  \textcolor{keyword}{def }gradientRelativeTolerance()  : \textcolor{keywordflow}{return} \textcolor{comment}{\#...}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+
+The convergence criterion and associated tolerance are used to decide why and when the solver needs to terminate. We currently support these termination criteria\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Enum value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Currently supported for\+:    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Enum value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Currently supported for\+:    }\\\cline{1-3}
+\endhead
+{\ttfamily stop.\+After\+Max\+Iters}   &self-\/explanatory   &all algorithms    \\\cline{1-3}
+{\ttfamily stop.\+When\+Correction\+Absolute\+Norm\+Below\+Tolerance}   &self-\/explanatory   &all algorithms    \\\cline{1-3}
+{\ttfamily stop.\+When\+Correction\+Relative\+Norm\+Below\+Tolerance}   &self-\/explanatory   &all algorithms    \\\cline{1-3}
+{\ttfamily stop.\+When\+Residual\+Absolute\+Norm\+Below\+Tolerance}   &self-\/explanatory   &all algorithms    \\\cline{1-3}
+{\ttfamily stop.\+When\+Residual\+Relative\+Norm\+Below\+Tolerance}   &self-\/explanatory   &all algorithms    \\\cline{1-3}
+{\ttfamily stop.\+When\+Gradient\+Absolute\+Norm\+Below\+Tolerance}   &self-\/explanatory   &least-\/squares solvers    \\\cline{1-3}
+{\ttfamily stop.\+When\+Gradient\+Relative\+Norm\+Below\+Tolerance}   &self-\/explanatory   &least-\/squares solvers   \\\cline{1-3}
+\end{longtabu}
+
+
+The update stage represents the {\itshape how} the current correction term is combined with state to update the latter. We currently support the following\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Enum value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Currently supported for\+:    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Enum value   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Currently supported for\+:    }\\\cline{1-4}
+\endhead
+Default   &{\ttfamily update.\+Standard}   &$x_{n+1} = x_{n} + \lambda_{n}$   &all algorithms    \\\cline{1-4}
+Armijo   &{\ttfamily update.\+Armijo}   &todo   &Gauss-\/\+Newton    \\\cline{1-4}
+LM-\/schedule1   &{\ttfamily update.\+LMSchedule1}   &todo   &Levenberg–\+Marquardt    \\\cline{1-4}
+LM-\/schedule2   &{\ttfamily update.\+LMSchedule2}   &todo   &Levenberg–\+Marquardt   \\\cline{1-4}
+\end{longtabu}
+
+
+where $\lambda_{n}$ is the correction computed at the n-\/th iteration of the solver.
+
+
+
+\begin{DoxyParagraph}{By default, a nonlinear solver uses\+:}
+
+\begin{DoxyItemize}
+\item update\+: {\ttfamily update.\+Standard};
+\item stopping\+: {\ttfamily stop.\+When\+Correction\+Absolute\+Norm\+Below\+Tolerance};
+\item max number of iterations = 100
+\item tolerance = 0.\+000001 (for everything) 
+\end{DoxyItemize}
+\end{DoxyParagraph}
+
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_general_autotoc_md9}{}\doxysubsection{4. Invoking the solve}\label{md_pages_components_nonlinsolvers_general_autotoc_md9}
+This is best explained via a simple snippet\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} solvers}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{\# assuming problem is already defined}}
+\DoxyCodeLine{}
+\DoxyCodeLine{state = np.array( \textcolor{comment}{\# whatever initial condition )}}
+\DoxyCodeLine{solver = solvers.create\_gauss\_newton(problem, state, ...)}
+\DoxyCodeLine{solver.solve(problem, state)}
+
+\end{DoxyCode}
+ 

@@ -1,51 +1,121 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.20" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
   <compounddef id="indexpage" kind="page">
     <compoundname>index</compoundname>
     <title>Python Bindings for Pressio</title>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
-<para><anchor id="index_1md_pages_main"/> <emphasis>Leading-edge projection-based reduced order models (pROMs) for dynamical systems in science and engineering.</emphasis></para>
-<para>This is the documentation of the Python bindings library, which is one component of the <ulink url="https://pressio.github.io/">Pressio project</ulink>.</para>
-<sect1 id="index_1autotoc_md59">
-<title>Install</title>
-<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
+<para><anchor id="index_1md_pages_main"/></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-frame m-default" /></para>
+<para><parblock><para><emphasis>Leading-edge reduced order models (ROMs) for dynamical systems in science and engineering.</emphasis></para>
+<para>This is the documentation of the <ulink url="https://github.com/Pressio/pressio4py">Python library</ulink>, one component of the <ulink url="https://pressio.github.io/">Pressio ecosystem</ulink>. </para>
+</parblock></para>
+<sect1 id="index_1autotoc_md104">
+<title>Start with why</title>
+<para>Model reduction is a broad and very active field. Many methods exist, but there is no such thing as &quot;one method to rule them all&quot;. We believe that evaluating the quality of a reduced model requires accounting for several factors, e.g., the reduction in degrees of freedom, training cost, evaluation cost, robustness, simplicity, predictive accuracy, etc. There is no single metric to rely on; it is always a tradeoff.</para>
+<para>We believe that there is a lot to explore in this field both in terms of new research directions as well as assessing robustness of current state-of-the-art methods. There is no better way than a Python framework to incentivize and foster work to impact this field. Working towards this goal, pressio4py is our contribution to research novel fundamental ideas on model reduction as well as test state-of-the-art methods on problems of arbitrary complexity. Python is the perfect language to do so because it benefits from a large community of developers and has become the de-facto choice for machine learning. This offers an ideal framework to explore and merge ideas from different fields.</para>
+</sect1>
+<sect1 id="index_1autotoc_md105">
+<title>Components</title>
+<para><table rows="5" cols="4"><row>
+<entry thead="yes"><para>Name   </para>
+</entry><entry thead="yes"><para>Description/Content   </para>
+</entry><entry thead="yes"><para>Links   </para>
+</entry><entry thead="yes"><para>Module(s)    </para>
+</entry></row>
+<row>
+<entry thead="no"><para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-success">logger</mcss:span>   </para>
+</entry><entry thead="no"><para>(dis)enable pressio logging   </para>
+</entry><entry thead="no"><para><linebreak/>
+<ulink url="md_pages_components_logger.html">Doc Page</ulink>   </para>
+</entry><entry thead="no"><para><computeroutput>pressio4py.logger</computeroutput>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-success">solvers_nonlinear</mcss:span>   </para>
+</entry><entry thead="no"><para><linebreak/>
+ general info <linebreak/>
+ Newton-Raphson <linebreak/>
+ Gauss-Newton <linebreak/>
+ Levenberg-Marquardt <linebreak/>
+   </para>
+</entry><entry thead="no"><para><linebreak/>
+ <ulink url="md_pages_components_nonlinsolvers_general.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_nonlinsolvers_nr.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_nonlinsolvers_gn.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_nonlinsolvers_lm.html">Doc Page</ulink>   </para>
+</entry><entry thead="no"><para><computeroutput>pressio4py.solvers</computeroutput>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-success">ode</mcss:span>   </para>
+</entry><entry thead="no"><para><linebreak/>
+ explicit steppers <linebreak/>
+implicit steppers <linebreak/>
+ advancers <linebreak/>
+   </para>
+</entry><entry thead="no"><para><linebreak/>
+ <ulink url="md_pages_components_ode_steppers_explicit.html">Doc Page</ulink><linebreak/>
+ <ulink url="md_pages_components_ode_steppers_implicit.html">Doc Page</ulink> <linebreak/>
+<ulink url="md_pages_components_ode_advance.html">Doc Page</ulink>   </para>
+</entry><entry thead="no"><para><computeroutput>pressio4py.ode</computeroutput>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-success">rom</mcss:span>   </para>
+</entry><entry thead="no"><para><linebreak/>
+general info <linebreak/>
+ decoder <linebreak/>
+ Galerkin<linebreak/>
+ least-squares Petrov-Galerkin (LSPG): steady<linebreak/>
+ least-squares Petrov-Galerkin (LSPG): unsteady<linebreak/>
+ Windowed least-squares (WLS)<linebreak/>
+   </para>
+</entry><entry thead="no"><para><linebreak/>
+<ulink url="md_pages_components_rom_general.html">Doc Page</ulink> <linebreak/>
+<ulink url="md_pages_components_rom_decoder.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_rom_galerkin.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_rom_lspg_steady.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_rom_lspg_unsteady.html">Doc Page</ulink> <linebreak/>
+ <ulink url="md_pages_components_rom_wls.html">Doc Page</ulink> <linebreak/>
+   </para>
+</entry><entry thead="no"><para><computeroutput>pressio4py.rom</computeroutput>   </para>
+</entry></row>
+</table>
+</para>
+<para>Note that we intentially keep pressio4py limited in scope for now. We don&apos;t provide bindings to all the functionalities in the <ulink url="https://pressio.github.io/pressio/html/index.html">pressio C++ library</ulink> but only bind those for model reduction and the auxiliary ones.</para>
+</sect1>
+<sect1 id="index_1autotoc_md106">
+<title>Installation</title>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-primary" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>the<sp/>C++<sp/>compiler<sp/>must<sp/>support<sp/>C++14</highlight></codeline>
 <codeline><highlight class="normal">export<sp/>CXX=&lt;path-to-your-C++-compiler&gt;</highlight></codeline>
-<codeline><highlight class="normal">git<sp/>clone<sp/>--recursive<sp/>git@github.com:Pressio/pressio4py.git<sp/>#<sp/>or<sp/>https://github.com/Pressio/pressio4py.git</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">git<sp/>clone<sp/>--recursive<sp/>git@github.com:Pressio/pressio4py.git</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>or<sp/>https://github.com/Pressio/pressio4py.git</highlight></codeline>
+<codeline></codeline>
 <codeline><highlight class="normal">pip<sp/>install<sp/>./pressio4py</highlight></codeline>
 <codeline></codeline>
-<codeline><highlight class="normal">#<sp/>you<sp/>can<sp/>then<sp/>run<sp/>the<sp/>regression<sp/>tests:</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>verify<sp/>installation<sp/>by<sp/>running<sp/>our<sp/>test<sp/>suite:</highlight></codeline>
 <codeline><highlight class="normal">cd<sp/>pressio4py</highlight></codeline>
 <codeline><highlight class="normal">pytest<sp/>-s</highlight></codeline>
-</programlisting></para>
+</programlisting> </para>
 </simplesect>
-Note that if you get an import error, it might be that the version of <computeroutput>pytest</computeroutput> you are using is not compatible with the <computeroutput>pip</computeroutput> command you used to install. Make sure you use Python commands from the <bold>same</bold> distribution.</para>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>If you get an import error, make sure the version of <computeroutput>pytest</computeroutput> you are using is compatible with the <computeroutput>pip</computeroutput> command you used to install. For compatibility, the Python commands must be from the <bold>same</bold> distribution. </para>
+</parblock></para>
+<para><linebreak/>
+</para>
 </sect1>
-<sect1 id="index_1autotoc_md60">
-<title>In a nutshell</title>
-<para>Pressio can be applied to any dynamical system expressible in a <emphasis>continuous-time</emphasis> form as <formula id="8">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]</formula> and/or in a <emphasis>discrete-time</emphasis> form <formula id="9">\[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]</formula></para>
-<para>Here, <formula id="10">$y$</formula> is the full-order model (FOM) state, <formula id="11">$f$</formula> the FOM velocity, <formula id="12">$t$</formula> is time, and <formula id="13">$R$</formula> is the residual.</para>
-<para>This formulation is quite general and does not make any assumption on its origin: it may be derived from the spatial discretization (regardless of the discretization method) of a PDE problem, or from naturally discrete systems.</para>
-<para>We leverage this expressive mathematical framework as a pivotal design choice to enable a minimal application programming interface (API) that is natural to dynamical systems: you choose the formulation more convenient to you, and interface your application to Pressio by creating a corresponding <emphasis>adapter class</emphasis> to expose the operators needed for the chosen formulation. In general, you don&apos;t need to support both: each one has advantages and disadvantages, and sometimes the choice is dictated directly by your native application (for example, in some cases it might be easier to directly expose the discrete-time residual).</para>
-<para>Read <ulink url="./md_pages_prepare_your_app.html">this doc page</ulink> to learn more about the adapter classes and see code templates.</para>
-</sect1>
-<sect1 id="index_1autotoc_md61">
-<title>Explore the tutorials and demos</title>
-<para>You can find descriptions of the demos <ulink url="./md_pages_demos_demo1.html">here</ulink> and of the tutorials <ulink url="./md_pages_tutorials_tutorial1.html">here</ulink><mdash/>we will progressively add more. <programlisting filename=".bash"><codeline><highlight class="normal">cd<sp/>pressio4py/demos</highlight></codeline>
-<codeline><highlight class="normal">python3<sp/>./&lt;demo-subdir-name&gt;/main.py</highlight></codeline>
-</programlisting></para>
-</sect1>
-<sect1 id="index_1autotoc_md62">
+<sect1 id="index_1autotoc_md107">
 <title>License and Citation</title>
 <para>The full license is available <ulink url="https://pressio.github.io/various/license/">here</ulink>.</para>
 <para>We are working on publishing this: you can find our arXiv preprint at: <ulink url="https://arxiv.org/abs/2003.07798">https://arxiv.org/abs/2003.07798</ulink></para>
 </sect1>
-<sect1 id="index_1autotoc_md63">
+<sect1 id="index_1autotoc_md108">
 <title>Questions?</title>
 <para>Find us on Slack: <ulink url="https://pressioteam.slack.com">https://pressioteam.slack.com</ulink> or open an issue on <ulink url="https://github.com/Pressio/pressio4py">github</ulink>. </para>
 </sect1>
     </detaileddescription>
+    <location file="pages/main.md"/>
   </compounddef>
 </doxygen>

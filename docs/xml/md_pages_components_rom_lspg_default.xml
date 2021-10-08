@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_rom_lspg_default" kind="page">
+    <compoundname>md_pages_components_rom_lspg_default</compoundname>
+    <title>rom: LSPG: unsteady default problem</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.lspg.unsteady</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import lspg</computeroutput> </para>
+</parblock></para>
+<sect1 id="md_pages_components_rom_lspg_default_1autotoc_md79">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.DefaultProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.PrecDefaultProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>preconditioner)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>scheme</computeroutput>:<itemizedlist>
+<listitem><para>value from the <computeroutput>ode.stepscheme</computeroutput> enum setting the desired stepping scheme</para>
+</listitem><listitem><para>requires an <ulink url="md_pages_components_ode_steppers_implicit.html">implicit value</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>fom_adapter</computeroutput>:<itemizedlist>
+<listitem><para>instance of your adapter class specifying the FOM problem. <linebreak/>
+</para>
+</listitem><listitem><para>must be admissible to unsteady LSPG, see <ulink url="./md_pages_components_rom_fom_apis.html">API list</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>decoder</computeroutput>:<itemizedlist>
+<listitem><para>decoder object</para>
+</listitem><listitem><para>must satify the requirements listed <ulink url="md_pages_components_rom_decoder.html">here</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>rom_state</computeroutput>:<itemizedlist>
+<listitem><para>currently, must be a rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>fom_ref_state</computeroutput>:<itemizedlist>
+<listitem><para>your FOM reference state that is used when reconstructing the FOM state</para>
+</listitem><listitem><para>must be a rank-1 <computeroutput>numpy.array</computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>preconditioner</computeroutput>:<itemizedlist>
+<listitem><para>functor needed to precondition the ROM operators</para>
+</listitem><listitem><para>must be a functor with a specific API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Prec:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>fom_state,<sp/>time,<sp/>operand):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>given<sp/>the<sp/>current<sp/>FOM<sp/>state,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>apply<sp/>your<sp/>preconditioner<sp/>to<sp/>the<sp/>operand.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>Ensure<sp/>that<sp/>you<sp/>overwrite<sp/>the<sp/>data<sp/>in<sp/>the<sp/>operand.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>As<sp/>an<sp/>example,<sp/>a<sp/>trivial<sp/>preconditioner<sp/>that<sp/>does<sp/>nothing:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>operand[:]<sp/>*=<sp/>1.</highlight></codeline>
+</programlisting> </para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/rom_lspg_default.md"/>
+  </compounddef>
+</doxygen>

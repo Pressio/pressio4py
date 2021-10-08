@@ -22,7 +22,7 @@ def myname():
   return "pressio4py"
 
 def myversion():
-  return "0.9.0-rc1"
+  return "0.9.0rc1"
 
 def description():
   with open(os.path.join(topdir, 'DESCRIPTION.rst')) as f:
@@ -100,6 +100,7 @@ class CMakeBuild(build_ext):
       "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(extdir),
       "-DPYTHON_EXECUTABLE={}".format(sys.executable),
       "-DCMAKE_BUILD_TYPE={}".format(buildMode),
+      "-DCMAKE_VERBOSE_MAKEFILE=ON",
       "-DPRESSIO_INCLUDE_DIR={}".format(pressioIncludeDir),
       "-DVERSION_INFO={}".format(self.distribution.get_version()),
     ]

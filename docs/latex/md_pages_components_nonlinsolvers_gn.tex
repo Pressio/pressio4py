@@ -1,0 +1,235 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+solvers}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import solvers} 
+
+~\newline
+\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md11}{}\doxysection{Gauss-\/\+Newton via Normal-\/\+Equations with optional weighting}\label{md_pages_components_nonlinsolvers_gn_autotoc_md11}
+\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md12}{}\doxysubsection{API, Parameters and Requirements}\label{md_pages_components_nonlinsolvers_gn_autotoc_md12}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = solvers.create\_gauss\_newton(problem, state, linear\_solver)         (1)}
+\DoxyCodeLine{}
+\DoxyCodeLine{solver = solvers.create\_weighted\_gauss\_newton(problem, state, \(\backslash\)             (2)}
+\DoxyCodeLine{                                              linear\_solver, weigh\_functor)}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily problem}\+:
+\begin{DoxyItemize}
+\item instance of your problem meeting the \href{md_pages_components_nonlinsolvers_general.html}{\texttt{ residual/jacobian API}}
+\end{DoxyItemize}
+\item {\ttfamily state}\+:
+\begin{DoxyItemize}
+\item rank-\/1 {\ttfamily numpy.\+array} storing initial condition
+\end{DoxyItemize}
+\item {\ttfamily linear\+\_\+solver}\+:
+\begin{DoxyItemize}
+\item an object that is used to solve the linear problem stemming from the normal equations
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }LinearSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A, b, x):}
+\DoxyCodeLine{    \textcolor{stringliteral}{'''}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Here you need to solve Ax = b.}}
+\DoxyCodeLine{\textcolor{stringliteral}{    Remember that you need to properly overwrite x}}
+\DoxyCodeLine{\textcolor{stringliteral}{    '''}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\item {\ttfamily weigh\+\_\+functor}\+:
+\begin{DoxyItemize}
+\item applicable only to overload 2
+\item callable that is called to apply weighting to operators at each nonlinear iteration
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }WeighingFunctor}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(self, operand, result):}
+\DoxyCodeLine{    \textcolor{comment}{\# apply your weighting to operand and store into result}}
+\DoxyCodeLine{    \textcolor{comment}{\# remember to properly overwrite result}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md13}{}\doxysubsection{Example usage}\label{md_pages_components_nonlinsolvers_gn_autotoc_md13}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{from} scipy \textcolor{keyword}{import} linalg \textcolor{keyword}{as} spla}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} logger, solvers, ode}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }RosenbrockSys:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(6)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((6,4))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(self, x, R):}
+\DoxyCodeLine{    x1,x2,x3,x4 = x[0],x[1],x[2],x[3]}
+\DoxyCodeLine{    R[0] = 10.*(x4 -\/ x3*x3)}
+\DoxyCodeLine{    R[1] = 10.*(x3 -\/ x2*x2)}
+\DoxyCodeLine{    R[2] = 10.*(x2 -\/ x1*x1)}
+\DoxyCodeLine{    R[3] = (1.-\/x1)}
+\DoxyCodeLine{    R[4] = (1.-\/x2)}
+\DoxyCodeLine{    R[5] = (1.-\/x3)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self, x, J):}
+\DoxyCodeLine{    x1,x2,x3 = x[0],x[1],x[2]}
+\DoxyCodeLine{    J[0,2] = -\/20.*x3}
+\DoxyCodeLine{    J[0,3] = 10.}
+\DoxyCodeLine{    J[1,1] = -\/20.*x2}
+\DoxyCodeLine{    J[1,2] = 10.}
+\DoxyCodeLine{    J[2,0] = -\/20.*x1}
+\DoxyCodeLine{    J[2,1] = 10.}
+\DoxyCodeLine{    J[3,0] = -\/1.}
+\DoxyCodeLine{    J[4,1] = -\/1.}
+\DoxyCodeLine{    J[5,2] = -\/1.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }MyLinSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }solve(self, A,b,x):}
+\DoxyCodeLine{    lumat, piv, info = linalg.lapack.dgetrf(A, overwrite\_a=\textcolor{keyword}{False})}
+\DoxyCodeLine{    x[:], info = spla.lapack.dgetrs(lumat, piv, b, 0, 0)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{'\_\_main\_\_'}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
+\DoxyCodeLine{  state   = np.array([-\/0.05, 1.1, 1.2, 1.5])}
+\DoxyCodeLine{  problem = RosenbrockSys()}
+\DoxyCodeLine{  lin\_s   = MyLinSolver()}
+\DoxyCodeLine{  solver  = solvers.create\_gauss\_newton(problem, state, lin\_s)}
+\DoxyCodeLine{  solver.setTolerance(1e-\/5)}
+\DoxyCodeLine{  solver.solve(problem, state)}
+\DoxyCodeLine{  print(state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  gold = np.array([1.00000001567414e+00,}
+\DoxyCodeLine{                   9.99999999124769e-\/01,}
+\DoxyCodeLine{                   9.99999996519930e-\/01,}
+\DoxyCodeLine{                   9.99999988898883e-\/01])}
+\DoxyCodeLine{  assert(np.allclose(gold, state))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  logger.finalize()}
+
+\end{DoxyCode}
+
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md14}{}\doxysection{Gauss-\/\+Newton via QR factorization}\label{md_pages_components_nonlinsolvers_gn_autotoc_md14}
+\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md15}{}\doxysubsection{API, Parameters and Requirements}\label{md_pages_components_nonlinsolvers_gn_autotoc_md15}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = solvers.create\_gauss\_newton\_qr(problem, state, qr\_solver);}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily problem}\+:
+\begin{DoxyItemize}
+\item instance of your problem meeting the \href{md_pages_components_nonlinsolvers_general.html}{\texttt{ residual/jacobian API}}
+\end{DoxyItemize}
+\item {\ttfamily state}\+:
+\begin{DoxyItemize}
+\item rank-\/1 {\ttfamily numpy.\+array} storing initial condition
+\end{DoxyItemize}
+\item {\ttfamily qr\+\_\+solver}\+:
+\begin{DoxyItemize}
+\item an object used for doing QR factorization and related operations
+\item must meet the following API\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }QRSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }computeThin(self, A):}
+\DoxyCodeLine{    self.Q, self.R = np.linalg.qr(A, mode=\textcolor{stringliteral}{'reduced'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyQTranspose(self, operand, result):}
+\DoxyCodeLine{    result[:] = self.Q.T.dot(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyRTranspose(self, operand, result):}
+\DoxyCodeLine{    result[:] = self.R.T.dot(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }solveRxb(self, b, x):}
+\DoxyCodeLine{    \textcolor{comment}{\# solve: Rx = b}}
+\DoxyCodeLine{    x[:] = linalg.solve(self.R, b)}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_pages_components_nonlinsolvers_gn_autotoc_md16}{}\doxysubsection{Example usage}\label{md_pages_components_nonlinsolvers_gn_autotoc_md16}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\textcolor{keyword}{from} scipy \textcolor{keyword}{import} linalg \textcolor{keyword}{as} spla}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} logger, solvers, ode}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }RosenbrockSys:}
+\DoxyCodeLine{  \textcolor{keyword}{def }createResidual(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros(6)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian(self):}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} np.zeros((6,4))}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }residual(self, x, R):}
+\DoxyCodeLine{    x1,x2,x3,x4 = x[0],x[1],x[2],x[3]}
+\DoxyCodeLine{    R[0] = 10.*(x4 -\/ x3*x3)}
+\DoxyCodeLine{    R[1] = 10.*(x3 -\/ x2*x2)}
+\DoxyCodeLine{    R[2] = 10.*(x2 -\/ x1*x1)}
+\DoxyCodeLine{    R[3] = (1.-\/x1)}
+\DoxyCodeLine{    R[4] = (1.-\/x2)}
+\DoxyCodeLine{    R[5] = (1.-\/x3)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(self, x, J):}
+\DoxyCodeLine{    x1,x2,x3 = x[0],x[1],x[2]}
+\DoxyCodeLine{    J[0,2] = -\/20.*x3}
+\DoxyCodeLine{    J[0,3] = 10.}
+\DoxyCodeLine{    J[1,1] = -\/20.*x2}
+\DoxyCodeLine{    J[1,2] = 10.}
+\DoxyCodeLine{    J[2,0] = -\/20.*x1}
+\DoxyCodeLine{    J[2,1] = 10.}
+\DoxyCodeLine{    J[3,0] = -\/1.}
+\DoxyCodeLine{    J[4,1] = -\/1.}
+\DoxyCodeLine{    J[5,2] = -\/1.}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{class }MyQRSolver:}
+\DoxyCodeLine{  \textcolor{keyword}{def }computeThin(self, A):}
+\DoxyCodeLine{    self.Q, self.R = np.linalg.qr(A, mode=\textcolor{stringliteral}{'reduced'})}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyQTranspose(self, operand, result):}
+\DoxyCodeLine{    result[:] = self.Q.T.dot(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }applyRTranspose(self, operand, result):}
+\DoxyCodeLine{    result[:] = self.R.T.dot(operand)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }solveRxb(self, b, x):}
+\DoxyCodeLine{    \textcolor{comment}{\# solve: Rx = b}}
+\DoxyCodeLine{    x[:] = spla.solve(self.R, b)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{'\_\_main\_\_'}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.debug])}
+\DoxyCodeLine{}
+\DoxyCodeLine{  state   = np.array([-\/0.05, 1.1, 1.2, 1.5])}
+\DoxyCodeLine{  problem = RosenbrockSys()}
+\DoxyCodeLine{  qr\_s    = MyQRSolver()}
+\DoxyCodeLine{  solver  = solvers.create\_gauss\_newton\_qr(problem, state, qr\_s)}
+\DoxyCodeLine{  solver.setTolerance(1e-\/5)}
+\DoxyCodeLine{  solver.solve(problem, state)}
+\DoxyCodeLine{  print(state)}
+\DoxyCodeLine{}
+\DoxyCodeLine{  gold = np.array([1.00000001567414e+00,}
+\DoxyCodeLine{                   9.99999999124769e-\/01,}
+\DoxyCodeLine{                   9.99999996519930e-\/01,}
+\DoxyCodeLine{                   9.99999988898883e-\/01])}
+\DoxyCodeLine{  assert(np.allclose(gold, state))}
+\DoxyCodeLine{  logger.finalize()}
+
+\end{DoxyCode}
+ 

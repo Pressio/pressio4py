@@ -8,8 +8,7 @@ import pathlib, sys
 file_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(str(file_path) + "/..")         # to access doFom
 
-from pressio4py import rom as rom, logger
-from pressio4py import solvers as solvers
+from pressio4py import logger, solvers, ode, rom
 from pressio4py.apps.advection_diffusion1d import AdvDiff1d
 from adv_diff_1d_fom import doFom
 from settings_for_website import edit_figure_for_web
@@ -25,7 +24,6 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   # auxiliary class to use in the solve below
   # to monitor the rom state during time stepping
   class RomStateObserver:
-    def __init__(self): pass
     def __call__(self, timeStep, time, state): pass
 
   # find out number of modes wanted
@@ -91,6 +89,8 @@ if __name__ == "__main__":
     fomNorm = linalg.norm(fomFinalState)
     err = linalg.norm(fomFinalState-currentSolution)
     print("With {} modes, final relative l2 error: {}".format(romSize, err/fomNorm))
+
+  logger.finalize()
 
   #--- plot ---#
   ax = plt.gca()

@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_nonlinsolvers_gn" kind="page">
+    <compoundname>md_pages_components_nonlinsolvers_gn</compoundname>
+    <title>Nonlinear Solvers: Gauss-Newton</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-default" /></para>
+<para><parblock><para>Defined in module: <computeroutput>pressio4py.solvers</computeroutput></para>
+<para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import solvers</computeroutput> </para>
+</parblock></para>
+<para><linebreak/>
+</para>
+<sect1 id="md_pages_components_nonlinsolvers_gn_1autotoc_md11">
+<title>Gauss-Newton via Normal-Equations with optional weighting</title>
+<sect2 id="md_pages_components_nonlinsolvers_gn_1autotoc_md12">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_gauss_newton(problem,<sp/>state,<sp/>linear_solver)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_weighted_gauss_newton(problem,<sp/>state,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>linear_solver,<sp/>weigh_functor)</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>problem</computeroutput>:<itemizedlist>
+<listitem><para>instance of your problem meeting the <ulink url="md_pages_components_nonlinsolvers_general.html">residual/jacobian API</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>:<itemizedlist>
+<listitem><para>rank-1 <computeroutput>numpy.array</computeroutput> storing initial condition</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>linear_solver</computeroutput>:<itemizedlist>
+<listitem><para>an object that is used to solve the linear problem stemming from the normal equations</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">LinearSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,<sp/>b,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&apos;&apos;&apos;</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Here<sp/>you<sp/>need<sp/>to<sp/>solve<sp/>Ax<sp/>=<sp/>b.</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>Remember<sp/>that<sp/>you<sp/>need<sp/>to<sp/>properly<sp/>overwrite<sp/>x</highlight></codeline>
+<codeline><highlight class="stringliteral"><sp/><sp/><sp/><sp/>&apos;&apos;&apos;</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>weigh_functor</computeroutput>:<itemizedlist>
+<listitem><para>applicable only to overload 2</para>
+</listitem><listitem><para>callable that is called to apply weighting to operators at each nonlinear iteration</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">WeighingFunctor</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>apply<sp/>your<sp/>weighting<sp/>to<sp/>operand<sp/>and<sp/>store<sp/>into<sp/>result</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>remember<sp/>to<sp/>properly<sp/>overwrite<sp/>result</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_pages_components_nonlinsolvers_gn_1autotoc_md13">
+<title>Example usage</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>scipy<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>linalg<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>spla</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>logger,<sp/>solvers,<sp/>ode</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RosenbrockSys:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createResidual(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(6)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((6,4))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residual(self,<sp/>x,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x1,x2,x3,x4<sp/>=<sp/>x[0],x[1],x[2],x[3]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[0]<sp/>=<sp/>10.*(x4<sp/>-<sp/>x3*x3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[1]<sp/>=<sp/>10.*(x3<sp/>-<sp/>x2*x2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[2]<sp/>=<sp/>10.*(x2<sp/>-<sp/>x1*x1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[3]<sp/>=<sp/>(1.-x1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[4]<sp/>=<sp/>(1.-x2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[5]<sp/>=<sp/>(1.-x3)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self,<sp/>x,<sp/>J):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x1,x2,x3<sp/>=<sp/>x[0],x[1],x[2]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,2]<sp/>=<sp/>-20.*x3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,3]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,1]<sp/>=<sp/>-20.*x2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,2]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[2,0]<sp/>=<sp/>-20.*x1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[2,1]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[3,0]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[4,1]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[5,2]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,b,x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>lumat,<sp/>piv,<sp/>info<sp/>=<sp/>linalg.lapack.dgetrf(A,<sp/>overwrite_a=</highlight><highlight class="keyword">False</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x[:],<sp/>info<sp/>=<sp/>spla.lapack.dgetrs(lumat,<sp/>piv,<sp/>b,<sp/>0,<sp/>0)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&apos;__main__&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>state<sp/><sp/><sp/>=<sp/>np.array([-0.05,<sp/>1.1,<sp/>1.2,<sp/>1.5])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>RosenbrockSys()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>lin_s<sp/><sp/><sp/>=<sp/>MyLinSolver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver<sp/><sp/>=<sp/>solvers.create_gauss_newton(problem,<sp/>state,<sp/>lin_s)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver.setTolerance(1e-5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver.solve(problem,<sp/>state)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>gold<sp/>=<sp/>np.array([1.00000001567414e+00,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999999124769e-01,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999996519930e-01,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999988898883e-01])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>assert(np.allclose(gold,<sp/>state))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
+</programlisting></para>
+<para><linebreak/>
+ <hruler/>
+ <linebreak/>
+</para>
+</sect2>
+</sect1>
+<sect1 id="md_pages_components_nonlinsolvers_gn_1autotoc_md14">
+<title>Gauss-Newton via QR factorization</title>
+<sect2 id="md_pages_components_nonlinsolvers_gn_1autotoc_md15">
+<title>API, Parameters and Requirements</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>solvers.create_gauss_newton_qr(problem,<sp/>state,<sp/>qr_solver);</highlight></codeline>
+</programlisting></para>
+<para><itemizedlist>
+<listitem><para><computeroutput>problem</computeroutput>:<itemizedlist>
+<listitem><para>instance of your problem meeting the <ulink url="md_pages_components_nonlinsolvers_general.html">residual/jacobian API</ulink></para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>state</computeroutput>:<itemizedlist>
+<listitem><para>rank-1 <computeroutput>numpy.array</computeroutput> storing initial condition</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><computeroutput>qr_solver</computeroutput>:<itemizedlist>
+<listitem><para>an object used for doing QR factorization and related operations</para>
+</listitem><listitem><para>must meet the following API: <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">QRSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">computeThin(self,<sp/>A):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.Q,<sp/>self.R<sp/>=<sp/>np.linalg.qr(A,<sp/>mode=</highlight><highlight class="stringliteral">&apos;reduced&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyQTranspose(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>self.Q.T.dot(operand)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyRTranspose(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>self.R.T.dot(operand)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solveRxb(self,<sp/>b,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>solve:<sp/>Rx<sp/>=<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x[:]<sp/>=<sp/>linalg.solve(self.R,<sp/>b)</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="md_pages_components_nonlinsolvers_gn_1autotoc_md16">
+<title>Example usage</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>scipy<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>linalg<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>spla</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>logger,<sp/>solvers,<sp/>ode</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">RosenbrockSys:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createResidual(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros(6)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>np.zeros((6,4))</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residual(self,<sp/>x,<sp/>R):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x1,x2,x3,x4<sp/>=<sp/>x[0],x[1],x[2],x[3]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[0]<sp/>=<sp/>10.*(x4<sp/>-<sp/>x3*x3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[1]<sp/>=<sp/>10.*(x3<sp/>-<sp/>x2*x2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[2]<sp/>=<sp/>10.*(x2<sp/>-<sp/>x1*x1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[3]<sp/>=<sp/>(1.-x1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[4]<sp/>=<sp/>(1.-x2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R[5]<sp/>=<sp/>(1.-x3)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(self,<sp/>x,<sp/>J):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x1,x2,x3<sp/>=<sp/>x[0],x[1],x[2]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,2]<sp/>=<sp/>-20.*x3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[0,3]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,1]<sp/>=<sp/>-20.*x2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[1,2]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[2,0]<sp/>=<sp/>-20.*x1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[2,1]<sp/>=<sp/>10.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[3,0]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[4,1]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>J[5,2]<sp/>=<sp/>-1.</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyQRSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">computeThin(self,<sp/>A):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.Q,<sp/>self.R<sp/>=<sp/>np.linalg.qr(A,<sp/>mode=</highlight><highlight class="stringliteral">&apos;reduced&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyQTranspose(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>self.Q.T.dot(operand)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">applyRTranspose(self,<sp/>operand,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>self.R.T.dot(operand)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solveRxb(self,<sp/>b,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>solve:<sp/>Rx<sp/>=<sp/>b</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>x[:]<sp/>=<sp/>spla.solve(self.R,<sp/>b)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&apos;__main__&apos;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.debug])</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>state<sp/><sp/><sp/>=<sp/>np.array([-0.05,<sp/>1.1,<sp/>1.2,<sp/>1.5])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>RosenbrockSys()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>qr_s<sp/><sp/><sp/><sp/>=<sp/>MyQRSolver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver<sp/><sp/>=<sp/>solvers.create_gauss_newton_qr(problem,<sp/>state,<sp/>qr_s)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver.setTolerance(1e-5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>solver.solve(problem,<sp/>state)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>gold<sp/>=<sp/>np.array([1.00000001567414e+00,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999999124769e-01,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999996519930e-01,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9.99999988898883e-01])</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>assert(np.allclose(gold,<sp/>state))</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
+</programlisting> </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/nonlinsolvers_gn.md"/>
+  </compounddef>
+</doxygen>

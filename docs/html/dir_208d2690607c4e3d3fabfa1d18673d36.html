@@ -24,37 +24,40 @@
       <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
-            <li><a href="md_pages_prepare_your_app.html">How to interface your app</a></li>
             <li>
-              <a>Synopsis</a>
+              <a>Documentation</a>
               <ol>
-                <li><a href="md_pages_synopsis_galerkin.html">Galerkin</a></li>
-                <li><a href="md_pages_synopsis_lspg.html">LSPG</a></li>
-                <li><a href="md_pages_synopsis_wls.html">WLS</a></li>
+                <li><a href="md_pages_components_logger.html">logger</a></li>
+                <li><a> nonlinear solvers: </a></li>
+                <li><a href="md_pages_components_nonlinsolvers_general.html"> &emsp; - general info</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_nr.html"> &emsp; - Newton-Raphson</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_gn.html"> &emsp; - Gauss-Newton</a></li>
+                <li><a href="md_pages_components_nonlinsolvers_lm.html"> &emsp; - Levenberg-Marquardt</a></li>
+                <li><a> ode: </a></li>
+                <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
+                <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
+                <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+                <li><a> rom: </a></li>
+                <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
+                <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
+                <li><a href="md_pages_components_rom_galerkin.html"> &emsp; - Galerkin </a></li>
+                <li><a href="md_pages_components_rom_galerkin_projector.html"> &emsp; &emsp; - projector </a></li>
+                <li><a href="md_pages_components_rom_galerkin_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_galerkin_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_steady.html"> &emsp; - LSPG: steady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default_steady.html"> &emsp; &emsp; - basic problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked_steady.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_unsteady.html"> &emsp; - LSPG: unsteady </a></li>
+                <li><a href="md_pages_components_rom_lspg_default.html"> &emsp; &emsp; - default problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_hypred.html"> &emsp; &emsp; - hyper-reduced problem </a></li>
+                <li><a href="md_pages_components_rom_lspg_masked.html"> &emsp; &emsp; - masked problem </a></li>
+                <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
-            <li>
-              <a>Tutorials</a>
-              <ol>
-                <li><a href="md_pages_tutorials_tutorial1.html">Linear Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial2.html">Custom Decoder</a></li>
-                <li><a href="md_pages_tutorials_tutorial3.html">Default Galerkin explicit</a></li>
-                <li><a href="md_pages_tutorials_tutorial4.html">Masked Galerkin explicit</a></li>
-              </ol>
-            </li>
-            <li>
-              <a>Demos</a>
-              <ol>
-                <li><a href="md_pages_demos_demo1.html">1D adv-diff: Galerkin with POD modes</a></li>
-                <li><a href="md_pages_demos_demo2.html">1D adv-diff: LSPG with POD modes</a></li>
-                <li><a href="md_pages_demos_demo3.html">1D adv-diff: LSPG with nonlinear manifold (kPCA) </a></li>
-                <li><a href="md_pages_demos_demo4.html">1D adv-diff: POD Galerkin with collocation mask</a></li>
-                <li><a href="md_pages_demos_demo5.html">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a></li>
-                <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
-              </ol>
-            </li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="3">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,13 +89,7 @@
         <section id="subdirs">
           <h2><a href="#subdirs">Directories</a></h2>
           <dl class="m-doc">
-            <dt>directory <a href="dir_e3e5033bce933e9613999c4991aa42b8.html" class="m-doc">demos</a>/</dt>
-            <dd><span></span></dd>
-            <dt>directory <a href="dir_c8b5f49f42f70cbb2789196c6be03b08.html" class="m-doc">examples</a>/</dt>
-            <dd><span></span></dd>
-            <dt>directory <a href="dir_72e76ac6147c72c291306ebceacd125b.html" class="m-doc">getstarted</a>/</dt>
-            <dd><span></span></dd>
-            <dt>directory <a href="dir_d37f90f6dfa16220c69059cd0bfa7aa7.html" class="m-doc">tutorials</a>/</dt>
+            <dt>directory <a href="dir_4af40c8677da60eb4c6f7c14f8103d72.html" class="m-doc">components</a>/</dt>
             <dd><span></span></dd>
           </dl>
         </section>
@@ -140,7 +137,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.8.20 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>Pressio4Py. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

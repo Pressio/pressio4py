@@ -2,6 +2,7 @@
 import numpy as np
 from scipy import linalg
 
+from pressio4py import ode
 from pressio4py import rom as rom
 
 np.set_printoptions(linewidth=140)
@@ -15,7 +16,7 @@ class MyMasker:
   def createApplyMaskResult(self, operand):
     return np.zeros(self.sampleMeshSize_)
 
-  def applyMask(self, operand, time, result):
+  def __call__(self, operand, time, result):
     result[:] = np.take(operand, self.rows_)
 
 #--------------------------------------
@@ -43,6 +44,16 @@ class OdeObserver:
     if(timeStep==2):
       print("goldRomState: {}".format(self.goldRom2))
       assert( np.allclose(state, self.goldRom2, atol=1e-13) )
+
+#----------------------------
+class MyProjector:
+  def __init__(self, matrix):
+    self.matrix = matrix
+
+  def __call__(self, operand, time, result):
+    result[:] = 1.
+    pass
+    #result[:] = np.dot(self.matrix.T, operand)
 
 
 #----------------------------
@@ -88,18 +99,25 @@ def test():
   # decoder
   decoder = rom.Decoder(phi)
 
+  yFom = np.zeros(N)
+  decoder.applyMapping(yRom, yFom)
+
   # pick sample mesh indices
   sampleMeshIndices = [2,5,6,9]
   # create phi on the "sample mesh"
   phiSM = np.take(phi, sampleMeshIndices, axis=0)
   # create projector (pass the phiSM)
-  projector = rom.galerkin.ArbitraryProjector(phiSM)
+  projector = MyProjector(phiSM)
   # create masker and galerkin problem
   masker = MyMasker(sampleMeshIndices)
-  galerkinProblem = rom.galerkin.masked.ProblemForwardEuler(appObj, decoder, yRom,
-                                                            yRef, masker, projector)
+  scheme = ode.stepscheme.ForwardEuler
+  galerkinProblem = rom.galerkin.create_default_explicit_problem(scheme, appObj, \
+                                                                decoder, yRom, yRef)
+  rom.galerkin.solve(galerkinProblem, yRom, 0., 1., 1)
+  #stepper = galerkinProblem.stepper()
+  #stepper(yRom, 0., 1., 0)
 
-  # fomRecon = galerkinProblem.fomStateReconstructor()
+  #fomRecon = galerkinProblem.fomStateReconstructor()
   # # the observer is called to monitor evolution of rom_state and
   # # uses the reconstructor object to reconstruct FOM state
-  rom.galerkin.advanceNSteps(galerkinProblem, yRom, 0., dt, Nsteps, OdeObserver())
+  #ode.advance_n_steps(stepper, yRom, 0., dt, Nsteps)

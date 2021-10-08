@@ -1,0 +1,50 @@
+
+
+Defined in module\+: {\ttfamily pressio4py.\+logger}
+
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import logger} \hypertarget{md_pages_components_logger_autotoc_md1}{}\doxysection{Overview}\label{md_pages_components_logger_autotoc_md1}
+
+
+By default, for performance reasons, the logger is disabled, so pressio4py will not output anything. 
+
+
+
+To enable logging, you need to do two things\+:
+\begin{DoxyEnumerate}
+\item initialize the logger and (if needed) change the verbosity level
+\item finalize the logger 
+\end{DoxyEnumerate}\hypertarget{md_pages_components_logger_autotoc_md2}{}\doxysection{Usage}\label{md_pages_components_logger_autotoc_md2}
+The following snippet provides the main idea\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{from} pressio4py \textcolor{keyword}{import} logger}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{'\_\_main\_\_'}:}
+\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{\# your code}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  logger.finalize()}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_logger_autotoc_md3}{}\doxysubsection{Levels}\label{md_pages_components_logger_autotoc_md3}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{loglevel.trace}
+\DoxyCodeLine{loglevel.debug}
+\DoxyCodeLine{loglevel.info}
+\DoxyCodeLine{loglevel.warn}
+\DoxyCodeLine{loglevel.error}
+\DoxyCodeLine{loglevel.critical}
+\DoxyCodeLine{loglevel.off}
+
+\end{DoxyCode}
+
+
+
+
+\begin{DoxyParagraph}{Keep in mind\+:}
+The log statements issued for a specific level will be printed {\itshape only if} {\ttfamily PRESSIO\+\_\+\+LOG\+\_\+\+ACTIVE\+\_\+\+MIN\+\_\+\+LEVEL} is smaller or equal than that level. If the logger is disabled, the macros are expanded to a no-\/op. So it does not cost you anything to place log statements in your code, because in production mode you can just compile to no-\/op. 
+\end{DoxyParagraph}

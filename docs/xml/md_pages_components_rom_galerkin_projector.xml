@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_components_rom_galerkin_projector" kind="page">
+    <compoundname>md_pages_components_rom_galerkin_projector</compoundname>
+    <title>rom: Galerkin: projector</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>The projector is needed for Galerkin to perform the projection of the FOM operators onto the reduced space.</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>It is explicitly required from the user when doing <ulink url="md_pages_components_rom_galerkin_masked.html">maked</ulink> or <ulink url="md_pages_components_rom_galerkin_hypred.html">hyper-reduced</ulink> Galerkin. </para>
+</parblock></para>
+<para>For a <ulink url="md_pages_components_rom_galerkin_default.html">default</ulink> problem, you don&apos;t need to pass it because the projector is constructed behind the scenes automatically using the decoder&apos;s jacobian.</para>
+<para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: explain more, talk about pressio-tools.</para>
+<sect1 id="md_pages_components_rom_galerkin_projector_1autotoc_md76">
+<title>API</title>
+<para>When provided by the user, the projector operator must be provided in the form of a functor as follows:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Projector:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>...):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>as<sp/>needed</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>operand,<sp/>time,<sp/>result):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>project<sp/>operand<sp/>and<sp/>store<sp/>in<sp/>result</highlight></codeline>
+</programlisting></para>
+<para>Note that the operand is either a FOM velocity instance, or the decoder&apos;s Jacobian. In all cases, however, it is a <computeroutput>numpy.array</computeroutput>. You can put define the actual projection operation however you like.</para>
+<para>One thing to keep in mind is that, typically, the <computeroutput>operand</computeroutput> is either a masked operand (i.e., the result of masking a full FOM operand) if you are using a masked problem, or it is a hyper-reduced object if you are using a hyper-reduced Galerkin problem. </para>
+</sect1>
+    </detaileddescription>
+    <location file="pages/components/rom_galerkin_projector.md"/>
+  </compounddef>
+</doxygen>

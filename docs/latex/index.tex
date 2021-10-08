@@ -1,8 +1,64 @@
 \label{index_md_pages_main}%
 \Hypertarget{index_md_pages_main}%
- {\itshape Leading-\/edge projection-\/based reduced order models (p\+R\+O\+Ms) for dynamical systems in science and engineering.}
 
-This is the documentation of the Python bindings library, which is one component of the \href{https://pressio.github.io/}{\texttt{ Pressio project}}.\hypertarget{index_autotoc_md59}{}\doxysection{Install}\label{index_autotoc_md59}
+
+
+
+{\itshape Leading-\/edge reduced order models (ROMs) for dynamical systems in science and engineering.}
+
+This is the documentation of the \href{https://github.com/Pressio/pressio4py}{\texttt{ Python library}}, one component of the \href{https://pressio.github.io/}{\texttt{ Pressio ecosystem}}. \hypertarget{index_autotoc_md104}{}\doxysection{Start with why}\label{index_autotoc_md104}
+Model reduction is a broad and very active field. Many methods exist, but there is no such thing as \char`\"{}one method to rule them all\char`\"{}. We believe that evaluating the quality of a reduced model requires accounting for several factors, e.\+g., the reduction in degrees of freedom, training cost, evaluation cost, robustness, simplicity, predictive accuracy, etc. There is no single metric to rely on; it is always a tradeoff.
+
+We believe that there is a lot to explore in this field both in terms of new research directions as well as assessing robustness of current state-\/of-\/the-\/art methods. There is no better way than a Python framework to incentivize and foster work to impact this field. Working towards this goal, pressio4py is our contribution to research novel fundamental ideas on model reduction as well as test state-\/of-\/the-\/art methods on problems of arbitrary complexity. Python is the perfect language to do so because it benefits from a large community of developers and has become the de-\/facto choice for machine learning. This offers an ideal framework to explore and merge ideas from different fields.\hypertarget{index_autotoc_md105}{}\doxysection{Components}\label{index_autotoc_md105}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description/\+Content   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Links   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Module(s)    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description/\+Content   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Links   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Module(s)    }\\\cline{1-4}
+\endhead
+logger   &(dis)enable pressio logging   &~\newline
+\href{md_pages_components_logger.html}{\texttt{ Doc Page}}   &{\ttfamily pressio4py.\+logger}    \\\cline{1-4}
+solvers\+\_\+nonlinear   &~\newline
+ general info ~\newline
+ Newton-\/\+Raphson ~\newline
+ Gauss-\/\+Newton ~\newline
+ Levenberg-\/\+Marquardt ~\newline
+   &~\newline
+ \href{md_pages_components_nonlinsolvers_general.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_nonlinsolvers_nr.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_nonlinsolvers_gn.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_nonlinsolvers_lm.html}{\texttt{ Doc Page}}   &{\ttfamily pressio4py.\+solvers}    \\\cline{1-4}
+ode   &~\newline
+ explicit steppers ~\newline
+implicit steppers ~\newline
+ advancers ~\newline
+   &~\newline
+ \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ Doc Page}}~\newline
+ \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ Doc Page}} ~\newline
+\href{md_pages_components_ode_advance.html}{\texttt{ Doc Page}}   &{\ttfamily pressio4py.\+ode}    \\\cline{1-4}
+rom   &~\newline
+general info ~\newline
+ decoder ~\newline
+ Galerkin~\newline
+ least-\/squares Petrov-\/\+Galerkin (LSPG)\+: steady~\newline
+ least-\/squares Petrov-\/\+Galerkin (LSPG)\+: unsteady~\newline
+ Windowed least-\/squares (WLS)~\newline
+   &~\newline
+\href{md_pages_components_rom_general.html}{\texttt{ Doc Page}} ~\newline
+\href{md_pages_components_rom_decoder.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_rom_galerkin.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_rom_lspg_steady.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_rom_lspg_unsteady.html}{\texttt{ Doc Page}} ~\newline
+ \href{md_pages_components_rom_wls.html}{\texttt{ Doc Page}} ~\newline
+   &{\ttfamily pressio4py.\+rom}   \\\cline{1-4}
+\end{longtabu}
+
+
+Note that we intentially keep pressio4py limited in scope for now. We don\textquotesingle{}t provide bindings to all the functionalities in the \href{https://pressio.github.io/pressio/html/index.html}{\texttt{ pressio C++ library}} but only bind those for model reduction and the auxiliary ones.\hypertarget{index_autotoc_md106}{}\doxysection{Installation}\label{index_autotoc_md106}
 
 
 \begin{DoxyParagraph}{}
@@ -10,32 +66,28 @@ This is the documentation of the Python bindings library, which is one component
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\# the C++ compiler must support C++14}
 \DoxyCodeLine{export CXX=<path-\/to-\/your-\/C++-\/compiler>}
-\DoxyCodeLine{git clone -\/-\/recursive git@github.com:Pressio/pressio4py.git \# or https://github.com/Pressio/pressio4py.git}
+\DoxyCodeLine{}
+\DoxyCodeLine{git clone -\/-\/recursive git@github.com:Pressio/pressio4py.git}
+\DoxyCodeLine{\# or https://github.com/Pressio/pressio4py.git}
+\DoxyCodeLine{}
 \DoxyCodeLine{pip install ./pressio4py}
 \DoxyCodeLine{}
-\DoxyCodeLine{\# you can then run the regression tests:}
+\DoxyCodeLine{\# verify installation by running our test suite:}
 \DoxyCodeLine{cd pressio4py}
 \DoxyCodeLine{pytest -\/s}
-\end{DoxyCode}
 
+\end{DoxyCode}
+ 
 \end{DoxyParagraph}
-Note that if you get an import error, it might be that the version of {\ttfamily pytest} you are using is not compatible with the {\ttfamily pip} command you used to install. Make sure you use Python commands from the {\bfseries{same}} distribution.\hypertarget{index_autotoc_md60}{}\doxysection{In a nutshell}\label{index_autotoc_md60}
-Pressio can be applied to any dynamical system expressible in a {\itshape continuous-\/time} form as \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \] and/or in a {\itshape discrete-\/time} form \[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]
 
-Here, $y$ is the full-\/order model (F\+OM) state, $f$ the F\+OM velocity, $t$ is time, and $R$ is the residual.
 
-This formulation is quite general and does not make any assumption on its origin\+: it may be derived from the spatial discretization (regardless of the discretization method) of a P\+DE problem, or from naturally discrete systems.
 
-We leverage this expressive mathematical framework as a pivotal design choice to enable a minimal application programming interface (A\+PI) that is natural to dynamical systems\+: you choose the formulation more convenient to you, and interface your application to Pressio by creating a corresponding {\itshape adapter class} to expose the operators needed for the chosen formulation. In general, you don\textquotesingle{}t need to support both\+: each one has advantages and disadvantages, and sometimes the choice is dictated directly by your native application (for example, in some cases it might be easier to directly expose the discrete-\/time residual).
 
-Read \href{./md_pages_prepare_your_app.html}{\texttt{ this doc page}} to learn more about the adapter classes and see code templates.\hypertarget{index_autotoc_md61}{}\doxysection{Explore the tutorials and demos}\label{index_autotoc_md61}
-You can find descriptions of the demos \href{./md_pages_demos_demo1.html}{\texttt{ here}} and of the tutorials \href{./md_pages_tutorials_tutorial1.html}{\texttt{ here}}---we will progressively add more. 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{cd pressio4py/demos}
-\DoxyCodeLine{python3 ./<demo-\/subdir-\/name>/main.py}
-\end{DoxyCode}
-\hypertarget{index_autotoc_md62}{}\doxysection{License and Citation}\label{index_autotoc_md62}
+If you get an import error, make sure the version of {\ttfamily pytest} you are using is compatible with the {\ttfamily pip} command you used to install. For compatibility, the Python commands must be from the {\bfseries{same}} distribution. 
+
+~\newline
+\hypertarget{index_autotoc_md107}{}\doxysection{License and Citation}\label{index_autotoc_md107}
 The full license is available \href{https://pressio.github.io/various/license/}{\texttt{ here}}.
 
-We are working on publishing this\+: you can find our ar\+Xiv preprint at\+: \href{https://arxiv.org/abs/2003.07798}{\texttt{ https\+://arxiv.\+org/abs/2003.\+07798}}\hypertarget{index_autotoc_md63}{}\doxysection{Questions?}\label{index_autotoc_md63}
+We are working on publishing this\+: you can find our ar\+Xiv preprint at\+: \href{https://arxiv.org/abs/2003.07798}{\texttt{ https\+://arxiv.\+org/abs/2003.\+07798}}\hypertarget{index_autotoc_md108}{}\doxysection{Questions?}\label{index_autotoc_md108}
 Find us on Slack\+: \href{https://pressioteam.slack.com}{\texttt{ https\+://pressioteam.\+slack.\+com}} or open an issue on \href{https://github.com/Pressio/pressio4py}{\texttt{ github}}. 

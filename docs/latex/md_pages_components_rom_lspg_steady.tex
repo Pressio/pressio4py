@@ -1,0 +1,64 @@
+todo\+: write this better
+
+The pressio4py steady LSPG ROMs are designed such that using them boils down to two main steps\+:\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md95}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_steady_autotoc_md95}
+You instantiate a \char`\"{}steady LSPG problem\char`\"{}, e.\+g.\+:~\newline
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = pressio4py.rom.lspg.steady.Problem(...)}
+
+\end{DoxyCode}
+
+
+We currently support two variants\+:
+\begin{DoxyItemize}
+\item Basic Problem\+: \href{md_pages_components_rom_lspg_default_steady.html}{\texttt{ link}}
+\item Masked\+: \href{md_pages_components_rom_lspg_masked_steady.html}{\texttt{ link}}
+\end{DoxyItemize}
+
+The {\ttfamily problem} class exposes the following interface\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class }Problem}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }fomStateReconstructor()}
+\DoxyCodeLine{    return \textcolor{comment}{\# reference to object for reconstructing FOM state}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def createResidual()}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# a residual instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian()}
+\DoxyCodeLine{    return \textcolor{comment}{\# a Jacobian instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def residual(state, R)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the residual for the given state}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(state, J)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the Jacobian for the given state}}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+
+\begin{DoxyItemize}
+\item note how the API conforms to the one required by the nonlinear solvers
+\end{DoxyItemize}\hypertarget{md_pages_components_rom_lspg_steady_autotoc_md96}{}\doxysection{2. Solve}\label{md_pages_components_rom_lspg_steady_autotoc_md96}
+
+\begin{DoxyItemize}
+\item you use a nonlinear least-\/squares solvers to solve the problem 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{solver = pressio4py.solvers.create\_gauss\_newton(problem, ...)}
+\DoxyCodeLine{solver.solve(problem, ...)}
+
+\end{DoxyCode}
+
+\item note that you don\textquotesingle{}t have to use our solvers, you can also use your own. The {\ttfamily problem} exposes everything you need to solve.
+\end{DoxyItemize}
+
+Refer to each problem page for details on each specific variant.
+
+~\newline
+ \DoxyHorRuler{0}
+ ~\newline
+ 
