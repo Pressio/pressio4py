@@ -55,6 +55,7 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -68,7 +69,7 @@
             </li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
+          <ol class="m-col-t-6 m-col-m-none" start="5">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -85,7 +86,7 @@
         <h1>
           ode: explicit steppers
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.ode</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py import ode</code></p></div><section id="autotoc_md29"><h2><a href="#autotoc_md29">Overview</a></h2><p>Applicable to systems of the form:</p><div class="m-math"><svg style="width: 8.303em; height: 2.562em;" viewBox="155.014186 -24.590612 79.71012 24.590612">
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.ode</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py import ode</code></p></div><section id="autotoc_md30"><h2><a href="#autotoc_md30">Overview</a></h2><p>Applicable to systems of the form:</p><div class="m-math"><svg style="width: 8.303em; height: 2.562em;" viewBox="155.014186 -24.590612 79.71012 24.590612">
 <title>
 \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]
 </title>
@@ -149,7 +150,7 @@ $t$
 <g id='eq4-page1'>
 <use x='0' y='0' xlink:href='#eq4-g0-116'/>
 </g>
-</svg> is time.<br />Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a &quot;stepper&quot; is an abstraction that represents the &quot;how&quot; to take a step.</p></section><section id="autotoc_md30"><h2><a href="#autotoc_md30">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="p">.</span><span class="n">create_explicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value of the <code>ode.stepscheme</code> enum to set the desired stepping scheme.<br />Current choices: <code>ForwardEuler</code>, <code>RungeKutta4</code>, <code>AdamsBashforth2</code>, <code>SSPRungeKutta3</code>.</li></ul></li><li><code>state</code>:<ul><li><code>numpy.array</code> storing your state</li></ul></li><li><code>system</code>:<ul><li>object defining how to create an instance of the velocity <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
+</svg> is time.<br />Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a &quot;stepper&quot; is an abstraction that represents the &quot;how&quot; to take a step.</p></section><section id="autotoc_md31"><h2><a href="#autotoc_md31">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="p">.</span><span class="n">create_explicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value of the <code>ode.stepscheme</code> enum to set the desired stepping scheme.<br />Current choices: <code>ForwardEuler</code>, <code>RungeKutta4</code>, <code>AdamsBashforth2</code>, <code>SSPRungeKutta3</code>.</li></ul></li><li><code>state</code>:<ul><li><code>numpy.array</code> storing your state</li></ul></li><li><code>system</code>:<ul><li>object defining how to create an instance of the velocity <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
 <title>
 $f$
 </title>
@@ -165,13 +166,13 @@ $f$
 
   <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateIn</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
     <span class="c1"># compute f as needed</span>
-    <span class="c1"># f[:] = ...</span></pre></li></ul></li></ul></section><section id="autotoc_md31"><h2><a href="#autotoc_md31">Stepper class API</a></h2><p>Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
+    <span class="c1"># f[:] = ...</span></pre></li></ul></li></ul></section><section id="autotoc_md32"><h2><a href="#autotoc_md32">Stepper class API</a></h2><p>Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
 
   <span class="k">def</span> <span class="nf">order</span><span class="p">():</span>
     <span class="k">return</span> <span class="c1"># order of the step scheme of this stepper instantiation</span>
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">current_time</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">step_number</span><span class="p">)</span></pre><p>When invoked, the call operator triggers the stepper to execute one step. Having access to the call operator, you can perform you own advancement in time. Alternatively, note that the <code>stepper</code> object satisfies the &quot;steppable&quot; concept discussed <a href="md_pages_components_ode_advance.html">here</a>, so you can pass it to the <a href="md_pages_components_ode_advance.html">&quot;advance&quot; functions</a> to step in time, see below for an example.</p><p><br /></p><hr/>
- <p><br /></p></section><section id="autotoc_md32"><h2><a href="#autotoc_md32">Example usage 1</a></h2><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+ <p><br /></p></section><section id="autotoc_md33"><h2><a href="#autotoc_md33">Example usage 1</a></h2><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pressio4py</span> <span class="kn">import</span> <span class="n">ode</span>
 
 <span class="k">class</span> <span class="nc">MyOdeSystem</span><span class="p">:</span>
@@ -195,7 +196,7 @@ $f$
 <span class="n">stepper</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">step_number</span><span class="p">)</span>
 
 <span class="c1"># after the step, the state changes</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after doing one step: &quot;</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></pre></section><section id="autotoc_md33"><h2><a href="#autotoc_md33">Example usage 2</a></h2><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after doing one step: &quot;</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></pre></section><section id="autotoc_md34"><h2><a href="#autotoc_md34">Example usage 2</a></h2><pre class="m-code"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pressio4py</span> <span class="kn">import</span> <span class="n">ode</span>
 
 <span class="k">class</span> <span class="nc">MyOdeSystem</span><span class="p">:</span>

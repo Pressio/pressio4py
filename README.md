@@ -29,12 +29,15 @@ This offers an ideal framework to explore and merge ideas from different fields.
 <!-- <br/>
 -> <button name="button" onclick="https://pressio.github.io/pressio4py/html/index.html" style="font-size: larger; color: black; background-color: #96FF33; border: 3pt">EXPLORE THE DOCUMENTATION</button> <- -->
 
+## Questions? Comments?
+
+Open an issue on [github](https://github.com/Pressio/pressio4py), or find us on Slack: https://pressioteam.slack.com.
+
 ## License and Citation
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 The full license is available [here](https://pressio.github.io/various/license/).
 
-We are working on publishing this: you can find our arXiv preprint at: https://arxiv.org/abs/2003.07798.
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-## Questions?
-Find us on Slack: https://pressioteam.slack.com or open an issue on [github](https://github.com/Pressio/pressio4py).
+
+We are working on publishing this: you can find our arXiv preprint at: https://arxiv.org/abs/2003.07798.

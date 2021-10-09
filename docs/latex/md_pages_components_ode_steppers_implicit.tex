@@ -2,14 +2,14 @@
 
 Defined in module\+: {\ttfamily pressio4py.\+ode}
 
-Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md35}{}\doxysection{Overview}\label{md_pages_components_ode_steppers_implicit_autotoc_md35}
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md36}{}\doxysection{Overview}\label{md_pages_components_ode_steppers_implicit_autotoc_md36}
 Provides functionalities to create steppers for implicit methods. Recall that implicit methods update the state of a system by solving a system of equations involving both the current and next state. An implicit stepper is an object that knows how to do one such {\itshape implicit} step.
 
 Pressio implicit steppers are applicable to any system written in {\itshape continuous-\/time} form\+: \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]
 
 and/or in a {\itshape discrete-\/time} form \[ \boldsymbol{R}(\boldsymbol{y}, \boldsymbol{y_{n-1}}, ..., t_n, dt_n; ...) = \boldsymbol{0} \]
 
-Here, $y$ is the state, $f$ the velocity, $t$ is time, and $R$ is the residual.\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md36}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_implicit_autotoc_md36}
+Here, $y$ is the state, $f$ the velocity, $t$ is time, and $R$ is the residual.\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md37}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_implicit_autotoc_md37}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{stepper = ode.create\_implicit\_stepper(scheme, state, system)}
@@ -74,7 +74,7 @@ Crank\+Nicolson   &Crank-\/\+Nicolson   &$R = y_{n+1}- y_{n} - {\tfrac {1}{2}} h
 
 
 
-Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support \href{https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html}{\texttt{ passing by reference sparse types}}. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense. \hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md37}{}\doxysubsection{Stepper object}\label{md_pages_components_ode_steppers_implicit_autotoc_md37}
+Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support \href{https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html}{\texttt{ passing by reference sparse types}}. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense. \hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md38}{}\doxysubsection{Stepper object}\label{md_pages_components_ode_steppers_implicit_autotoc_md38}
 The returned stepper object exposes the following methods\+:
 
 
@@ -96,7 +96,7 @@ The returned stepper object exposes the following methods\+:
 \DoxyCodeLine{  \textcolor{keyword}{def }jacobian(state, J)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md38}{}\doxysubsection{What to do after a stepper is created?}\label{md_pages_components_ode_steppers_implicit_autotoc_md38}
+\hypertarget{md_pages_components_ode_steppers_implicit_autotoc_md39}{}\doxysubsection{What to do after a stepper is created?}\label{md_pages_components_ode_steppers_implicit_autotoc_md39}
 Any stepper created using the functions above is guaranteed to satisfy the \char`\"{}steppable\char`\"{} concept discussed \href{/Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio/docs/html/md_pages_components_ode_advance.html}{\texttt{ here}}. Therefore, once you create a stepper, you can use the \href{md_pages_components_ode_advance.html}{\texttt{ advancers}} to step forward or you can use your own.~\newline
  An example is below\+:
 

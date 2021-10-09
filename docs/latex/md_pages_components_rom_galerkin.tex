@@ -1,6 +1,6 @@
 todo\+: write more
 
-The pressio4py Galerkin ROMs are designed such that using them involves three main steps\+:\hypertarget{md_pages_components_rom_galerkin_autotoc_md61}{}\doxysection{1. Create}\label{md_pages_components_rom_galerkin_autotoc_md61}
+The pressio4py Galerkin ROMs are designed such that using them involves three main steps\+:\hypertarget{md_pages_components_rom_galerkin_autotoc_md62}{}\doxysection{1. Create}\label{md_pages_components_rom_galerkin_autotoc_md62}
 You create an instance of a \char`\"{}\+Galerkin problem\char`\"{}, e.\+g.\+: ~\newline
 
 
@@ -36,7 +36,7 @@ All variants return a problem object that meets the following interface\+:
 
 The stepper method returns a reference to an \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit stepper}} or \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper}}, depending on what you pass when you create the Galerkin problem. The {\ttfamily stepper} method is, practically, what you would use to retrieve the underlying stepper and use it to solve the problem. Once you have the stepper, you can then use it as discussed on the \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit stepper page}} or \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper page}}.
 
-What does a stepper have to do with a Galerkin ROM? The answer is that practically speaking, at the lowest-\/level, a Galerkin problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a Galerkin problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.\hypertarget{md_pages_components_rom_galerkin_autotoc_md62}{}\doxysection{2. Reference the stepper and solve in time}\label{md_pages_components_rom_galerkin_autotoc_md62}
+What does a stepper have to do with a Galerkin ROM? The answer is that practically speaking, at the lowest-\/level, a Galerkin problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a Galerkin problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.\hypertarget{md_pages_components_rom_galerkin_autotoc_md63}{}\doxysection{2. Reference the stepper and solve in time}\label{md_pages_components_rom_galerkin_autotoc_md63}
 Extract the underlying stepper object and solve in time\+:
 
 

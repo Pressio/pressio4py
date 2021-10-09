@@ -8,7 +8,7 @@
     <detaileddescription>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write this better</para>
 <para>The pressio4py steady LSPG ROMs are designed to involve two main steps:</para>
-<sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md95">
+<sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md96">
 <title>1. Create</title>
 <para>You instantiate a &quot;steady LSPG problem&quot;, e.g.:<linebreak/>
 </para>
@@ -40,7 +40,7 @@
 <codeline><highlight class="normal">};</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md96">
+<sect1 id="md_pages_components_rom_lspg_steady_1autotoc_md97">
 <title>2. Solve</title>
 <para><itemizedlist>
 <listitem><para>you use a nonlinear least-squares solvers to solve the problem <programlisting filename=".py"><codeline><highlight class="normal">solver<sp/>=<sp/>pressio4py.solvers.create_gauss_newton(problem,<sp/>...)</highlight></codeline>

@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.galerkin</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import galerkin</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_galerkin_masked_1autotoc_md72">
+<sect1 id="md_pages_components_rom_galerkin_masked_1autotoc_md73">
 <title>API, Parameters and Requirements</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>galerkin.MaskedExplicitProblem(scheme,<sp/>fom_adapter,<sp/>decoder,</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
@@ -59,7 +59,7 @@
 </para>
 </listitem></itemizedlist>
 </para>
-<sect2 id="md_pages_components_rom_galerkin_masked_1autotoc_md73">
+<sect2 id="md_pages_components_rom_galerkin_masked_1autotoc_md74">
 <title>Masker</title>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: explain what it is</para>
 <para>The masker must meet the following API:</para>
@@ -81,7 +81,7 @@
 <para>where <computeroutput>sample_indices</computeroutput> is a <computeroutput>numpy.array</computeroutput> holding the set of the row indices to sample.</para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_components_rom_galerkin_masked_1autotoc_md74">
+<sect1 id="md_pages_components_rom_galerkin_masked_1autotoc_md75">
 <title>Example usage</title>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span> link tutorials </para>
 </sect1>

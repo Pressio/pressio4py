@@ -27,9 +27,10 @@ foster work to impact this field. Working towards this goal, pressio4py
 is our open source contribution to research novel fundamental ideas
 on model reduction as well as test state-of-the-art methods
 on problems of arbitrary complexity and from arbitrary disciplines.
-Python is the perfect language to do so because it benefits from a large community of developers
+Python is a great language to do so because it benefits
+from a large community of developers, a large choice of available packages,
 and has become the de-facto choice for machine learning.
-This offers an ideal framework to explore and merge ideas from different fields.
+This makes it an ideal framework to explore and merge ideas from different fields.
 
 
 ## Components
@@ -39,7 +40,7 @@ This offers an ideal framework to explore and merge ideas from different fields.
 | @m_span{m-text m-success}logger@m_endspan             | <br/> (dis)enable pressio logging                                                | <br/>[Doc Page](md_pages_components_logger.html)                                                                                                                                                                                                                                                      | `pressio4py.logger`                                                                                                                                                              |
 | @m_span{m-text m-success}solvers_nonlinear@m_endspan | <br/> general info <br/> Newton-Raphson <br/> Gauss-Newton <br/> Levenberg-Marquardt <br/>       | <br/> [Doc Page](md_pages_components_nonlinsolvers_general.html) <br/> [Doc Page](md_pages_components_nonlinsolvers_nr.html) <br/> [Doc Page](md_pages_components_nonlinsolvers_gn.html) <br/> [Doc Page](md_pages_components_nonlinsolvers_lm.html)                  | `pressio4py.solvers` |
 | @m_span{m-text m-success}ode@m_endspan               | <br/> explicit steppers <br/>implicit steppers <br/> advancers <br/>                             | <br/> [Doc Page](md_pages_components_ode_steppers_explicit.html)<br/> [Doc Page](md_pages_components_ode_steppers_implicit.html) <br/>[Doc Page](md_pages_components_ode_advance.html)                                                                                                                                                                               | `pressio4py.ode`                  |
-| @m_span{m-text m-success}rom@m_endspan               | <br/>general info <br/> decoder <br/> Galerkin<br/> least-squares Petrov-Galerkin (LSPG): steady<br/> least-squares Petrov-Galerkin (LSPG): unsteady<br/> Windowed least-squares (WLS)<br/> | <br/>[Doc Page](md_pages_components_rom_general.html) <br/>[Doc Page](md_pages_components_rom_decoder.html) <br/> [Doc Page](md_pages_components_rom_galerkin.html) <br/> [Doc Page](md_pages_components_rom_lspg_steady.html) <br/> [Doc Page](md_pages_components_rom_lspg_unsteady.html) <br/>  [Doc Page](md_pages_components_rom_wls.html) <br/> | `pressio4py.rom`                  |
+| @m_span{m-text m-success}rom@m_endspan               | <br/>general info <br/> decoder <br/> Galerkin<br/> LSPG: steady<br/> LSPG: unsteady<br/> WLS<br/> | <br/>[Doc Page](md_pages_components_rom_general.html) <br/>[Doc Page](md_pages_components_rom_decoder.html) <br/> [Doc Page](md_pages_components_rom_galerkin.html) <br/> [Doc Page](md_pages_components_rom_lspg_steady.html) <br/> [Doc Page](md_pages_components_rom_lspg_unsteady.html) <br/>  [Doc Page](md_pages_components_rom_wls.html) <br/> | `pressio4py.rom`                  |
 
 
 Note that we intentionally keep pressio4py limited in scope for now.

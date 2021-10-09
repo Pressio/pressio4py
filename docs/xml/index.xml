@@ -66,6 +66,8 @@
   </compound>
   <compound refid="main_8md" kind="file"><name>main.md</name>
   </compound>
+  <compound refid="ml__role_8md" kind="file"><name>ml_role.md</name>
+  </compound>
   <compound refid="md_pages_components_logger" kind="page"><name>md_pages_components_logger</name>
   </compound>
   <compound refid="md_pages_components_nonlinsolvers_general" kind="page"><name>md_pages_components_nonlinsolvers_general</name>
@@ -129,6 +131,8 @@
   <compound refid="md_pages_demos_demo6" kind="page"><name>md_pages_demos_demo6</name>
   </compound>
   <compound refid="md_pages_introduction" kind="page"><name>md_pages_introduction</name>
+  </compound>
+  <compound refid="md_pages_ml_role" kind="page"><name>md_pages_ml_role</name>
   </compound>
   <compound refid="dir_4af40c8677da60eb4c6f7c14f8103d72" kind="dir"><name>pages/components</name>
   </compound>

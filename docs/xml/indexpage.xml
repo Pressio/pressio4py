@@ -11,12 +11,12 @@
 <para><parblock><para><emphasis>Advancing reduced order models (ROMs) for dynamical systems in science and engineering.</emphasis></para>
 <para>This is the documentation of the <ulink url="https://github.com/Pressio/pressio4py">Python library</ulink>, one component of the <ulink url="https://pressio.github.io/">Pressio ecosystem</ulink>. </para>
 </parblock></para>
-<sect1 id="index_1autotoc_md153">
+<sect1 id="index_1autotoc_md154">
 <title>Start with why</title>
 <para>Model reduction is a broad and very active field. Many methods exist, but there is no such thing as &quot;one method to rule them all&quot;. We believe that evaluating the quality of a reduced model requires accounting for several factors, e.g., the reduction in degrees of freedom, training cost, evaluation cost, robustness, simplicity, predictive accuracy, etc. There is no single metric to rely on; it is always a tradeoff.</para>
-<para>We believe that there is a lot to explore in this field both in terms of new research directions as well as assessing robustness of current state-of-the-art methods. There is no better way than an agile Python framework to incentivize and foster work to impact this field. Working towards this goal, pressio4py is our open source contribution to research novel fundamental ideas on model reduction as well as test state-of-the-art methods on problems of arbitrary complexity and from arbitrary disciplines. Python is the perfect language to do so because it benefits from a large community of developers and has become the de-facto choice for machine learning. This offers an ideal framework to explore and merge ideas from different fields.</para>
+<para>We believe that there is a lot to explore in this field both in terms of new research directions as well as assessing robustness of current state-of-the-art methods. There is no better way than an agile Python framework to incentivize and foster work to impact this field. Working towards this goal, pressio4py is our open source contribution to research novel fundamental ideas on model reduction as well as test state-of-the-art methods on problems of arbitrary complexity and from arbitrary disciplines. Python is a great language to do so because it benefits from a large community of developers, a large choice of available packages, and has become the de-facto choice for machine learning. This makes it an ideal framework to explore and merge ideas from different fields.</para>
 </sect1>
-<sect1 id="index_1autotoc_md154">
+<sect1 id="index_1autotoc_md155">
 <title>Components</title>
 <para><table rows="5" cols="4"><row>
 <entry thead="yes"><para>Name   </para>
@@ -66,9 +66,9 @@ implicit steppers <linebreak/>
 general info <linebreak/>
  decoder <linebreak/>
  Galerkin<linebreak/>
- least-squares Petrov-Galerkin (LSPG): steady<linebreak/>
- least-squares Petrov-Galerkin (LSPG): unsteady<linebreak/>
- Windowed least-squares (WLS)<linebreak/>
+ LSPG: steady<linebreak/>
+ LSPG: unsteady<linebreak/>
+ WLS<linebreak/>
    </para>
 </entry><entry thead="no"><para><linebreak/>
 <ulink url="md_pages_components_rom_general.html">Doc Page</ulink> <linebreak/>
@@ -84,7 +84,7 @@ general info <linebreak/>
 </para>
 <para>Note that we intentionally keep pressio4py limited in scope for now. We don&apos;t provide bindings for all the functionalities in the <ulink url="https://pressio.github.io/pressio/html/index.html">pressio C++ library</ulink> but only for the model reduction ones and those strictly auxiliary.</para>
 </sect1>
-<sect1 id="index_1autotoc_md155">
+<sect1 id="index_1autotoc_md156">
 <title>Installation</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-primary" /></para>
 <para><simplesect kind="par"><title></title><para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>the<sp/>C++<sp/>compiler<sp/>must<sp/>support<sp/>C++14</highlight></codeline>
@@ -107,12 +107,12 @@ general info <linebreak/>
 <para><linebreak/>
 </para>
 </sect1>
-<sect1 id="index_1autotoc_md156">
+<sect1 id="index_1autotoc_md157">
 <title>License and Citation</title>
 <para>The full license is available <ulink url="https://pressio.github.io/various/license/">here</ulink>.</para>
 <para>We are working on publishing this: you can find our arXiv preprint at: <ulink url="https://arxiv.org/abs/2003.07798">https://arxiv.org/abs/2003.07798</ulink></para>
 </sect1>
-<sect1 id="index_1autotoc_md157">
+<sect1 id="index_1autotoc_md158">
 <title>Questions?</title>
 <para>Find us on Slack: <ulink url="https://pressioteam.slack.com">https://pressioteam.slack.com</ulink> or open an issue on <ulink url="https://github.com/Pressio/pressio4py">github</ulink>. </para>
 </sect1>

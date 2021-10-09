@@ -13,7 +13,7 @@
 </parblock></para>
 <para><linebreak/>
 </para>
-<sect1 id="md_pages_components_rom_decoder_1autotoc_md40">
+<sect1 id="md_pages_components_rom_decoder_1autotoc_md41">
 <title>Custom Decoder</title>
 <para>A custom decoder in pressio4py implements the general mapping above.</para>
 <para>This allows one to use an arbitrary function to map the ROM state to the FOM state.</para>
@@ -40,7 +40,7 @@
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>create<sp/>a<sp/>custom<sp/>decoder,<sp/>one<sp/>can<sp/>do</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">customDecoder<sp/>=<sp/>rom.Decoder(myMapper,<sp/></highlight><highlight class="stringliteral">&quot;MyMapper&quot;</highlight><highlight class="normal">)</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_components_rom_decoder_1autotoc_md41">
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md42">
 <title>Requirements</title>
 <para><itemizedlist>
 <listitem><para><computeroutput>rom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>
@@ -58,11 +58,11 @@
 </para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_components_rom_decoder_1autotoc_md42">
+<sect1 id="md_pages_components_rom_decoder_1autotoc_md43">
 <title>Linear Decoder</title>
 <para>A linear decoder is a mapping of the form: <formula id="15">\[ y_{fom} = \phi y_{rom} \]</formula></para>
 <para>where <formula id="16">$\phi$</formula> is the Jacobian matrix (for the time being, assume it constant).</para>
-<sect2 id="md_pages_components_rom_decoder_1autotoc_md43">
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md44">
 <title>Example usage</title>
 <para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>create<sp/>the<sp/>matrix</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>attention:<sp/>phi<sp/>must<sp/>be<sp/>column-major<sp/>for<sp/>these<sp/>reasons:</highlight><highlight class="normal"></highlight></codeline>
@@ -85,7 +85,7 @@
 <codeline><highlight class="normal">print(fomState)</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_components_rom_decoder_1autotoc_md44">
+<sect2 id="md_pages_components_rom_decoder_1autotoc_md45">
 <title>Requirements</title>
 <para><itemizedlist>
 <listitem><para><computeroutput>rom_state_type</computeroutput> : rank-1 <computeroutput>numpy.array</computeroutput></para>

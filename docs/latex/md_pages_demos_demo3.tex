@@ -3,8 +3,8 @@
 \begin{DoxyParagraph}{}
 This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-\/diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md117}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md117}
-This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}}, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.\hypertarget{md_pages_demos_demo3_autotoc_md118}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md118}
+\hypertarget{md_pages_demos_demo3_autotoc_md118}{}\doxysection{Overview}\label{md_pages_demos_demo3_autotoc_md118}
+This demo solves the same problem as the one \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}}, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.\hypertarget{md_pages_demos_demo3_autotoc_md119}{}\doxysection{Main function}\label{md_pages_demos_demo3_autotoc_md119}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
@@ -40,8 +40,8 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  logger.finalize()}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md119}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo3_autotoc_md119}
-This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md120}{}\doxysubsection{2. Setup and train the nonlinear k\+PCA mapper}\label{md_pages_demos_demo3_autotoc_md120}
+\hypertarget{md_pages_demos_demo3_autotoc_md120}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo3_autotoc_md120}
+This step is the same as described \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo3_autotoc_md121}{}\doxysubsection{2. Setup and train the nonlinear k\+PCA mapper}\label{md_pages_demos_demo3_autotoc_md121}
 It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a k\+PCA-\/based representation, but one can use, e.\+g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods. 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMapperKPCA:}
@@ -92,7 +92,7 @@ It is important to note that while the mapper class below has the API required b
 \begin{DoxyParagraph}{Important\+:}
 when creating an arbitrary mapping (as in the class above), the jacobian matrix {\bfseries{must}} be column-\/major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo3_autotoc_md121}{}\doxysubsection{3. Construct and run LSPG}\label{md_pages_demos_demo3_autotoc_md121}
+\hypertarget{md_pages_demos_demo3_autotoc_md122}{}\doxysubsection{3. Construct and run LSPG}\label{md_pages_demos_demo3_autotoc_md122}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, customMapper):}
@@ -142,5 +142,5 @@ when creating an arbitrary mapping (as in the class above), the jacobian matrix 
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon(romState)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo3_autotoc_md122}{}\doxysection{Results}\label{md_pages_demos_demo3_autotoc_md122}
+\hypertarget{md_pages_demos_demo3_autotoc_md123}{}\doxysection{Results}\label{md_pages_demos_demo3_autotoc_md123}
 If everything works fine, the following plot shows the result.  
