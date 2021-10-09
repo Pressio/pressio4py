@@ -55,6 +55,7 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -68,7 +69,7 @@
             </li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
+          <ol class="m-col-t-6 m-col-m-none" start="5">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -156,7 +157,7 @@ $g$
 <g id='eq4-page1'>
 <use x='0' y='0' xlink:href='#eq4-g0-103'/>
 </g>
-</svg> is the decoder (or mapping).</p></div><p><br /></p><section id="autotoc_md40"><h2><a href="#autotoc_md40">Custom Decoder</a></h2><p>A custom decoder in pressio4py implements the general mapping above.</p><p>This allows one to use an arbitrary function to map the ROM state to the FOM state.</p><pre class="m-code"><span class="k">class</span> <span class="nc">CustomMapper</span><span class="p">:</span>
+</svg> is the decoder (or mapping).</p></div><p><br /></p><section id="autotoc_md41"><h2><a href="#autotoc_md41">Custom Decoder</a></h2><p>A custom decoder in pressio4py implements the general mapping above.</p><p>This allows one to use an arbitrary function to map the ROM state to the FOM state.</p><pre class="m-code"><span class="k">class</span> <span class="nc">CustomMapper</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fomSize</span><span class="p">,</span> <span class="n">romSize</span><span class="p">):</span>
     <span class="c1"># attention: the jacobian of the mapping must be column-major oder</span>
     <span class="c1"># so that pressio can view it without deep copying it, this enables</span>
@@ -177,8 +178,8 @@ $g$
 <span class="c1"># create the mapper</span>
 <span class="n">myMapper</span> <span class="o">=</span> <span class="n">CustomMapper</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 <span class="c1"># to create a custom decoder, one can do</span>
-<span class="n">customDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">myMapper</span><span class="p">,</span> <span class="s2">&quot;MyMapper&quot;</span><span class="p">)</span></pre><section id="autotoc_md41"><h3><a href="#autotoc_md41">Requirements</a></h3><ul><li><code>rom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>fom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>jacobian_type</code>&ensp; : rank-2 <code>numpy.array</code></li></ul><div class="m-note m-info"><p>Note: there is no explicit constraint on what the mapping is, it can be anything.</p><p>As long as the decoder (or mapper) class implements the concept, it is admissible.</p></div><p><br /></p><hr/>
- <p><br /></p></section></section><section id="autotoc_md42"><h2><a href="#autotoc_md42">Linear Decoder</a></h2><p>A linear decoder is a mapping of the form:</p><div class="m-math"><svg style="width: 6.954em; height: 1.213em;" viewBox="160.643209 -11.6452 66.758464 11.6452">
+<span class="n">customDecoder</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">Decoder</span><span class="p">(</span><span class="n">myMapper</span><span class="p">,</span> <span class="s2">&quot;MyMapper&quot;</span><span class="p">)</span></pre><section id="autotoc_md42"><h3><a href="#autotoc_md42">Requirements</a></h3><ul><li><code>rom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>fom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>jacobian_type</code>&ensp; : rank-2 <code>numpy.array</code></li></ul><div class="m-note m-info"><p>Note: there is no explicit constraint on what the mapping is, it can be anything.</p><p>As long as the decoder (or mapper) class implements the concept, it is admissible.</p></div><p><br /></p><hr/>
+ <p><br /></p></section></section><section id="autotoc_md43"><h2><a href="#autotoc_md43">Linear Decoder</a></h2><p>A linear decoder is a mapping of the form:</p><div class="m-math"><svg style="width: 6.954em; height: 1.213em;" viewBox="160.643209 -11.6452 66.758464 11.6452">
 <title>
 \[ y_{fom} = \phi y_{rom} \]
 </title>
@@ -213,7 +214,7 @@ $\phi$
 <g id='eq6-page1'>
 <use x='0' y='0' xlink:href='#eq6-g0-30'/>
 </g>
-</svg> is the Jacobian matrix (for the time being, assume it constant).</p><section id="autotoc_md43"><h3><a href="#autotoc_md43">Example usage</a></h3><pre class="m-code"><span class="c1"># create the matrix</span>
+</svg> is the Jacobian matrix (for the time being, assume it constant).</p><section id="autotoc_md44"><h3><a href="#autotoc_md44">Example usage</a></h3><pre class="m-code"><span class="c1"># create the matrix</span>
 <span class="c1"># attention: phi must be column-major for these reasons:</span>
 <span class="c1">#</span>
 <span class="c1"># 1. pressio4py uses blas (wherever possible) to operate on numpy arrays,</span>
@@ -231,7 +232,7 @@ $\phi$
 <span class="c1"># linearDecoder exposes a method to evaluate the mapping</span>
 <span class="n">fomState</span><span class="p">,</span> <span class="n">romState</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">linearDecoder</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romState</span><span class="p">,</span> <span class="n">fomState</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">fomState</span><span class="p">)</span></pre></section><section id="autotoc_md44"><h3><a href="#autotoc_md44">Requirements</a></h3><ul><li><code>rom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>fom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>jacobian_type</code>&ensp; : rank-2 <code>numpy.array</code></li></ul></section></section>
+<span class="nb">print</span><span class="p">(</span><span class="n">fomState</span><span class="p">)</span></pre></section><section id="autotoc_md45"><h3><a href="#autotoc_md45">Requirements</a></h3><ul><li><code>rom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>fom_state_type</code> : rank-1 <code>numpy.array</code></li><li><code>jacobian_type</code>&ensp; : rank-2 <code>numpy.array</code></li></ul></section></section>
       </div>
     </div>
   </div>

@@ -55,6 +55,7 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -68,7 +69,7 @@
             </li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="4">
+          <ol class="m-col-t-6 m-col-m-none" start="5">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -85,7 +86,7 @@
         <h1>
           ode: implicit steppers
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.ode</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py import ode</code></p></div><section id="autotoc_md35"><h2><a href="#autotoc_md35">Overview</a></h2><p>Provides functionalities to create steppers for implicit methods. Recall that implicit methods update the state of a system by solving a system of equations involving both the current and next state. An implicit stepper is an object that knows how to do one such <em>implicit</em> step.</p><p>Pressio implicit steppers are applicable to any system written in <em>continuous-time</em> form:</p><div class="m-math"><svg style="width: 8.303em; height: 2.562em;" viewBox="155.014186 -24.590612 79.71012 24.590612">
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.ode</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py import ode</code></p></div><section id="autotoc_md36"><h2><a href="#autotoc_md36">Overview</a></h2><p>Provides functionalities to create steppers for implicit methods. Recall that implicit methods update the state of a system by solving a system of equations involving both the current and next state. An implicit stepper is an object that knows how to do one such <em>implicit</em> step.</p><p>Pressio implicit steppers are applicable to any system written in <em>continuous-time</em> form:</p><div class="m-math"><svg style="width: 8.303em; height: 2.562em;" viewBox="155.014186 -24.590612 79.71012 24.590612">
 <title>
 \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]
 </title>
@@ -208,7 +209,7 @@ $R$
 <g id='eq6-page1'>
 <use x='0' y='0' xlink:href='#eq6-g0-82'/>
 </g>
-</svg> is the residual.</p></section><section id="autotoc_md36"><h2><a href="#autotoc_md36">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">create_implicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme:</li></ul></li></ul><table class="m-table"><thead><tr><th>enum value</th><th>Method</th><th>Discrete Residual Formula</th></tr></thead><tbody><tr><td>BDF1</td><td>Backward Diff 1st order</td><td><svg class="m-math" style="width: 16.507em; height: 1.245em; vertical-align: -0.312em;" viewBox="0 -8.966376 158.46995 11.955168">
+</svg> is the residual.</p></section><section id="autotoc_md37"><h2><a href="#autotoc_md37">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">create_implicit_stepper</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme:</li></ul></li></ul><table class="m-table"><thead><tr><th>enum value</th><th>Method</th><th>Discrete Residual Formula</th></tr></thead><tbody><tr><td>BDF1</td><td>Backward Diff 1st order</td><td><svg class="m-math" style="width: 16.507em; height: 1.245em; vertical-align: -0.312em;" viewBox="0 -8.966376 158.46995 11.955168">
 <title>
 $R = y_{n+1}-y_{n}- hf(t_{n+1},y_{n+1})$
 </title>
@@ -401,7 +402,7 @@ $f$
 
   <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stateIn</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
       <span class="c1"># compute J as needed</span>
-      <span class="c1"># make sure to use J[:] to overwrite value</span></pre></li></ul></li></ul><div class="m-note m-warning"><p>Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support <a href="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing by reference sparse types</a>. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense.</p></div><section id="autotoc_md37"><h3><a href="#autotoc_md37">Stepper object</a></h3><p>The returned stepper object exposes the following methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
+      <span class="c1"># make sure to use J[:] to overwrite value</span></pre></li></ul></li></ul><div class="m-note m-warning"><p>Note that currently, the implicit steppers are implemented only for dense Jacobians. This is on purpose, because pybind11 does not support <a href="https://pybind11.readthedocs.io/en/stable/advanced/cast/eigen.html">passing by reference sparse types</a>. Therefore, for the time being, we do not provide bindings for doing implicit stepping for systems with sparse Jacobians. Note, also, that this is not critical for the main purposes of this library because ROMs are inherently dense.</p></div><section id="autotoc_md38"><h3><a href="#autotoc_md38">Stepper object</a></h3><p>The returned stepper object exposes the following methods:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Stepper</span><span class="p">:</span>
 
   <span class="k">def</span> <span class="nf">order</span><span class="p">():</span>
     <span class="k">return</span> <span class="c1"># order of the step scheme of this stepper instantiation</span>
@@ -415,7 +416,7 @@ $f$
     <span class="k">return</span> <span class="c1"># a Jacobian instance</span>
 
   <span class="k">def</span> <span class="nf">residual</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
-  <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span></pre></section><section id="autotoc_md38"><h3><a href="#autotoc_md38">What to do after a stepper is created?</a></h3><p>Any stepper created using the functions above is guaranteed to satisfy the &quot;steppable&quot; concept discussed <a href="/Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio/docs/html/md_pages_components_ode_advance.html">here</a>. Therefore, once you create a stepper, you can use the <a href="md_pages_components_ode_advance.html">advancers</a> to step forward or you can use your own.<br />An example is below:</p><pre class="m-code"><span class="n">todo</span></pre></section></section>
+  <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span></pre></section><section id="autotoc_md39"><h3><a href="#autotoc_md39">What to do after a stepper is created?</a></h3><p>Any stepper created using the functions above is guaranteed to satisfy the &quot;steppable&quot; concept discussed <a href="/Users/fnrizzi/Desktop/work/ROM/gitrepos/pressio/docs/html/md_pages_components_ode_advance.html">here</a>. Therefore, once you create a stepper, you can use the <a href="md_pages_components_ode_advance.html">advancers</a> to step forward or you can use your own.<br />An example is below:</p><pre class="m-code"><span class="n">todo</span></pre></section></section>
       </div>
     </div>
   </div>

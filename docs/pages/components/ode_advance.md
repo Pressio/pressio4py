@@ -22,16 +22,18 @@ Overload set for advancing for fixed number of steps
 
 ```py
 advance_n_steps(stepper, state, start_time, \
-				time_step_size, num_steps);						    (1)
+				time_step_size,   num_steps [, arg]);	   (1)
 
 advance_n_steps(stepper, state, start_time, \
-				time_step_setter, num_steps);					    (2)
+				time_step_setter, num_steps [, arg]);	   (2)
 
 advance_n_steps_and_observe(stepper, state, start_time, \
-						    time_step_size, num_steps, observer);   (3)
+						    time_step_size,   num_steps,\  (3)
+							observer [, arg]);
 
 advance_n_steps_and_observe(stepper, state, start_time, \
-							time_step_setter, num_steps, observer); (4)
+							time_step_setter, num_steps,\  (4)
+							observer [, arg]);
 ```
 
 - (1,2): overloads for advancing for a fixed number of steps
@@ -43,6 +45,7 @@ also an "observer" to monitor the evolution of the state at each step (more on t
 
 - `stepper`: the steppable object, see e.g.:
   - [explicit steppers](md_pages_components_ode_steppers_explicit.html)
+  - [implicit steppers](md_pages_components_ode_steppers_implicit.html)
   - stepper extracted from a [Galerkin ROM problem](md_pages_components_rom_galerkin_default.html)
   - stepper extracted from a [LSPG ROM problem](md_pages_components_rom_lspg_default.html)
 
@@ -78,6 +81,13 @@ also an "observer" to monitor the evolution of the state at each step (more on t
 	  # do something with state
   ```
 
+- `arg`: an optional argument
+  - for example, this is what you would use
+  when doing [implicit time stepping](md_pages_components_ode_steppers_implicit.html)
+  to pass the nonlinear solver neeeded to peform a single step
+
+
+## Notes
 
 @m_class{m-note m-info}
 

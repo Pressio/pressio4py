@@ -2,11 +2,11 @@
 
 Defined in module\+: {\ttfamily pressio4py.\+ode}
 
-Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md29}{}\doxysection{Overview}\label{md_pages_components_ode_steppers_explicit_autotoc_md29}
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py import ode} \hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md30}{}\doxysection{Overview}\label{md_pages_components_ode_steppers_explicit_autotoc_md30}
 Applicable to systems of the form\+: \[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]
 
 where $y$ is the state, $f$ is the RHS (also called velocity below), $t$ is time.~\newline
- Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a \char`\"{}stepper\char`\"{} is an abstraction that represents the \char`\"{}how\char`\"{} to take a step.\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md30}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_explicit_autotoc_md30}
+ Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a \char`\"{}stepper\char`\"{} is an abstraction that represents the \char`\"{}how\char`\"{} to take a step.\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md31}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_ode_steppers_explicit_autotoc_md31}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{stepper = ode.create\_explicit\_stepper(scheme, state, system)}
@@ -42,7 +42,7 @@ where $y$ is the state, $f$ is the RHS (also called velocity below), $t$ is time
 \end{DoxyCode}
 
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md31}{}\doxysection{Stepper class API}\label{md_pages_components_ode_steppers_explicit_autotoc_md31}
+\end{DoxyItemize}\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md32}{}\doxysection{Stepper class API}\label{md_pages_components_ode_steppers_explicit_autotoc_md32}
 Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods\+:
 
 
@@ -62,7 +62,7 @@ When invoked, the call operator triggers the stepper to execute one step. Having
 ~\newline
  \DoxyHorRuler{0}
  ~\newline
-\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md32}{}\doxysection{Example usage 1}\label{md_pages_components_ode_steppers_explicit_autotoc_md32}
+\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md33}{}\doxysection{Example usage 1}\label{md_pages_components_ode_steppers_explicit_autotoc_md33}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{import numpy as np}
@@ -92,7 +92,7 @@ When invoked, the call operator triggers the stepper to execute one step. Having
 \DoxyCodeLine{print(\textcolor{stringliteral}{"{}after doing one step: "{}}, state)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md33}{}\doxysection{Example usage 2}\label{md_pages_components_ode_steppers_explicit_autotoc_md33}
+\hypertarget{md_pages_components_ode_steppers_explicit_autotoc_md34}{}\doxysection{Example usage 2}\label{md_pages_components_ode_steppers_explicit_autotoc_md34}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}

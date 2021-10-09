@@ -13,7 +13,7 @@
 <para><simplesect kind="par"><title>We are currently working on this page, it will be updated with more explanations.</title><para></para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo4_1autotoc_md124">
+<sect1 id="md_pages_demos_demo4_1autotoc_md125">
 <title>Overview</title>
 <para>We cover these steps:<orderedlist>
 <listitem><para>generate of snapshots using the full-order model (FOM)</para>
@@ -25,12 +25,12 @@
 <para>The key item introduced here is the &quot;masking&quot; operator. In simple words, masking allows us to mimic the effect of the hyper-reduction without changing the application code. Hyper-reduction is a fundamental part of ROMs needed to approximate the FOM operators, thus contributing significantly to the computational cost savings. However, the main difficulty of hyper-reduction is that it generally is quite intrusive to be done properly.</para>
 <para>To briefly explain what hyper-reduction, let&apos;s look at the most basic form of hyper-reduction, namely &quot;collocation&quot;. Consider the following system of N ODEs: <formula id="26">\[ \frac{du}{dt} = f(u,x,t) \]</formula> A collocation-based hyper-reduction involves <emphasis>approximating</emphasis> the right-hand side by computing <formula id="27">$f()$</formula> only at a subset of grid points. Obviously, the way we compute the locations to select is critical and there are several techniques available to do so. Here, we show a simple example just for demonstration purposes of performing collocation with randomly selected points</para>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md125">
+<sect1 id="md_pages_demos_demo4_1autotoc_md126">
 <title>FOM Equations</title>
 <para>The governing equations for this problem are:</para>
 <para><formula id="20">\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \]</formula> where <formula id="21">$k(u,x)=x^4$</formula>, the field is <formula id="22">$u(x;t)$</formula>, the advection velocity is fixed at <formula id="23">$a=2$</formula>, the spatial coordinate is <formula id="24">$x$</formula> and the domain is <formula id="25">$(0,1)$</formula>. We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences is implemented <ulink url="https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py">here</ulink>.</para>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md126">
+<sect1 id="md_pages_demos_demo4_1autotoc_md127">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
@@ -88,7 +88,7 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_demos_demo4_1autotoc_md127">
+<sect2 id="md_pages_demos_demo4_1autotoc_md128">
 <title>1. Run FOM and collect snapshots</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
@@ -105,7 +105,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md128">
+<sect2 id="md_pages_demos_demo4_1autotoc_md129">
 <title>2. Compute POD modes</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
@@ -113,7 +113,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md129">
+<sect2 id="md_pages_demos_demo4_1autotoc_md130">
 <title>3. Create the sampling indices</title>
 <para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>a<sp/>masked<sp/>galerkin<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
@@ -133,7 +133,7 @@
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md130">
+<sect2 id="md_pages_demos_demo4_1autotoc_md131">
 <title>4. The masker class</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>indices):</highlight></codeline>
@@ -147,7 +147,7 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>np.take(operand,<sp/>self.rows_)</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md131">
+<sect2 id="md_pages_demos_demo4_1autotoc_md132">
 <title>5. Construct and run the masked ROM</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runMaskedGalerkin(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes,<sp/>sampleMeshIndices):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>find<sp/>out<sp/>number<sp/>of<sp/>modes<sp/>wanted</highlight><highlight class="normal"></highlight></codeline>
@@ -202,7 +202,7 @@
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md132">
+<sect1 id="md_pages_demos_demo4_1autotoc_md133">
 <title>Results</title>
 <para>If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few POD modes. <image type="html" name="demo4.png"></image>
 </para>

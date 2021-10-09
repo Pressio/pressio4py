@@ -16,16 +16,18 @@
 <para><parblock><para>Overload set for advancing for fixed number of steps </para>
 </parblock></para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">advance_n_steps(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/>num_steps);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/><sp/><sp/>num_steps<sp/>[,<sp/>arg]);<sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">advance_n_steps(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps<sp/>[,<sp/>arg]);<sp/><sp/><sp/><sp/><sp/><sp/>(2)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">advance_n_steps_and_observe(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/>num_steps,<sp/>observer);<sp/><sp/><sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_size,<sp/><sp/><sp/>num_steps,\<sp/><sp/>(3)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>observer<sp/>[,<sp/>arg]);</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">advance_n_steps_and_observe(stepper,<sp/>state,<sp/>start_time,<sp/>\</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps,<sp/>observer);<sp/>(4)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>time_step_setter,<sp/>num_steps,\<sp/><sp/>(4)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>observer<sp/>[,<sp/>arg]);</highlight></codeline>
 </programlisting></para>
 <para><itemizedlist>
 <listitem><para>(1,2): overloads for advancing for a fixed number of steps</para>
@@ -38,6 +40,7 @@
 <para><itemizedlist>
 <listitem><para><computeroutput>stepper</computeroutput>: the steppable object, see e.g.:<itemizedlist>
 <listitem><para><ulink url="md_pages_components_ode_steppers_explicit.html">explicit steppers</ulink></para>
+</listitem><listitem><para><ulink url="md_pages_components_ode_steppers_implicit.html">implicit steppers</ulink></para>
 </listitem><listitem><para>stepper extracted from a <ulink url="md_pages_components_rom_galerkin_default.html">Galerkin ROM problem</ulink></para>
 </listitem><listitem><para>stepper extracted from a <ulink url="md_pages_components_rom_lspg_default.html">LSPG ROM problem</ulink></para>
 </listitem></itemizedlist>
@@ -69,8 +72,15 @@
 </programlisting></para>
 </listitem></itemizedlist>
 </para>
+</listitem><listitem><para><computeroutput>arg</computeroutput>: an optional argument<itemizedlist>
+<listitem><para>for example, this is what you would use when doing <ulink url="md_pages_components_ode_steppers_implicit.html">implicit time stepping</ulink> to pass the nonlinear solver neeeded to peform a single step</para>
 </listitem></itemizedlist>
 </para>
+</listitem></itemizedlist>
+</para>
+</sect1>
+<sect1 id="md_pages_components_ode_advance_1autotoc_md28">
+<title>Notes</title>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
 <para><parblock><para>By design, the steps are enumerated as follows: <computeroutput>1,2,3...,num_steps</computeroutput>. Therefore, step 1 is the step that starts at <computeroutput>t_0 = start_time</computeroutput> and ends at <computeroutput>t_1 = start_time + dt_1</computeroutput>, step 2 is the step that starts at <computeroutput>t_1</computeroutput> and ends at <computeroutput>t_2 = t_1 + dt_2</computeroutput>. Here, <computeroutput>dt_n</computeroutput> indicates the time step size to use for the <computeroutput>n</computeroutput>-th step. </para>
 </parblock></para>

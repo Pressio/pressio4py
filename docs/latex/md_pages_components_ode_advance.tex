@@ -10,16 +10,18 @@ Overload set for advancing for fixed number of steps
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{advance\_n\_steps(stepper, state, start\_time, \(\backslash\)}
-\DoxyCodeLine{                time\_step\_size, num\_steps);                         (1)}
+\DoxyCodeLine{                time\_step\_size,   num\_steps [, arg]);      (1)}
 \DoxyCodeLine{}
 \DoxyCodeLine{advance\_n\_steps(stepper, state, start\_time, \(\backslash\)}
-\DoxyCodeLine{                time\_step\_setter, num\_steps);                       (2)}
+\DoxyCodeLine{                time\_step\_setter, num\_steps [, arg]);      (2)}
 \DoxyCodeLine{}
 \DoxyCodeLine{advance\_n\_steps\_and\_observe(stepper, state, start\_time, \(\backslash\)}
-\DoxyCodeLine{                            time\_step\_size, num\_steps, observer);   (3)}
+\DoxyCodeLine{                            time\_step\_size,   num\_steps,\(\backslash\)  (3)}
+\DoxyCodeLine{                            observer [, arg]);}
 \DoxyCodeLine{}
 \DoxyCodeLine{advance\_n\_steps\_and\_observe(stepper, state, start\_time, \(\backslash\)}
-\DoxyCodeLine{                            time\_step\_setter, num\_steps, observer); (4)}
+\DoxyCodeLine{                            time\_step\_setter, num\_steps,\(\backslash\)  (4)}
+\DoxyCodeLine{                            observer [, arg]);}
 
 \end{DoxyCode}
 
@@ -34,6 +36,7 @@ Overload set for advancing for fixed number of steps
 \item {\ttfamily stepper}\+: the steppable object, see e.\+g.\+:
 \begin{DoxyItemize}
 \item \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit steppers}}
+\item \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit steppers}}
 \item stepper extracted from a \href{md_pages_components_rom_galerkin_default.html}{\texttt{ Galerkin ROM problem}}
 \item stepper extracted from a \href{md_pages_components_rom_lspg_default.html}{\texttt{ LSPG ROM problem}}
 \end{DoxyItemize}
@@ -72,8 +75,11 @@ Overload set for advancing for fixed number of steps
 \end{DoxyCode}
 
 \end{DoxyItemize}
+\item {\ttfamily arg}\+: an optional argument
+\begin{DoxyItemize}
+\item for example, this is what you would use when doing \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit time stepping}} to pass the nonlinear solver neeeded to peform a single step
 \end{DoxyItemize}
-
+\end{DoxyItemize}\hypertarget{md_pages_components_ode_advance_autotoc_md28}{}\doxysection{Notes}\label{md_pages_components_ode_advance_autotoc_md28}
 
 
 By design, the steps are enumerated as follows\+: {\ttfamily 1,2,3...,num\+\_\+steps}. Therefore, step 1 is the step that starts at {\ttfamily t\+\_\+0 = start\+\_\+time} and ends at {\ttfamily t\+\_\+1 = start\+\_\+time + dt\+\_\+1}, step 2 is the step that starts at {\ttfamily t\+\_\+1} and ends at {\ttfamily t\+\_\+2 = t\+\_\+1 + dt\+\_\+2}. Here, {\ttfamily dt\+\_\+n} indicates the time step size to use for the {\ttfamily n}-\/th step. 

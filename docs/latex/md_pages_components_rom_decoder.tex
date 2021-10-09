@@ -7,7 +7,7 @@ A key assumption of projection-\/based ROMs is to approximate the full-\/order m
 where $y_{rom}$ is the reduced state (or generalized coordinates), and $g$ is the decoder (or mapping). 
 
 ~\newline
-\hypertarget{md_pages_components_rom_decoder_autotoc_md40}{}\doxysection{Custom Decoder}\label{md_pages_components_rom_decoder_autotoc_md40}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md41}{}\doxysection{Custom Decoder}\label{md_pages_components_rom_decoder_autotoc_md41}
 A custom decoder in pressio4py implements the general mapping above.
 
 This allows one to use an arbitrary function to map the ROM state to the FOM state.
@@ -38,7 +38,7 @@ This allows one to use an arbitrary function to map the ROM state to the FOM sta
 \DoxyCodeLine{customDecoder = rom.Decoder(myMapper, \textcolor{stringliteral}{"{}MyMapper"{}})}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_rom_decoder_autotoc_md41}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md41}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md42}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md42}
 
 \begin{DoxyItemize}
 \item {\ttfamily rom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}
@@ -55,10 +55,10 @@ As long as the decoder (or mapper) class implements the concept, it is admissibl
 ~\newline
  \DoxyHorRuler{0}
  ~\newline
-\hypertarget{md_pages_components_rom_decoder_autotoc_md42}{}\doxysection{Linear Decoder}\label{md_pages_components_rom_decoder_autotoc_md42}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md43}{}\doxysection{Linear Decoder}\label{md_pages_components_rom_decoder_autotoc_md43}
 A linear decoder is a mapping of the form\+: \[ y_{fom} = \phi y_{rom} \]
 
-where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hypertarget{md_pages_components_rom_decoder_autotoc_md43}{}\doxysubsection{Example usage}\label{md_pages_components_rom_decoder_autotoc_md43}
+where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hypertarget{md_pages_components_rom_decoder_autotoc_md44}{}\doxysubsection{Example usage}\label{md_pages_components_rom_decoder_autotoc_md44}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# create the matrix}}
@@ -82,7 +82,7 @@ where $\phi$ is the Jacobian matrix (for the time being, assume it constant).\hy
 \DoxyCodeLine{print(fomState)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_rom_decoder_autotoc_md44}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md44}
+\hypertarget{md_pages_components_rom_decoder_autotoc_md45}{}\doxysubsection{Requirements}\label{md_pages_components_rom_decoder_autotoc_md45}
 
 \begin{DoxyItemize}
 \item {\ttfamily rom\+\_\+state\+\_\+type} \+: rank-\/1 {\ttfamily numpy.\+array}

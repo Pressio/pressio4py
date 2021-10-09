@@ -2,7 +2,7 @@
 
 Defined in module\+: {\ttfamily pressio4py.\+rom.\+lspg.\+unsteady}
 
-Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md85}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_lspg_hypred_autotoc_md85}
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lspg} \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md86}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_lspg_hypred_autotoc_md86}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = lspg.unsteady.HypredProblem(scheme, fom\_adapter, decoder, \(\backslash\)}
@@ -72,7 +72,7 @@ Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lsp
  ~\newline
 
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md86}{}\doxysection{Stencil to sample indexing}\label{md_pages_components_rom_lspg_hypred_autotoc_md86}
+\end{DoxyItemize}\hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md87}{}\doxysection{Stencil to sample indexing}\label{md_pages_components_rom_lspg_hypred_autotoc_md87}
 When working with a hyper-\/reduced problem, pressio4py has to manipulate objects that have different sizes/distributions. For such problem, in fact, some operators are naturally defined on the what we refer to as \char`\"{}sample mesh\char`\"{} while some are defined on what we call the \char`\"{}stencil mesh\char`\"{}.
 
 As explained \href{https://pressio.github.io/algos/hyper/}{\texttt{ here}}, recall that\+:
@@ -86,7 +86,7 @@ As explained \href{https://pressio.github.io/algos/hyper/}{\texttt{ here}}, reca
 
 
 
-The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh. \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md87}{}\doxysubsection{Explain it to me better!}\label{md_pages_components_rom_lspg_hypred_autotoc_md87}
+The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh. \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md88}{}\doxysubsection{Explain it to me better!}\label{md_pages_components_rom_lspg_hypred_autotoc_md88}
 Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, {\itshape it does not matter what problem we are solving}, only what we just said. Now, suppose that you want to try hyper-\/reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read \href{https://pressio.github.io/algos/hyper/}{\texttt{ this page}} for some information about how to select sample mesh cells), and let\textquotesingle{}s say it looks like this\+: 
 
 The stencil mesh is the set of {\itshape all} cells shown, while the sample mesh is the {\itshape subset} color-\/coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-\/hand-\/side $f$ on the yellow cells, for a given FOM state $y$ on the stencil mesh.

@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.lspg.steady</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import lspg</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_lspg_default_steady_1autotoc_md81">
+<sect1 id="md_pages_components_rom_lspg_default_steady_1autotoc_md82">
 <title>API</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>lspg.steady.Problem(fom_adapter,<sp/>decoder,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state)</highlight></codeline>
@@ -18,7 +18,7 @@
 <codeline><highlight class="normal">problem<sp/>=<sp/>lspg.steady.PrecProblem(fom_adapter,<sp/>decoder,<sp/>rom_state,<sp/><sp/>(2)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fom_ref_state,<sp/>preconditioner)</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_components_rom_lspg_default_steady_1autotoc_md82">
+<sect2 id="md_pages_components_rom_lspg_default_steady_1autotoc_md83">
 <title>Parameters and Requirements</title>
 <para><itemizedlist>
 <listitem><para><computeroutput>fom_adapter</computeroutput>:<itemizedlist>
@@ -61,7 +61,7 @@
 </para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_default_steady_1autotoc_md83">
+<sect1 id="md_pages_components_rom_lspg_default_steady_1autotoc_md84">
 <title>Example code</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>scipy<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>linalg</highlight></codeline>

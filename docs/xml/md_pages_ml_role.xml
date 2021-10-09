@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="md_pages_ml_role" kind="page">
+    <compoundname>md_pages_ml_role</compoundname>
+    <title>The interplay between pressio4py and machine learning</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span><itemizedlist>
+<listitem><para>explain that ML is obviously important to consider given the hype</para>
+</listitem><listitem><para>ML offers interesting opportunities to do many things</para>
+</listitem><listitem><para>we do not believe in blindly adopting it</para>
+</listitem><listitem><para>describe here how ML can help</para>
+</listitem></itemizedlist>
+</para>
+<para>To see this in practice, take a look at our ML-oriented demos:</para>
+<para><orderedlist>
+<listitem><para><ulink url="md_pages_demos_demo3.html">LSPG using kPCA</ulink></para>
+</listitem><listitem><para><ulink url="md_pages_demos_demo6.html">LSPG using multilayer perceptron</ulink></para>
+</listitem></orderedlist>
+</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-frame m-default" /></para>
+<para><parblock><para>bladfsdf </para>
+</parblock></para>
+    </detaileddescription>
+    <location file="pages/ml_role.md"/>
+  </compounddef>
+</doxygen>

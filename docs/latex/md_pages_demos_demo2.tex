@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-\/diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo2_autotoc_md110}{}\doxysection{Overview}\label{md_pages_demos_demo2_autotoc_md110}
+\hypertarget{md_pages_demos_demo2_autotoc_md111}{}\doxysection{Overview}\label{md_pages_demos_demo2_autotoc_md111}
 We cover these three typical steps needed for a ROM\+:
 \begin{DoxyEnumerate}
 \item generate of snapshots using the full-\/order model (FOM)
@@ -11,7 +11,7 @@ We cover these three typical steps needed for a ROM\+:
 \item execute the ROM\+: here we leverage the LSPG ROM to demonstrate a {\itshape reproductive} test, i.\+e., we run the ROM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different tutorial.
 \end{DoxyEnumerate}
 
-The governing equations for this problem are the same as those in \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo2_autotoc_md111}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md111}
+The governing equations for this problem are the same as those in \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo2_autotoc_md112}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md112}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
@@ -48,7 +48,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  logger.finalize()}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md112}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo2_autotoc_md112}
+\hypertarget{md_pages_demos_demo2_autotoc_md113}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo2_autotoc_md113}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -66,7 +66,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md113}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo2_autotoc_md113}
+\hypertarget{md_pages_demos_demo2_autotoc_md114}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo2_autotoc_md114}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -75,7 +75,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md114}{}\doxysubsection{3. Construct and run ROM}\label{md_pages_demos_demo2_autotoc_md114}
+\hypertarget{md_pages_demos_demo2_autotoc_md115}{}\doxysubsection{3. Construct and run ROM}\label{md_pages_demos_demo2_autotoc_md115}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, modes):}
@@ -128,5 +128,5 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon(romState)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md115}{}\doxysection{Results}\label{md_pages_demos_demo2_autotoc_md115}
+\hypertarget{md_pages_demos_demo2_autotoc_md116}{}\doxysection{Results}\label{md_pages_demos_demo2_autotoc_md116}
 If everything works fine, the following plot shows the result.  

@@ -57,8 +57,6 @@ solver.solve(problem, ...)
   As shown above, the `problem` exposes all the operators that you need to solve.
 
 
-
-
 <br/>
 ___
 <br/>

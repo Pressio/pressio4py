@@ -10,13 +10,13 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.ode</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py import ode</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md29">
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md30">
 <title>Overview</title>
 <para>Applicable to systems of the form: <formula id="2">\[ \frac{d \boldsymbol{y}}{dt} = \boldsymbol{f}(\boldsymbol{y},t; ...) \]</formula></para>
 <para>where <formula id="3">$y$</formula> is the state, <formula id="4">$f$</formula> is the RHS (also called velocity below), <formula id="5">$t$</formula> is time.<linebreak/>
  Explicit methods calculate the state of a system at a later time from the state of the system at the current time and potentially previous times. In pressio, a &quot;stepper&quot; is an abstraction that represents the &quot;how&quot; to take a step.</para>
 </sect1>
-<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md30">
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md31">
 <title>API, Parameters and Requirements</title>
 <para><programlisting filename=".cpp"><codeline><highlight class="normal">stepper<sp/>=<sp/>ode.create_explicit_stepper(scheme,<sp/>state,<sp/>system)</highlight></codeline>
 </programlisting></para>
@@ -46,7 +46,7 @@
 </listitem></itemizedlist>
 </para>
 </sect1>
-<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md31">
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md32">
 <title>Stepper class API</title>
 <para>Calling the factory function above returns a stepper object. A stepper class exposes the follwing methods:</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Stepper:</highlight></codeline>
@@ -62,7 +62,7 @@
  <linebreak/>
 </para>
 </sect1>
-<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md32">
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md33">
 <title>Example usage 1</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">import<sp/>numpy<sp/>as<sp/>np</highlight></codeline>
 <codeline><highlight class="normal">from<sp/>pressio4py<sp/>import<sp/>ode</highlight></codeline>
@@ -91,7 +91,7 @@
 <codeline><highlight class="normal">print(</highlight><highlight class="stringliteral">&quot;after<sp/>doing<sp/>one<sp/>step:<sp/>&quot;</highlight><highlight class="normal">,<sp/>state)</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md33">
+<sect1 id="md_pages_components_ode_steppers_explicit_1autotoc_md34">
 <title>Example usage 2</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">import</highlight><highlight class="normal"><sp/>numpy<sp/></highlight><highlight class="keyword">as</highlight><highlight class="normal"><sp/>np</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">from</highlight><highlight class="normal"><sp/>pressio4py<sp/></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>ode</highlight></codeline>
