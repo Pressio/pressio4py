@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.galerkin</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import galerkin</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_galerkin_hypred_1autotoc_md70">
+<sect1 id="md_pages_components_rom_galerkin_hypred_1autotoc_md72">
 <title>API, Parameters and Requirements</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>galerkin.HyperreducedExplicitProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\<sp/><sp/><sp/><sp/><sp/><sp/>(1)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>projector)</highlight></codeline>
@@ -55,7 +55,7 @@
 <para><linebreak/>
 </para>
 </sect1>
-<sect1 id="md_pages_components_rom_galerkin_hypred_1autotoc_md71">
+<sect1 id="md_pages_components_rom_galerkin_hypred_1autotoc_md73">
 <title>Example usage</title>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span> link tutorials/demos </para>
 </sect1>

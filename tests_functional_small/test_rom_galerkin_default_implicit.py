@@ -38,32 +38,31 @@ class MyObs2:
     print("MyObs2")
     print(state)
 
-def test_galerkin_cont_time_default_implicit1():
-  print("\n")
-  N = 10
-  sw = FomSystem(N)
-  fom_state = np.zeros(N)
-  phi = np.zeros((N,3), order='F')
-  phi[:,0] = 0.
-  phi[:,1] = 1.
-  phi[:,2] = 2.
-  decoder = rom.Decoder(phi)
-  rom_state = np.array([0., 1., 2.])
-  scheme = ode.stepscheme.BDF1
-  problem = rom.galerkin.DefaultImplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
+# def test_galerkin_cont_time_default_implicit1():
+#   print("\n")
+#   N = 10
+#   sw = FomSystem(N)
+#   fom_state = np.zeros(N)
+#   phi = np.zeros((N,3), order='F')
+#   phi[:,0] = 0.
+#   phi[:,1] = 1.
+#   phi[:,2] = 2.
+#   decoder = rom.Decoder(phi)
+#   rom_state = np.array([0., 1., 2.])
+#   scheme = ode.stepscheme.BDF1
+#   problem = rom.galerkin.DefaultImplicitProblem(scheme, sw, decoder, rom_state, fom_state)
 
-  # solvers
-  lsO = MyLinSolver()
-  nlsO = solvers.create_newton_raphson(stepper, rom_state, lsO)
-  nlsO.setUpdatingCriterion(solvers.update.Standard)
-  nlsO.setMaxIterations(2)
-  nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
+#   # solvers
+#   lsO = MyLinSolver()
+#   nlsO = solvers.create_newton_raphson(problem, rom_state, lsO)
+#   nlsO.setUpdatingCriterion(solvers.update.Standard)
+#   nlsO.setMaxIterations(2)
+#   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
-  dt, num_steps = 1., 1
-  obs = MyObs2()
-  ode.advance_n_steps_and_observe(stepper, rom_state, 0., dt, num_steps, obs, nlsO)
-  print("final rom_state = ", rom_state)
+#   dt, num_steps = 1., 1
+#   obs = MyObs2()
+#   ode.advance_n_steps_and_observe(problem, rom_state, 0., dt, num_steps, obs, nlsO)
+#   print("final rom_state = ", rom_state)
 
 # =====================================================================================
 
@@ -112,7 +111,6 @@ class MyNonLinSolver:
       assert(self.J[2,1] ==-120.)
       assert(self.J[2,2] ==-159.)
 
-
 def test_galerkin_cont_time_default_implicit2():
   print("\n")
   print("using advance")
@@ -128,13 +126,12 @@ def test_galerkin_cont_time_default_implicit2():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.BDF1
   problem = rom.galerkin.DefaultImplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
 
-  mynlsO = MyNonLinSolver(stepper)
+  mynlsO = MyNonLinSolver(problem)
 
   dt, num_steps = 2., 2
   obs = MyObs2()
-  ode.advance_n_steps_and_observe(stepper, rom_state, 0., dt, num_steps, obs, mynlsO)
+  ode.advance_n_steps_and_observe(problem, rom_state, 0., dt, num_steps, obs, mynlsO)
   print("final rom_state = ", rom_state)
 
 
@@ -152,15 +149,7 @@ def test_galerkin_cont_time_default_implicit3():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.BDF1
   problem = rom.galerkin.DefaultImplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
 
-  mynlsO = MyNonLinSolver(stepper)
-  stepper(rom_state, 0., 2., 1, mynlsO)
+  mynlsO = MyNonLinSolver(problem)
+  problem(rom_state, 0., 2., 1, mynlsO)
   print("final rom_state = ", rom_state)
-
-  # dtcb = MyDtSetter()
-  # #assert(rom_state[0] == 0.)
-  # #assert(rom_state[1] == 2611.)
-  # #assert(rom_state[2] == 5222.)
-
-  # stepper(rom_state, 0., 1., 1, mynlsO)

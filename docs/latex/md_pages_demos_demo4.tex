@@ -8,7 +8,7 @@ This page describes a demo for a reproductive \char`\"{}masked\char`\"{} Galerki
 \begin{DoxyParagraph}{We are currently working on this page, it will be updated with more explanations.}
 
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo4_autotoc_md125}{}\doxysection{Overview}\label{md_pages_demos_demo4_autotoc_md125}
+\hypertarget{md_pages_demos_demo4_autotoc_md127}{}\doxysection{Overview}\label{md_pages_demos_demo4_autotoc_md127}
 We cover these steps\+:
 \begin{DoxyEnumerate}
 \item generate of snapshots using the full-\/order model (FOM)
@@ -19,70 +19,69 @@ We cover these steps\+:
 
 The key item introduced here is the \char`\"{}masking\char`\"{} operator. In simple words, masking allows us to mimic the effect of the hyper-\/reduction without changing the application code. Hyper-\/reduction is a fundamental part of ROMs needed to approximate the FOM operators, thus contributing significantly to the computational cost savings. However, the main difficulty of hyper-\/reduction is that it generally is quite intrusive to be done properly.
 
-To briefly explain what hyper-\/reduction, let\textquotesingle{}s look at the most basic form of hyper-\/reduction, namely \char`\"{}collocation\char`\"{}. Consider the following system of N ODEs\+: \[ \frac{du}{dt} = f(u,x,t) \] A collocation-\/based hyper-\/reduction involves {\itshape approximating} the right-\/hand side by computing $f()$ only at a subset of grid points. Obviously, the way we compute the locations to select is critical and there are several techniques available to do so. Here, we show a simple example just for demonstration purposes of performing collocation with randomly selected points\hypertarget{md_pages_demos_demo4_autotoc_md126}{}\doxysection{FOM Equations}\label{md_pages_demos_demo4_autotoc_md126}
+To briefly explain what hyper-\/reduction, let\textquotesingle{}s look at the most basic form of hyper-\/reduction, namely \char`\"{}collocation\char`\"{}. Consider the following system of N ODEs\+: \[ \frac{du}{dt} = f(u,x,t) \] A collocation-\/based hyper-\/reduction involves {\itshape approximating} the right-\/hand side by computing $f()$ only at a subset of grid points. Obviously, the way we compute the locations to select is critical and there are several techniques available to do so. Here, we show a simple example just for demonstration purposes of performing collocation with randomly selected points\hypertarget{md_pages_demos_demo4_autotoc_md128}{}\doxysection{FOM Equations}\label{md_pages_demos_demo4_autotoc_md128}
 The governing equations for this problem are\+:
 
-\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the FOM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo4_autotoc_md127}{}\doxysection{Main function}\label{md_pages_demos_demo4_autotoc_md127}
+\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \] where $k(u,x)=x^4$, the field is $u(x;t)$, the advection velocity is fixed at $a=2$, the spatial coordinate is $x$ and the domain is $(0,1)$. We use homogeneous BC. Note that a class approximating the FOM operators via finite-\/differences is implemented \href{https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py}{\texttt{ here}}.\hypertarget{md_pages_demos_demo4_autotoc_md129}{}\doxysection{Main function}\label{md_pages_demos_demo4_autotoc_md129}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
-\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{logger.setVerbosity([logger.loglevel.info])}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# total number of grid points}}
-\DoxyCodeLine{  meshSize = 200}
+\DoxyCodeLine{\textcolor{comment}{\# total number of grid points}}
+\DoxyCodeLine{meshSize = 200}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
-\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=meshSize, adv\_coef=1.0)}
+\DoxyCodeLine{\textcolor{comment}{\# create fom object}}
+\DoxyCodeLine{fomObj = AdvDiff1d(nGrid=meshSize, adv\_coef=1.0)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# the final time to integrate to}}
-\DoxyCodeLine{  finalTime = .05}
+\DoxyCodeLine{\textcolor{comment}{\# the final time to integrate to}}
+\DoxyCodeLine{finalTime = .05}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 1. FOM -\/-\/-\/\#}}
-\DoxyCodeLine{  fomTimeStepSize  = 1e-\/5}
-\DoxyCodeLine{  fomNumberOfSteps = int(finalTime/fomTimeStepSize)}
-\DoxyCodeLine{  sampleEvery      = 100}
-\DoxyCodeLine{  [fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 1. FOM -\/-\/-\/\#}}
+\DoxyCodeLine{fomTimeStepSize  = 1e-\/5}
+\DoxyCodeLine{fomNumberOfSteps = int(finalTime/fomTimeStepSize)}
+\DoxyCodeLine{sampleEvery      = 100}
+\DoxyCodeLine{[fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 2. POD -\/-\/-\/\#}}
-\DoxyCodeLine{  modes = computePodModes(snapshots)}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 2. POD -\/-\/-\/\#}}
+\DoxyCodeLine{modes = computePodModes(snapshots)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 3. MASKED GALERKIN ROM -\/-\/-\/\#}}
-\DoxyCodeLine{  romSize = 10  \textcolor{comment}{\# number of modes to use}}
-\DoxyCodeLine{  romTimeStepSize  = 1e-\/4}
-\DoxyCodeLine{  romNumberOfSteps = int(finalTime/romTimeStepSize)}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 3. MASKED GALERKIN ROM -\/-\/-\/\#}}
+\DoxyCodeLine{romSize = 10  \textcolor{comment}{\# number of modes to use}}
+\DoxyCodeLine{romTimeStepSize  = 1e-\/4}
+\DoxyCodeLine{romNumberOfSteps = int(finalTime/romTimeStepSize)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# a masked galerkin is supposed to make it easier to emulate the}}
-\DoxyCodeLine{  \textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
-\DoxyCodeLine{  \textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
-\DoxyCodeLine{  \textcolor{comment}{\# identifying a subset of the grid points in the full mesh.}}
-\DoxyCodeLine{  \textcolor{comment}{\# This is a simple way to mimic hyper-\/reduction}}
-\DoxyCodeLine{  \textcolor{comment}{\# without changing the FOM problem. In fact, the fom still}}
-\DoxyCodeLine{  \textcolor{comment}{\# computes the full operators but we have an additional step}}
-\DoxyCodeLine{  \textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
-\DoxyCodeLine{  \textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
-\DoxyCodeLine{  \textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
-\DoxyCodeLine{  \textcolor{comment}{\# and 150 randomly selected grid points inside the domain.}}
-\DoxyCodeLine{  \textcolor{comment}{\# So effectively we use 25\% less of the full mesh.}}
-\DoxyCodeLine{  random.seed(312367)}
-\DoxyCodeLine{  sampleMeshSize = 150}
-\DoxyCodeLine{  sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
-\DoxyCodeLine{  sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
+\DoxyCodeLine{\textcolor{comment}{\# a masked galerkin is supposed to make it easier to emulate the}}
+\DoxyCodeLine{\textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
+\DoxyCodeLine{\textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
+\DoxyCodeLine{\textcolor{comment}{\# identifying a subset of the grid points in the full mesh.}}
+\DoxyCodeLine{\textcolor{comment}{\# This is a simple way to mimic hyper-\/reduction}}
+\DoxyCodeLine{\textcolor{comment}{\# without changing the FOM problem. In fact, the fom still}}
+\DoxyCodeLine{\textcolor{comment}{\# computes the full operators but we have an additional step}}
+\DoxyCodeLine{\textcolor{comment}{\# to "{}mask"{} the operators to compute the sample mesh version.}}
+\DoxyCodeLine{\textcolor{comment}{\# In this test, the meshSize = 200. Our sample mesh includes}}
+\DoxyCodeLine{\textcolor{comment}{\# the two end points since those contain the boundary conditions,}}
+\DoxyCodeLine{\textcolor{comment}{\# and 150 randomly selected grid points inside the domain.}}
+\DoxyCodeLine{\textcolor{comment}{\# So effectively we use 25\% less of the full mesh.}}
+\DoxyCodeLine{random.seed(312367)}
+\DoxyCodeLine{sampleMeshSize = 150}
+\DoxyCodeLine{sampleMeshIndices = random.sample(range(1, 199), sampleMeshSize)}
+\DoxyCodeLine{sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# run the masked galerkin problem}}
-\DoxyCodeLine{  approximatedState = runMaskedGalerkin(fomObj, romTimeStepSize,}
-\DoxyCodeLine{                                        romNumberOfSteps, modes[:,:romSize],}
-\DoxyCodeLine{                                        sampleMeshIndices)}
+\DoxyCodeLine{\textcolor{comment}{\# run the masked galerkin problem}}
+\DoxyCodeLine{approximatedState = runMaskedGalerkin(fomObj, romTimeStepSize,}
+\DoxyCodeLine{                                      romNumberOfSteps, modes[:,:romSize],}
+\DoxyCodeLine{                                      sampleMeshIndices)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
-\DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
-\DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
-\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
+\DoxyCodeLine{\textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
+\DoxyCodeLine{fomNorm = linalg.norm(fomFinalState)}
+\DoxyCodeLine{err = linalg.norm(fomFinalState-\/approximatedState)}
+\DoxyCodeLine{print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
 \DoxyCodeLine{}
-\DoxyCodeLine{  logger.finalize()}
+\DoxyCodeLine{logger.finalize()}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md128}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo4_autotoc_md128}
+\hypertarget{md_pages_demos_demo4_autotoc_md130}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo4_autotoc_md130}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -100,7 +99,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md129}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo4_autotoc_md129}
+\hypertarget{md_pages_demos_demo4_autotoc_md131}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo4_autotoc_md131}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -109,10 +108,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md130}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo4_autotoc_md130}
+\hypertarget{md_pages_demos_demo4_autotoc_md132}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo4_autotoc_md132}
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{comment}{\# a masked galerkin is supposed to make it easier to emulate the}}
 \DoxyCodeLine{\textcolor{comment}{\# effect of hyper-\/reduction. To create a mask ROM problem,}}
 \DoxyCodeLine{\textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
 \DoxyCodeLine{\textcolor{comment}{\# identifying a subset of the grid points in the full mesh.}}
@@ -130,7 +128,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{sampleMeshIndices = np.append(sampleMeshIndices, [0, 199])}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md131}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo4_autotoc_md131}
+\hypertarget{md_pages_demos_demo4_autotoc_md133}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo4_autotoc_md133}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
@@ -145,7 +143,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{    result[:] = np.take(operand, self.rows\_)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md132}{}\doxysubsection{5. Construct and run the masked ROM}\label{md_pages_demos_demo4_autotoc_md132}
+\hypertarget{md_pages_demos_demo4_autotoc_md134}{}\doxysubsection{5. Construct and run the masked ROM}\label{md_pages_demos_demo4_autotoc_md134}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):}
@@ -187,10 +185,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  problem = rom.galerkin.MaskedExplicitProblem(scheme, fomObj, linearDecoder, \(\backslash\)}
 \DoxyCodeLine{                                               romState, fomReferenceState, \(\backslash\)}
 \DoxyCodeLine{                                               projector, masker)}
-\DoxyCodeLine{  stepper = problem.stepper()}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
-\DoxyCodeLine{  ode.advance\_n\_steps(stepper, romState, 0., dt, nsteps)}
+\DoxyCodeLine{  ode.advance\_n\_steps(problem, romState, 0., dt, nsteps)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
 \DoxyCodeLine{  \textcolor{comment}{\# NOTE: even though the Galerkin problem was run on the "{}masked mesh points"{},}}
@@ -200,7 +197,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon(romState)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo4_autotoc_md133}{}\doxysection{Results}\label{md_pages_demos_demo4_autotoc_md133}
+\hypertarget{md_pages_demos_demo4_autotoc_md135}{}\doxysection{Results}\label{md_pages_demos_demo4_autotoc_md135}
 If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few POD modes. 
 
 

@@ -3,7 +3,7 @@
 \begin{DoxyParagraph}{}
 This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-\/diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is \href{https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py}{\texttt{ here.}}
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo2_autotoc_md111}{}\doxysection{Overview}\label{md_pages_demos_demo2_autotoc_md111}
+\hypertarget{md_pages_demos_demo2_autotoc_md113}{}\doxysection{Overview}\label{md_pages_demos_demo2_autotoc_md113}
 We cover these three typical steps needed for a ROM\+:
 \begin{DoxyEnumerate}
 \item generate of snapshots using the full-\/order model (FOM)
@@ -11,44 +11,43 @@ We cover these three typical steps needed for a ROM\+:
 \item execute the ROM\+: here we leverage the LSPG ROM to demonstrate a {\itshape reproductive} test, i.\+e., we run the ROM using the same physical coefficients, b.\+c., etc. A predictive run is demonstrated in a different tutorial.
 \end{DoxyEnumerate}
 
-The governing equations for this problem are the same as those in \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo2_autotoc_md112}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md112}
+The governing equations for this problem are the same as those in \href{https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html}{\texttt{ here}},\hypertarget{md_pages_demos_demo2_autotoc_md114}{}\doxysection{Main function}\label{md_pages_demos_demo2_autotoc_md114}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{keywordflow}{if} \_\_name\_\_ == \textcolor{stringliteral}{"{}\_\_main\_\_"{}}:}
-\DoxyCodeLine{  logger.initialize(logger.logto.terminal)}
-\DoxyCodeLine{  logger.setVerbosity([logger.loglevel.info])}
+\DoxyCodeLine{logger.initialize(logger.logto.terminal)}
+\DoxyCodeLine{logger.setVerbosity([logger.loglevel.info])}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# create fom object}}
-\DoxyCodeLine{  fomObj = AdvDiff1d(nGrid=120, adv\_coef=2.0)}
+\DoxyCodeLine{\textcolor{comment}{\# create fom object}}
+\DoxyCodeLine{fomObj = AdvDiff1d(nGrid=120, adv\_coef=2.0)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# the final time to integrate to}}
-\DoxyCodeLine{  finalTime = .05}
+\DoxyCodeLine{\textcolor{comment}{\# the final time to integrate to}}
+\DoxyCodeLine{finalTime = .05}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 1. FOM -\/-\/-\/\#}}
-\DoxyCodeLine{  fomTimeStepSize  = 1e-\/5}
-\DoxyCodeLine{  fomNumberOfSteps = int(finalTime/fomTimeStepSize)}
-\DoxyCodeLine{  sampleEvery      = 200}
-\DoxyCodeLine{  [fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 1. FOM -\/-\/-\/\#}}
+\DoxyCodeLine{fomTimeStepSize  = 1e-\/5}
+\DoxyCodeLine{fomNumberOfSteps = int(finalTime/fomTimeStepSize)}
+\DoxyCodeLine{sampleEvery      = 200}
+\DoxyCodeLine{[fomFinalState, snapshots] = doFom(fomObj, fomTimeStepSize, fomNumberOfSteps, sampleEvery)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 2. POD -\/-\/-\/\#}}
-\DoxyCodeLine{  modes = computePodModes(snapshots)}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 2. POD -\/-\/-\/\#}}
+\DoxyCodeLine{modes = computePodModes(snapshots)}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\#-\/-\/-\/ 3. LSPG ROM -\/-\/-\/\#}}
-\DoxyCodeLine{  romSize = 4}
-\DoxyCodeLine{  romTimeStepSize  = 3e-\/4}
-\DoxyCodeLine{  romNumberOfSteps = int(finalTime/romTimeStepSize)}
-\DoxyCodeLine{  \textcolor{comment}{\# we pass only romSize modes}}
-\DoxyCodeLine{  approximatedState = runLspg(fomObj, romTimeStepSize, romNumberOfSteps, modes[:,:romSize])}
+\DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/ 3. LSPG ROM -\/-\/-\/\#}}
+\DoxyCodeLine{romSize = 4}
+\DoxyCodeLine{romTimeStepSize  = 3e-\/4}
+\DoxyCodeLine{romNumberOfSteps = int(finalTime/romTimeStepSize)}
+\DoxyCodeLine{\textcolor{comment}{\# we pass only romSize modes}}
+\DoxyCodeLine{approximatedState = runLspg(fomObj, romTimeStepSize, romNumberOfSteps, modes[:,:romSize])}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
-\DoxyCodeLine{  fomNorm = linalg.norm(fomFinalState)}
-\DoxyCodeLine{  err = linalg.norm(fomFinalState-\/approximatedState)}
-\DoxyCodeLine{  print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
+\DoxyCodeLine{\textcolor{comment}{\# compute l2-\/error between fom and approximate state}}
+\DoxyCodeLine{fomNorm = linalg.norm(fomFinalState)}
+\DoxyCodeLine{err = linalg.norm(fomFinalState-\/approximatedState)}
+\DoxyCodeLine{print(\textcolor{stringliteral}{"{}Final state relative l2 error: \{\}"{}}.format(err/fomNorm))}
 \DoxyCodeLine{}
-\DoxyCodeLine{  logger.finalize()}
+\DoxyCodeLine{logger.finalize()}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md113}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo2_autotoc_md113}
+\hypertarget{md_pages_demos_demo2_autotoc_md115}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo2_autotoc_md115}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -66,7 +65,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md114}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo2_autotoc_md114}
+\hypertarget{md_pages_demos_demo2_autotoc_md116}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo2_autotoc_md116}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -75,7 +74,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md115}{}\doxysubsection{3. Construct and run ROM}\label{md_pages_demos_demo2_autotoc_md115}
+\hypertarget{md_pages_demos_demo2_autotoc_md117}{}\doxysubsection{3. Construct and run ROM}\label{md_pages_demos_demo2_autotoc_md117}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runLspg(fomObj, dt, nsteps, modes):}
@@ -108,10 +107,9 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{comment}{\# create LSPG problem}}
 \DoxyCodeLine{  scheme = ode.stepscheme.BDF1}
 \DoxyCodeLine{  problem = rom.lspg.unsteady.DefaultProblem(scheme, fomObj, linearDecoder, romState, fomReferenceState)}
-\DoxyCodeLine{  stepper = problem.stepper()}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# create the Gauss-\/Newton solver}}
-\DoxyCodeLine{  nonLinSolver = solvers.create\_gauss\_newton(stepper, romState, MyLinSolver())}
+\DoxyCodeLine{  nonLinSolver = solvers.create\_gauss\_newton(problem, romState, MyLinSolver())}
 \DoxyCodeLine{  \textcolor{comment}{\# set tolerance and convergence criteria}}
 \DoxyCodeLine{  nlsTol, nlsMaxIt = 1e-\/6, 5}
 \DoxyCodeLine{  nonLinSolver.setMaxIterations(nlsMaxIt)}
@@ -120,13 +118,15 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{comment}{\# create object to monitor the romState at every iteration}}
 \DoxyCodeLine{  myObs = RomStateObserver()}
 \DoxyCodeLine{  \textcolor{comment}{\# solve problem}}
-\DoxyCodeLine{  ode.advance\_n\_steps\_and\_observe(stepper, romState, 0., dt, nsteps, myObs, nonLinSolver)}
+\DoxyCodeLine{  ode.advance\_n\_steps\_and\_observe(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)}
 \DoxyCodeLine{}
 \DoxyCodeLine{  \textcolor{comment}{\# after we are done, use the reconstructor object to reconstruct the fom state}}
 \DoxyCodeLine{  \textcolor{comment}{\# get the reconstructor object: this allows to map romState to fomState}}
 \DoxyCodeLine{  fomRecon = problem.fomStateReconstructor()}
 \DoxyCodeLine{  \textcolor{keywordflow}{return} fomRecon(romState)}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo2_autotoc_md116}{}\doxysection{Results}\label{md_pages_demos_demo2_autotoc_md116}
+\hypertarget{md_pages_demos_demo2_autotoc_md118}{}\doxysection{Results}\label{md_pages_demos_demo2_autotoc_md118}
 If everything works fine, the following plot shows the result.  

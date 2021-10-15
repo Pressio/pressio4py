@@ -66,7 +66,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py
-114:158
+113:158
 ```
 
 ## Results

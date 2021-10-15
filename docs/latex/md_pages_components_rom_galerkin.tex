@@ -20,29 +20,51 @@ We currently support three variants\+:
 \item Masked\+: \href{md_pages_components_rom_galerkin_masked.html}{\texttt{ link}}
 \end{DoxyItemize}
 
-All variants return a problem object that meets the following interface\+:
+The {\ttfamily problem} object behaves like a stepper. Therefore, you can use the problem like you would with any other stepper object (more on this below).\hypertarget{md_pages_components_rom_galerkin_autotoc_md63}{}\doxysubsection{Explicit Problem}\label{md_pages_components_rom_galerkin_autotoc_md63}
+The problem meets the following API\+:
 
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }GalerkinProblem}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{def }stepper()}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(state, time, time\_step\_size, step\_count);}
 \DoxyCodeLine{}
-\DoxyCodeLine{  def fomStateReconstructor()}
+\DoxyCodeLine{  def fomStateReconstructor();}
 \DoxyCodeLine{\};}
 
 \end{DoxyCode}
-
-
-The stepper method returns a reference to an \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit stepper}} or \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper}}, depending on what you pass when you create the Galerkin problem. The {\ttfamily stepper} method is, practically, what you would use to retrieve the underlying stepper and use it to solve the problem. Once you have the stepper, you can then use it as discussed on the \href{md_pages_components_ode_steppers_explicit.html}{\texttt{ explicit stepper page}} or \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper page}}.
-
-What does a stepper have to do with a Galerkin ROM? The answer is that practically speaking, at the lowest-\/level, a Galerkin problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a Galerkin problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.\hypertarget{md_pages_components_rom_galerkin_autotoc_md63}{}\doxysection{2. Reference the stepper and solve in time}\label{md_pages_components_rom_galerkin_autotoc_md63}
-Extract the underlying stepper object and solve in time\+:
+\hypertarget{md_pages_components_rom_galerkin_autotoc_md64}{}\doxysubsection{Implicit Problem}\label{md_pages_components_rom_galerkin_autotoc_md64}
+The problem meets the following API\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{stepper = problme.stepper()}
-\DoxyCodeLine{pressio4py.ode.advance\_n\_steps\_and\_observe(stepper, ...)}
+\DoxyCodeLine{\textcolor{keyword}{class }GalerkinProblem}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(state, time, time\_step\_size, step\_count, solver);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def createResidual()}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# a residual instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian()}
+\DoxyCodeLine{    return \textcolor{comment}{\# a Jacobian instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def residual(state, R)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the residual for the given state}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(state, J)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the Jacobian for the given state}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def fomStateReconstructor();}
+\DoxyCodeLine{\};}
+
+\end{DoxyCode}
+\hypertarget{md_pages_components_rom_galerkin_autotoc_md65}{}\doxysection{2. Solve in time}\label{md_pages_components_rom_galerkin_autotoc_md65}
+What does a stepper have to do with a Galerkin ROM problme? The answer is that practically speaking, at the lowest-\/level, a Galerkin problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a Galerkin problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{problem = ...}
+\DoxyCodeLine{pressio4py.ode.advance\_n\_steps\_and\_observe(problem, ...)}
 
 \end{DoxyCode}
  

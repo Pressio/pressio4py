@@ -146,15 +146,14 @@ def test():
   masker = MyMasker(sampleMeshIndices)
 
   scheme = ode.stepscheme.BDF1
-  galerkinProblem = rom.galerkin.MaskedImplicitProblem(scheme, appObj, decoder, \
-    yRom, yRef, projector, masker)
-  stepper = galerkinProblem.stepper()
+  problem = rom.galerkin.MaskedImplicitProblem(scheme, appObj, decoder, \
+                                               yRom, yRef, projector, masker)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_newton_raphson(stepper, yRom, lsO)
+  nlsO = solvers.create_newton_raphson(problem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(1)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
-  ode.advance_n_steps(stepper, yRom, 0., dt, Nsteps, nlsO)
+  ode.advance_n_steps(problem, yRom, 0., dt, Nsteps, nlsO)

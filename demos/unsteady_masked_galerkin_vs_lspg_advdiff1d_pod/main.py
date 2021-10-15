@@ -93,15 +93,14 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   problem = rom.galerkin.MaskedImplicitProblem(scheme, fomObj, linearDecoder, \
                                                romState, fomReferenceState, \
                                                projector, masker)
-  stepper = problem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_newton_raphson(stepper, romState, lsO)
+  nlsO = solvers.create_newton_raphson(problem, romState, lsO)
   nlsO.setMaxIterations(15)
 
   # solve the problem
-  ode.advance_n_steps(stepper, romState, 0., dt, nsteps, nlsO)
+  ode.advance_n_steps(problem, romState, 0., dt, nsteps, nlsO)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",
@@ -140,15 +139,14 @@ def runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):
   problem = rom.lspg.unsteady.MaskedProblem(scheme, fomObj, linearDecoder,\
                                             romState, fomReferenceState,\
                                             masker)
-  stepper = problem.stepper()
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_gauss_newton(stepper, romState, lsO)
+  nlsO = solvers.create_gauss_newton(problem, romState, lsO)
   nlsO.setMaxIterations(10)
 
   # solve the problem
-  ode.advance_n_steps(stepper, romState, 0., dt, nsteps, nlsO)
+  ode.advance_n_steps(problem, romState, 0., dt, nsteps, nlsO)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",

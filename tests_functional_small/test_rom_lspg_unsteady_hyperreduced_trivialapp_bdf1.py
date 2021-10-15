@@ -185,23 +185,22 @@ def test():
 
   indexing = rom.lspg.unsteady.StencilToSampleIndexing([1,4,5,7,8])
   scheme = ode.stepscheme.BDF1
-  lspgProblem = rom.lspg.unsteady.HypredProblem(scheme, appObj, decoder, yRom, yRef, indexing)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.HypredProblem(scheme, appObj, decoder, yRom, yRef, indexing)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
+  nlsO = solvers.create_gauss_newton(problem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, 0., 0.2, 1, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, 0., 0.2, 1, myObs, nlsO)
   print(yRom)
 
   # yRom should be [1 1 1]
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
 

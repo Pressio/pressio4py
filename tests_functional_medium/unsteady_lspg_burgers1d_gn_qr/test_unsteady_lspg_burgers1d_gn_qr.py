@@ -102,21 +102,20 @@ def test_euler():
   yRom = np.zeros(romSize)
   # lspg problem
   scheme = ode.stepscheme.BDF1
-  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.create_gauss_newton_qr(stepper, yRom, qrS)
+  nlsO = solvers.create_gauss_newton_qr(problem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, t0,dt, Nsteps, myObs, nlsO)
 
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
   print(yFomFinal)
@@ -151,21 +150,20 @@ def test_bdf2():
   yRom = np.zeros(romSize)
   # lspg problem
   scheme = ode.stepscheme.BDF2
-  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
 
   # qr and non linear solver
   qrS = MyQRSolver(meshSize, romSize)
-  nlsO = solvers.create_gauss_newton_qr(stepper, yRom, qrS)
+  nlsO = solvers.create_gauss_newton_qr(problem, yRom, qrS)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, t0,dt, Nsteps, myObs, nlsO)
 
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
   print(yFomFinal)

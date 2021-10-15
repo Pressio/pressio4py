@@ -2,7 +2,7 @@
 
 Defined in module\+: {\ttfamily pressio4py.\+rom.\+galerkin}
 
-Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_default_autotoc_md65}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_default_autotoc_md65}
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_default_autotoc_md67}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_default_autotoc_md67}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = galerkin.DefaultExplicitProblem(scheme, fom\_adapter, decoder, \(\backslash\)   (1)}
@@ -45,8 +45,8 @@ Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import gal
 \end{DoxyItemize}
 
 ~\newline
-\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md66}{}\doxysection{Example usage}\label{md_pages_components_rom_galerkin_default_autotoc_md66}
-\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md67}{}\doxysubsection{Explicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md67}
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md68}{}\doxysection{Example usage}\label{md_pages_components_rom_galerkin_default_autotoc_md68}
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md69}{}\doxysubsection{Explicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md69}
 An example usage for explicit stepper is as follows\+:
 
 
@@ -55,21 +55,20 @@ An example usage for explicit stepper is as follows\+:
 \DoxyCodeLine{}
 \DoxyCodeLine{scheme = ode.stepscheme.ForwardEuler}
 \DoxyCodeLine{problem = rom.galerkin.DefaultExplicitProblem(scheme, adapter, decoder, rom\_state, fom\_ref\_state)}
-\DoxyCodeLine{stepper = problem.stepper()}
 \DoxyCodeLine{dt = 1.}
 \DoxyCodeLine{num\_steps = 2}
 \DoxyCodeLine{observer = MyObserver()}
-\DoxyCodeLine{ode.advance\_n\_steps\_and\_observe(stepper, rom\_state, 0., dt, num\_steps, observer)}
+\DoxyCodeLine{ode.advance\_n\_steps\_and\_observe(problem, rom\_state, 0., dt, num\_steps, observer)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md68}{}\doxysubsection{Implicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md68}
+\hypertarget{md_pages_components_rom_galerkin_default_autotoc_md70}{}\doxysubsection{Implicit Case}\label{md_pages_components_rom_galerkin_default_autotoc_md70}
 An example usage for implicit stepper is as follows\+:
 
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{scheme = ode.stepscheme.BDF1}
 \DoxyCodeLine{problem = rom.galerkin.DefaultImplicitProblem(scheme, adapter, decoder, rom\_state, fom\_ref\_state)}
-\DoxyCodeLine{stepper = problem.stepper()}
+\DoxyCodeLine{// todo add}
 
 \end{DoxyCode}
  

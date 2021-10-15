@@ -1,6 +1,6 @@
 todo\+: write more
 
-The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps\+:\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md99}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_unsteady_autotoc_md99}
+The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps\+:\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md101}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_unsteady_autotoc_md101}
 You create an instance of a \char`\"{}\+LSPG problem\char`\"{}, e.\+g.\+: ~\newline
 
 
@@ -26,23 +26,31 @@ All variants return a problem object that meets the following interface\+:
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }UnsteadyLSPGProblem}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{def }stepper()}
+\DoxyCodeLine{  \textcolor{keyword}{def }\_\_call\_\_(state, time, time\_step\_size, step\_count, solver);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def createResidual()}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} \textcolor{comment}{\# a residual instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }createJacobian()}
+\DoxyCodeLine{    return \textcolor{comment}{\# a Jacobian instance}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  def residual(state, R)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the residual for the given state}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keyword}{def }jacobian(state, J)}
+\DoxyCodeLine{    \textcolor{comment}{\# evaluates the Jacobian for the given state}}
 \DoxyCodeLine{}
 \DoxyCodeLine{  def fomStateReconstructor()}
 \DoxyCodeLine{\};}
 
 \end{DoxyCode}
-
-
-The stepper method returns a reference to an \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper}} object that the problem creates and owns. The {\ttfamily stepper} method is what you use to retrieve the underlying stepper and solve the problem in time. Once you have the stepper, you can then use it as discussed in \href{md_pages_components_ode_steppers_implicit.html}{\texttt{ implicit stepper page}}.
-
-What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-\/level, an unsteady LSPG problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem contains a stepper object inside\+: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md100}{}\doxysection{2. Reference the stepper and solve in time}\label{md_pages_components_rom_lspg_unsteady_autotoc_md100}
-Extract the underlying stepper object and solve in time\+:
+\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md102}{}\doxysection{2. Solve in time}\label{md_pages_components_rom_lspg_unsteady_autotoc_md102}
+What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-\/level, an unsteady LSPG problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{stepper = problme.stepper()}
-\DoxyCodeLine{pressio4py.ode.advance\_n\_steps\_and\_observe(stepper, ...)}
+\DoxyCodeLine{stepper = ...}
+\DoxyCodeLine{pressio4py.ode.advance\_n\_steps\_and\_observe(problem, ...)}
 
 \end{DoxyCode}
 

@@ -72,9 +72,9 @@ pytest -s
 @m_class{m-note m-info}
 
 @parblock
-If you get an import error, make sure the version of `pytest` you are
-using is compatible with the `pip` command you used to install.
-For compatibility, the Python commands must be from the **same** distribution.
+To avoid potential issues with mixed versions, make sure the version of `pytest`
+you use is compatible with the `pip` command you use to install.
+The Python commands must be from the **same** distribution.
 @endparblock
 
 <!-- ## Explore the tutorials and demos -->
@@ -88,8 +88,6 @@ For compatibility, the Python commands must be from the **same** distribution.
 
 <!-- read the [building/installation process](./md_pages_getstarted_build_and_install.html)>
 <!-- Untill we start filling the tutorials and examples, you can peek at the [test subdirectory](https://github.com/Pressio/pressio/tree/master/tests/rom/burgers1d) of the C++ library. -->
-
-<br/>
 
 ## License and Citation
 The full license is available [here](https://pressio.github.io/various/license/).

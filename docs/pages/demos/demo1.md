@@ -60,7 +60,7 @@ The main function of the demo is the following:
 ```py
 @codesnippet
 ../../../demos/unsteady_default_galerkin_advdiff1d_pod/main.py
-24:56
+23:56
 ```
 
 ## Results

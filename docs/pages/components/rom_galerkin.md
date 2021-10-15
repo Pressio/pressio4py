@@ -21,28 +21,51 @@ We currently support three variants:
 - Masked: [link](md_pages_components_rom_galerkin_masked.html)
 
 
-All variants return a problem object that meets the following interface:
+The `problem` object behaves like a stepper.
+Therefore, you can use the problem like
+you would with any other stepper object (more on this below).
+
+### Explicit Problem
+
+The problem meets the following API:
 
 ```py
 class GalerkinProblem
 
-  def stepper()
+  def __call__(state, time, time_step_size, step_count);
 
-  def fomStateReconstructor()
+  def fomStateReconstructor();
 };
 ```
 
-The stepper method returns a reference to an
-[explicit stepper](md_pages_components_ode_steppers_explicit.html) or
-[implicit stepper](md_pages_components_ode_steppers_implicit.html),
-depending on what you pass when you create the Galerkin problem.
-The `stepper` method is, practically, what you would use
-to retrieve the underlying stepper and use it to solve the problem.
-Once you have the stepper, you can then use it as discussed
-on the [explicit stepper page](md_pages_components_ode_steppers_explicit.html)
-or [implicit stepper page](md_pages_components_ode_steppers_implicit.html).
+### Implicit Problem
 
-What does a stepper have to do with a Galerkin ROM?
+The problem meets the following API:
+
+```py
+class GalerkinProblem
+
+  def __call__(state, time, time_step_size, step_count, solver);
+
+  def createResidual()
+	return # a residual instance
+
+  def createJacobian()
+	return # a Jacobian instance
+
+  def residual(state, R)
+	# evaluates the residual for the given state
+
+  def jacobian(state, J)
+	# evaluates the Jacobian for the given state
+
+  def fomStateReconstructor();
+};
+```
+
+## 2. Solve in time
+
+What does a stepper have to do with a Galerkin ROM problme?
 The answer is that practically speaking, at the lowest-level,
 a Galerkin problem can be reduced to simply a "custom" stepper to advance in time.
 This is how pressio4py implements this and the reason why a Galerkin
@@ -52,12 +75,7 @@ object that you can use. You don't need to know how this is done,
 or rely on the details, because these are problem- and implementation-dependent,
 and we reserve the right to change this in the future.
 
-
-## 2. Reference the stepper and solve in time
-
-Extract the underlying stepper object and solve in time:
-
 ```py
-stepper = problme.stepper()
-pressio4py.ode.advance_n_steps_and_observe(stepper, ...)
+problem = ...
+pressio4py.ode.advance_n_steps_and_observe(problem, ...)
 ```

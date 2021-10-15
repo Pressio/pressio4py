@@ -158,11 +158,11 @@ struct GalerkinBinder
   using implicit_problem_types = std::tuple<
     implicit_default_problem_t, implicit_masked_problem_t, implicit_hypred_problem_t>;
 
-  // collect all stepper types in tuples
-  using explicit_stepper_types = std::tuple<
-    explicit_default_stepper_t, explicit_masked_stepper_t, explicit_hypred_stepper_t>;
-  using implicit_stepper_types = std::tuple<
-    implicit_default_stepper_t, implicit_masked_stepper_t, implicit_hypred_stepper_t>;
+  // // collect all stepper types in tuples
+  // using explicit_stepper_types = std::tuple<
+  //   explicit_default_stepper_t, explicit_masked_stepper_t, explicit_hypred_stepper_t>;
+  // using implicit_stepper_types = std::tuple<
+  //   implicit_default_stepper_t, implicit_masked_stepper_t, implicit_hypred_stepper_t>;
 
   template<typename T>
   static void bindConstructorDefault(pybind11::class_<T> & problem)
@@ -204,55 +204,28 @@ struct GalerkinBinder
   }
 
   template<class T>
-  static void bindMethods(pybind11::class_<T> & problem)
+  static void bindCommonMethods(pybind11::class_<T> & object)
   {
-    problem.def("stepper",
-		&T::stepper,
-		pybind11::return_value_policy::reference);
+    // object.def("stepper",
+    // 		&T::stepper,
+    // 		pybind11::return_value_policy::reference);
 
-    problem.def("fomStateReconstructor",
+    object.def("fomStateReconstructor",
 		&T::fomStateReconstructor,
 		pybind11::return_value_policy::reference);
   }
 
-  static void bindProblems(pybind11::module & m)
-  {
-    pybind11::class_<explicit_default_problem_t> DefProbClass(m, "DefaultExplicitProblem");
-    bindConstructorDefault(DefProbClass);
-    bindMethods(DefProbClass);
-
-    pybind11::class_<explicit_masked_problem_t> MaskedProbClass(m, "MaskedExplicitProblem");
-    bindConstructorMasked(MaskedProbClass);
-    bindMethods(MaskedProbClass);
-
-    pybind11::class_<explicit_hypred_problem_t> HypredProbClass(m, "HyperreducedExplicitProblem");
-    bindConstructorHypRed(HypredProbClass);
-    bindMethods(HypredProbClass);
-
-    pybind11::class_<implicit_default_problem_t> ImpDefProbClass(m, "DefaultImplicitProblem");
-    bindConstructorDefault(ImpDefProbClass);
-    bindMethods(ImpDefProbClass);
-
-    pybind11::class_<implicit_masked_problem_t> ImpMaskedProbClass(m, "MaskedImplicitProblem");
-    bindConstructorMasked(ImpMaskedProbClass);
-    bindMethods(ImpMaskedProbClass);
-
-    pybind11::class_<implicit_hypred_problem_t> ImpHypredProbClass(m, "HyperreducedImplicitProblem");
-    bindConstructorHypRed(ImpHypredProbClass);
-    bindMethods(ImpHypredProbClass);
-  }
-
   template<class T>
-  static void bindExplicitStepperCallOperator(pybind11::class_<T> & stepper)
+  static void bindExplicitStepperCallOperator(pybind11::class_<T> & object)
   {
-    stepper.def("__call__",
-		[](T & stepper,
+    object.def("__call__",
+		[](T & object,
 		   ::pressio4py::py_f_arr & state,
 		   ::pressio4py::scalar_t time,
 		   ::pressio4py::scalar_t dt,
 		   int32_t step)
 		{
-		  stepper(state, time, dt, step);
+		  object(state, time, dt, step);
 		}, pybind11::is_operator());
   }
 
@@ -260,10 +233,10 @@ struct GalerkinBinder
     class SolverType, class T,
     pressio::mpl::enable_if_t<!::pressio4py::is_solver_wrapper<SolverType>::value, int> = 0
     >
-  static void bindImplicitStepperCallOperator(pybind11::class_<T> & stepper)
+  static void bindImplicitStepperCallOperator(pybind11::class_<T> & object)
   {
-    stepper.def("__call__",
-		[](T & stepper,
+    object.def("__call__",
+		[](T & object,
 		   ::pressio4py::py_f_arr & state,
 		   ::pressio4py::scalar_t time,
 		   ::pressio4py::scalar_t dt,
@@ -271,7 +244,7 @@ struct GalerkinBinder
 		   SolverType & solver
 		   )
 		{
-		  stepper(state, time, dt, step, solver);
+		  object(state, time, dt, step, solver);
 		}, pybind11::is_operator());
   }
 
@@ -279,10 +252,10 @@ struct GalerkinBinder
     class SolverType, class T,
     pressio::mpl::enable_if_t<::pressio4py::is_solver_wrapper<SolverType>::value, int> = 0
     >
-  static void bindImplicitStepperCallOperator(pybind11::class_<T> & stepper)
+  static void bindImplicitStepperCallOperator(pybind11::class_<T> & object)
   {
-    stepper.def("__call__",
-		[](T & stepper,
+    object.def("__call__",
+		[](T & object,
 		   ::pressio4py::py_f_arr & state,
 		   ::pressio4py::scalar_t time,
 		   ::pressio4py::scalar_t dt,
@@ -291,56 +264,87 @@ struct GalerkinBinder
 		   )
 		{
 		  UserDefinedNonLinSolverWrapper nlsw(pysolver);
-		  stepper(state, time, dt, step, nlsw);
+		  object(state, time, dt, step, nlsw);
 		}, pybind11::is_operator());
   }
 
-  template<class Head, class ...Tail, class T>
-  static void bindImplicitStepperCallOperatorVar(pybind11::class_<T> & stepper)
-  {
-    bindImplicitStepperCallOperator<Head, T>(stepper);
-    bindImplicitStepperCallOperator<Tail..., T>(stepper);
+  template<class S1, class S2, class T>
+  static void bindImplicitStepperCallOperatorVar(pybind11::class_<T> & object){
+    bindImplicitStepperCallOperator<S1, T>(object);
+    bindImplicitStepperCallOperator<S2, T>(object);
   }
 
   template<class T>
-  static void bindImplicitStepperOperatorMethods(pybind11::class_<T> & stepper)
+  static void bindImplicitStepperOperatorMethods(pybind11::class_<T> & object)
   {
-    stepper.def("createResidual",
+    object.def("createResidual",
 		&T::createResidual,
 		pybind11::return_value_policy::take_ownership);
-    stepper.def("createJacobian",
+    object.def("createJacobian",
 		&T::createJacobian,
 		pybind11::return_value_policy::take_ownership);
-    stepper.def("residual", &T::residual);
-    stepper.def("jacobian", &T::jacobian);
+    object.def("residual", &T::residual);
+    object.def("jacobian", &T::jacobian);
   }
 
-  static void bindExplicitSteppers(pybind11::module & m)
+  static void bindExplicitProblems(pybind11::module & m)
   {
-    pybind11::class_<explicit_default_stepper_t> ExpDefStepperClass(m,    "DefaultExplicitStepper");
-    bindExplicitStepperCallOperator(ExpDefStepperClass);
+    pybind11::class_<explicit_default_problem_t> DefProbClass(m, "DefaultExplicitProblem");
+    bindConstructorDefault(DefProbClass);
+    bindCommonMethods(DefProbClass);
+    bindExplicitStepperCallOperator(DefProbClass);
 
-    pybind11::class_<explicit_masked_stepper_t>  ExpMaskedStepperClass(m, "MaskedExplicitStepper");
-    bindExplicitStepperCallOperator(ExpMaskedStepperClass);
+    pybind11::class_<explicit_masked_problem_t> MaskedProbClass(m, "MaskedExplicitProblem");
+    bindConstructorMasked(MaskedProbClass);
+    bindCommonMethods(MaskedProbClass);
+    bindExplicitStepperCallOperator(MaskedProbClass);
 
-    pybind11::class_<explicit_hypred_stepper_t>  ExpHypredStepperClass(m, "HyperreducedExplicitStepper");
-    bindExplicitStepperCallOperator(ExpHypredStepperClass);
+    pybind11::class_<explicit_hypred_problem_t> HypredProbClass(m, "HyperreducedExplicitProblem");
+    bindConstructorHypRed(HypredProbClass);
+    bindCommonMethods(HypredProbClass);
+    bindExplicitStepperCallOperator(HypredProbClass);
   }
 
   template<class ...Solvers>
-  static void bindImplicitSteppers(pybind11::module & m)
+  static void bindImplicitProblems(pybind11::module & m)
   {
+    // note that below we need to bind both problem and underlying steppers
+    // becauase of how the operator() is implemented: remember that it calls *this
+    // otherwise we get a python error that a stepper cannnot be converted to python object
+
+    pybind11::class_<implicit_default_problem_t> DefProbClass(m, "DefaultImplicitProblem");
+    bindConstructorDefault(DefProbClass);
+    bindCommonMethods(DefProbClass);
+    bindImplicitStepperOperatorMethods(DefProbClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(DefProbClass);
     pybind11::class_<implicit_default_stepper_t> ImpDefStepperClass(m,    "DefaultImplicitStepper");
-    bindImplicitStepperCallOperatorVar<Solvers...>(ImpDefStepperClass);
     bindImplicitStepperOperatorMethods(ImpDefStepperClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(ImpDefStepperClass);
 
+    pybind11::class_<implicit_masked_problem_t> MaskedProbClass(m, "MaskedImplicitProblem");
+    bindConstructorMasked(MaskedProbClass);
+    bindCommonMethods(MaskedProbClass);
+    bindImplicitStepperOperatorMethods(MaskedProbClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(MaskedProbClass);
     pybind11::class_<implicit_masked_stepper_t>  ImpMaskedStepperClass(m, "MaskedImplicitStepper");
-    bindImplicitStepperCallOperatorVar<Solvers...>(ImpMaskedStepperClass);
     bindImplicitStepperOperatorMethods(ImpMaskedStepperClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(ImpMaskedStepperClass);
 
+    pybind11::class_<implicit_hypred_problem_t> HypredProbClass(m, "HyperreducedImplicitProblem");
+    bindConstructorHypRed(HypredProbClass);
+    bindCommonMethods(HypredProbClass);
+    bindImplicitStepperOperatorMethods(HypredProbClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(HypredProbClass);
     pybind11::class_<implicit_hypred_stepper_t>  ImpHypredStepperClass(m, "HyperreducedImplicitStepper");
-    bindImplicitStepperCallOperatorVar<Solvers...>(ImpHypredStepperClass);
     bindImplicitStepperOperatorMethods(ImpHypredStepperClass);
+    bindImplicitStepperCallOperatorVar<Solvers...>(ImpHypredStepperClass);
+  }
+
+  static void bindSteppers(pybind11::module & m)
+  {
+    pybind11::class_<explicit_default_stepper_t> ExpDefStepperClass(m,    "DefaultExplicitStepper");
+    pybind11::class_<explicit_masked_stepper_t>  ExpMaskedStepperClass(m, "MaskedExplicitStepper");
+    pybind11::class_<explicit_hypred_stepper_t>  ExpHypredStepperClass(m, "HyperreducedExplicitStepper");
   }
 };
 

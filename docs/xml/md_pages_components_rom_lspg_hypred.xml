@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.lspg.unsteady</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import lspg</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_lspg_hypred_1autotoc_md86">
+<sect1 id="md_pages_components_rom_lspg_hypred_1autotoc_md88">
 <title>API, Parameters and Requirements</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>lspg.unsteady.HypredProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>\</highlight></codeline>
@@ -70,7 +70,7 @@
 </listitem></itemizedlist>
 </para>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_hypred_1autotoc_md87">
+<sect1 id="md_pages_components_rom_lspg_hypred_1autotoc_md89">
 <title>Stencil to sample indexing</title>
 <para>When working with a hyper-reduced problem, pressio4py has to manipulate objects that have different sizes/distributions. For such problem, in fact, some operators are naturally defined on the what we refer to as &quot;sample mesh&quot; while some are defined on what we call the &quot;stencil mesh&quot;.</para>
 <para>As explained <ulink url="https://pressio.github.io/algos/hyper/">here</ulink>, recall that:</para>
@@ -83,7 +83,7 @@
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
 <para><parblock><para>The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh. </para>
 </parblock></para>
-<sect2 id="md_pages_components_rom_lspg_hypred_1autotoc_md88">
+<sect2 id="md_pages_components_rom_lspg_hypred_1autotoc_md90">
 <title>Explain it to me better!</title>
 <para>Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, <emphasis>it does not matter what problem we are solving</emphasis>, only what we just said. Now, suppose that you want to try hyper-reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read <ulink url="https://pressio.github.io/algos/hyper/">this page</ulink> for some information about how to select sample mesh cells), and let&apos;s say it looks like this: <image type="html" name="lspg_sample_mesh1.png" width="400px"></image>
 </para>

@@ -55,11 +55,10 @@ An example usage for explicit stepper is as follows:
 
 scheme = ode.stepscheme.ForwardEuler
 problem = rom.galerkin.DefaultExplicitProblem(scheme, adapter, decoder, rom_state, fom_ref_state)
-stepper = problem.stepper()
 dt = 1.
 num_steps = 2
 observer = MyObserver()
-ode.advance_n_steps_and_observe(stepper, rom_state, 0., dt, num_steps, observer)
+ode.advance_n_steps_and_observe(problem, rom_state, 0., dt, num_steps, observer)
 ```
 
 ### Implicit Case
@@ -68,5 +67,5 @@ An example usage for implicit stepper is as follows:
 ```py
 scheme = ode.stepscheme.BDF1
 problem = rom.galerkin.DefaultImplicitProblem(scheme, adapter, decoder, rom_state, fom_ref_state)
-stepper = problem.stepper()
+// todo add
 ```
