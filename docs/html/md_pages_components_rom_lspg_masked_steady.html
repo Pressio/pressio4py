@@ -55,7 +55,6 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
-            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -67,6 +66,7 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="5">
@@ -86,11 +86,11 @@
         <h1>
           rom: LSPG: steady masked problem
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.lspg.steady</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import lspg</code></p></div><section id="autotoc_md92"><h2><a href="#autotoc_md92">API</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">lspg</span><span class="o">.</span><span class="n">steady</span><span class="o">.</span><span class="n">MaskedProblem</span><span class="p">(</span><span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.lspg.steady</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import lspg</code></p></div><section id="autotoc_md94"><h2><a href="#autotoc_md94">API</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">lspg</span><span class="o">.</span><span class="n">steady</span><span class="o">.</span><span class="n">MaskedProblem</span><span class="p">(</span><span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \
                                     <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span>
 
 <span class="n">problem</span> <span class="o">=</span> <span class="n">lspg</span><span class="o">.</span><span class="n">steady</span><span class="o">.</span><span class="n">PrecMaskedProblem</span><span class="p">(</span><span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">rom_state</span><span class="p">,</span>
-                                        <span class="n">fom_ref_state</span><span class="p">,</span> <span class="n">masker</span><span class="p">,</span> <span class="n">preconditioner</span><span class="p">)</span></pre><section id="autotoc_md93"><h3><a href="#autotoc_md93">Parameters and Requirements</a></h3><ul><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy the <a href="./md_pages_components_rom_fom_apis.html">steady API</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>masker</code>:<ul><li>functor responsible of &quot;masking&quot; the FOM operators</li><li><p>must be a functor with a specific API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Masker</span><span class="p">:</span>
+                                        <span class="n">fom_ref_state</span><span class="p">,</span> <span class="n">masker</span><span class="p">,</span> <span class="n">preconditioner</span><span class="p">)</span></pre><section id="autotoc_md95"><h3><a href="#autotoc_md95">Parameters and Requirements</a></h3><ul><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy the <a href="./md_pages_components_rom_fom_apis.html">steady API</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>masker</code>:<ul><li>functor responsible of &quot;masking&quot; the FOM operators</li><li><p>must be a functor with a specific API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Masker</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="n">sample_indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span>
@@ -109,7 +109,7 @@
     <span class="c1"># Ensure that you overwrite the data in the operand.</span>
     <span class="c1"># As an example, a trivial preconditioner that does nothing:</span>
     <span class="c1"># operand[:] *= 1.</span></pre></li></ul></li></ul><p><br /></p><hr/>
- <p><br /></p></section></section><section id="autotoc_md94"><h2><a href="#autotoc_md94">Example code</a></h2><p><span class="m-text m-danger">todo</span> add</p></section>
+ <p><br /></p></section></section><section id="autotoc_md96"><h2><a href="#autotoc_md96">Example code</a></h2><p><span class="m-text m-danger">todo</span> add</p></section>
       </div>
     </div>
   </div>

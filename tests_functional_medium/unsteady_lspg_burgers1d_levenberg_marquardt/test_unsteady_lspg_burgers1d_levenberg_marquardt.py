@@ -72,20 +72,19 @@ def test_euler():
   yRom = np.zeros(romSize)
 
   scheme = ode.stepscheme.BDF1
-  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_levenberg_marquardt(stepper, yRom, lsO)
+  nlsO = solvers.create_levenberg_marquardt(problem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.LMSchedule1)
   nlsO.setMaxIterations(2)
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, t0,dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, t0,dt, Nsteps, myObs, nlsO)
 
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   print(yFomFinal)
 

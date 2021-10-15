@@ -43,12 +43,11 @@ def runGalerkin(fomObj, dt, nsteps, modes):
   # create problem
   scheme = ode.stepscheme.ForwardEuler
   problem = rom.galerkin.DefaultExplicitProblem(scheme, fomObj, linearDecoder, romState, fomReferenceState)
-  stepper = problem.stepper()
 
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solve problem
-  ode.advance_n_steps_and_observe(stepper, romState, 0., dt, nsteps, myObs)
+  ode.advance_n_steps_and_observe(problem, romState, 0., dt, nsteps, myObs)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # get the reconstructor object: this allows to map romState to fomState

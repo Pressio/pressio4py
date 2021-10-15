@@ -55,7 +55,6 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
-            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -67,6 +66,7 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="5">
@@ -86,13 +86,25 @@
         <h1>
           rom: Unsteady LSPG: General Info
         </h1>
-<p><span class="m-text m-danger">todo</span>: write more</p><p>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</p><section id="autotoc_md99"><h2><a href="#autotoc_md99">1. Create</a></h2><p>You create an instance of a &quot;LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">DefaultProblem</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></pre><p>We currently support three variants:</p><ul><li>Default: <a href="md_pages_components_rom_lspg_default.html">link</a></li><li>Hyper-reduced: <a href="md_pages_components_rom_lspg_hypred.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked.html">link</a></li></ul><p>All variants return a problem object that meets the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">UnsteadyLSPGProblem</span>
+<p><span class="m-text m-danger">todo</span>: write more</p><p>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</p><section id="autotoc_md101"><h2><a href="#autotoc_md101">1. Create</a></h2><p>You create an instance of a &quot;LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">DefaultProblem</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></pre><p>We currently support three variants:</p><ul><li>Default: <a href="md_pages_components_rom_lspg_default.html">link</a></li><li>Hyper-reduced: <a href="md_pages_components_rom_lspg_hypred.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked.html">link</a></li></ul><p>All variants return a problem object that meets the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">UnsteadyLSPGProblem</span>
 
-  <span class="k">def</span> <span class="nf">stepper</span><span class="p">()</span>
+  <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">time_step_size</span><span class="p">,</span> <span class="n">step_count</span><span class="p">,</span> <span class="n">solver</span><span class="p">);</span>
+
+  <span class="k">def</span> <span class="nf">createResidual</span><span class="p">()</span>
+    <span class="k">return</span> <span class="c1"># a residual instance</span>
+
+  <span class="k">def</span> <span class="nf">createJacobian</span><span class="p">()</span>
+    <span class="k">return</span> <span class="c1"># a Jacobian instance</span>
+
+  <span class="k">def</span> <span class="nf">residual</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+    <span class="c1"># evaluates the residual for the given state</span>
+
+  <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+    <span class="c1"># evaluates the Jacobian for the given state</span>
 
   <span class="k">def</span> <span class="nf">fomStateReconstructor</span><span class="p">()</span>
-<span class="p">};</span></pre><p>The stepper method returns a reference to an <a href="md_pages_components_ode_steppers_implicit.html">implicit stepper</a> object that the problem creates and owns. The <code>stepper</code> method is what you use to retrieve the underlying stepper and solve the problem in time. Once you have the stepper, you can then use it as discussed in <a href="md_pages_components_ode_steppers_implicit.html">implicit stepper page</a>.</p><p>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem contains a stepper object inside: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don&#x27;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</p></section><section id="autotoc_md100"><h2><a href="#autotoc_md100">2. Reference the stepper and solve in time</a></h2><p>Extract the underlying stepper object and solve in time:</p><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="n">problme</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
-<span class="n">pressio4py</span><span class="o">.</span><span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps_and_observe</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre><div class="m-note m-warning"><p>Remember that for LSPG, you are solving at each step a nonlinear least-squares problem. Therefore, the solver you need to use is a nonlinear least-squares solver, e.g, Gauss-Newton or Levernberg-Marquardt.</p></div></section>
+<span class="p">};</span></pre></section><section id="autotoc_md102"><h2><a href="#autotoc_md102">2. Solve in time</a></h2><p>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don&#x27;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</p><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="o">...</span>
+<span class="n">pressio4py</span><span class="o">.</span><span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps_and_observe</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre><div class="m-note m-warning"><p>Remember that for LSPG, you are solving at each step a nonlinear least-squares problem. Therefore, the solver you need to use is a nonlinear least-squares solver, e.g, Gauss-Newton or Levernberg-Marquardt.</p></div></section>
       </div>
     </div>
   </div>

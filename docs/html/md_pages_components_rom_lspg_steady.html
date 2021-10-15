@@ -55,7 +55,6 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
-            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -67,6 +66,7 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="5">
@@ -86,7 +86,7 @@
         <h1>
           rom: Steady LSPG
         </h1>
-<p><span class="m-text m-danger">todo</span>: write this better</p><p>The pressio4py steady LSPG ROMs are designed to involve two main steps:</p><section id="autotoc_md96"><h2><a href="#autotoc_md96">1. Create</a></h2><p>You instantiate a &quot;steady LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">steady</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="o">...</span><span class="p">)</span></pre><p>We currently support two variants:</p><ul><li>Basic Problem: <a href="md_pages_components_rom_lspg_default_steady.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked_steady.html">link</a></li></ul><p>Refer to each problem page for details on each specific variant.</p><p>The returned <code>problem</code> object is an instantiation of a class exposing the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Problem</span>
+<p><span class="m-text m-danger">todo</span>: write this better</p><p>The pressio4py steady LSPG ROMs are designed to involve two main steps:</p><section id="autotoc_md98"><h2><a href="#autotoc_md98">1. Create</a></h2><p>You instantiate a &quot;steady LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">steady</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="o">...</span><span class="p">)</span></pre><p>We currently support two variants:</p><ul><li>Basic Problem: <a href="md_pages_components_rom_lspg_default_steady.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked_steady.html">link</a></li></ul><p>Refer to each problem page for details on each specific variant.</p><p>The returned <code>problem</code> object is an instantiation of a class exposing the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Problem</span>
 
   <span class="k">def</span> <span class="nf">fomStateReconstructor</span><span class="p">()</span>
     <span class="k">return</span> <span class="c1"># reference to object for reconstructing FOM state</span>
@@ -102,7 +102,7 @@
 
   <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
     <span class="c1"># evaluates the Jacobian for the given state</span>
-<span class="p">};</span></pre></section><section id="autotoc_md97"><h2><a href="#autotoc_md97">2. Solve</a></h2><ul><li><p>you use a nonlinear least-squares solvers to solve the problem</p><pre class="m-code"><span class="n">solver</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="p">};</span></pre></section><section id="autotoc_md99"><h2><a href="#autotoc_md99">2. Solve</a></h2><ul><li><p>you use a nonlinear least-squares solvers to solve the problem</p><pre class="m-code"><span class="n">solver</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre></li><li>note, in fact, that the problem&#x27;s API conforms to the one required by the nonlinear solvers</li><li>for this solve stage, you don&#x27;t have to use the pressio4py solvers. Once you have the problem object, you can also use your own nonlinear least-squares solver. As shown above, the <code>problem</code> exposes all the operators that you need to solve.</li></ul><p><br /></p><hr/>
  <p><br /></p></section>
       </div>

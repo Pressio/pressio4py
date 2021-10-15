@@ -1,7 +1,7 @@
 
 import numpy as np
 from scipy import linalg
-from pressio4py import solvers, ode, rom 
+from pressio4py import solvers, ode, rom
 
 np.set_printoptions(linewidth=140)
 
@@ -212,22 +212,21 @@ def test():
   decoder = rom.Decoder(phi)
   yRom    = np.zeros(romSize)
   scheme = ode.stepscheme.BDF1
-  lspgProblem = rom.lspg.unsteady.MaskedProblem(scheme,appObj,decoder,yRom,yRef,masker)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.MaskedProblem(scheme,appObj,decoder,yRom,yRef,masker)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
+  nlsO = solvers.create_gauss_newton(problem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, 0.,0.2, 1, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, 0.,0.2, 1, myObs, nlsO)
 
   # yRom should be [1 1 1]
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   np.set_printoptions(precision=15)
 

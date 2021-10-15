@@ -8,7 +8,7 @@
     <detaileddescription>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write more</para>
 <para>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</para>
-<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md99">
+<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md101">
 <title>1. Create</title>
 <para>You create an instance of a &quot;LSPG problem&quot;, e.g.: <linebreak/>
 </para>
@@ -24,19 +24,29 @@
 <para>All variants return a problem object that meets the following interface:</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">UnsteadyLSPGProblem</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">stepper()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>time,<sp/>time_step_size,<sp/>step_count,<sp/>solver);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>createResidual()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>a<sp/>residual<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/></highlight><highlight class="comment">#<sp/>a<sp/>Jacobian<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>residual(state,<sp/>R)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>residual<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(state,<sp/>J)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>Jacobian<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>def<sp/>fomStateReconstructor()</highlight></codeline>
 <codeline><highlight class="normal">};</highlight></codeline>
 </programlisting></para>
-<para>The stepper method returns a reference to an <ulink url="md_pages_components_ode_steppers_implicit.html">implicit stepper</ulink> object that the problem creates and owns. The <computeroutput>stepper</computeroutput> method is what you use to retrieve the underlying stepper and solve the problem in time. Once you have the stepper, you can then use it as discussed in <ulink url="md_pages_components_ode_steppers_implicit.html">implicit stepper page</ulink>.</para>
-<para>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem contains a stepper object inside: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don&apos;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</para>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md100">
-<title>2. Reference the stepper and solve in time</title>
-<para>Extract the underlying stepper object and solve in time:</para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>problme.stepper()</highlight></codeline>
-<codeline><highlight class="normal">pressio4py.ode.advance_n_steps_and_observe(stepper,<sp/>...)</highlight></codeline>
+<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md102">
+<title>2. Solve in time</title>
+<para>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don&apos;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</para>
+<para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>...</highlight></codeline>
+<codeline><highlight class="normal">pressio4py.ode.advance_n_steps_and_observe(problem,<sp/>...)</highlight></codeline>
 </programlisting></para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-warning" /></para>
 <para><parblock><para>Remember that for LSPG, you are solving at each step a nonlinear least-squares problem. Therefore, the solver you need to use is a nonlinear least-squares solver, e.g, Gauss-Newton or Levernberg-Marquardt. </para>

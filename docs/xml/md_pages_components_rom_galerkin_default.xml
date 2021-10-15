@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.galerkin</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import galerkin</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_galerkin_default_1autotoc_md65">
+<sect1 id="md_pages_components_rom_galerkin_default_1autotoc_md67">
 <title>API, Parameters and Requirements</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>galerkin.DefaultExplicitProblem(scheme,<sp/>fom_adapter,<sp/>decoder,<sp/>\<sp/><sp/><sp/>(1)</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state)</highlight></codeline>
@@ -50,28 +50,27 @@
 <para><linebreak/>
 </para>
 </sect1>
-<sect1 id="md_pages_components_rom_galerkin_default_1autotoc_md66">
+<sect1 id="md_pages_components_rom_galerkin_default_1autotoc_md68">
 <title>Example usage</title>
-<sect2 id="md_pages_components_rom_galerkin_default_1autotoc_md67">
+<sect2 id="md_pages_components_rom_galerkin_default_1autotoc_md69">
 <title>Explicit Case</title>
 <para>An example usage for explicit stepper is as follows:</para>
 <para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>assuming:<sp/>decoder,<sp/>adapter,<sp/>rom_state,<sp/>fom_ref_state<sp/>are<sp/>defined</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">scheme<sp/>=<sp/>ode.stepscheme.ForwardEuler</highlight></codeline>
 <codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.DefaultExplicitProblem(scheme,<sp/>adapter,<sp/>decoder,<sp/>rom_state,<sp/>fom_ref_state)</highlight></codeline>
-<codeline><highlight class="normal">stepper<sp/>=<sp/>problem.stepper()</highlight></codeline>
 <codeline><highlight class="normal">dt<sp/>=<sp/>1.</highlight></codeline>
 <codeline><highlight class="normal">num_steps<sp/>=<sp/>2</highlight></codeline>
 <codeline><highlight class="normal">observer<sp/>=<sp/>MyObserver()</highlight></codeline>
-<codeline><highlight class="normal">ode.advance_n_steps_and_observe(stepper,<sp/>rom_state,<sp/>0.,<sp/>dt,<sp/>num_steps,<sp/>observer)</highlight></codeline>
+<codeline><highlight class="normal">ode.advance_n_steps_and_observe(problem,<sp/>rom_state,<sp/>0.,<sp/>dt,<sp/>num_steps,<sp/>observer)</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_components_rom_galerkin_default_1autotoc_md68">
+<sect2 id="md_pages_components_rom_galerkin_default_1autotoc_md70">
 <title>Implicit Case</title>
 <para>An example usage for implicit stepper is as follows:</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">scheme<sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
 <codeline><highlight class="normal">problem<sp/>=<sp/>rom.galerkin.DefaultImplicitProblem(scheme,<sp/>adapter,<sp/>decoder,<sp/>rom_state,<sp/>fom_ref_state)</highlight></codeline>
-<codeline><highlight class="normal">stepper<sp/>=<sp/>problem.stepper()</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>todo<sp/>add</highlight></codeline>
 </programlisting> </para>
 </sect2>
 </sect1>

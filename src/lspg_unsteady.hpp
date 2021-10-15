@@ -233,13 +233,13 @@ struct UnsteadyLSPGBinder
     default_dt_n2_problem_t, masked_dt_n2_problem_t,
     default_dt_n3_problem_t, masked_dt_n3_problem_t>;
 
-  // collect all stepper types in tuples
-  using stepper_types = std::tuple<
-    default_stepper_t, prec_default_stepper_t,
-    masked_stepper_t,  prec_masked_stepper_t,
-    hypred_stepper_t,  prec_hypred_stepper_t,
-    default_dt_n2_stepper_t, masked_dt_n2_stepper_t,
-    default_dt_n3_stepper_t, masked_dt_n3_stepper_t>;
+  // // collect all stepper types in tuples
+  // using stepper_types = std::tuple<
+  //   default_stepper_t, prec_default_stepper_t,
+  //   masked_stepper_t,  prec_masked_stepper_t,
+  //   hypred_stepper_t,  prec_hypred_stepper_t,
+  //   default_dt_n2_stepper_t, masked_dt_n2_stepper_t,
+  //   default_dt_n3_stepper_t, masked_dt_n3_stepper_t>;
 
   // ======================================================
   // functions
@@ -350,74 +350,25 @@ struct UnsteadyLSPGBinder
   }
 
   template<class T>
-  static void bindMethods(pybind11::class_<T> & problem)
+  static void bindMethods(pybind11::class_<T> & object)
   {
-    problem.def("stepper",
-		&T::stepper,
-		pybind11::return_value_policy::reference);
+    // object.def("stepper",
+    // 		&T::stepper,
+    // 		pybind11::return_value_policy::reference);
 
-    problem.def("fomStateReconstructor",
+    object.def("fomStateReconstructor",
 		&T::fomStateReconstructor,
 		pybind11::return_value_policy::reference);
-  }
-
-  static void bindProblems(pybind11::module & m)
-  {
-    pybind11::class_<hypred_updater_type> HypredUpdaterClass(m, "StencilToSampleIndexing");
-    HypredUpdaterClass.def(pybind11::init<const std::vector<int> &>());
-
-    // ---- discrete-time 2 states ----
-    pybind11::class_<default_dt_n2_problem_t> DefProbClassDTN2(m, "DiscreteTimeProblemTwoStates");
-    bindConstructorDefaultDT(DefProbClassDTN2);
-    bindMethods(DefProbClassDTN2);
-
-    pybind11::class_<masked_dt_n2_problem_t> MaskedProbClassDTN2(m, "DiscreteTimeMaskedProblemTwoStates");
-    bindConstructorMaskedDT(MaskedProbClassDTN2);
-    bindMethods(MaskedProbClassDTN2);
-
-    // ---- discrete-time 3 states ----
-    pybind11::class_<default_dt_n3_problem_t> DefProbClassDTN3(m, "DiscreteTimeProblemThreeStates");
-    bindConstructorDefaultDT(DefProbClassDTN3);
-    bindMethods(DefProbClassDTN3);
-
-    pybind11::class_<masked_dt_n3_problem_t> MaskedProbClassDTN3(m, "DiscreteTimeMaskedProblemThreeStates");
-    bindConstructorMaskedDT(MaskedProbClassDTN3);
-    bindMethods(MaskedProbClassDTN3);
-
-    // ----- cont-time ----
-    pybind11::class_<default_problem_t> DefProbClass(m, "DefaultProblem");
-    bindConstructorDefault(DefProbClass);
-    bindMethods(DefProbClass);
-
-    pybind11::class_<prec_default_problem_t> PrecDefProbClass(m, "PrecDefaultProblem");
-    bindConstructorDefaultPrec(PrecDefProbClass);
-    bindMethods(PrecDefProbClass);
-
-    pybind11::class_<masked_problem_t> MaskedProbClass(m, "MaskedProblem");
-    bindConstructorMasked(MaskedProbClass);
-    bindMethods(MaskedProbClass);
-
-    pybind11::class_<prec_masked_problem_t> PrecMaskedProbClass(m, "PrecMaskedProblem");
-    bindConstructorMaskedPrec(PrecMaskedProbClass);
-    bindMethods(PrecMaskedProbClass);
-
-    pybind11::class_<hypred_problem_t> HypredProbClass(m, "HypredProblem");
-    bindConstructorHypred(HypredProbClass);
-    bindMethods(HypredProbClass);
-
-    pybind11::class_<prec_hypred_problem_t> PrecHypredProbClass(m, "PrecHypredProblem");
-    bindConstructorHypredPrec(PrecHypredProbClass);
-    bindMethods(PrecHypredProbClass);
   }
 
   template<
     class SolverType, class T,
     pressio::mpl::enable_if_t<!::pressio4py::is_solver_wrapper<SolverType>::value, int> = 0
     >
-  static void bindStepperCallOperator(pybind11::class_<T> & stepper)
+  static void bindStepperCallOperator(pybind11::class_<T> & object)
   {
-    stepper.def("__call__",
-		[](T & stepper,
+    object.def("__call__",
+		[](T & object,
 		   ::pressio4py::py_f_arr & state,
 		   ::pressio4py::scalar_t time,
 		   ::pressio4py::scalar_t dt,
@@ -425,7 +376,7 @@ struct UnsteadyLSPGBinder
 		   SolverType & solver
 		   )
 		{
-		  stepper(state, time, dt, step, solver);
+		  object(state, time, dt, step, solver);
 		}, pybind11::is_operator());
   }
 
@@ -433,10 +384,10 @@ struct UnsteadyLSPGBinder
     class SolverType, class T,
     pressio::mpl::enable_if_t<::pressio4py::is_solver_wrapper<SolverType>::value, int> = 0
     >
-  static void bindStepperCallOperator(pybind11::class_<T> & stepper)
+  static void bindStepperCallOperator(pybind11::class_<T> & object)
   {
-    stepper.def("__call__",
-		[](T & stepper,
+    object.def("__call__",
+		[](T & object,
 		   ::pressio4py::py_f_arr & state,
 		   ::pressio4py::scalar_t time,
 		   ::pressio4py::scalar_t dt,
@@ -445,91 +396,192 @@ struct UnsteadyLSPGBinder
 		   )
 		{
 		  UserDefinedNonLinSolverWrapper nlsw(pysolver);
-		  stepper(state, time, dt, step, nlsw);
+		  object(state, time, dt, step, nlsw);
 		}, pybind11::is_operator());
   }
 
-  template<class Head, class ...Tail, class T>
-  static void bindStepperCallOperatorVar(pybind11::class_<T> & stepper)
+  template<class S1, class S2, class T>
+  static void bindStepperCallOperatorVar(pybind11::class_<T> & object)
   {
-    bindStepperCallOperator<Head, T>(stepper);
-    bindStepperCallOperator<Tail..., T>(stepper);
+    bindStepperCallOperator<S1, T>(object);
+    bindStepperCallOperator<S2, T>(object);
   }
 
   template<class T>
-  static void bindStepperOperatorMethods(pybind11::class_<T> & stepper)
+  static void bindStepperOperatorMethods(pybind11::class_<T> & object)
   {
-    stepper.def("createResidual",
+    object.def("createResidual",
 		&T::createResidual,
 		pybind11::return_value_policy::take_ownership);
-    stepper.def("createJacobian",
+    object.def("createJacobian",
 		&T::createJacobian,
 		pybind11::return_value_policy::take_ownership);
-    stepper.def("residual", &T::residual);
-    stepper.def("jacobian", &T::jacobian);
+    object.def("residual", &T::residual);
+    object.def("jacobian", &T::jacobian);
   }
 
-  template<class T>
-  static void bindStepperOperatorMethods2(pybind11::class_<T> & stepper)
+  template<std::size_t n, class T>
+  static void bindStepperOperatorMethods2(pybind11::class_<T> & object)
   {
-    stepper.def("createResidual",
+    object.def("createResidual",
 		&T::createResidual,
 		pybind11::return_value_policy::take_ownership);
-    stepper.def("createJacobian",
+    object.def("createJacobian",
 		&T::createJacobian,
 		pybind11::return_value_policy::take_ownership);
 
-    constexpr auto n = T::numAuxStates;
-    stepper.def("residual", &T::template residual<n>);
-    stepper.def("jacobian", &T::template jacobian<n>);
+    object.def("residual", &T::template residual<n>);
+    object.def("jacobian", &T::template jacobian<n>);
+  }
+
+  template<class ...Solvers>
+  static void bindProblems(pybind11::module & m)
+  {
+    pybind11::class_<hypred_updater_type> HypredUpdaterClass(m, "StencilToSampleIndexing");
+    HypredUpdaterClass.def(pybind11::init<const std::vector<int> &>());
+
+    // ---- discrete-time 2 states ----
+    constexpr auto n = default_dt_n2_stepper_t::numAuxStates;
+    pybind11::class_<default_dt_n2_problem_t> DefProbClassDTN2(m, "DiscreteTimeProblemTwoStates");
+    bindConstructorDefaultDT		  (DefProbClassDTN2);
+    bindMethods				  (DefProbClassDTN2);
+    bindStepperCallOperatorVar<Solvers...>(DefProbClassDTN2);
+    bindStepperOperatorMethods		  (DefProbClassDTN2);
+    pybind11::class_<default_dt_n2_stepper_t> DefStepperClassDTN2(m, "DefaultStepperDTN2");
+    bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN2);
+    bindStepperOperatorMethods2<n>	  (DefStepperClassDTN2);
+
+    pybind11::class_<masked_dt_n2_problem_t> MaskedProbClassDTN2(m, "DiscreteTimeMaskedProblemTwoStates");
+    bindConstructorMaskedDT		  (MaskedProbClassDTN2);
+    bindMethods				  (MaskedProbClassDTN2);
+    bindStepperCallOperatorVar<Solvers...>(MaskedProbClassDTN2);
+    bindStepperOperatorMethods		  (MaskedProbClassDTN2);
+    pybind11::class_<masked_dt_n2_stepper_t> MaskedStepperClassDTN2(m, "MaskedStepperDTN2");
+    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN2);
+    bindStepperOperatorMethods2<n>	  (MaskedStepperClassDTN2);
+
+    // ---- discrete-time 3 states ----
+    constexpr auto k = default_dt_n3_stepper_t::numAuxStates;
+    pybind11::class_<default_dt_n3_problem_t> DefProbClassDTN3(m, "DiscreteTimeProblemThreeStates");
+    bindConstructorDefaultDT		  (DefProbClassDTN3);
+    bindMethods				  (DefProbClassDTN3);
+    bindStepperCallOperatorVar<Solvers...>(DefProbClassDTN3);
+    bindStepperOperatorMethods		  (DefProbClassDTN3);
+    pybind11::class_<default_dt_n3_stepper_t> DefStepperClassDTN3(m, "DefaultStepperDTN3");
+    bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN3);
+    bindStepperOperatorMethods2<k>	  (DefStepperClassDTN3);
+
+    pybind11::class_<masked_dt_n3_problem_t> MaskedProbClassDTN3(m, "DiscreteTimeMaskedProblemThreeStates");
+    bindConstructorMaskedDT		  (MaskedProbClassDTN3);
+    bindMethods				  (MaskedProbClassDTN3);
+    bindStepperCallOperatorVar<Solvers...>(MaskedProbClassDTN3);
+    bindStepperOperatorMethods		  (MaskedProbClassDTN3);
+    pybind11::class_<masked_dt_n3_stepper_t> MaskedStepperClassDTN3(m, "MaskedStepperDTN3");
+    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN3);
+    bindStepperOperatorMethods2<k>	  (MaskedStepperClassDTN3);
+
+    // ----- cont-time ----
+    pybind11::class_<default_problem_t> DefProbClass(m, "DefaultProblem");
+    bindConstructorDefault		  (DefProbClass);
+    bindMethods				  (DefProbClass);
+    bindStepperCallOperatorVar<Solvers...>(DefProbClass);
+    bindStepperOperatorMethods		  (DefProbClass);
+    pybind11::class_<default_stepper_t> DefStepperClass(m, "DefaultStepper");
+    bindStepperCallOperatorVar<Solvers...>(DefStepperClass);
+    bindStepperOperatorMethods		  (DefStepperClass);
+
+    pybind11::class_<prec_default_problem_t> PrecDefProbClass(m, "PrecDefaultProblem");
+    bindConstructorDefaultPrec		  (PrecDefProbClass);
+    bindMethods				  (PrecDefProbClass);
+    bindStepperCallOperatorVar<Solvers...>(PrecDefProbClass);
+    bindStepperOperatorMethods		  (PrecDefProbClass);
+    pybind11::class_<prec_default_stepper_t> PrecDefStepperClass(m, "PrecDefaultStepper");
+    bindStepperCallOperatorVar<Solvers...>(PrecDefStepperClass);
+    bindStepperOperatorMethods		  (PrecDefStepperClass);
+
+    pybind11::class_<masked_problem_t> MaskedProbClass(m, "MaskedProblem");
+    bindConstructorMasked		  (MaskedProbClass);
+    bindMethods				  (MaskedProbClass);
+    bindStepperCallOperatorVar<Solvers...>(MaskedProbClass);
+    bindStepperOperatorMethods		  (MaskedProbClass);
+    pybind11::class_<masked_stepper_t> MaskedStepperClass(m, "MaskedStepper");
+    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClass);
+    bindStepperOperatorMethods		  (MaskedStepperClass);
+
+    pybind11::class_<prec_masked_problem_t> PrecMaskedProbClass(m, "PrecMaskedProblem");
+    bindConstructorMaskedPrec		  (PrecMaskedProbClass);
+    bindMethods				  (PrecMaskedProbClass);
+    bindStepperCallOperatorVar<Solvers...>(PrecMaskedProbClass);
+    bindStepperOperatorMethods		  (PrecMaskedProbClass);
+    pybind11::class_<prec_masked_stepper_t> PrecMaskedStepperClass(m, "PrecMaskedStepper");
+    bindStepperCallOperatorVar<Solvers...>(PrecMaskedStepperClass);
+    bindStepperOperatorMethods		  (PrecMaskedStepperClass);
+
+    pybind11::class_<hypred_problem_t> HypredProbClass(m, "HypredProblem");
+    bindConstructorHypred		  (HypredProbClass);
+    bindMethods				  (HypredProbClass);
+    bindStepperCallOperatorVar<Solvers...>(HypredProbClass);
+    bindStepperOperatorMethods		  (HypredProbClass);
+    pybind11::class_<hypred_stepper_t> HypredStepperClass(m, "HypredStepper");
+    bindStepperCallOperatorVar<Solvers...>(HypredStepperClass);
+    bindStepperOperatorMethods		  (HypredStepperClass);
+
+    pybind11::class_<prec_hypred_problem_t> PrecHypredProbClass(m, "PrecHypredProblem");
+    bindConstructorHypredPrec		  (PrecHypredProbClass);
+    bindMethods				  (PrecHypredProbClass);
+    bindStepperCallOperatorVar<Solvers...>(PrecHypredProbClass);
+    bindStepperOperatorMethods		  (PrecHypredProbClass);
+    pybind11::class_<prec_hypred_stepper_t> PrecHypredStepperClass(m, "PrecHypredStepper");
+    bindStepperCallOperatorVar<Solvers...>(PrecHypredStepperClass);
+    bindStepperOperatorMethods		  (PrecHypredStepperClass);
   }
 
   template<class ...Solvers>
   static void bindSteppers(pybind11::module & m)
   {
 
-    // ---- disc-time 2 states -----
-    pybind11::class_<default_dt_n2_stepper_t> DefStepperClassDTN2(m, "DefaultStepperDTN2");
-    bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN2);
-    bindStepperOperatorMethods2(DefStepperClassDTN2);
+    // // ---- disc-time 2 states -----
+    // pybind11::class_<default_dt_n2_stepper_t> DefStepperClassDTN2(m, "DefaultStepperDTN2");
+    // bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN2);
+    // bindStepperOperatorMethods2(DefStepperClassDTN2);
 
-    pybind11::class_<masked_dt_n2_stepper_t> MaskedStepperClassDTN2(m, "MaskedStepperDTN2");
-    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN2);
-    bindStepperOperatorMethods2(MaskedStepperClassDTN2);
+    // pybind11::class_<masked_dt_n2_stepper_t> MaskedStepperClassDTN2(m, "MaskedStepperDTN2");
+    // bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN2);
+    // bindStepperOperatorMethods2(MaskedStepperClassDTN2);
 
-    // ---- disc-time 3 states -----
-    pybind11::class_<default_dt_n3_stepper_t> DefStepperClassDTN3(m, "DefaultStepperDTN3");
-    bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN3);
-    bindStepperOperatorMethods2(DefStepperClassDTN3);
+    // // ---- disc-time 3 states -----
+    // pybind11::class_<default_dt_n3_stepper_t> DefStepperClassDTN3(m, "DefaultStepperDTN3");
+    // bindStepperCallOperatorVar<Solvers...>(DefStepperClassDTN3);
+    // bindStepperOperatorMethods2(DefStepperClassDTN3);
 
-    pybind11::class_<masked_dt_n3_stepper_t> MaskedStepperClassDTN3(m, "MaskedStepperDTN3");
-    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN3);
-    bindStepperOperatorMethods2(MaskedStepperClassDTN3);
+    // pybind11::class_<masked_dt_n3_stepper_t> MaskedStepperClassDTN3(m, "MaskedStepperDTN3");
+    // bindStepperCallOperatorVar<Solvers...>(MaskedStepperClassDTN3);
+    // bindStepperOperatorMethods2(MaskedStepperClassDTN3);
 
-    // ---- cont-time -----
-    pybind11::class_<default_stepper_t> DefStepperClass(m, "DefaultStepper");
-    bindStepperCallOperatorVar<Solvers...>(DefStepperClass);
-    bindStepperOperatorMethods(DefStepperClass);
+    // // ---- cont-time -----
+    // pybind11::class_<default_stepper_t> DefStepperClass(m, "DefaultStepper");
+    // bindStepperCallOperatorVar<Solvers...>(DefStepperClass);
+    // bindStepperOperatorMethods(DefStepperClass);
 
-    pybind11::class_<prec_default_stepper_t> PrecDefStepperClass(m, "PrecDefaultStepper");
-    bindStepperCallOperatorVar<Solvers...>(PrecDefStepperClass);
-    bindStepperOperatorMethods(PrecDefStepperClass);
+    // pybind11::class_<prec_default_stepper_t> PrecDefStepperClass(m, "PrecDefaultStepper");
+    // bindStepperCallOperatorVar<Solvers...>(PrecDefStepperClass);
+    // bindStepperOperatorMethods(PrecDefStepperClass);
 
-    pybind11::class_<masked_stepper_t> MaskedStepperClass(m, "MaskedStepper");
-    bindStepperCallOperatorVar<Solvers...>(MaskedStepperClass);
-    bindStepperOperatorMethods(MaskedStepperClass);
+    // pybind11::class_<masked_stepper_t> MaskedStepperClass(m, "MaskedStepper");
+    // bindStepperCallOperatorVar<Solvers...>(MaskedStepperClass);
+    // bindStepperOperatorMethods(MaskedStepperClass);
 
-    pybind11::class_<prec_masked_stepper_t> PrecMaskedStepperClass(m, "PrecMaskedStepper");
-    bindStepperCallOperatorVar<Solvers...>(PrecMaskedStepperClass);
-    bindStepperOperatorMethods(PrecMaskedStepperClass);
+    // pybind11::class_<prec_masked_stepper_t> PrecMaskedStepperClass(m, "PrecMaskedStepper");
+    // bindStepperCallOperatorVar<Solvers...>(PrecMaskedStepperClass);
+    // bindStepperOperatorMethods(PrecMaskedStepperClass);
 
-    pybind11::class_<hypred_stepper_t> HypredStepperClass(m, "HypredStepper");
-    bindStepperCallOperatorVar<Solvers...>(HypredStepperClass);
-    bindStepperOperatorMethods(HypredStepperClass);
+    // pybind11::class_<hypred_stepper_t> HypredStepperClass(m, "HypredStepper");
+    // bindStepperCallOperatorVar<Solvers...>(HypredStepperClass);
+    // bindStepperOperatorMethods(HypredStepperClass);
 
-    pybind11::class_<prec_hypred_stepper_t> PrecHypredStepperClass(m, "PrecHypredStepper");
-    bindStepperCallOperatorVar<Solvers...>(PrecHypredStepperClass);
-    bindStepperOperatorMethods(PrecHypredStepperClass);
+    // pybind11::class_<prec_hypred_stepper_t> PrecHypredStepperClass(m, "PrecHypredStepper");
+    // bindStepperCallOperatorVar<Solvers...>(PrecHypredStepperClass);
+    // bindStepperOperatorMethods(PrecHypredStepperClass);
   }
 };
 

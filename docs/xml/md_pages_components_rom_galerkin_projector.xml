@@ -12,7 +12,7 @@
 </parblock></para>
 <para>For a <ulink url="md_pages_components_rom_galerkin_default.html">default</ulink> problem, you don&apos;t need to pass it because the projector is constructed behind the scenes automatically using the decoder&apos;s jacobian.</para>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: explain more, talk about pressio-tools.</para>
-<sect1 id="md_pages_components_rom_galerkin_projector_1autotoc_md77">
+<sect1 id="md_pages_components_rom_galerkin_projector_1autotoc_md79">
 <title>API</title>
 <para>When provided by the user, the projector must be a functor as follows:</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">Projector:</highlight></codeline>

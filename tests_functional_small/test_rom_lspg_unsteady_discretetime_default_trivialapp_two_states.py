@@ -83,15 +83,14 @@ def test():
   decoder = rom.Decoder(phi)
   yRom    = np.ones(romSize)
   problem = rom.lspg.unsteady.DiscreteTimeProblemTwoStates(appObj, decoder, yRom, yRef)
-  stepper = problem.stepper()
 
   lsO = MyLinSolver()
-  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
+  nlsO = solvers.create_gauss_newton(problem, yRom, lsO)
   nlsO.setUpdatingCriterion(solvers.update.Standard)
   nlsO.setMaxIterations(2)
   nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)
   # solve
-  ode.advance_n_steps(stepper, yRom, 0., dt, 1, nlsO)
+  ode.advance_n_steps(problem, yRom, 0., dt, 1, nlsO)
   assert( np.allclose(yRom, np.array([2.,2.,2.]), 1e-12) )
 
   logger.finalize()

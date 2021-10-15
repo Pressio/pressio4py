@@ -61,12 +61,11 @@ def test_euler():
   yRom = np.zeros(romSize)
 
   scheme = ode.stepscheme.BDF1
-  lspgProblem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
-  stepper = lspgProblem.stepper()
+  problem = rom.lspg.unsteady.DefaultProblem(scheme, appObj, decoder, yRom, yRef)
 
   # linear and non linear solver
   lsO = MyLinSolver()
-  nlsO = solvers.create_gauss_newton(stepper, yRom, lsO)
+  nlsO = solvers.create_gauss_newton(problem, yRom, lsO)
   nlsTol, nlsMaxIt = 1e-13, 4
   nlsO.setMaxIterations(nlsMaxIt)
   nlsO.setStoppingCriterion(solvers.stop.WhenCorrectionAbsoluteNormBelowTolerance)
@@ -74,9 +73,9 @@ def test_euler():
 
   # solve
   myObs = OdeObserver()
-  ode.advance_n_steps_and_observe(stepper, yRom, t0, dt, Nsteps, myObs, nlsO)
+  ode.advance_n_steps_and_observe(problem, yRom, t0, dt, Nsteps, myObs, nlsO)
 
-  fomRecon = lspgProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   yFomFinal = fomRecon(yRom)
   print(yFomFinal)
 

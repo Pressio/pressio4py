@@ -55,9 +55,8 @@ def test_lspg_cont_time_default_2():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.BDF1
   problem = rom.lspg.unsteady.DefaultProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
 
-  mynlsO = MyNonLinSolver(stepper)
+  mynlsO = MyNonLinSolver(problem)
   dt, num_steps = 2., 1
-  ode.advance_n_steps(stepper, rom_state, 0., dt, num_steps, mynlsO)
+  ode.advance_n_steps(problem, rom_state, 0., dt, num_steps, mynlsO)
   print("final rom_state = ", rom_state)

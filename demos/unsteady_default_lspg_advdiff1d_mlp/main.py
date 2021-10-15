@@ -42,10 +42,9 @@ def runLspg(fomObj, dt, nsteps, customMapper):
   # create LSPG problem
   scheme = ode.stepscheme.BDF1
   problem = rom.lspg.unsteady.DefaultProblem(scheme, fomObj, customDecoder, romState, fomReferenceState)
-  stepper = problem.stepper()
 
   # create the Gauss-Newton solver
-  nonLinSolver = solvers.create_gauss_newton(stepper, romState, MyLinSolver())
+  nonLinSolver = solvers.create_gauss_newton(problem, romState, MyLinSolver())
   # set tolerance and convergence criteria
   nlsTol, nlsMaxIt = 1e-7, 10
   nonLinSolver.setMaxIterations(nlsMaxIt)
@@ -54,7 +53,7 @@ def runLspg(fomObj, dt, nsteps, customMapper):
   # create object to monitor the romState at every iteration
   myObs = RomStateObserver()
   # solve problem
-  ode.advance_n_steps_and_observe(stepper, romState, 0., dt, nsteps, myObs, nonLinSolver)
+  ode.advance_n_steps_and_observe(problem, romState, 0., dt, nsteps, myObs, nonLinSolver)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # get the reconstructor object: this allows to map romState to fomState

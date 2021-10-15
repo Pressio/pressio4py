@@ -13,7 +13,7 @@
 <para><simplesect kind="par"><title>We are currently working on this page, it will be updated with more explanations.</title><para></para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo4_1autotoc_md125">
+<sect1 id="md_pages_demos_demo4_1autotoc_md127">
 <title>Overview</title>
 <para>We cover these steps:<orderedlist>
 <listitem><para>generate of snapshots using the full-order model (FOM)</para>
@@ -25,70 +25,69 @@
 <para>The key item introduced here is the &quot;masking&quot; operator. In simple words, masking allows us to mimic the effect of the hyper-reduction without changing the application code. Hyper-reduction is a fundamental part of ROMs needed to approximate the FOM operators, thus contributing significantly to the computational cost savings. However, the main difficulty of hyper-reduction is that it generally is quite intrusive to be done properly.</para>
 <para>To briefly explain what hyper-reduction, let&apos;s look at the most basic form of hyper-reduction, namely &quot;collocation&quot;. Consider the following system of N ODEs: <formula id="26">\[ \frac{du}{dt} = f(u,x,t) \]</formula> A collocation-based hyper-reduction involves <emphasis>approximating</emphasis> the right-hand side by computing <formula id="27">$f()$</formula> only at a subset of grid points. Obviously, the way we compute the locations to select is critical and there are several techniques available to do so. Here, we show a simple example just for demonstration purposes of performing collocation with randomly selected points</para>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md126">
+<sect1 id="md_pages_demos_demo4_1autotoc_md128">
 <title>FOM Equations</title>
 <para>The governing equations for this problem are:</para>
 <para><formula id="20">\[ \frac{\partial u}{\partial t} = \frac{\partial}{\partial x} (k(u,x) \frac{\partial u}{\partial x} ) - a*\frac{\partial u}{\partial x} \]</formula> where <formula id="21">$k(u,x)=x^4$</formula>, the field is <formula id="22">$u(x;t)$</formula>, the advection velocity is fixed at <formula id="23">$a=2$</formula>, the spatial coordinate is <formula id="24">$x$</formula> and the domain is <formula id="25">$(0,1)$</formula>. We use homogeneous BC. Note that a class approximating the FOM operators via finite-differences is implemented <ulink url="https://github.com/Pressio/pressio4py/blob/master/apps/adv_diff1d.py">here</ulink>.</para>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md127">
+<sect1 id="md_pages_demos_demo4_1autotoc_md129">
 <title>Main function</title>
-<para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>logger.initialize(logger.logto.terminal)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
+<para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="normal">logger.initialize(logger.logto.terminal)</highlight></codeline>
+<codeline><highlight class="normal">logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>total<sp/>number<sp/>of<sp/>grid<sp/>points</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>meshSize<sp/>=<sp/>200</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>total<sp/>number<sp/>of<sp/>grid<sp/>points</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">meshSize<sp/>=<sp/>200</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomObj<sp/>=<sp/>AdvDiff1d(nGrid=meshSize,<sp/>adv_coef=1.0)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>create<sp/>fom<sp/>object</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">fomObj<sp/>=<sp/>AdvDiff1d(nGrid=meshSize,<sp/>adv_coef=1.0)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>final<sp/>time<sp/>to<sp/>integrate<sp/>to</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>finalTime<sp/>=<sp/>.05</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>the<sp/>final<sp/>time<sp/>to<sp/>integrate<sp/>to</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">finalTime<sp/>=<sp/>.05</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>1.<sp/>FOM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomTimeStepSize<sp/><sp/>=<sp/>1e-5</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomNumberOfSteps<sp/>=<sp/>int(finalTime/fomTimeStepSize)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>sampleEvery<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>100</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>[fomFinalState,<sp/>snapshots]<sp/>=<sp/>doFom(fomObj,<sp/>fomTimeStepSize,<sp/>fomNumberOfSteps,<sp/>sampleEvery)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#---<sp/>1.<sp/>FOM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">fomTimeStepSize<sp/><sp/>=<sp/>1e-5</highlight></codeline>
+<codeline><highlight class="normal">fomNumberOfSteps<sp/>=<sp/>int(finalTime/fomTimeStepSize)</highlight></codeline>
+<codeline><highlight class="normal">sampleEvery<sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>100</highlight></codeline>
+<codeline><highlight class="normal">[fomFinalState,<sp/>snapshots]<sp/>=<sp/>doFom(fomObj,<sp/>fomTimeStepSize,<sp/>fomNumberOfSteps,<sp/>sampleEvery)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>2.<sp/>POD<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>modes<sp/>=<sp/>computePodModes(snapshots)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#---<sp/>2.<sp/>POD<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">modes<sp/>=<sp/>computePodModes(snapshots)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#---<sp/>3.<sp/>MASKED<sp/>GALERKIN<sp/>ROM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romSize<sp/>=<sp/>10<sp/><sp/></highlight><highlight class="comment">#<sp/>number<sp/>of<sp/>modes<sp/>to<sp/>use</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romTimeStepSize<sp/><sp/>=<sp/>1e-4</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#---<sp/>3.<sp/>MASKED<sp/>GALERKIN<sp/>ROM<sp/>---#</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">romSize<sp/>=<sp/>10<sp/><sp/></highlight><highlight class="comment">#<sp/>number<sp/>of<sp/>modes<sp/>to<sp/>use</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">romTimeStepSize<sp/><sp/>=<sp/>1e-4</highlight></codeline>
+<codeline><highlight class="normal">romNumberOfSteps<sp/>=<sp/>int(finalTime/romTimeStepSize)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>a<sp/>masked<sp/>galerkin<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>we<sp/>need<sp/>to<sp/>select<sp/>and<sp/>provide<sp/>to<sp/>pressio<sp/>a<sp/>set<sp/>of<sp/>indices</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>identifying<sp/>a<sp/>subset<sp/>of<sp/>the<sp/>grid<sp/>points<sp/>in<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>This<sp/>is<sp/>a<sp/>simple<sp/>way<sp/>to<sp/>mimic<sp/>hyper-reduction</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>without<sp/>changing<sp/>the<sp/>FOM<sp/>problem.<sp/>In<sp/>fact,<sp/>the<sp/>fom<sp/>still</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>computes<sp/>the<sp/>full<sp/>operators<sp/>but<sp/>we<sp/>have<sp/>an<sp/>additional<sp/>step</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>to<sp/>&quot;mask&quot;<sp/>the<sp/>operators<sp/>to<sp/>compute<sp/>the<sp/>sample<sp/>mesh<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>In<sp/>this<sp/>test,<sp/>the<sp/>meshSize<sp/>=<sp/>200.<sp/>Our<sp/>sample<sp/>mesh<sp/>includes</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>the<sp/>two<sp/>end<sp/>points<sp/>since<sp/>those<sp/>contain<sp/>the<sp/>boundary<sp/>conditions,</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>and<sp/>150<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>So<sp/>effectively<sp/>we<sp/>use<sp/>25%<sp/>less<sp/>of<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>random.seed(312367)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>sampleMeshSize<sp/>=<sp/>150</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>sampleMeshIndices<sp/>=<sp/>random.sample(range(1,<sp/>199),<sp/>sampleMeshSize)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>a<sp/>masked<sp/>galerkin<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>we<sp/>need<sp/>to<sp/>select<sp/>and<sp/>provide<sp/>to<sp/>pressio<sp/>a<sp/>set<sp/>of<sp/>indices</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>identifying<sp/>a<sp/>subset<sp/>of<sp/>the<sp/>grid<sp/>points<sp/>in<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>This<sp/>is<sp/>a<sp/>simple<sp/>way<sp/>to<sp/>mimic<sp/>hyper-reduction</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>without<sp/>changing<sp/>the<sp/>FOM<sp/>problem.<sp/>In<sp/>fact,<sp/>the<sp/>fom<sp/>still</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>computes<sp/>the<sp/>full<sp/>operators<sp/>but<sp/>we<sp/>have<sp/>an<sp/>additional<sp/>step</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>to<sp/>&quot;mask&quot;<sp/>the<sp/>operators<sp/>to<sp/>compute<sp/>the<sp/>sample<sp/>mesh<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>In<sp/>this<sp/>test,<sp/>the<sp/>meshSize<sp/>=<sp/>200.<sp/>Our<sp/>sample<sp/>mesh<sp/>includes</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>the<sp/>two<sp/>end<sp/>points<sp/>since<sp/>those<sp/>contain<sp/>the<sp/>boundary<sp/>conditions,</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>and<sp/>150<sp/>randomly<sp/>selected<sp/>grid<sp/>points<sp/>inside<sp/>the<sp/>domain.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>So<sp/>effectively<sp/>we<sp/>use<sp/>25%<sp/>less<sp/>of<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">random.seed(312367)</highlight></codeline>
+<codeline><highlight class="normal">sampleMeshSize<sp/>=<sp/>150</highlight></codeline>
+<codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>random.sample(range(1,<sp/>199),<sp/>sampleMeshSize)</highlight></codeline>
+<codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>run<sp/>the<sp/>masked<sp/>galerkin<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>approximatedState<sp/>=<sp/>runMaskedGalerkin(fomObj,<sp/>romTimeStepSize,</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>romNumberOfSteps,<sp/>modes[:,:romSize],</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sampleMeshIndices)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>run<sp/>the<sp/>masked<sp/>galerkin<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">approximatedState<sp/>=<sp/>runMaskedGalerkin(fomObj,<sp/>romTimeStepSize,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>romNumberOfSteps,<sp/>modes[:,:romSize],</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sampleMeshIndices)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>compute<sp/>l2-error<sp/>between<sp/>fom<sp/>and<sp/>approximate<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">fomNorm<sp/>=<sp/>linalg.norm(fomFinalState)</highlight></codeline>
+<codeline><highlight class="normal">err<sp/>=<sp/>linalg.norm(fomFinalState-approximatedState)</highlight></codeline>
+<codeline><highlight class="normal">print(</highlight><highlight class="stringliteral">&quot;Final<sp/>state<sp/>relative<sp/>l2<sp/>error:<sp/>{}&quot;</highlight><highlight class="normal">.format(err/fomNorm))</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>logger.finalize()</highlight></codeline>
+<codeline><highlight class="normal">logger.finalize()</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_demos_demo4_1autotoc_md128">
+<sect2 id="md_pages_demos_demo4_1autotoc_md130">
 <title>1. Run FOM and collect snapshots</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">doFom(fom,<sp/>dt,<sp/>nsteps,<sp/>saveFreq):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>u<sp/>=<sp/>fom.u0.copy()</highlight></codeline>
@@ -105,7 +104,7 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>[u,<sp/>Usolns.T]</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md129">
+<sect2 id="md_pages_demos_demo4_1autotoc_md131">
 <title>2. Compute POD modes</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">computePodModes(snapshots):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>print(</highlight><highlight class="stringliteral">&quot;SVD<sp/>on<sp/>matrix:<sp/>&quot;</highlight><highlight class="normal">,<sp/>snapshots.shape)</highlight></codeline>
@@ -113,10 +112,9 @@
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>U</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md130">
+<sect2 id="md_pages_demos_demo4_1autotoc_md132">
 <title>3. Create the sampling indices</title>
-<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>a<sp/>masked<sp/>galerkin<sp/>is<sp/>supposed<sp/>to<sp/>make<sp/>it<sp/>easier<sp/>to<sp/>emulate<sp/>the</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>effect<sp/>of<sp/>hyper-reduction.<sp/>To<sp/>create<sp/>a<sp/>mask<sp/>ROM<sp/>problem,</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>we<sp/>need<sp/>to<sp/>select<sp/>and<sp/>provide<sp/>to<sp/>pressio<sp/>a<sp/>set<sp/>of<sp/>indices</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>identifying<sp/>a<sp/>subset<sp/>of<sp/>the<sp/>grid<sp/>points<sp/>in<sp/>the<sp/>full<sp/>mesh.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>This<sp/>is<sp/>a<sp/>simple<sp/>way<sp/>to<sp/>mimic<sp/>hyper-reduction</highlight><highlight class="normal"></highlight></codeline>
@@ -133,7 +131,7 @@
 <codeline><highlight class="normal">sampleMeshIndices<sp/>=<sp/>np.append(sampleMeshIndices,<sp/>[0,<sp/>199])</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md131">
+<sect2 id="md_pages_demos_demo4_1autotoc_md133">
 <title>4. The masker class</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyMasker:</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>indices):</highlight></codeline>
@@ -147,7 +145,7 @@
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>result[:]<sp/>=<sp/>np.take(operand,<sp/>self.rows_)</highlight></codeline>
 </programlisting></para>
 </sect2>
-<sect2 id="md_pages_demos_demo4_1autotoc_md132">
+<sect2 id="md_pages_demos_demo4_1autotoc_md134">
 <title>5. Construct and run the masked ROM</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runMaskedGalerkin(fomObj,<sp/>dt,<sp/>nsteps,<sp/>modes,<sp/>sampleMeshIndices):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>find<sp/>out<sp/>number<sp/>of<sp/>modes<sp/>wanted</highlight><highlight class="normal"></highlight></codeline>
@@ -188,10 +186,9 @@
 <codeline><highlight class="normal"><sp/><sp/>problem<sp/>=<sp/>rom.galerkin.MaskedExplicitProblem(scheme,<sp/>fomObj,<sp/>linearDecoder,<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>romState,<sp/>fomReferenceState,<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>projector,<sp/>masker)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>stepper<sp/>=<sp/>problem.stepper()</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps(stepper,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps(problem,<sp/>romState,<sp/>0.,<sp/>dt,<sp/>nsteps)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>after<sp/>we<sp/>are<sp/>done,<sp/>use<sp/>the<sp/>reconstructor<sp/>object<sp/>to<sp/>reconstruct<sp/>the<sp/>fom<sp/>state</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>NOTE:<sp/>even<sp/>though<sp/>the<sp/>Galerkin<sp/>problem<sp/>was<sp/>run<sp/>on<sp/>the<sp/>&quot;masked<sp/>mesh<sp/>points&quot;,</highlight><highlight class="normal"></highlight></codeline>
@@ -202,7 +199,7 @@
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo4_1autotoc_md133">
+<sect1 id="md_pages_demos_demo4_1autotoc_md135">
 <title>Results</title>
 <para>If everything works fine, the following plot shows the result. We see that for this toy example, the full solution is recovered very well with Galerkin with just a few POD modes. <image type="html" name="demo4.png"></image>
 </para>

@@ -80,10 +80,9 @@ def runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):
   problem = rom.galerkin.MaskedExplicitProblem(scheme, fomObj, linearDecoder, \
                                                romState, fomReferenceState, \
                                                projector, masker)
-  stepper = problem.stepper()
 
   # solve problem
-  ode.advance_n_steps(stepper, romState, 0., dt, nsteps)
+  ode.advance_n_steps(problem, romState, 0., dt, nsteps)
 
   # after we are done, use the reconstructor object to reconstruct the fom state
   # NOTE: even though the Galerkin problem was run on the "masked mesh points",

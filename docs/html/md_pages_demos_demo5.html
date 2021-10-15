@@ -55,7 +55,6 @@
                 <li><a href="md_pages_components_rom_wls.html"> &emsp; - WLS</a></li>
               </ol>
             </li>
-            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li>
               <a>Full Demos</a>
               <ol>
@@ -67,6 +66,7 @@
                 <li><a href="md_pages_demos_demo6.html">1D adv-diff: LSPG with nonlinear manifold (MLP) </a></li>
               </ol>
             </li>
+            <li><a href="md_pages_ml_role.html">Role of ML</a></li>
             <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="5">
@@ -86,86 +86,28 @@
         <h1>
           1D adv-diff: Comparing Masked POD Galerkin against masked POD LSPG
         </h1>
-<aside class="m-block m-info"><p>This page describes a demo for a reproductive &quot;masked&quot; Galerkin and LSPG ROMs applied to a 1D advection-diffusion problem using POD modes as basis. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py">here.</a></p></aside><aside class="m-note m-default"><h4>We are currently working on this page, it will be updated with more explanations.</h4></aside><section id="autotoc_md135"><h2><a href="#autotoc_md135">Overview</a></h2><p>This is a follow up to the previous demo <a href="./md_pages_demos_demo4.html">here</a> We compare here maskdd Galerkin and masked LSPG.</p></section><section id="autotoc_md136"><h2><a href="#autotoc_md136">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-  <span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
-  <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive &quot;masked&quot; Galerkin and LSPG ROMs applied to a 1D advection-diffusion problem using POD modes as basis. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py">here.</a></p></aside><aside class="m-note m-default"><h4>We are currently working on this page, it will be updated with more explanations.</h4></aside><section id="autotoc_md137"><h2><a href="#autotoc_md137">Overview</a></h2><p>This is a follow up to the previous demo <a href="./md_pages_demos_demo4.html">here</a> We compare here maskdd Galerkin and masked LSPG.</p></section><section id="autotoc_md138"><h2><a href="#autotoc_md138">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
 
-  <span class="c1"># total number of grid points</span>
-  <span class="n">meshSize</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="c1"># total number of grid points</span>
+<span class="n">meshSize</span> <span class="o">=</span> <span class="mi">200</span>
 
-  <span class="c1"># create fom object</span>
-  <span class="n">fomObj</span> <span class="o">=</span> <span class="n">AdvDiff1d</span><span class="p">(</span><span class="n">nGrid</span><span class="o">=</span><span class="n">meshSize</span><span class="p">,</span> <span class="n">adv_coef</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="c1"># create fom object</span>
+<span class="n">fomObj</span> <span class="o">=</span> <span class="n">AdvDiff1d</span><span class="p">(</span><span class="n">nGrid</span><span class="o">=</span><span class="n">meshSize</span><span class="p">,</span> <span class="n">adv_coef</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 
-  <span class="c1"># the final time to integrate to</span>
-  <span class="n">finalTime</span> <span class="o">=</span> <span class="o">.</span><span class="mi">05</span>
+<span class="c1"># the final time to integrate to</span>
+<span class="n">finalTime</span> <span class="o">=</span> <span class="o">.</span><span class="mi">05</span>
 
-  <span class="c1">#--- 1. FOM ---#</span>
-  <span class="n">fomTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-5</span>
-  <span class="n">fomNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">fomTimeStepSize</span><span class="p">)</span>
-  <span class="n">sampleEvery</span>      <span class="o">=</span> <span class="mi">100</span>
-  <span class="p">[</span><span class="n">fomFinalState</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">]</span> <span class="o">=</span> <span class="n">doFom</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">fomTimeStepSize</span><span class="p">,</span> <span class="n">fomNumberOfSteps</span><span class="p">,</span> <span class="n">sampleEvery</span><span class="p">)</span>
+<span class="c1">#--- 1. FOM ---#</span>
+<span class="n">fomTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-5</span>
+<span class="n">fomNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">fomTimeStepSize</span><span class="p">)</span>
+<span class="n">sampleEvery</span>      <span class="o">=</span> <span class="mi">100</span>
+<span class="p">[</span><span class="n">fomFinalState</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">]</span> <span class="o">=</span> <span class="n">doFom</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">fomTimeStepSize</span><span class="p">,</span> <span class="n">fomNumberOfSteps</span><span class="p">,</span> <span class="n">sampleEvery</span><span class="p">)</span>
 
-  <span class="c1">#--- 2. POD ---#</span>
-  <span class="n">modes</span> <span class="o">=</span> <span class="n">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+<span class="c1">#--- 2. POD ---#</span>
+<span class="n">modes</span> <span class="o">=</span> <span class="n">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
 
-  <span class="c1">#--- 3. MASKED GALERKIN and LSPG ROM ---#</span>
-  <span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
-  <span class="c1"># effect of hyper-reduction. To create a mask ROM problem,</span>
-  <span class="c1"># we need to select and provide to pressio a set of indices</span>
-  <span class="c1"># identifying a subset of the grid points in the full mesh.</span>
-  <span class="c1"># This is a simple way to mimic hyper-reduction</span>
-  <span class="c1"># without changing the FOM problem. In fact, the fom still</span>
-  <span class="c1"># computes the full operators but we have an additional step</span>
-  <span class="c1"># to &quot;mask&quot; the operators to compute the sample mesh version.</span>
-  <span class="c1"># In this test, the meshSize = 200. Our sample mesh includes</span>
-  <span class="c1"># the two end points since those contain the boundary conditions,</span>
-  <span class="c1"># and 20 randomly selected grid points inside the domain.</span>
-  <span class="c1"># So effectively we use 1/10 of the full mesh.</span>
-  <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">22123</span><span class="p">)</span>
-  <span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">20</span>
-  <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
-  <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
-  <span class="c1"># sort for convenience, not necessarily needed</span>
-  <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
-
-  <span class="n">romSize</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of modes to use</span>
-  <span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-4</span>
-  <span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span>
-
-  <span class="c1"># run the masked galerkin problem</span>
-  <span class="p">[</span><span class="n">approximatedStateGal</span><span class="p">,</span> <span class="n">romGal</span><span class="p">]</span> <span class="o">=</span> <span class="n">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span>
-                                                     <span class="n">romNumberOfSteps</span><span class="p">,</span>
-                                                     <span class="n">modes</span><span class="p">[:,:</span><span class="n">romSize</span><span class="p">],</span>
-                                                     <span class="n">sampleMeshIndices</span><span class="p">)</span>
-  <span class="c1"># run the masked galerkin problem</span>
-  <span class="p">[</span><span class="n">approximatedStateLspg</span><span class="p">,</span> <span class="n">romLspg</span><span class="p">]</span> <span class="o">=</span> <span class="n">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span>
-                                                   <span class="n">romNumberOfSteps</span><span class="p">,</span>
-                                                   <span class="n">modes</span><span class="p">[:,:</span><span class="n">romSize</span><span class="p">],</span>
-                                                   <span class="n">sampleMeshIndices</span><span class="p">)</span>
-
-  <span class="c1"># compute l2-error between fom and approximate state</span>
-  <span class="n">fomNorm</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="p">)</span>
-  <span class="n">err1</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateGal</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Galerkin: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err1</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
-  <span class="n">err2</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateLspg</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LSPG: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err2</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
-
-  <span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md137"><h3><a href="#autotoc_md137">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
-  <span class="n">u</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-  <span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
-  <span class="n">f</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">createVelocity</span><span class="p">()</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nsteps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="c1"># query rhs of discretized system</span>
-    <span class="n">fom</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-    <span class="c1"># simple Euler forward</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="n">f</span>
-    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">saveFreq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-      <span class="n">U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-  <span class="n">Usolns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md138"><h3><a href="#autotoc_md138">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
-  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-  <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md139"><h3><a href="#autotoc_md139">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
+<span class="c1">#--- 3. MASKED GALERKIN and LSPG ROM ---#</span>
+<span class="c1"># a masked problem is supposed to make it easier to emulate the</span>
 <span class="c1"># effect of hyper-reduction. To create a mask ROM problem,</span>
 <span class="c1"># we need to select and provide to pressio a set of indices</span>
 <span class="c1"># identifying a subset of the grid points in the full mesh.</span>
@@ -182,7 +124,65 @@
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
 <span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
 <span class="c1"># sort for convenience, not necessarily needed</span>
-<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span></pre></section><section id="autotoc_md140"><h3><a href="#autotoc_md140">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
+
+<span class="n">romSize</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of modes to use</span>
+<span class="n">romTimeStepSize</span>  <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">romNumberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">finalTime</span><span class="o">/</span><span class="n">romTimeStepSize</span><span class="p">)</span>
+
+<span class="c1"># run the masked galerkin problem</span>
+<span class="p">[</span><span class="n">approximatedStateGal</span><span class="p">,</span> <span class="n">romGal</span><span class="p">]</span> <span class="o">=</span> <span class="n">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span>
+                                                   <span class="n">romNumberOfSteps</span><span class="p">,</span>
+                                                   <span class="n">modes</span><span class="p">[:,:</span><span class="n">romSize</span><span class="p">],</span>
+                                                   <span class="n">sampleMeshIndices</span><span class="p">)</span>
+<span class="c1"># run the masked galerkin problem</span>
+<span class="p">[</span><span class="n">approximatedStateLspg</span><span class="p">,</span> <span class="n">romLspg</span><span class="p">]</span> <span class="o">=</span> <span class="n">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">romTimeStepSize</span><span class="p">,</span>
+                                                 <span class="n">romNumberOfSteps</span><span class="p">,</span>
+                                                 <span class="n">modes</span><span class="p">[:,:</span><span class="n">romSize</span><span class="p">],</span>
+                                                 <span class="n">sampleMeshIndices</span><span class="p">)</span>
+
+<span class="c1"># compute l2-error between fom and approximate state</span>
+<span class="n">fomNorm</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="p">)</span>
+<span class="n">err1</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateGal</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Galerkin: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err1</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
+<span class="n">err2</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedStateLspg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LSPG: final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err2</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+
+<span class="c1">#----------------------------------------------#</span></pre><section id="autotoc_md139"><h3><a href="#autotoc_md139">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
+  <span class="n">u</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">createVelocity</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nsteps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># query rhs of discretized system</span>
+    <span class="n">fom</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="c1"># simple Euler forward</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="n">f</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">saveFreq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+  <span class="n">Usolns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md140"><h3><a href="#autotoc_md140">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+  <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md141"><h3><a href="#autotoc_md141">3. Create the sampling indices</a></h3><pre class="m-code"><span class="c1"># we need to select and provide to pressio a set of indices</span>
+<span class="c1"># identifying a subset of the grid points in the full mesh.</span>
+<span class="c1"># This is a simple way to mimic hyper-reduction</span>
+<span class="c1"># without changing the FOM problem. In fact, the fom still</span>
+<span class="c1"># computes the full operators but we have an additional step</span>
+<span class="c1"># to &quot;mask&quot; the operators to compute the sample mesh version.</span>
+<span class="c1"># In this test, the meshSize = 200. Our sample mesh includes</span>
+<span class="c1"># the two end points since those contain the boundary conditions,</span>
+<span class="c1"># and 20 randomly selected grid points inside the domain.</span>
+<span class="c1"># So effectively we use 1/10 of the full mesh.</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">22123</span><span class="p">)</span>
+<span class="n">sampleMeshSize</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">199</span><span class="p">),</span> <span class="n">sampleMeshSize</span><span class="p">)</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">199</span><span class="p">])</span>
+<span class="c1"># sort for convenience, not necessarily needed</span>
+<span class="n">sampleMeshIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">sampleMeshIndices</span><span class="p">)</span>
+
+<span class="n">romSize</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of modes to use</span></pre></section><section id="autotoc_md142"><h3><a href="#autotoc_md142">4. The masker class</a></h3><pre class="m-code"><span class="k">class</span> <span class="nc">MyMasker</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span> <span class="o">=</span> <span class="n">indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampleMeshSize_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
@@ -197,7 +197,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">operand</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
       <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-      <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></pre></section><section id="autotoc_md141"><h3><a href="#autotoc_md141">5. Masked Galerkin ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
+      <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></pre></section><section id="autotoc_md143"><h3><a href="#autotoc_md143">5. Masked Galerkin ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedGalerkin</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
   <span class="c1"># find out number of modes wanted</span>
   <span class="n">romSize</span> <span class="o">=</span> <span class="n">modes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -236,22 +236,21 @@
   <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">MaskedImplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span> \
                                                <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span> \
                                                <span class="n">projector</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span>
-  <span class="n">stepper</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_newton_raphson</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_newton_raphson</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>
-  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
+  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
 
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># NOTE: even though the Galerkin problem was run on the &quot;masked mesh points&quot;,</span>
   <span class="c1"># this reconstruction uses the POD modes on the full mesh stored in the decoder</span>
   <span class="c1"># so we can effectively obtain an approximation of the full solution</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section><section id="autotoc_md142"><h3><a href="#autotoc_md142">6. Masked LSPG ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section><section id="autotoc_md144"><h3><a href="#autotoc_md144">6. Masked LSPG ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runMaskedLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">sampleMeshIndices</span><span class="p">):</span>
   <span class="c1"># find out number of modes wanted</span>
   <span class="n">romSize</span> <span class="o">=</span> <span class="n">modes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -280,22 +279,21 @@
   <span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">MaskedProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fomObj</span><span class="p">,</span> <span class="n">linearDecoder</span><span class="p">,</span>\
                                             <span class="n">romState</span><span class="p">,</span> <span class="n">fomReferenceState</span><span class="p">,</span>\
                                             <span class="n">masker</span><span class="p">)</span>
-  <span class="n">stepper</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">stepper</span><span class="p">()</span>
 
   <span class="c1"># linear and non linear solver</span>
   <span class="n">lsO</span> <span class="o">=</span> <span class="n">MyLinSolver</span><span class="p">()</span>
-  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
+  <span class="n">nlsO</span> <span class="o">=</span> <span class="n">solvers</span><span class="o">.</span><span class="n">create_gauss_newton</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="n">lsO</span><span class="p">)</span>
   <span class="n">nlsO</span><span class="o">.</span><span class="n">setMaxIterations</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
   <span class="c1"># solve the problem</span>
-  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">stepper</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
+  <span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">romState</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">nlsO</span><span class="p">)</span>
 
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># NOTE: even though the Galerkin problem was run on the &quot;masked mesh points&quot;,</span>
   <span class="c1"># this reconstruction uses the POD modes on the full mesh stored in the decoder</span>
   <span class="c1"># so we can effectively obtain an approximation of the full solution</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section></section><section id="autotoc_md143"><h2><a href="#autotoc_md143">Results</a></h2><p>If everything works fine, the following plots shows the result. We first plot the result reconstructed <em>only on the sample mesh</em>. This can easily be done using the bases collocated on the sample mesh indices.</p><img class="m-image" src="demo5_f1.png" alt="Image" /><p>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate.</p><img class="m-image" src="demo5_f2.png" alt="Image" /><aside class="m-block m-warning"><h3>Warning</h3><p>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos.</p></aside></section>
+  <span class="k">return</span> <span class="p">[</span><span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">),</span> <span class="n">romState</span><span class="p">]</span></pre></section></section><section id="autotoc_md145"><h2><a href="#autotoc_md145">Results</a></h2><p>If everything works fine, the following plots shows the result. We first plot the result reconstructed <em>only on the sample mesh</em>. This can easily be done using the bases collocated on the sample mesh indices.</p><img class="m-image" src="demo5_f1.png" alt="Image" /><p>We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate.</p><img class="m-image" src="demo5_f2.png" alt="Image" /><aside class="m-block m-warning"><h3>Warning</h3><p>Note that using the mask to mimic hyper-reduction is only helpful to assess the accuracy but not the computational performance. This is because the &quot;masked&quot; problem still requires the FOM to compute the full kernels. Hyper-reduction becomes computationally very efficient if implemented without the mask, which we will show in subsequent demos.</p></aside></section>
       </div>
     </div>
   </div>

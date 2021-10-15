@@ -65,14 +65,13 @@ def test_euler():
   yRom = np.zeros(romSize)
   # create problem
   scheme = ode.stepscheme.ForwardEuler
-  galerkinProblem = rom.galerkin.DefaultExplicitProblem(scheme, appObj, decoder, yRom, yRef)
-  stepper = galerkinProblem.stepper()
+  problem = rom.galerkin.DefaultExplicitProblem(scheme, appObj, decoder, yRom, yRef)
 
-  fomRecon = galerkinProblem.fomStateReconstructor()
+  fomRecon = problem.fomStateReconstructor()
   # the observer is called to monitor evolution of rom_state and
   # uses the reconstructor object to reconstruct FOM state
   myObs = OdeObserver(fomRecon)
-  ode.advance_n_steps_and_observe(stepper, yRom, 0., dt, Nsteps, myObs)
+  ode.advance_n_steps_and_observe(problem, yRom, 0., dt, Nsteps, myObs)
 
   # reconstruct full state at the end
   yFomFinal = fomRecon(yRom)

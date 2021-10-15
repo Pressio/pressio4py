@@ -57,8 +57,6 @@ LINKS_NAVBAR1 = [
      ("<a href=\"md_pages_components_rom_wls.html\"> &emsp; - WLS</a>",),
    ]),
 
-  ("<a href=\"md_pages_ml_role.html\">Role of ML</a>", []),
-
   ("<a>Full Demos</a>", #("<a href=\"md_pages_demos.html\">Demos</a>",
    [
      ("<a href=\"md_pages_demos_demo1.html\">1D adv-diff: Galerkin with POD modes</a>", ),
@@ -68,6 +66,8 @@ LINKS_NAVBAR1 = [
      ("<a href=\"md_pages_demos_demo5.html\">1D adv-diff: Collocation-based Masked POD Galerkin vs LSPG</a>", ),
      ("<a href=\"md_pages_demos_demo6.html\">1D adv-diff: LSPG with nonlinear manifold (MLP) </a>", ),
    ]),
+
+  ("<a href=\"md_pages_ml_role.html\">Role of ML</a>", []),
 
   # # tutorials
   # ("<a>Tutorials</a>", #("<a href=\"md_pages_tutorials.html\">Tutorials</a>",

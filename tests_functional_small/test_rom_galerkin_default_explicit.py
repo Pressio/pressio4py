@@ -45,11 +45,10 @@ def test_galerkin_cont_time_default_explicit1():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.ForwardEuler
   problem = galerkin.DefaultExplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
   dt = 1.
   num_steps = 2
   obs = MyObs()
-  ode.advance_n_steps_and_observe(stepper, rom_state, 0., dt, num_steps, obs)
+  ode.advance_n_steps_and_observe(problem, rom_state, 0., dt, num_steps, obs)
   print(rom_state)
   assert(rom_state[0] == 0.)
   assert(rom_state[1] == 2611.)
@@ -74,11 +73,10 @@ def test_galerkin_cont_time_default_explicit2():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.ForwardEuler
   problem = rom.galerkin.DefaultExplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
   dtCb = MyDtSetter()
   num_steps = 2
   obs = MyObs()
-  ode.advance_n_steps_and_observe(stepper, rom_state, 0., dtCb, num_steps, obs)
+  ode.advance_n_steps_and_observe(problem, rom_state, 0., dtCb, num_steps, obs)
   print(rom_state)
   assert(rom_state[0] == 0.)
   assert(rom_state[1] == 2611.)
@@ -98,9 +96,8 @@ def test_galerkin_cont_time_default_explicit3():
   rom_state = np.array([0., 1., 2.])
   scheme = ode.stepscheme.ForwardEuler
   problem = rom.galerkin.DefaultExplicitProblem(scheme, sw, decoder, rom_state, fom_state)
-  stepper = problem.stepper()
   dt = 1.
-  stepper(rom_state, 0., dt, 1)
+  problem(rom_state, 0., dt, 1)
   print(rom_state)
   assert(rom_state[0] == 0.)
   assert(rom_state[1] == 51.)

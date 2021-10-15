@@ -26,38 +26,40 @@ All variants return a problem object that meets the following interface:
 ```py
 class UnsteadyLSPGProblem
 
-  def stepper()
+  def __call__(state, time, time_step_size, step_count, solver);
+
+  def createResidual()
+	return # a residual instance
+
+  def createJacobian()
+	return # a Jacobian instance
+
+  def residual(state, R)
+	# evaluates the residual for the given state
+
+  def jacobian(state, J)
+	# evaluates the Jacobian for the given state
 
   def fomStateReconstructor()
 };
 ```
 
-The stepper method returns a reference
-to an [implicit stepper](md_pages_components_ode_steppers_implicit.html) object
-that the problem creates and owns.
-The `stepper` method is what you use to retrieve the underlying
-stepper and solve the problem in time.
-Once you have the stepper, you can then use it as discussed
-in [implicit stepper page](md_pages_components_ode_steppers_implicit.html).
+
+## 2. Solve in time
 
 What does a stepper have to do with a LSPG ROM?
 The answer is that practically speaking, at the lowest-level,
 an unsteady LSPG problem can be reduced to simply a "custom" stepper to advance in time.
 This is how pressio4py implements this and the reason why a LSPG
-problem contains a stepper object inside: when you create the
-problem, pressio creates the appropriate custom stepper
-object that you can use. You don't need to know how this is done,
+problem behaves like a stepper.
+You don't need to know how this is done,
 or rely on the details, because these are problem- and implementation-dependent,
 and we reserve the right to change this in the future.
 
 
-## 2. Reference the stepper and solve in time
-
-Extract the underlying stepper object and solve in time:
-
 ```py
-stepper = problme.stepper()
-pressio4py.ode.advance_n_steps_and_observe(stepper, ...)
+stepper = ...
+pressio4py.ode.advance_n_steps_and_observe(problem, ...)
 ```
 
 @m_class{m-note m-warning}
