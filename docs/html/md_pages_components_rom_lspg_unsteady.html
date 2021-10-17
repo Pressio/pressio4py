@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,7 +91,7 @@
         <h1>
           rom: Unsteady LSPG: General Info
         </h1>
-<p><span class="m-text m-danger">todo</span>: write more</p><p>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</p><section id="autotoc_md101"><h2><a href="#autotoc_md101">1. Create</a></h2><p>You create an instance of a &quot;LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">DefaultProblem</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></pre><p>We currently support three variants:</p><ul><li>Default: <a href="md_pages_components_rom_lspg_default.html">link</a></li><li>Hyper-reduced: <a href="md_pages_components_rom_lspg_hypred.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked.html">link</a></li></ul><p>All variants return a problem object that meets the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">UnsteadyLSPGProblem</span>
+<p><span class="m-text m-danger">todo</span>: write more</p><p>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</p><section id="autotoc_md102"><h2><a href="#autotoc_md102">1. Create</a></h2><p>You create an instance of a &quot;LSPG problem&quot;, e.g.:<br /></p><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">pressio4py</span><span class="o">.</span><span class="n">rom</span><span class="o">.</span><span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">DefaultProblem</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></pre><p>We currently support three variants:</p><ul><li>Default: <a href="md_pages_components_rom_lspg_default.html">link</a></li><li>Hyper-reduced: <a href="md_pages_components_rom_lspg_hypred.html">link</a></li><li>Masked: <a href="md_pages_components_rom_lspg_masked.html">link</a></li></ul><p>All variants return a problem object that meets the following interface:</p><pre class="m-code"><span class="k">class</span> <span class="nc">UnsteadyLSPGProblem</span>
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">time_step_size</span><span class="p">,</span> <span class="n">step_count</span><span class="p">,</span> <span class="n">solver</span><span class="p">);</span>
 
@@ -103,7 +108,7 @@
     <span class="c1"># evaluates the Jacobian for the given state</span>
 
   <span class="k">def</span> <span class="nf">fomStateReconstructor</span><span class="p">()</span>
-<span class="p">};</span></pre></section><section id="autotoc_md102"><h2><a href="#autotoc_md102">2. Solve in time</a></h2><p>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don&#x27;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</p><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="o">...</span>
+<span class="p">};</span></pre></section><section id="autotoc_md103"><h2><a href="#autotoc_md103">2. Solve in time</a></h2><p>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don&#x27;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</p><pre class="m-code"><span class="n">stepper</span> <span class="o">=</span> <span class="o">...</span>
 <span class="n">pressio4py</span><span class="o">.</span><span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps_and_observe</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre><div class="m-note m-warning"><p>Remember that for LSPG, you are solving at each step a nonlinear least-squares problem. Therefore, the solver you need to use is a nonlinear least-squares solver, e.g, Gauss-Newton or Levernberg-Marquardt.</p></div></section>
       </div>
     </div>

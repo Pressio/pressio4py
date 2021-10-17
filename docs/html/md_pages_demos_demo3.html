@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,7 +91,7 @@
         <h1>
           1D adv-diff: LSPG with nonlinear manifold projection via kPCA
         </h1>
-<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</a></p></aside><section id="autotoc_md120"><h2><a href="#autotoc_md120">Overview</a></h2><p>This demo solves the same problem as the one <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.</p></section><section id="autotoc_md121"><h2><a href="#autotoc_md121">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via kernel PCA. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_kpca/main.py">here.</a></p></aside><section id="autotoc_md121"><h2><a href="#autotoc_md121">Overview</a></h2><p>This demo solves the same problem as the one <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>, but instead of using POD modes, we show here how to use a nonlinear manifold computed via kernel PCA.</p></section><section id="autotoc_md122"><h2><a href="#autotoc_md122">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
 
 <span class="c1"># create fom object</span>
@@ -115,7 +120,7 @@
 <span class="n">err</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedState</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
 
-<span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md122"><h3><a href="#autotoc_md122">1. Run FOM and collect snapshots</a></h3><p>This step is the same as described <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>,</p></section><section id="autotoc_md123"><h3><a href="#autotoc_md123">2. Setup and train the nonlinear kPCA mapper</a></h3><p>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods.</p><pre class="m-code"><span class="k">class</span> <span class="nc">MyMapperKPCA</span><span class="p">:</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md123"><h3><a href="#autotoc_md123">1. Run FOM and collect snapshots</a></h3><p>This step is the same as described <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</a>,</p></section><section id="autotoc_md124"><h3><a href="#autotoc_md124">2. Setup and train the nonlinear kPCA mapper</a></h3><p>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a kPCA-based representation, but one can use, e.g., autoencoder, and any other types of mapping. This is how we enable support for testing various methods.</p><pre class="m-code"><span class="k">class</span> <span class="nc">MyMapperKPCA</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">snapshots</span><span class="p">,</span> <span class="n">numModes</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">transformer_</span> <span class="o">=</span> <span class="n">skd</span><span class="o">.</span><span class="n">KernelPCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">numModes</span><span class="p">,</span>\
                                       <span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span>
@@ -153,7 +158,7 @@
         <span class="n">romStateLocal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">applyMapping</span><span class="p">(</span><span class="n">romStateLocal</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fomState1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fomState1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">fomState0</span><span class="p">)</span> <span class="o">/</span> <span class="n">eps</span>
-        <span class="n">romStateLocal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">eps</span></pre><aside class="m-block m-warning"><h3>Important:</h3><p>when creating an arbitrary mapping (as in the class above), the jacobian matrix <strong>must</strong> be column-major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.</p></aside></section><section id="autotoc_md124"><h3><a href="#autotoc_md124">3. Construct and run LSPG</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">customMapper</span><span class="p">):</span>
+        <span class="n">romStateLocal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">eps</span></pre><aside class="m-block m-warning"><h3>Important:</h3><p>when creating an arbitrary mapping (as in the class above), the jacobian matrix <strong>must</strong> be column-major oder so that pressio can reference it without deep copying it. This not only reduced the memory footprint since it allows to keep only one jacobian object around but also it is fundamental for the update method below correctly.</p></aside></section><section id="autotoc_md125"><h3><a href="#autotoc_md125">3. Construct and run LSPG</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">customMapper</span><span class="p">):</span>
   <span class="c1"># this is an auxiliary class that can be passed to solve</span>
   <span class="c1"># LSPG to monitor the rom state.</span>
   <span class="k">class</span> <span class="nc">RomStateObserver</span><span class="p">:</span>
@@ -196,7 +201,7 @@
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># get the reconstructor object: this allows to map romState to fomState</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md125"><h2><a href="#autotoc_md125">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo3.png" alt="Image" /></section>
+  <span class="k">return</span> <span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md126"><h2><a href="#autotoc_md126">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo3.png" alt="Image" /></section>
       </div>
     </div>
   </div>

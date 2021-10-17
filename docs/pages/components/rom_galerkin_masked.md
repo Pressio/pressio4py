@@ -78,7 +78,16 @@ class Masker:
 where `sample_indices` is a `numpy.array` holding the set of
 the row indices to sample.
 
+<br/>
 
-## Example usage
+@m_div{m-button m-primary}
+<a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py">
+@m_div{m-big} Explicit demo @m_enddiv
+@m_div{m-small} (click me) @m_enddiv
+</a> @m_enddiv
 
-\todo link tutorials
+@m_div{m-button m-primary}
+<a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py">
+@m_div{m-big} Implicit demo @m_enddiv
+@m_div{m-small} (click me) @m_enddiv
+</a> @m_enddiv

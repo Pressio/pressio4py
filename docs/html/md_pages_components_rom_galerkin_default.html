@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,20 +91,11 @@
         <h1>
           rom: Galerkin: default problem
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.galerkin</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import galerkin</code></p></div><section id="autotoc_md67"><h2><a href="#autotoc_md67">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">DefaultExplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \   <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.galerkin</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import galerkin</code></p></div><section id="autotoc_md72"><h2><a href="#autotoc_md72">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">DefaultExplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \   <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                           <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">)</span>
 
 <span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">DefaultImplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \   <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                                          <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme</li><li>(1) requires <a href="md_pages_components_ode_steppers_explicit.html">explicit value</a></li><li>(2) requires <a href="md_pages_components_ode_steppers_implicit.html">implicit value</a></li></ul></li><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy one of the APIs suitable for Galerkin, see <a href="./md_pages_components_rom_fom_apis.html">API list</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li></ul><p><br /></p></section><section id="autotoc_md68"><h2><a href="#autotoc_md68">Example usage</a></h2><section id="autotoc_md69"><h3><a href="#autotoc_md69">Explicit Case</a></h3><p>An example usage for explicit stepper is as follows:</p><pre class="m-code"><span class="c1"># assuming: decoder, adapter, rom_state, fom_ref_state are defined</span>
-
-<span class="n">scheme</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">stepscheme</span><span class="o">.</span><span class="n">ForwardEuler</span>
-<span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">DefaultExplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">)</span>
-<span class="n">dt</span> <span class="o">=</span> <span class="mf">1.</span>
-<span class="n">num_steps</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">observer</span> <span class="o">=</span> <span class="n">MyObserver</span><span class="p">()</span>
-<span class="n">ode</span><span class="o">.</span><span class="n">advance_n_steps_and_observe</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">rom_state</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">observer</span><span class="p">)</span></pre></section><section id="autotoc_md70"><h3><a href="#autotoc_md70">Implicit Case</a></h3><p>An example usage for implicit stepper is as follows:</p><pre class="m-code"><span class="n">scheme</span> <span class="o">=</span> <span class="n">ode</span><span class="o">.</span><span class="n">stepscheme</span><span class="o">.</span><span class="n">BDF1</span>
-<span class="n">problem</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">galerkin</span><span class="o">.</span><span class="n">DefaultImplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">)</span>
-<span class="o">//</span> <span class="n">todo</span> <span class="n">add</span></pre></section></section>
+                                          <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme</li><li>(1) requires <a href="md_pages_components_ode_steppers_explicit.html">explicit value</a></li><li>(2) requires <a href="md_pages_components_ode_steppers_implicit.html">implicit value</a></li></ul></li><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy one of the APIs suitable for Galerkin, see <a href="./md_pages_components_rom_fom_apis.html">API list</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li></ul><p><br /></p><div class="m-button m-primary"><a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_default_galerkin_advdiff1d_pod/main.py"><div class="m-big">Explicit demo</div>  <div class="m-small">(click me)</div></a></div></section>
       </div>
     </div>
   </div>

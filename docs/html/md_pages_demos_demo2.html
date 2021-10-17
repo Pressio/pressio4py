@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,7 +91,7 @@
         <h1>
           1D adv-diff: LSPG with POD modes
         </h1>
-<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</a></p></aside><section id="autotoc_md113"><h2><a href="#autotoc_md113">Overview</a></h2><p>We cover these three typical steps needed for a ROM:</p><ol><li>generate of snapshots using the full-order model (FOM)</li><li>compute the basis: here we demonstrate the use of POD modes</li><li>execute the ROM: here we leverage the LSPG ROM to demonstrate a <em>reproductive</em> test, i.e., we run the ROM using the same physical coefficients, b.c., etc. A predictive run is demonstrated in a different tutorial.</li></ol><p>The governing equations for this problem are the same as those in <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html">here</a>,</p></section><section id="autotoc_md114"><h2><a href="#autotoc_md114">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
+<aside class="m-block m-info"><p>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using POD modes as basis. By the end, it should be clear how to setup the problem. This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <a href="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_pod/main.py">here.</a></p></aside><section id="autotoc_md114"><h2><a href="#autotoc_md114">Overview</a></h2><p>We cover these three typical steps needed for a ROM:</p><ol><li>generate of snapshots using the full-order model (FOM)</li><li>compute the basis: here we demonstrate the use of POD modes</li><li>execute the ROM: here we leverage the LSPG ROM to demonstrate a <em>reproductive</em> test, i.e., we run the ROM using the same physical coefficients, b.c., etc. A predictive run is demonstrated in a different tutorial.</li></ol><p>The governing equations for this problem are the same as those in <a href="https://pressio.github.io/pressio4py/html/md_pages_demos_demo2.html">here</a>,</p></section><section id="autotoc_md115"><h2><a href="#autotoc_md115">Main function</a></h2><p>The main function of the demo is the following:</p><pre class="m-code"><span class="n">logger</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">logto</span><span class="o">.</span><span class="n">terminal</span><span class="p">)</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">setVerbosity</span><span class="p">([</span><span class="n">logger</span><span class="o">.</span><span class="n">loglevel</span><span class="o">.</span><span class="n">info</span><span class="p">])</span>
 
 <span class="c1"># create fom object</span>
@@ -116,7 +121,7 @@
 <span class="n">err</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fomFinalState</span><span class="o">-</span><span class="n">approximatedState</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final state relative l2 error: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">/</span><span class="n">fomNorm</span><span class="p">))</span>
 
-<span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md115"><h3><a href="#autotoc_md115">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span></pre><section id="autotoc_md116"><h3><a href="#autotoc_md116">1. Run FOM and collect snapshots</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">doFom</span><span class="p">(</span><span class="n">fom</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">saveFreq</span><span class="p">):</span>
   <span class="n">u</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">u0</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
   <span class="n">U</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span>
   <span class="n">f</span> <span class="o">=</span> <span class="n">fom</span><span class="o">.</span><span class="n">createVelocity</span><span class="p">()</span>
@@ -128,10 +133,10 @@
     <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="n">saveFreq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
       <span class="n">U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
   <span class="n">Usolns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md116"><h3><a href="#autotoc_md116">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">Usolns</span><span class="o">.</span><span class="n">T</span><span class="p">]</span></pre></section><section id="autotoc_md117"><h3><a href="#autotoc_md117">2. Compute POD modes</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">computePodModes</span><span class="p">(</span><span class="n">snapshots</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SVD on matrix: &quot;</span><span class="p">,</span> <span class="n">snapshots</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
   <span class="n">U</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">snapshots</span><span class="p">)</span>
-  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md117"><h3><a href="#autotoc_md117">3. Construct and run ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">U</span></pre></section><section id="autotoc_md118"><h3><a href="#autotoc_md118">3. Construct and run ROM</a></h3><pre class="m-code"><span class="k">def</span> <span class="nf">runLspg</span><span class="p">(</span><span class="n">fomObj</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">nsteps</span><span class="p">,</span> <span class="n">modes</span><span class="p">):</span>
   <span class="c1"># this is an auxiliary class that can be passed to solve</span>
   <span class="c1"># LSPG to monitor the rom state.</span>
   <span class="k">class</span> <span class="nc">RomStateObserver</span><span class="p">:</span>
@@ -177,7 +182,7 @@
   <span class="c1"># after we are done, use the reconstructor object to reconstruct the fom state</span>
   <span class="c1"># get the reconstructor object: this allows to map romState to fomState</span>
   <span class="n">fomRecon</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">fomStateReconstructor</span><span class="p">()</span>
-  <span class="k">return</span> <span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md118"><h2><a href="#autotoc_md118">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo2.png" alt="Image" /></section>
+  <span class="k">return</span> <span class="n">fomRecon</span><span class="p">(</span><span class="n">romState</span><span class="p">)</span></pre></section></section><section id="autotoc_md119"><h2><a href="#autotoc_md119">Results</a></h2><p>If everything works fine, the following plot shows the result.</p><img class="m-image" src="demo2.png" alt="Image" /></section>
       </div>
     </div>
   </div>

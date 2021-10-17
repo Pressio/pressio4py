@@ -8,8 +8,8 @@ This page describes a demo for a reproductive \char`\"{}masked\char`\"{} Galerki
 \begin{DoxyParagraph}{We are currently working on this page, it will be updated with more explanations.}
 
 \end{DoxyParagraph}
-\hypertarget{md_pages_demos_demo5_autotoc_md137}{}\doxysection{Overview}\label{md_pages_demos_demo5_autotoc_md137}
-This is a follow up to the previous demo \href{./md_pages_demos_demo4.html}{\texttt{ here}} We compare here maskdd Galerkin and masked LSPG.\hypertarget{md_pages_demos_demo5_autotoc_md138}{}\doxysection{Main function}\label{md_pages_demos_demo5_autotoc_md138}
+\hypertarget{md_pages_demos_demo5_autotoc_md138}{}\doxysection{Overview}\label{md_pages_demos_demo5_autotoc_md138}
+This is a follow up to the previous demo \href{./md_pages_demos_demo4.html}{\texttt{ here}} We compare here maskdd Galerkin and masked LSPG.\hypertarget{md_pages_demos_demo5_autotoc_md139}{}\doxysection{Main function}\label{md_pages_demos_demo5_autotoc_md139}
 The main function of the demo is the following\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{logger.setVerbosity([logger.loglevel.info])}
@@ -79,7 +79,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{\textcolor{comment}{\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\#}}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md139}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo5_autotoc_md139}
+\hypertarget{md_pages_demos_demo5_autotoc_md140}{}\doxysubsection{1. Run FOM and collect snapshots}\label{md_pages_demos_demo5_autotoc_md140}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }doFom(fom, dt, nsteps, saveFreq):}
@@ -97,7 +97,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [u, Usolns.T]}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md140}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo5_autotoc_md140}
+\hypertarget{md_pages_demos_demo5_autotoc_md141}{}\doxysubsection{2. Compute POD modes}\label{md_pages_demos_demo5_autotoc_md141}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }computePodModes(snapshots):}
@@ -106,7 +106,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} U}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md141}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo5_autotoc_md141}
+\hypertarget{md_pages_demos_demo5_autotoc_md142}{}\doxysubsection{3. Create the sampling indices}\label{md_pages_demos_demo5_autotoc_md142}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# we need to select and provide to pressio a set of indices}}
@@ -129,7 +129,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{romSize = 5  \textcolor{comment}{\# number of modes to use}}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md142}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo5_autotoc_md142}
+\hypertarget{md_pages_demos_demo5_autotoc_md143}{}\doxysubsection{4. The masker class}\label{md_pages_demos_demo5_autotoc_md143}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{class }MyMasker:}
@@ -150,7 +150,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{      result[:] = np.take(operand, self.rows\_, axis=0)}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md143}{}\doxysubsection{5. Masked Galerkin ROM}\label{md_pages_demos_demo5_autotoc_md143}
+\hypertarget{md_pages_demos_demo5_autotoc_md144}{}\doxysubsection{5. Masked Galerkin ROM}\label{md_pages_demos_demo5_autotoc_md144}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runMaskedGalerkin(fomObj, dt, nsteps, modes, sampleMeshIndices):}
@@ -209,7 +209,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{  \textcolor{keywordflow}{return} [fomRecon(romState), romState]}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md144}{}\doxysubsection{6. Masked LSPG ROM}\label{md_pages_demos_demo5_autotoc_md144}
+\hypertarget{md_pages_demos_demo5_autotoc_md145}{}\doxysubsection{6. Masked LSPG ROM}\label{md_pages_demos_demo5_autotoc_md145}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{def }runMaskedLspg(fomObj, dt, nsteps, modes, sampleMeshIndices):}
@@ -260,7 +260,7 @@ The main function of the demo is the following\+:
 \DoxyCodeLine{}
 
 \end{DoxyCode}
-\hypertarget{md_pages_demos_demo5_autotoc_md145}{}\doxysection{Results}\label{md_pages_demos_demo5_autotoc_md145}
+\hypertarget{md_pages_demos_demo5_autotoc_md146}{}\doxysection{Results}\label{md_pages_demos_demo5_autotoc_md146}
 If everything works fine, the following plots shows the result. We first plot the result reconstructed {\itshape only on the sample mesh}. This can easily be done using the bases collocated on the sample mesh indices. 
 
 We then plot the fom solution reconstructed using the bases on the full mesh. Note that all we need to change is just using the full bases. We see that for this toy example, even with just 10\% of the grid, LSPG with 5 modes accuractely reproduces the FOM solution. While for Galerkin the solution is less accurate. 

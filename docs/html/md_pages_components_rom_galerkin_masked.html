@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,13 +91,13 @@
         <h1>
           rom: Galerkin: masked problem
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.galerkin</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import galerkin</code></p></div><section id="autotoc_md75"><h2><a href="#autotoc_md75">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">MaskedExplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span>
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.galerkin</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import galerkin</code></p></div><section id="autotoc_md77"><h2><a href="#autotoc_md77">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">MaskedExplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span>
                                          <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">,</span> \      <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                                          <span class="n">projector</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span>
 
 <span class="n">problem</span> <span class="o">=</span> <span class="n">galerkin</span><span class="o">.</span><span class="n">MaskedImplicitProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span>
                                          <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">,</span> \      <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                                         <span class="n">projector</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme</li><li>(1) requires <a href="md_pages_components_ode_steppers_explicit.html">explicit value</a></li><li>(2) requires <a href="md_pages_components_ode_steppers_implicit.html">implicit value</a></li></ul></li><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy one of the APIs suitable for Galerkin, see <a href="./md_pages_components_rom_fom_apis.html">API list</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>projector</code>:<ul><li>performs the projection of the FOM operators onto the reduced space</li><li>must meet <a href="md_pages_components_rom_galerkin_projector.html">this specific API</a></li></ul></li><li><code>masker</code>:<ul><li>an functor responsible of &quot;masking&quot; the FOM operators</li><li>must be a functor with a specific API, see details below</li></ul></li></ul><section id="autotoc_md76"><h3><a href="#autotoc_md76">Masker</a></h3><p><span class="m-text m-danger">todo</span>: explain what it is</p><p>The masker must meet the following API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Masker</span><span class="p">:</span>
+                                         <span class="n">projector</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span></pre><ul><li><code>scheme</code>:<ul><li>value from the <code>ode.stepscheme</code> enum setting the desired stepping scheme</li><li>(1) requires <a href="md_pages_components_ode_steppers_explicit.html">explicit value</a></li><li>(2) requires <a href="md_pages_components_ode_steppers_implicit.html">implicit value</a></li></ul></li><li><code>fom_adapter</code>:<ul><li>instance of your adapter class specifying the FOM problem.<br /></li><li>must satisfy one of the APIs suitable for Galerkin, see <a href="./md_pages_components_rom_fom_apis.html">API list</a></li></ul></li><li><code>decoder</code>:<ul><li>decoder object</li><li>must satify the requirements listed <a href="md_pages_components_rom_decoder.html">here</a></li></ul></li><li><code>rom_state</code>:<ul><li>currently, must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>fom_ref_state</code>:<ul><li>your FOM reference state that is used when reconstructing the FOM state</li><li>must be a rank-1 <code>numpy.array</code></li></ul></li><li><code>projector</code>:<ul><li>performs the projection of the FOM operators onto the reduced space</li><li>must meet <a href="md_pages_components_rom_galerkin_projector.html">this specific API</a></li></ul></li><li><code>masker</code>:<ul><li>an functor responsible of &quot;masking&quot; the FOM operators</li><li>must be a functor with a specific API, see details below</li></ul></li></ul><section id="autotoc_md78"><h3><a href="#autotoc_md78">Masker</a></h3><p><span class="m-text m-danger">todo</span>: explain what it is</p><p>The masker must meet the following API:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Masker</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_indices</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span> <span class="o">=</span> <span class="n">sample_indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span>
@@ -105,7 +110,7 @@
 
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operand</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
     <span class="c1"># time is not used, but you can potentially</span>
-    <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span></pre><p>where <code>sample_indices</code> is a <code>numpy.array</code> holding the set of the row indices to sample.</p></section></section><section id="autotoc_md77"><h2><a href="#autotoc_md77">Example usage</a></h2><p><span class="m-text m-danger">todo</span> link tutorials</p></section>
+    <span class="n">result</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_indices</span><span class="p">)</span></pre><p>where <code>sample_indices</code> is a <code>numpy.array</code> holding the set of the row indices to sample.</p><p><br /></p><div class="m-button m-primary"><a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py"><div class="m-big">Explicit demo</div>  <div class="m-small">(click me)</div></a></div><div class="m-button m-primary"><a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py"><div class="m-big">Implicit demo</div>  <div class="m-small">(click me)</div></a></div></section></section>
       </div>
     </div>
   </div>

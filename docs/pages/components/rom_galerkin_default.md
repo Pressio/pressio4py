@@ -44,28 +44,8 @@ problem = galerkin.DefaultImplicitProblem(scheme, fom_adapter, decoder, \   (2)
 
 <br/>
 
-## Example usage
-
-### Explicit Case
-An example usage for explicit stepper is as follows:
-
-```py
-
-# assuming: decoder, adapter, rom_state, fom_ref_state are defined
-
-scheme = ode.stepscheme.ForwardEuler
-problem = rom.galerkin.DefaultExplicitProblem(scheme, adapter, decoder, rom_state, fom_ref_state)
-dt = 1.
-num_steps = 2
-observer = MyObserver()
-ode.advance_n_steps_and_observe(problem, rom_state, 0., dt, num_steps, observer)
-```
-
-### Implicit Case
-An example usage for implicit stepper is as follows:
-
-```py
-scheme = ode.stepscheme.BDF1
-problem = rom.galerkin.DefaultImplicitProblem(scheme, adapter, decoder, rom_state, fom_ref_state)
-// todo add
-```
+@m_div{m-button m-primary}
+<a href="https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_default_galerkin_advdiff1d_pod/main.py">
+@m_div{m-big}Explicit demo @m_enddiv
+@m_div{m-small} (click me) @m_enddiv
+</a> @m_enddiv

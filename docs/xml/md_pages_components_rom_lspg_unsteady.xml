@@ -8,7 +8,7 @@
     <detaileddescription>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write more</para>
 <para>The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps:</para>
-<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md101">
+<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md102">
 <title>1. Create</title>
 <para>You create an instance of a &quot;LSPG problem&quot;, e.g.: <linebreak/>
 </para>
@@ -42,7 +42,7 @@
 <codeline><highlight class="normal">};</highlight></codeline>
 </programlisting></para>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md102">
+<sect1 id="md_pages_components_rom_lspg_unsteady_1autotoc_md103">
 <title>2. Solve in time</title>
 <para>What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-level, an unsteady LSPG problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don&apos;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</para>
 <para><programlisting filename=".py"><codeline><highlight class="normal">stepper<sp/>=<sp/>...</highlight></codeline>

@@ -11,7 +11,7 @@ LINKS_NAVBAR1 = [
   #  ]),
   # ("<a href=\"md_pages_components.html\">Components</a>",
 
-  ("<a>Documentation</a>",
+  ("<a>Documentation/A</a>",
    [
      ("<a href=\"md_pages_components_logger.html\">logger</a>",),
 
@@ -28,7 +28,10 @@ LINKS_NAVBAR1 = [
      ("<a href=\"md_pages_components_ode_steppers_explicit.html\"> &emsp; - explicit steppers</a>",),
      ("<a href=\"md_pages_components_ode_steppers_implicit.html\"> &emsp; - implicit steppers</a>",),
      ("<a href=\"md_pages_components_ode_advance.html\"> &emsp; - advancers</a>",),
+   ]),
 
+  ("<a>Documentation/B</a>",
+   [
      #
      ("<a> rom: </a>",),
      ("<a href=\"md_pages_components_rom_fom_apis.html\"> &emsp; - FOM adapter API</a>",),
@@ -78,7 +81,7 @@ LINKS_NAVBAR1 = [
   #    ("<a href=\"md_pages_tutorials_tutorial4.html\">Masked Galerkin explicit</a>", )
   #  ]),
 
-  ("<a href=\"https://github.com/Pressio/pressio4py\">Github Page</a>", []),
+  ("<a href=\"https://github.com/Pressio/pressio4py\">Github</a>", []),
 
   # # synopsis
   # ("<a>Synopsis</a>",

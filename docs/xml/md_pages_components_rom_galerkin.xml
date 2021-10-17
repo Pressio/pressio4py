@@ -6,63 +6,186 @@
     <briefdescription>
     </briefdescription>
     <detaileddescription>
-<para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span>: write more</para>
-<para>The pressio4py Galerkin ROMs are designed such that using them involves three main steps:</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-note m-info" /></para>
+<para><parblock><para>This page explains the API for using the pressio Galerkin ROMs. After reading this, you should understand what a &quot;pressio Galerkin problem&quot; is, the variants we currently support, and how to use the problem after instantiating it.</para>
+<para>If anything is unclear, and/or you have suggestions on how to improve this page, <ulink url="https://github.com/Pressio/pressio4py/issues">open an issue on github</ulink>. </para>
+</parblock></para>
+<para><linebreak/>
+</para>
 <sect1 id="md_pages_components_rom_galerkin_1autotoc_md62">
-<title>1. Create</title>
-<para>You create an instance of a &quot;Galerkin problem&quot;, e.g.: <linebreak/>
+<title>Everything starts with creating a problem!</title>
+<para>The main entry point to use the pressio Galerkin ROMs is the problem class. You create an instance of one of the supported &quot;Galerkin problems&quot; as:</para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-primary" /></para>
+<para><simplesect kind="par"><title></title><para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>pressio4py.rom.galerkin.&lt;keyword&gt;ExplicitProblem(scheme,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">problem<sp/>=<sp/>pressio4py.rom.galerkin.&lt;keyword&gt;ImplicitProblem(scheme,<sp/>...)</highlight></codeline>
+</programlisting> </para>
+</simplesect>
 </para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>pressio4py.rom.galerkin.DefaultExplicitProblem(args)</highlight></codeline>
-</programlisting></para>
-<para>We currently support three variants:</para>
-<para><itemizedlist>
-<listitem><para>Default: <ulink url="md_pages_components_rom_galerkin_default.html">link</ulink></para>
-</listitem><listitem><para>Hyper-reduced: <ulink url="md_pages_components_rom_galerkin_hypred.html">link</ulink></para>
-</listitem><listitem><para>Masked: <ulink url="md_pages_components_rom_galerkin_masked.html">link</ulink></para>
-</listitem></itemizedlist>
+<para>where <computeroutput>&lt;keyword&gt;</computeroutput> expresses the variant you want (more below), <computeroutput>scheme</computeroutput> is a value from the <computeroutput>ode.stepscheme</computeroutput> enum to set the desired stepping scheme, and the other arguments depend on the variant you choose. If you pass an invalid scheme, you get a runtime error.</para>
+<para>We currently offer the following variants:</para>
+<para> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-button m-success"> <ulink url="md_pages_components_rom_galerkin_default.html"> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-medium"><ensp/><emsp/>Default Problem<emsp/> <ensp/> </mcss:div>  <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-small"> click to learn more </mcss:div> </ulink> </mcss:div></para>
+<para> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-button m-primary"> <ulink url="md_pages_components_rom_galerkin_hypred.html"> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-medium">Hyper-reduced Problem </mcss:div>  <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-small"> click to learn more </mcss:div> </ulink> </mcss:div></para>
+<para> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-button m-warning"> <ulink url="md_pages_components_rom_galerkin_masked.html"> <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-medium"><ensp/><emsp/> Masked Problem<ensp/><emsp/> </mcss:div>  <mcss:div xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-small"> click to learn more </mcss:div> </ulink> </mcss:div></para>
+<para><linebreak/>
 </para>
-<para>The <computeroutput>problem</computeroutput> object behaves like a stepper. Therefore, you can use the problem like you would with any other stepper object (more on this below).</para>
-<sect2 id="md_pages_components_rom_galerkin_1autotoc_md63">
-<title>Explicit Problem</title>
-<para>The problem meets the following API:</para>
+</sect1>
+<sect1 id="md_pages_components_rom_galerkin_1autotoc_md63">
+<title>Explicit Problem API</title>
+<para>An explicit Galerkin problem exposes the following API:</para>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">GalerkinProblem</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>time,<sp/>time_step_size,<sp/>step_count);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>time,<sp/>time_step_size,<sp/>step_count):</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>def<sp/>fomStateReconstructor();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">fomStateReconstructor():</highlight></codeline>
 <codeline><highlight class="normal">};</highlight></codeline>
 </programlisting></para>
-</sect2>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-success" /></para>
+<para><simplesect kind="par"><title>Main thing to remember:</title><para>An explicit Galerkin problem satisfies the <ulink url="md_pages_components_ode_advance.html">steppable concept</ulink> (specifically, behaves like an <ulink url="md_pages_components_ode_steppers_explicit.html">explicit stepper</ulink>). </para>
+</simplesect>
+</para>
 <sect2 id="md_pages_components_rom_galerkin_1autotoc_md64">
-<title>Implicit Problem</title>
-<para>The problem meets the following API:</para>
-<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">GalerkinProblem</highlight></codeline>
+<title>How do I solve an EXPLICIT problem?</title>
+<para>The following snippets illustrate some things you can do.</para>
+<sect3 id="md_pages_components_rom_galerkin_1autotoc_md65">
+<title>Snippet 1:</title>
+<para><programlisting filename=".py"><codeline><highlight class="normal">scheme<sp/><sp/><sp/><sp/>=<sp/>ode.stepscheme.RungeKutta4</highlight></codeline>
+<codeline><highlight class="normal">problem<sp/><sp/><sp/>=<sp/>galerkin.DefaultExplicitProblem(scheme,<sp/>...)</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>time,<sp/>time_step_size,<sp/>step_count,<sp/>solver);</highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>def<sp/>createResidual()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>a<sp/>residual<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createJacobian()</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/></highlight><highlight class="comment">#<sp/>a<sp/>Jacobian<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>def<sp/>residual(state,<sp/>R)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>residual<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">jacobian(state,<sp/>J)</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>Jacobian<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>def<sp/>fomStateReconstructor();</highlight></codeline>
-<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal">time,<sp/>dt<sp/>=<sp/>0.,<sp/>0.5</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>step<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem(romState,<sp/>currTime,<sp/>dt,<sp/>step)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time<sp/>+=<sp/>dt</highlight></codeline>
 </programlisting></para>
+</sect3>
+<sect3 id="md_pages_components_rom_galerkin_1autotoc_md66">
+<title>Snippet 2:</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyObserver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>step,<sp/>time,<sp/>state):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>called<sp/>at<sp/>every<sp/>step<sp/>allowing<sp/>you<sp/>to</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>monitor<sp/>and/or<sp/>use<sp/>the<sp/>Galerkin<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">scheme<sp/><sp/><sp/><sp/>=<sp/>ode.stepscheme.RungeKutta4</highlight></codeline>
+<codeline><highlight class="normal">problem<sp/><sp/><sp/>=<sp/>galerkin.DefaultExplicitProblem(scheme,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal">time0,<sp/>dt,<sp/>nSteps<sp/>=<sp/>0,<sp/>0.5,<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">obs<sp/>=<sp/>MyObserver()</highlight></codeline>
+<codeline><highlight class="normal">ode.advance_n_steps_and_observe(problem,<sp/>romState,<sp/>time0,<sp/>dt,<sp/>nSteps,<sp/>obs)</highlight></codeline>
+</programlisting></para>
+<para><linebreak/>
+ <hruler/>
+ <linebreak/>
+</para>
+</sect3>
 </sect2>
 </sect1>
-<sect1 id="md_pages_components_rom_galerkin_1autotoc_md65">
-<title>2. Solve in time</title>
-<para>What does a stepper have to do with a Galerkin ROM problme? The answer is that practically speaking, at the lowest-level, a Galerkin problem can be reduced to simply a &quot;custom&quot; stepper to advance in time. This is how pressio4py implements this and the reason why a Galerkin problem contains a stepper object inside: when you create the problem, pressio creates the appropriate custom stepper object that you can use. You don&apos;t need to know how this is done, or rely on the details, because these are problem- and implementation-dependent, and we reserve the right to change this in the future.</para>
-<para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>...</highlight></codeline>
-<codeline><highlight class="normal">pressio4py.ode.advance_n_steps_and_observe(problem,<sp/>...)</highlight></codeline>
-</programlisting> </para>
+<sect1 id="md_pages_components_rom_galerkin_1autotoc_md67">
+<title>Implicit Problem API</title>
+<para>If you create an implicit Galerkin problem, the problem exposes the following API:</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">GalerkinProblem</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">fomStateReconstructor():</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(state,<sp/>time,<sp/>time_step_size,<sp/>step_count,<sp/>solver):</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">createResidual()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>return<sp/></highlight><highlight class="comment">#<sp/>a<sp/>residual<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>createJacobian()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="comment">#<sp/>a<sp/>Jacobian<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">residual(state,<sp/>R)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>residual<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>def<sp/>jacobian(state,<sp/>J)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>evaluates<sp/>the<sp/>Jacobian<sp/>for<sp/>the<sp/>given<sp/>state</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+</programlisting></para>
+<para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-success" /></para>
+<para><simplesect kind="par"><title>Main thing to remember:</title><para>An implicit Galerkin problem satisfies the <ulink url="md_pages_components_ode_advance.html">steppable concept</ulink> (specifically, behaves like an <ulink url="md_pages_components_ode_steppers_implicit.html">implicit stepper</ulink>). </para>
+</simplesect>
+</para>
+<sect2 id="md_pages_components_rom_galerkin_1autotoc_md68">
+<title>How do I solve an IMPLICIT problem?</title>
+<para>Recall that doing implicit time stepping it is not as simple as explicit. <ulink url="md_pages_components_ode_steppers_implicit.html">For implicit, in fact, you also need a <emphasis>solver</emphasis> to compute the solution at the next step</ulink>. In the case of Galerkin, you can use a Newton-Raphson solver, because at eaach step, you are solving a (reduced) system of equations with as many equations as the number of unknowns. More specifically, the system you need to solve has as many equations as the dimensionality of your approximating subspace. See some sample snippets below:</para>
+<sect3 id="md_pages_components_rom_galerkin_1autotoc_md69">
+<title>Snippet 1:</title>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyLinSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>A,b,x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>solve<sp/>Ax<sp/>=<sp/>b<sp/>using<sp/>your<sp/>favority<sp/>solver,<sp/>like<sp/>scipy</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyObserver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>step,<sp/>time,<sp/>state):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>assuming<sp/>romState<sp/>and<sp/>other<sp/>things<sp/>are<sp/>already<sp/>created</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>scheme<sp/><sp/><sp/><sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/><sp/><sp/>=<sp/>galerkin.DefaultExplicitProblem(scheme,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>lsO<sp/><sp/>=<sp/>MyLinSolver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO<sp/>=<sp/>solvers.create_newton_raphson(problem,<sp/>romState,<sp/>lsO)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO.setUpdatingCriterion(solvers.update.Standard)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO.setMaxIterations(5)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>nlsO.setStoppingCriterion(solvers.stop.AfterMaxIters)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>use<sp/>the<sp/>call<sp/>operator<sp/>directly</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time,<sp/>dt<sp/>=<sp/>0.,<sp/>0.5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>step<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>problem(romState,<sp/>currTime,<sp/>dt,<sp/>step,<sp/>nlsO)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time<sp/>+=<sp/>dt</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>or<sp/>use<sp/>our<sp/>own<sp/>advance<sp/>functions</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>obs<sp/>=<sp/>MyObserver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>t0,<sp/>dt,<sp/>nSteps<sp/>=<sp/>0.,<sp/>0.5,<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps_and_observe(problem,<sp/>t0,<sp/>dt,<sp/>Steps,<sp/>obs,<sp/>nlsO)</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="md_pages_components_rom_galerkin_1autotoc_md70">
+<title>Snippet 2:</title>
+<para>Here we show the scenario where you want to use your own nonlinear solver.</para>
+<para><programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyNonLinSolver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__init__(self,<sp/>system):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.R<sp/>=<sp/>system.createResidual()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>self.J<sp/>=<sp/>system.createJacobian()</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">solve(self,<sp/>system,<sp/>x):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>here<sp/>you<sp/>have<sp/>the<sp/>solve<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">#<sp/>you<sp/>can<sp/>compute<sp/>the<sp/>operators<sp/>as<sp/>follows:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>system.residual(x,<sp/>self.R);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>system.jacobian(x,<sp/>self.J);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MyObserver:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">def<sp/></highlight><highlight class="normal">__call__(self,<sp/>step,<sp/>time,<sp/>state):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>print(state)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>__name__<sp/>==<sp/></highlight><highlight class="stringliteral">&quot;__main__&quot;</highlight><highlight class="normal">:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>assuming<sp/>romState<sp/>and<sp/>other<sp/>things<sp/>are<sp/>already<sp/>created</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>scheme<sp/><sp/><sp/><sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>problem<sp/><sp/><sp/>=<sp/>galerkin.DefaultExplicitProblem(scheme,<sp/>...)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>customNonLinSolver<sp/>=<sp/>MyNonLinSolver(problem)</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>use<sp/>the<sp/>call<sp/>operator<sp/>directly</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>time,<sp/>dt<sp/>=<sp/>0.,<sp/>0.5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>step<sp/></highlight><highlight class="keywordflow">in</highlight><highlight class="normal"><sp/>range(10):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>problem(romState,<sp/>currTime,<sp/>dt,<sp/>step,<sp/>customNonLinSolver)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>time<sp/>+=<sp/>dt</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>or<sp/>use<sp/>our<sp/>own<sp/>advance<sp/>functions</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>obs<sp/>=<sp/>MyObserver()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>t0,<sp/>dt,<sp/>nSteps<sp/>=<sp/>0.,<sp/>0.5,<sp/>5</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>ode.advance_n_steps_and_observe(problem,<sp/>t0,<sp/>dt,<sp/>Steps,<sp/>obs,<sp/>customNonLinSolver)</highlight></codeline>
+</programlisting></para>
+<para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span> finish </para>
+</sect3>
+</sect2>
 </sect1>
     </detaileddescription>
     <location file="pages/components/rom_galerkin.md"/>

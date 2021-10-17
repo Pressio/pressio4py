@@ -2,7 +2,7 @@
 
 Defined in module\+: {\ttfamily pressio4py.\+rom.\+galerkin}
 
-Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md75}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_masked_autotoc_md75}
+Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import galerkin} \hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md77}{}\doxysection{API, Parameters and Requirements}\label{md_pages_components_rom_galerkin_masked_autotoc_md77}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{problem = galerkin.MaskedExplicitProblem(scheme, fom\_adapter, decoder,}
@@ -54,7 +54,7 @@ Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import gal
 \item an functor responsible of \char`\"{}masking\char`\"{} the FOM operators
 \item must be a functor with a specific API, see details below
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md76}{}\doxysubsection{Masker}\label{md_pages_components_rom_galerkin_masked_autotoc_md76}
+\end{DoxyItemize}\hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md78}{}\doxysubsection{Masker}\label{md_pages_components_rom_galerkin_masked_autotoc_md78}
 todo\+: explain what it is
 
 The masker must meet the following API\+:
@@ -79,5 +79,11 @@ The masker must meet the following API\+:
 \end{DoxyCode}
 
 
-where {\ttfamily sample\+\_\+indices} is a {\ttfamily numpy.\+array} holding the set of the row indices to sample.\hypertarget{md_pages_components_rom_galerkin_masked_autotoc_md77}{}\doxysection{Example usage}\label{md_pages_components_rom_galerkin_masked_autotoc_md77}
-todo link tutorials 
+where {\ttfamily sample\+\_\+indices} is a {\ttfamily numpy.\+array} holding the set of the row indices to sample.
+
+~\newline
+
+
+ \href{https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_advdiff1d_pod/main.py}{\texttt{  Explicit demo  (click me) }}
+
+ \href{https://github.com/Pressio/pressio4py/blob/main/demos/unsteady_masked_galerkin_vs_lspg_advdiff1d_pod/main.py}{\texttt{  Implicit demo  (click me) }} 

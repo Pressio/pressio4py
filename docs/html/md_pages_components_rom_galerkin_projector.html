@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,7 +91,7 @@
         <h1>
           rom: Galerkin: projector
         </h1>
-<div class="m-note m-info"><p>The projector is needed for Galerkin to perform the projection of the FOM operators onto the reduced space.</p><p>It is explicitly required from the user when doing <a href="md_pages_components_rom_galerkin_masked.html">masked</a> or <a href="md_pages_components_rom_galerkin_hypred.html">hyper-reduced</a> Galerkin.</p></div><p>For a <a href="md_pages_components_rom_galerkin_default.html">default</a> problem, you don&#x27;t need to pass it because the projector is constructed behind the scenes automatically using the decoder&#x27;s jacobian.</p><p><span class="m-text m-danger">todo</span>: explain more, talk about pressio-tools.</p><section id="autotoc_md79"><h2><a href="#autotoc_md79">API</a></h2><p>When provided by the user, the projector must be a functor as follows:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Projector</span><span class="p">:</span>
+<div class="m-note m-info"><p>The projector is needed for Galerkin to perform the projection of the FOM operators onto the reduced space.</p><p>It is explicitly required from the user when doing <a href="md_pages_components_rom_galerkin_masked.html">masked</a> or <a href="md_pages_components_rom_galerkin_hypred.html">hyper-reduced</a> Galerkin.</p></div><p>For a <a href="md_pages_components_rom_galerkin_default.html">default</a> problem, you don&#x27;t need to pass it because the projector is constructed behind the scenes automatically using the decoder&#x27;s jacobian.</p><p><span class="m-text m-danger">todo</span>: explain more, talk about pressio-tools.</p><section id="autotoc_md80"><h2><a href="#autotoc_md80">API</a></h2><p>When provided by the user, the projector must be a functor as follows:</p><pre class="m-code"><span class="k">class</span> <span class="nc">Projector</span><span class="p">:</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
     <span class="c1"># as needed</span>
 

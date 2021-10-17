@@ -25,7 +25,7 @@
         <div class="m-row">
           <ol class="m-col-t-12 m-col-m-none">
             <li>
-              <a>Documentation</a>
+              <a>Documentation/A</a>
               <ol>
                 <li><a href="md_pages_components_logger.html">logger</a></li>
                 <li><a> nonlinear solvers: </a></li>
@@ -37,6 +37,11 @@
                 <li><a href="md_pages_components_ode_steppers_explicit.html"> &emsp; - explicit steppers</a></li>
                 <li><a href="md_pages_components_ode_steppers_implicit.html"> &emsp; - implicit steppers</a></li>
                 <li><a href="md_pages_components_ode_advance.html"> &emsp; - advancers</a></li>
+              </ol>
+            </li>
+            <li>
+              <a>Documentation/B</a>
+              <ol>
                 <li><a> rom: </a></li>
                 <li><a href="md_pages_components_rom_fom_apis.html"> &emsp; - FOM adapter API</a></li>
                 <li><a href="md_pages_components_rom_decoder.html">  &emsp; - decoder</a></li>
@@ -67,9 +72,9 @@
               </ol>
             </li>
             <li><a href="md_pages_ml_role.html">Role of ML</a></li>
-            <li><a href="https://github.com/Pressio/pressio4py">Github Page</a></li>
+            <li><a href="https://github.com/Pressio/pressio4py">Github</a></li>
           </ol>
-          <ol class="m-col-t-6 m-col-m-none" start="5">
+          <ol class="m-col-t-6 m-col-m-none" start="6">
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -86,7 +91,7 @@
         <h1>
           rom: LSPG: unsteady hyper-reduced problem
         </h1>
-<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.lspg.unsteady</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import lspg</code></p></div><section id="autotoc_md88"><h2><a href="#autotoc_md88">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">HypredProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \
+<div class="m-note m-default"><p>Defined in module: <code>pressio4py.rom.lspg.unsteady</code></p><p>Import as: &emsp; &emsp; &emsp; <code>from pressio4py.rom import lspg</code></p></div><section id="autotoc_md89"><h2><a href="#autotoc_md89">API, Parameters and Requirements</a></h2><pre class="m-code"><span class="n">problem</span> <span class="o">=</span> <span class="n">lspg</span><span class="o">.</span><span class="n">unsteady</span><span class="o">.</span><span class="n">HypredProblem</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">fom_adapter</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> \
                                       <span class="n">rom_state</span><span class="p">,</span> <span class="n">fom_ref_state</span><span class="p">,</span> \
                                       <span class="n">sampleToStencilIndexing</span><span class="p">)</span>
 
@@ -98,7 +103,7 @@
     <span class="c1"># apply your preconditioner to the operand.</span>
     <span class="c1"># Ensure that you overwrite the data in the operand.</span>
     <span class="c1"># As an example, a trivial preconditioner that does nothing:</span>
-    <span class="c1"># operand[:] *= 1.</span></pre> <p><br /></p></li></ul></li></ul></section><section id="autotoc_md89"><h2><a href="#autotoc_md89">Stencil to sample indexing</a></h2><p>When working with a hyper-reduced problem, pressio4py has to manipulate objects that have different sizes/distributions. For such problem, in fact, some operators are naturally defined on the what we refer to as &quot;sample mesh&quot; while some are defined on what we call the &quot;stencil mesh&quot;.</p><p>As explained <a href="https://pressio.github.io/algos/hyper/">here</a>, recall that:</p><ol><li><strong>sample mesh</strong>: a disjoint collection of elements where the velocity (or residual) operator is computed.</li><li><strong>stencil mesh</strong>: the set of all nodes or elements needed to compute the velocity or residual on the sample mesh.</li><li>Typically, the sample mesh is a subset of the stencil mesh.</li></ol><div class="m-note m-info"><p>The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh.</p></div><section id="autotoc_md90"><h3><a href="#autotoc_md90">Explain it to me better!</a></h3><p>Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, <em>it does not matter what problem we are solving</em>, only what we just said. Now, suppose that you want to try hyper-reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read <a href="https://pressio.github.io/algos/hyper/">this page</a> for some information about how to select sample mesh cells), and let&#x27;s say it looks like this:</p><img class="m-image" src="lspg_sample_mesh1.png" alt="Image" style="width: 400px;" /><p>The stencil mesh is the set of <em>all</em> cells shown, while the sample mesh is the <em>subset</em> color-coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-hand-side <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
+    <span class="c1"># operand[:] *= 1.</span></pre> <p><br /></p></li></ul></li></ul></section><section id="autotoc_md90"><h2><a href="#autotoc_md90">Stencil to sample indexing</a></h2><p>When working with a hyper-reduced problem, pressio4py has to manipulate objects that have different sizes/distributions. For such problem, in fact, some operators are naturally defined on the what we refer to as &quot;sample mesh&quot; while some are defined on what we call the &quot;stencil mesh&quot;.</p><p>As explained <a href="https://pressio.github.io/algos/hyper/">here</a>, recall that:</p><ol><li><strong>sample mesh</strong>: a disjoint collection of elements where the velocity (or residual) operator is computed.</li><li><strong>stencil mesh</strong>: the set of all nodes or elements needed to compute the velocity or residual on the sample mesh.</li><li>Typically, the sample mesh is a subset of the stencil mesh.</li></ol><div class="m-note m-info"><p>The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh.</p></div><section id="autotoc_md91"><h3><a href="#autotoc_md91">Explain it to me better!</a></h3><p>Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, <em>it does not matter what problem we are solving</em>, only what we just said. Now, suppose that you want to try hyper-reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read <a href="https://pressio.github.io/algos/hyper/">this page</a> for some information about how to select sample mesh cells), and let&#x27;s say it looks like this:</p><img class="m-image" src="lspg_sample_mesh1.png" alt="Image" style="width: 400px;" /><p>The stencil mesh is the set of <em>all</em> cells shown, while the sample mesh is the <em>subset</em> color-coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-hand-side <svg class="m-math" style="width: 0.734em; height: 1.107em;" viewBox="0 -8.302191 7.046437 10.626798">
 <title>
 $f$
 </title>

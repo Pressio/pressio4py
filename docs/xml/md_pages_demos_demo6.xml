@@ -10,7 +10,7 @@
 <para><simplesect kind="par"><title></title><para>This page describes a demo for a reproductive LSPG ROM applied to a 1D advection-diffusion problem using a nonlinear manifold via a multilayer perceptron (MLP). This demo purposefully focuses on a simple test since the main goal is to demonstrate the steps and the code. The full demo script is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/main.py">here</ulink>.</para>
 </simplesect>
 </para>
-<sect1 id="md_pages_demos_demo6_1autotoc_md147">
+<sect1 id="md_pages_demos_demo6_1autotoc_md148">
 <title>Overview</title>
 <para>This demo solves the same problem as the one <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>, but instead of using POD modes, we show here how to use a nonlinear manifold computed approximated by a neural network. Specifically, we use a MLP with 2 hidden layers of sizes 64 and 200.</para>
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-warning" /></para>
@@ -18,7 +18,7 @@
 </simplesect>
 </para>
 </sect1>
-<sect1 id="md_pages_demos_demo6_1autotoc_md148">
+<sect1 id="md_pages_demos_demo6_1autotoc_md149">
 <title>Main function</title>
 <para>The main function of the demo is the following: <programlisting filename=".py"><codeline><highlight class="normal">logger.initialize(logger.logto.terminal)</highlight></codeline>
 <codeline><highlight class="normal">logger.setVerbosity([logger.loglevel.info])</highlight></codeline>
@@ -51,11 +51,11 @@
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">logger.finalize()</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_demos_demo6_1autotoc_md149">
+<sect2 id="md_pages_demos_demo6_1autotoc_md150">
 <title>1. Run FOM and collect snapshots</title>
 <para>This step is the same as described <ulink url="https://pressio.github.io/pressio4py/html/md_pages_demos_demo1.html">here</ulink>,</para>
 </sect2>
-<sect2 id="md_pages_demos_demo6_1autotoc_md150">
+<sect2 id="md_pages_demos_demo6_1autotoc_md151">
 <title>2. Setup and train the nonlinear mapper</title>
 <para>It is important to note that while the mapper class below has the API required by pressio4py, it can encapsulate any arbitrary mapping function. In this case we show how to create a MLP-based representation in PyTorch, but one can use any other types of mapping and any other library (e.g., Tensorflow, keras). All of the PyTorch-specific code is encapsulated <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_PyTorch.py">here</ulink>. If you prefer Tensorflow/keras, an equivalent implementation is <ulink url="https://github.com/Pressio/pressio4py/blob/master/demos/unsteady_default_lspg_advdiff1d_mlp/autoencoder_keras.py">here</ulink>.</para>
 <para>The autoencoder is defined by <programlisting filename=".py"><codeline><highlight class="keyword">class<sp/></highlight><highlight class="normal">myAutoencoder(torch.nn.Module):</highlight></codeline>
@@ -190,7 +190,7 @@
 </simplesect>
 </para>
 </sect2>
-<sect2 id="md_pages_demos_demo6_1autotoc_md151">
+<sect2 id="md_pages_demos_demo6_1autotoc_md152">
 <title>3. Construct and run LSPG</title>
 <para><programlisting filename=".py"><codeline><highlight class="keyword">def<sp/></highlight><highlight class="normal">runLspg(fomObj,<sp/>dt,<sp/>nsteps,<sp/>customMapper):</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">#<sp/>this<sp/>is<sp/>an<sp/>auxiliary<sp/>class<sp/>that<sp/>can<sp/>be<sp/>passed<sp/>to<sp/>solve</highlight><highlight class="normal"></highlight></codeline>
@@ -238,7 +238,7 @@
 </programlisting></para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_demos_demo6_1autotoc_md152">
+<sect1 id="md_pages_demos_demo6_1autotoc_md153">
 <title>Results</title>
 <para>If everything works fine, the following plot shows the result. <image type="html" name="demo6.png"></image>
  </para>

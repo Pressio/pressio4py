@@ -10,7 +10,7 @@
 <para><parblock><para>Defined in module: <computeroutput>pressio4py.rom.lspg.steady</computeroutput></para>
 <para>Import as: <emsp/> <emsp/> <emsp/> <computeroutput>from pressio4py.rom import lspg</computeroutput> </para>
 </parblock></para>
-<sect1 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md94">
+<sect1 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md95">
 <title>API</title>
 <para><programlisting filename=".py"><codeline><highlight class="normal">problem<sp/>=<sp/>lspg.steady.MaskedProblem(fom_adapter,<sp/>decoder,<sp/>\</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rom_state,<sp/>fom_ref_state,<sp/>masker)</highlight></codeline>
@@ -18,7 +18,7 @@
 <codeline><highlight class="normal">problem<sp/>=<sp/>lspg.steady.PrecMaskedProblem(fom_adapter,<sp/>decoder,<sp/>rom_state,</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fom_ref_state,<sp/>masker,<sp/>preconditioner)</highlight></codeline>
 </programlisting></para>
-<sect2 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md95">
+<sect2 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md96">
 <title>Parameters and Requirements</title>
 <para><itemizedlist>
 <listitem><para><computeroutput>fom_adapter</computeroutput>:<itemizedlist>
@@ -79,7 +79,7 @@
 </para>
 </sect2>
 </sect1>
-<sect1 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md96">
+<sect1 id="md_pages_components_rom_lspg_masked_steady_1autotoc_md97">
 <title>Example code</title>
 <para> <mcss:span xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-text m-danger">todo</mcss:span> add </para>
 </sect1>

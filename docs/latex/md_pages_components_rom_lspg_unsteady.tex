@@ -1,6 +1,6 @@
 todo\+: write more
 
-The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps\+:\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md101}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_unsteady_autotoc_md101}
+The pressio4py unsteady LSPG ROMs are designed such that using them involves these main steps\+:\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md102}{}\doxysection{1. Create}\label{md_pages_components_rom_lspg_unsteady_autotoc_md102}
 You create an instance of a \char`\"{}\+LSPG problem\char`\"{}, e.\+g.\+: ~\newline
 
 
@@ -44,7 +44,7 @@ All variants return a problem object that meets the following interface\+:
 \DoxyCodeLine{\};}
 
 \end{DoxyCode}
-\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md102}{}\doxysection{2. Solve in time}\label{md_pages_components_rom_lspg_unsteady_autotoc_md102}
+\hypertarget{md_pages_components_rom_lspg_unsteady_autotoc_md103}{}\doxysection{2. Solve in time}\label{md_pages_components_rom_lspg_unsteady_autotoc_md103}
 What does a stepper have to do with a LSPG ROM? The answer is that practically speaking, at the lowest-\/level, an unsteady LSPG problem can be reduced to simply a \char`\"{}custom\char`\"{} stepper to advance in time. This is how pressio4py implements this and the reason why a LSPG problem behaves like a stepper. You don\textquotesingle{}t need to know how this is done, or rely on the details, because these are problem-\/ and implementation-\/dependent, and we reserve the right to change this in the future.
 
 
