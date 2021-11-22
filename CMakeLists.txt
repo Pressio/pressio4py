@@ -5,7 +5,7 @@ project(pressio4py CXX)
 # setting where other cmake commands are
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 # include commands for coloring prints
-include(${PROJECT_SOURCE_DIR}/cmake/colors)
+#include(${PROJECT_SOURCE_DIR}/cmake/colors)
 
 #=====================================================================
 # we need c++14
