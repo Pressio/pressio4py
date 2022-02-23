@@ -231,7 +231,7 @@ def test():
   decoder = rom.Decoder(phi)
   yRom    = np.zeros(romSize)
 
-  indexing = rom.lspg.unsteady.StencilToSampleIndexing([1,4,5,7,8])
+  indexing = rom.lspg.unsteady.StencilToSampleIndexing([1,4,5,7,8], 1)
   scheme = ode.stepscheme.BDF2
   problem = rom.lspg.unsteady.HypredProblem(scheme, appObj, decoder, yRom, yRef, indexing)
 

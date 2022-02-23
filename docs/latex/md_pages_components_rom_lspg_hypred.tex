@@ -49,11 +49,13 @@ Import as\+: \quad{} \quad{} \quad{} {\ttfamily from pressio4py.\+rom import lsp
 \item can be constructed as\+: ~\newline
  
 \begin{DoxyCode}{0}
-\DoxyCodeLine{mapper = rom.lspg.unsteady.StencilToSampleIndexing(list\_of\_ints)}
+\DoxyCodeLine{mapper = rom.lspg.unsteady.StencilToSampleIndexing(list\_of\_ints, \(\backslash\)}
+\DoxyCodeLine{                                                   num\_vars\_per\_cell)}
 
 \end{DoxyCode}
  ~
 \item see section below for more details
+\item where {\ttfamily num\+\_\+vars\+\_\+per\+\_\+cell} is the number of variables for each cell. For example, for 1d Euler equations in conservative form one has density, momentum and energy.
 \end{DoxyItemize}
 \item {\ttfamily preconditioner}\+:
 \begin{DoxyItemize}
@@ -87,7 +89,7 @@ As explained \href{https://pressio.github.io/algos/hyper/}{\texttt{ here}}, reca
 
 
 The sample to stencil indexing is a list of indices that you need to provide such that pressio4py knows how to properly combine operands defined on stencil and sample mesh. \hypertarget{md_pages_components_rom_lspg_hypred_autotoc_md91}{}\doxysubsection{Explain it to me better!}\label{md_pages_components_rom_lspg_hypred_autotoc_md91}
-Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, {\itshape it does not matter what problem we are solving}, only what we just said. Now, suppose that you want to try hyper-\/reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read \href{https://pressio.github.io/algos/hyper/}{\texttt{ this page}} for some information about how to select sample mesh cells), and let\textquotesingle{}s say it looks like this\+: 
+Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. Also, for the sake of explanation, suppose that your problem stores 1 quantity at each cell. For example, you are solving a heat equation for the temperature field. Now, suppose that you want to try hyper-\/reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read \href{https://pressio.github.io/algos/hyper/}{\texttt{ this page}} for some information about how to select sample mesh cells), and let\textquotesingle{}s say it looks like this\+: 
 
 The stencil mesh is the set of {\itshape all} cells shown, while the sample mesh is the {\itshape subset} color-\/coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-\/hand-\/side $f$ on the yellow cells, for a given FOM state $y$ on the stencil mesh.
 
@@ -96,8 +98,10 @@ For this example, you then would do this\+:
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{comment}{\# ...}}
+\DoxyCodeLine{\textcolor{comment}{\# we assume here you only have 1 variable per cell}}
+\DoxyCodeLine{numVarsPerCell = 1}
 \DoxyCodeLine{mylist = [1,4,9,14,18,24,25,31,37,40,47,50,53,62,65,70]}
-\DoxyCodeLine{indexing = rom.lspg.unsteady.StencilToSampleIndexing(mylist)}
+\DoxyCodeLine{indexing = rom.lspg.unsteady.StencilToSampleIndexing(mylist, numVarsPerCell)}
 \DoxyCodeLine{scheme = ode.stepscheme.BDF1}
 \DoxyCodeLine{lspgProblem = rom.lspg.unsteady.HypredProblem(..., indexing)}
 \DoxyCodeLine{\textcolor{comment}{\# ...}}
@@ -111,6 +115,7 @@ For this example, you then would do this\+:
 
 \begin{DoxyItemize}
 \item how you enumerate the cells does not matter. You are free to do whatever you want, as long as your adapter object is consistent with the chosen enumeration scheme and handles things accordingly.
-\item This indexing notion seamlessly extends to 1D and 3D problems. 
+\item This indexing notion seamlessly extends to 1D and 3D problems.
+\item If you have multiple quantities per cell, then you need to set {\ttfamily num\+Vars\+Per\+Cell} accordingly
 \end{DoxyItemize}
 \end{DoxyParagraph}

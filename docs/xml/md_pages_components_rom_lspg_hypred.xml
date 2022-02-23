@@ -49,9 +49,11 @@
 </listitem><listitem><para><computeroutput>stencilToSampleIndexing</computeroutput>:<itemizedlist>
 <listitem><para>an object that knows the mapping from sample to stancil operators</para>
 </listitem><listitem><para>can be constructed as: <linebreak/>
- <programlisting filename=".py"><codeline><highlight class="normal">mapper<sp/>=<sp/>rom.lspg.unsteady.StencilToSampleIndexing(list_of_ints)</highlight></codeline>
+ <programlisting filename=".py"><codeline><highlight class="normal">mapper<sp/>=<sp/>rom.lspg.unsteady.StencilToSampleIndexing(list_of_ints,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>num_vars_per_cell)</highlight></codeline>
 </programlisting> <nonbreakablespace/></para>
 </listitem><listitem><para>see section below for more details</para>
+</listitem><listitem><para>where <computeroutput>num_vars_per_cell</computeroutput> is the number of variables for each cell. For example, for 1d Euler equations in conservative form one has density, momentum and energy.</para>
 </listitem></itemizedlist>
 </para>
 </listitem><listitem><para><computeroutput>preconditioner</computeroutput>:<itemizedlist>
@@ -85,13 +87,15 @@
 </parblock></para>
 <sect2 id="md_pages_components_rom_lspg_hypred_1autotoc_md91">
 <title>Explain it to me better!</title>
-<para>Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. For the sake of explanation, <emphasis>it does not matter what problem we are solving</emphasis>, only what we just said. Now, suppose that you want to try hyper-reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read <ulink url="https://pressio.github.io/algos/hyper/">this page</ulink> for some information about how to select sample mesh cells), and let&apos;s say it looks like this: <image type="html" name="lspg_sample_mesh1.png" width="400px"></image>
+<para>Suppose that your FOM problem involves a 2D problem and that your FOM numerical method needs at every cell information from the nearest neighbors. Also, for the sake of explanation, suppose that your problem stores 1 quantity at each cell. For example, you are solving a heat equation for the temperature field. Now, suppose that you want to try hyper-reduced LSPG on it. You come up with a sample and stencil mesh for your problem (read <ulink url="https://pressio.github.io/algos/hyper/">this page</ulink> for some information about how to select sample mesh cells), and let&apos;s say it looks like this: <image type="html" name="lspg_sample_mesh1.png" width="400px"></image>
 </para>
 <para>The stencil mesh is the set of <emphasis>all</emphasis> cells shown, while the sample mesh is the <emphasis>subset</emphasis> color-coded yellow. We have added an arbitrary enumeration scheme to uniquely assign a global index to each cell. The enumeration order does not matter, this is just for demonstration purposes. You have an adapter class for your problem that is able to compute the FOM right-hand-side <formula id="4">$f$</formula> on the yellow cells, for a given FOM state <formula id="3">$y$</formula> on the stencil mesh.</para>
 <para>For this example, you then would do this:</para>
 <para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>we<sp/>assume<sp/>here<sp/>you<sp/>only<sp/>have<sp/>1<sp/>variable<sp/>per<sp/>cell</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">numVarsPerCell<sp/>=<sp/>1</highlight></codeline>
 <codeline><highlight class="normal">mylist<sp/>=<sp/>[1,4,9,14,18,24,25,31,37,40,47,50,53,62,65,70]</highlight></codeline>
-<codeline><highlight class="normal">indexing<sp/>=<sp/>rom.lspg.unsteady.StencilToSampleIndexing(mylist)</highlight></codeline>
+<codeline><highlight class="normal">indexing<sp/>=<sp/>rom.lspg.unsteady.StencilToSampleIndexing(mylist,<sp/>numVarsPerCell)</highlight></codeline>
 <codeline><highlight class="normal">scheme<sp/>=<sp/>ode.stepscheme.BDF1</highlight></codeline>
 <codeline><highlight class="normal">lspgProblem<sp/>=<sp/>rom.lspg.unsteady.HypredProblem(...,<sp/>indexing)</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="comment">#<sp/>...</highlight></codeline>
@@ -99,7 +103,8 @@
 <para> <mcss:class xmlns:mcss="http://mcss.mosra.cz/doxygen/" mcss:class="m-block m-info" /></para>
 <para><simplesect kind="par"><title>Note that:</title><para><itemizedlist>
 <listitem><para>how you enumerate the cells does not matter. You are free to do whatever you want, as long as your adapter object is consistent with the chosen enumeration scheme and handles things accordingly.</para>
-</listitem><listitem><para>This indexing notion seamlessly extends to 1D and 3D problems. </para>
+</listitem><listitem><para>This indexing notion seamlessly extends to 1D and 3D problems.</para>
+</listitem><listitem><para>If you have multiple quantities per cell, then you need to set <computeroutput>numVarsPerCell</computeroutput> accordingly</para>
 </listitem></itemizedlist>
 </para>
 </simplesect>
