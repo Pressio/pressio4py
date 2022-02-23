@@ -11,11 +11,13 @@ class HypRedUpdaterPressio4py
 {
   using data_type = std::vector<int>;
   data_type m_indices;
+  int m_ndpc; // num dofs per cell
 
 public:
   HypRedUpdaterPressio4py() = delete;
-  explicit HypRedUpdaterPressio4py(const data_type & indices)
-    : m_indices(indices)
+  explicit HypRedUpdaterPressio4py(const data_type & indices,
+				   int ndpc)
+    : m_indices(indices), m_ndpc(ndpc)
   {}
 
   void updateSampleMeshOperandWithStencilMeshOne(py_f_arr sample_operand,
@@ -40,26 +42,36 @@ public:
   }
 
 private:
-  void rank1_combine(py_f_arr sa_o,
+  void rank1_combine(py_f_arr a,
 		     const ScalarType alpha,
-		     const py_f_arr st_o,
+		     const py_f_arr b,
 		     const ScalarType beta) const
   {
-    for (std::size_t i=0; i<(std::size_t) sa_o.shape(0); ++i){
-      const auto k = m_indices[i];
-      sa_o(i) = alpha*sa_o(i) + beta*st_o(k);
+
+    for (std::size_t i=0; i< m_indices.size(); ++i){
+      const std::size_t r = i*m_ndpc;
+      const std::size_t g = m_indices[i]*m_ndpc;
+      for (std::size_t k=0; k<m_ndpc; ++k){
+	a(r+k) = alpha*a(r+k) + beta*b(g+k);
+      }
     }
   }
 
-  void rank2_combine(py_f_arr & sa_o,
+  void rank2_combine(py_f_arr & a,
 		     const ScalarType alpha,
-		     const py_f_arr & st_o,
+		     const py_f_arr & b,
 		     const ScalarType beta) const
   {
-    for (std::size_t i=0; i<(std::size_t) ::pressio::ops::extent(sa_o, 0); ++i){
-      const auto k = m_indices[i];
-      for (std::size_t j=0; j<(std::size_t) ::pressio::ops::extent(sa_o, 1); ++j){
-	sa_o(i,j) = alpha*sa_o(i,j) + beta*st_o(k,j);
+    for (std::size_t j=0; j< pressio::ops::extent(b, 1); ++j)
+    {
+      for (std::size_t i=0; i<m_indices.size(); ++i)
+      {
+	const std::size_t r = i*m_ndpc;
+	const std::size_t g = m_indices[i]*m_ndpc;
+	for (std::size_t k=0; k<m_ndpc; ++k)
+	{
+	  a(r+k,j) = alpha*a(r+k,j) + beta*b(g+k,j);
+	}
       }
     }
   }

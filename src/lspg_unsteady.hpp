@@ -438,7 +438,7 @@ struct UnsteadyLSPGBinder
   static void bindProblems(pybind11::module & m)
   {
     pybind11::class_<hypred_updater_type> HypredUpdaterClass(m, "StencilToSampleIndexing");
-    HypredUpdaterClass.def(pybind11::init<const std::vector<int> &>());
+    HypredUpdaterClass.def(pybind11::init<const std::vector<int> &, int>());
 
     // ---- discrete-time 2 states ----
     constexpr auto n = default_dt_n2_stepper_t::numAuxStates;

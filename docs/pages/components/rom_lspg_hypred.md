@@ -45,10 +45,13 @@ problem = lspg.unsteady.PrecHypredProblem(scheme, fom_adapter, decoder, \
   - an object that knows the mapping from sample to stancil operators
   - can be constructed as: <br/>
   ```py
-  mapper = rom.lspg.unsteady.StencilToSampleIndexing(list_of_ints)
+  mapper = rom.lspg.unsteady.StencilToSampleIndexing(list_of_ints, \
+                                                     num_vars_per_cell)
   ```
   &nbsp;
   - see section below for more details
+  - where `num_vars_per_cell` is the number of variables for each cell.
+    For example, for 1d Euler equations in conservative form one has density, momentum and energy.
 
 - `preconditioner`:
   - functor needed to precondition the ROM operators
@@ -95,8 +98,8 @@ pressio4py knows how to properly combine operands defined on stencil and sample 
 
 Suppose that your FOM problem involves a 2D problem and that your FOM numerical
 method needs at every cell information from the nearest neighbors.
-For the sake of explanation, *it does not matter what problem we are solving*,
-only what we just said.
+Also, for the sake of explanation, suppose that your problem stores 1 quantity at each cell.
+For example, you are solving a heat equation for the temperature field.
 Now, suppose that you want to try hyper-reduced LSPG on it.
 You come up with a sample and stencil mesh for your problem
 (read [this page](https://pressio.github.io/algos/hyper/) for some information about
@@ -115,8 +118,10 @@ For this example, you then would do this:
 
 ```py
 # ...
+# we assume here you only have 1 variable per cell
+numVarsPerCell = 1
 mylist = [1,4,9,14,18,24,25,31,37,40,47,50,53,62,65,70]
-indexing = rom.lspg.unsteady.StencilToSampleIndexing(mylist)
+indexing = rom.lspg.unsteady.StencilToSampleIndexing(mylist, numVarsPerCell)
 scheme = ode.stepscheme.BDF1
 lspgProblem = rom.lspg.unsteady.HypredProblem(..., indexing)
 # ...
@@ -130,6 +135,9 @@ lspgProblem = rom.lspg.unsteady.HypredProblem(..., indexing)
   consistent with the chosen enumeration scheme and handles things accordingly.
 
 - This indexing notion seamlessly extends to 1D and 3D problems.
+
+- If you have multiple quantities per cell, then you need to set `numVarsPerCell` accordingly
+
 @endparblock
 
 
