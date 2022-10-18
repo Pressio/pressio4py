@@ -29,6 +29,9 @@ This offers an ideal framework to explore and merge ideas from different fields.
 <!-- <br/>
 -> <button name="button" onclick="https://pressio.github.io/pressio4py/html/index.html" style="font-size: larger; color: black; background-color: #96FF33; border: 3pt">EXPLORE THE DOCUMENTATION</button> <- -->
 
+
+# This repo is currently out of sync with pressio until we have resources to update it!
+
 ## Questions? Comments?
 
 Open an issue on [github](https://github.com/Pressio/pressio4py), or find us on Slack: https://pressioteam.slack.com.
