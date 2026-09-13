@@ -25,7 +25,7 @@ This offers an ideal framework to explore and merge ideas from different fields.
 
 # Development installation
 
-The modernization branch targets Python 3.10-3.13 on Linux and macOS. Clone
+The modernization effort targets Python 3.10-3.13 on Linux and macOS. Clone
 with submodules and install through the standard PEP 517 build path:
 
 ```bash
