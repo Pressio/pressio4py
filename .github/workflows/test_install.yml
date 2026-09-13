@@ -1,80 +1,56 @@
-# This is a basic workflow to help you get started with Actions
+name: Build and test
 
-name: Test compilation
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
 on:
   push:
-    branches: [main, develop]
+    branches: [main, port-pressio4py-017]
   pull_request:
-    branches: [main, develop]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [3.7, 3.8]
-        cxx-compilers: [g++-9, g++-10]
+        os: [ubuntu-latest, macos-14]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    # - name: set environment variables
-    #   uses: allenevans/set-env@v2.0.0
-    #   with:
-    #     CXX: ${{matrix.cxx-compilers}}
+      - name: Install build and test tools
+        run: python -m pip install --upgrade pip build pytest
 
-    - name: Clone Repos
-      run: |
-        pwd
-        ls -lh
-        git submodule update --init
-        cd pressio/
-        git checkout develop
-        git branch
-        ls -lh
+      - name: Build wheel
+        run: python -m build --wheel
 
-    - name: Build
-      env:
-        CXX: ${{matrix.cxx-compilers}}
-      run: |
-        echo "Compilers:"
-        echo $CXX
-        python setup.py build
+      - name: Run compiled tests
+        shell: bash
+        run: |
+          compiled_tests=$(find build -type d -name tests_compiled -print -quit)
+          test -n "$compiled_tests"
+          python -m pytest "$compiled_tests"
 
-    - name: Build wheels
-      env:
-        CXX: ${{matrix.cxx-compilers}}
-      run: |
-        echo "Compilers:"
-        echo $CXX
-        pip install wheel
-        python setup.py sdist bdist_wheel
+      - name: Install wheel
+        shell: bash
+        run: python -m pip install dist/*.whl
 
-    - name: install
-      env:
-        CXX: ${{matrix.cxx-compilers}}
-      run: |
-        python setup.py install
+      - name: Run functional tests
+        run: python -m pytest tests_functional_small tests_functional_medium
 
-    - name: Unit tests
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest numpy scipy
-        cd build
-        python -m pytest
+      - name: Build source distribution
+        run: python -m build --sdist
 
-    - name: Regression tests
-      run: |
-        pip install pytest
-        pytest
+      - name: Verify source distribution installs
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall --no-deps dist/*.tar.gz
+          python -c "import pressio4py; print(pressio4py.__version__)"
