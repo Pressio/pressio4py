@@ -1,4 +1,3 @@
-
 # Overview
 
 Pressio is an open-source computational framework aimed at advancing
@@ -24,11 +23,19 @@ This offers an ideal framework to explore and merge ideas from different fields.
 
 [![](https://img.shields.io/website?label=EXPLORE%20THE%20DOCUMENTATION&url=https%3A%2F%2Fpressio.github.io%2Fpressio4py%2Fhtml%2Findex.html)](https://pressio.github.io/pressio4py/html/index.html)
 
-<!-- [![License](https://img.shields.io/badge/-EXPLORE%20THE%20DOCUMENTATION-brightgreen)](https://opensource.org/licenses/BSD-3-Clause) -->
+# Development installation
 
-<!-- <br/>
--> <button name="button" onclick="https://pressio.github.io/pressio4py/html/index.html" style="font-size: larger; color: black; background-color: #96FF33; border: 3pt">EXPLORE THE DOCUMENTATION</button> <- -->
+The modernization branch targets Python 3.10-3.13 on Linux and macOS. Clone
+with submodules and install through the standard PEP 517 build path:
 
+```bash
+git clone --recursive https://github.com/Pressio/pressio4py.git
+cd pressio4py
+python -m pip install .
+```
+
+A compiler normally does not need to be selected explicitly. `CXX` may still
+be set when a specific compiler is desired.
 
 # This repo is currently out of sync with pressio until we have resources to update it!
 
@@ -41,6 +48,5 @@ Open an issue on [github](https://github.com/Pressio/pressio4py), or find us on 
 The full license is available [here](https://pressio.github.io/various/license/).
 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-
 
 We are working on publishing this: you can find our arXiv preprint at: https://arxiv.org/abs/2003.07798.
