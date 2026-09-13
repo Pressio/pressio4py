@@ -9,7 +9,7 @@ name = "pressio4py"
 version = "0.12.0"
 description = "Projection-based model reduction for Python"
 readme = { file = "DESCRIPTION.rst", content-type = "text/x-rst" }
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.11"
 license = { file = "LICENSE" }
 authors = [
   { name = "F. Rizzi, E. Parish, P. Blonigan, J. Tencer", email = "fnrizzi@sandia.gov" },
