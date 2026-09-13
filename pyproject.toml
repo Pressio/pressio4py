@@ -1,0 +1,54 @@
+[build-system]
+requires = [
+  "scikit-build-core>=0.10",
+  "pybind11>=2.13.6,<3",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "pressio4py"
+version = "0.12.0"
+description = "Projection-based model reduction for Python"
+readme = { file = "DESCRIPTION.rst", content-type = "text/x-rst" }
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "F. Rizzi, E. Parish, P. Blonigan, J. Tencer", email = "fnrizzi@sandia.gov" },
+]
+dependencies = [
+  "numpy",
+  "scipy",
+  "matplotlib",
+  "scikit-learn",
+]
+classifiers = [
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: Unix",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Software Development :: Libraries",
+  "Development Status :: 4 - Beta",
+]
+keywords = ["model reduction", "scientific computing", "dense linear algebra", "pressio", "HPC"]
+
+[project.urls]
+Documentation = "https://pressio.github.io/pressio4py/html/index.html"
+Source = "https://github.com/Pressio/pressio4py"
+
+[tool.scikit-build]
+cmake.version = ">=3.18"
+build-dir = "build/{wheel_tag}"
+wheel.packages = ["pressio4py"]
+
+[tool.scikit-build.sdist]
+include = [
+  "pressio/**",
+  "src/**",
+  "tests_compiled/**",
+  "tests_functional_small/**",
+  "tests_functional_medium/**",
+  "cmake/**",
+]
