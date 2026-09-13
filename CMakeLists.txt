@@ -1,94 +1,92 @@
+cmake_minimum_required(VERSION 3.18.0 FATAL_ERROR)
+project(pressio4py LANGUAGES CXX)
 
-cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
-project(pressio4py CXX)
-
-# setting where other cmake commands are
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-# include commands for coloring prints
 include(colors)
 
-#=====================================================================
-# we need c++14
-#=====================================================================
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#=====================================================================
-### guard against in-source builds ###
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  message(FATAL_ERROR "In-source builds are not allowed.
-    Please make a new directory (e.g. build directory) and run CMake from there.")
+  message(FATAL_ERROR "In-source builds are not allowed. Please use a separate build directory.")
 endif()
 
-### default to release if build type is empty ###
-if (NOT CMAKE_BUILD_TYPE)
-  message(STATUS "${CMAKE_BUILD_TYPE} is not specified, defaulting to Release.")
+if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-### check if PRESSIO_INCLUDE_DIR is set ###
-if (NOT PRESSIO_INCLUDE_DIR)
-  message(FATAL_ERROR "${PRESSIO_INCLUDE_DIR} is not specified, must be set.")
-endif()
+# pressio 0.12 is header-only. Configure the generated feature header in place
+# rather than installing pressio into an intermediate prefix during the Python build.
+set(PRESSIO_ENABLE_TPL_EIGEN OFF)
+set(PRESSIO_ENABLE_TPL_TRILINOS OFF)
+set(PRESSIO_ENABLE_TPL_BLAS OFF)
+set(PRESSIO_ENABLE_TPL_LAPACK OFF)
+set(PRESSIO_ENABLE_TPL_KOKKOS OFF)
+set(PRESSIO_ENABLE_TPL_MPI OFF)
+set(PRESSIO_ENABLE_TPL_PYBIND11 ON)
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/pressio/include/pressio/pressio_cmake_config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/pressio_cmake_config.h
+)
 
-#----------------------------------------------------------------
-include_directories(${PRESSIO_INCLUDE_DIR})
-#find_package(pybind11 REQUIRED PATHS ${PYBIND11_DIR}/share/cmake)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pybind11)
+# The Pressio 0.12 baseline relies on behavior from its pinned pybind11 fork.
+# Keep that exact dependency for this infrastructure-only step; #31 moves to
+# current Pressio and can upgrade pybind11 with the binding port.
+set(PYBIND11_FINDPYTHON ON CACHE BOOL "" FORCE)
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
+add_subdirectory(pybind11)
 
-#----------------------------------------------------------------
-# dir where all sources for pressio4py are
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/pressio/include
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
 set(PRESSIO4PY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(PRESSIO4PY_APPS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/pressio4pyApps)
 
-#----------------------------------------------------------------
 if(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-#----------------------------------------------------------------
-# get the working branch
 execute_process(
   COMMAND git rev-parse --abbrev-ref HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   OUTPUT_VARIABLE PFPY_BRANCH
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET)
 
-# get the commit hash of the pressio4py being used
 execute_process(
   COMMAND git rev-parse HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  RESULT_VARIABLE SHORT_HASH_RESULT
   OUTPUT_VARIABLE PFPY_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET)
 
-#----------------------------------------------------------------
 set(modulename _p4pyimpl)
 pybind11_add_module(${modulename} ${PRESSIO4PY_SRC_DIR}/main_binder.cc)
 target_compile_definitions(${modulename} PRIVATE MODNAME=${modulename})
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-  # set min log level to info
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(${modulename} PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=2)
 else()
-  # set min log level to 0
   target_compile_definitions(${modulename} PRIVATE PRESSIO_LOG_ACTIVE_MIN_LEVEL=0)
 endif()
 
-### display some info ###
+install(
+  TARGETS ${modulename}
+  LIBRARY DESTINATION pressio4py
+  RUNTIME DESTINATION pressio4py
+  ARCHIVE DESTINATION pressio4py
+)
+
 message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} Pressio4Py config info: ${ColourReset}")
 message("${Yellow}----------------------------------${ColourReset}")
 message("${Yellow} - C++ standard   = ${CMAKE_CXX_STANDARD} ${ColourReset}")
-message("${Yellow} - p4py version   = ${VERSION_INFO} ${ColourReset}")
 message("${Yellow} - p4py branch    = ${PFPY_BRANCH} ${ColourReset}")
 message("${Yellow} - p4py hash      = ${PFPY_HASH} ${ColourReset}")
 message("${Yellow} - Build dir      = ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${ColourReset}")
 message("${Yellow} - prefix         = ${CMAKE_INSTALL_PREFIX} ${ColourReset}")
 
-# add unit tests
-# we have to do this because unit tests
-# contain c++ code that is compiled too
+# Keep the existing compiled-test layout for this modernization pass.
 add_subdirectory(tests_compiled)
-#install(TARGETS pressio4py DESTINATION ${CMAKE_INSTALL_PREFIX})

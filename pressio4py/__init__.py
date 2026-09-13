@@ -1,5 +1,9 @@
-"""Root module of your package"""
+"""Top-level package for pressio4py."""
 
-from pkg_resources import get_distribution
+from importlib.metadata import PackageNotFoundError, version
 
-__version__ = get_distribution('pressio4py').version
+try:
+  __version__ = version("pressio4py")
+except PackageNotFoundError:
+  # Allows source-tree imports before installation.
+  __version__ = "0+unknown"

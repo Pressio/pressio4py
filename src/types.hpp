@@ -49,6 +49,7 @@
 #ifndef PRESSIO4PY_PYBINDINGS_TYPES_HPP_
 #define PRESSIO4PY_PYBINDINGS_TYPES_HPP_
 
+#include <cstdint>
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <pybind11/numpy.h>
