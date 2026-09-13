@@ -32,19 +32,25 @@ jobs:
       - name: Build wheel
         run: python -m build --wheel
 
+      - name: Install wheel
+        shell: bash
+        run: python -m pip install dist/*.whl
+
       - name: Run compiled tests
         shell: bash
         run: |
           compiled_tests=$(find build -type d -name tests_compiled -print -quit)
           test -n "$compiled_tests"
-          python -m pytest "$compiled_tests"
-
-      - name: Install wheel
-        shell: bash
-        run: python -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          python -m pytest "$GITHUB_WORKSPACE/$compiled_tests"
 
       - name: Run functional tests
-        run: python -m pytest tests_functional_small tests_functional_medium
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP"
+          python -m pytest \
+            "$GITHUB_WORKSPACE/tests_functional_small" \
+            "$GITHUB_WORKSPACE/tests_functional_medium"
 
       - name: Build source distribution
         run: python -m build --sdist
@@ -53,4 +59,5 @@ jobs:
         shell: bash
         run: |
           python -m pip install --force-reinstall --no-deps dist/*.tar.gz
+          cd "$RUNNER_TEMP"
           python -c "import pressio4py; print(pressio4py.__version__)"
