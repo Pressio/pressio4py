@@ -15,7 +15,7 @@ authors = [
   { name = "F. Rizzi, E. Parish, P. Blonigan, J. Tencer", email = "fnrizzi@sandia.gov" },
 ]
 dependencies = [
-  "numpy",
+  "numpy<2",
   "scipy",
   "matplotlib",
   "scikit-learn",
