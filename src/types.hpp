@@ -63,7 +63,6 @@ using py_c_arr	= pybind11::array_t<scalar_t, pybind11::array::c_style>;
 using py_f_arr	= pybind11::array_t<scalar_t, pybind11::array::f_style>;
 }//end namespace pressio4py
 
-#include "pressio/utils.hpp"
 #include "pressio/type_traits.hpp"
 #include "./rom/py_decoder.hpp"
 #include "./wrappers/ode_collector_wrapper.hpp"
