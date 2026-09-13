@@ -25,8 +25,10 @@ This offers an ideal framework to explore and merge ideas from different fields.
 
 # Development installation
 
-The modernization effort targets Python 3.10-3.13 on Linux and macOS. Clone
-with submodules and install through the standard PEP 517 build path:
+The initial packaging-modernization baseline is validated with Python 3.10 on
+Linux and macOS. The full modernization effort targets Python 3.10-3.13 after
+the bindings are ported to current Pressio. Clone with submodules and install
+through the standard PEP 517 build path:
 
 ```bash
 git clone --recursive https://github.com/Pressio/pressio4py.git
