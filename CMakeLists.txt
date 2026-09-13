@@ -30,8 +30,12 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/pressio_cmake_config.h
 )
 
+# The Pressio 0.12 baseline relies on behavior from its pinned pybind11 fork.
+# Keep that exact dependency for this infrastructure-only step; #31 moves to
+# current Pressio and can upgrade pybind11 with the binding port.
+set(PYBIND11_FINDPYTHON ON CACHE BOOL "" FORCE)
 find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
-find_package(pybind11 CONFIG REQUIRED)
+add_subdirectory(pybind11)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/pressio/include
