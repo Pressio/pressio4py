@@ -1,7 +1,6 @@
 [build-system]
 requires = [
   "scikit-build-core>=0.10",
-  "pybind11>=2.13.6,<3",
 ]
 build-backend = "scikit_build_core.build"
 
@@ -46,6 +45,7 @@ wheel.packages = ["pressio4py"]
 [tool.scikit-build.sdist]
 include = [
   "pressio/**",
+  "pybind11/**",
   "src/**",
   "tests_compiled/**",
   "tests_functional_small/**",
