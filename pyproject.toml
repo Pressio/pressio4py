@@ -38,7 +38,7 @@ Documentation = "https://pressio.github.io/pressio4py/html/index.html"
 Source = "https://github.com/Pressio/pressio4py"
 
 [tool.scikit-build]
-cmake.version = ">=3.18"
+cmake.version = ">=3.18,<4"
 build-dir = "build/{wheel_tag}"
 wheel.packages = ["pressio4py"]
 
