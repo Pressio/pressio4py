@@ -2,52 +2,18 @@
 //@HEADER
 // ************************************************************************
 //
-// ode_collector_wrapper.hpp
-//                     		  Pressio
+// ode_dt_setter.hpp
+//                         Pressio
 //                         Copyright 2019
 //    National Technology & Engineering Solutions of Sandia, LLC (NTESS)
 //
-// Under the terms of Contract DE-NA0003525 with NTESS, the
-// U.S. Government retains certain rights in this software.
-//
-// Pressio is licensed under BSD-3-Clause terms of use:
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its
-// contributors may be used to endorse or promote products derived
-// from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-// COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-// IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Francesco Rizzi (fnrizzi@sandia.gov)
-//
+// Pressio is licensed under BSD-3-Clause terms of use.
 // ************************************************************************
 //@HEADER
 */
 
-#ifndef ODE_DT_SETTER_HPP_
-#define ODE_DT_SETTER_HPP_
+#ifndef PRESSIO4PY_PYBINDINGS_ODE_DT_SETTER_WRAPPER_HPP_
+#define PRESSIO4PY_PYBINDINGS_ODE_DT_SETTER_WRAPPER_HPP_
 
 namespace pressio4py{
 
@@ -60,22 +26,13 @@ public:
   explicit OdeTimeStepSizeSetterWrapper(pybind11::object pyObj)
     : pyObj_(pyObj){}
 
-  OdeTimeStepSizeSetterWrapper() = delete;
-  OdeTimeStepSizeSetterWrapper(const OdeTimeStepSizeSetterWrapper &) = default;
-  OdeTimeStepSizeSetterWrapper & operator=(const OdeTimeStepSizeSetterWrapper &) = default;
-  ~OdeTimeStepSizeSetterWrapper() = default;
-
-public:
-  template<class StepType>
-  void operator()(const StepType step,
-		  const ScalarType time,
-		  ScalarType & dt) const
+  void operator()(::pressio::ode::StepCount step,
+                  ::pressio::ode::StepStartAt<ScalarType> time,
+                  ::pressio::ode::StepSize<ScalarType> & dt) const
   {
-    // I need to do this otherwise passing dt directly won't work
-    // because it looks like it won't change it in place but makes copy
-    dt = pybind11::cast<ScalarType>(pyObj_.attr("__call__")(step, time));
+    dt = pyObj_(step.get(), time.get()).template cast<ScalarType>();
   }
 };
 
-}//namespace pressio4py
+} // end namespace pressio4py
 #endif

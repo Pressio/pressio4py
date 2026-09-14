@@ -1,6 +1,9 @@
 [submodule "pressio"]
 	path = pressio
-	url = https://github.com/Pressio/pressio.git
-[submodule "pybind11"]
-	path = pybind11
-	url = https://github.com/Pressio/pybind11.git
+	url = https://github.com/Pressio/pressio-rom.git
+[submodule "pressio-ops"]
+	path = pressio-ops
+	url = https://github.com/Pressio/pressio-ops.git
+[submodule "pressio-log"]
+	path = pressio-log
+	url = https://github.com/Pressio/pressio-log.git
